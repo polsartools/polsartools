@@ -4,7 +4,7 @@
 
 ## A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 
-[![Build](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/Narayana-Rao/polsartools/actions/workflows/ci.yml)
+[![Build](https://github.com/polsartools/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/polsartools/polsartools/actions/workflows/ci.yml)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
 [![image](https://img.shields.io/pypi/v/polsartools.svg)](https://pypi.python.org/pypi/polsartools)
@@ -13,7 +13,7 @@
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/version.svg)](https://anaconda.org/bnarayanarao/polsartools)
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/downloads.svg)](https://anaconda.org/bnarayanarao/polsartools/files)
 
-[![GitHub commits](https://img.shields.io/github/commits-since/Narayana-Rao/polsartools/0.8.svg)](https://GitHub.com/Narayana-Rao/polsartools/commit/)
+[![GitHub commits](https://img.shields.io/github/commits-since/polsartools/polsartools/0.8.svg)](https://GitHub.com/polsartools/polsartools/commit/)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
 
@@ -73,7 +73,7 @@ This package generates derived SAR parameters (viz. polarimetric descriptors, ve
 	 - c. GitHub (Weekly Build)
 	
 		```bash
-		pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
+		pip install git+https://github.com/polsartools/polsartools.git#egg=polsartools
 		```
 		Use this if you encounter errors like: `AttributeError: module 'polsartools' has no attribute 'xyzabc'`
 		
@@ -84,7 +84,7 @@ This package generates derived SAR parameters (viz. polarimetric descriptors, ve
 
 ## 💠Example Usage
 
-Sample use cases and notebooks are provided at [polsartools-notebooks](https://github.com/Narayana-Rao/polsartools-notebooks) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
+Sample use cases and notebooks are provided at [polsartools-notebooks](https://github.com/polsartools/polsartools-tutorials) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
 
 ## 💠Available functionalities:
 Full list of available functions is provided here : [Functions](https://polsartools.readthedocs.io/en/latest/files/02functions.html)
@@ -112,7 +112,7 @@ We welcome contributions! Whether it's fixing bugs, adding new features, or impr
 2. **Clone your fork** - Clone the repository to your local machine:
 
     ```bash
-    git clone https://github.com/Narayana-Rao/polsartools.git
+    git clone https://github.com/polsartools/polsartools.git
     ```
 
 3. Create a branch - Create a new branch for your changes:
@@ -138,7 +138,7 @@ We welcome contributions! Whether it's fixing bugs, adding new features, or impr
 
 If you encounter a bug or issue, please follow these steps to report it:
 
-1. Check the existing issues: Before submitting a new bug report, check if the issue has already been reported in the [Issues section](https://github.com/Narayana-Rao/polsartools/issues).
+1. Check the existing issues: Before submitting a new bug report, check if the issue has already been reported in the [Issues section](https://github.com/polsartools/polsartools/issues).
 
 2. Submit a bug report: If the issue hasn’t been reported, please open a new issue and include the following information:
     * A clear description of the problem.
@@ -148,24 +148,24 @@ If you encounter a bug or issue, please follow these steps to report it:
     * Relevant code snippets or files if possible.
     * Version of `polsartools` and Python you're using.
 
-[Click here to report a bug](https://github.com/Narayana-Rao/polsartools/issues/new?template=bug_report.md)
+[Click here to report a bug](https://github.com/polsartools/polsartools/issues/new?template=bug_report.md)
 
 
 ## 💠Feature Requests
 
 We’re always open to suggestions for new features or improvements!
 
-1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the [Issues section](https://github.com/Narayana-Rao/polsartools/issues).
+1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the [Issues section](https://github.com/polsartools/polsartools/issues).
 
 2. **Submit a feature request:** If it hasn’t been requested already, please open a new issue with the following information:
       * A clear description of the feature.
       * Why you think this feature would be beneficial.
       * Any specific use cases or examples.
 
-[Click here to request a feature](https://github.com/Narayana-Rao/polsartools/issues/new?template=feature_request.md)
+     [Click here to request a feature](https://github.com/polsartools/polsartools/issues/new?template=feature_request.md)
 
 
-## 💠Cite
+<!-- ## 💠Cite
 
 If you use **`PolSARtools`** in your research or projects, please cite it as follows:
 
@@ -185,4 +185,4 @@ If you use **`PolSARtools`** in your research or projects, please cite it as fol
   doi= {10.21105/joss.02970}
 }
 
-```
+``` -->

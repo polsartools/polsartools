@@ -31,7 +31,7 @@ If you encounter an error like "function not found" or need the latest version, 
 Example Usage
 -------------
 
-Sample use cases and notebooks are provided at `polsartools-notebooks <https://github.com/polsartools/polsartools-notebooks>`_ repo. Detailed documentation is available at `polsartools.readthedocs.io <https://polsartools.readthedocs.io/en/latest/>`_.
+Sample use cases and notebooks are provided at `polsartools-notebooks <https://github.com/polsartools/polsartools-tutorials>`_ repo. Detailed documentation is available at `polsartools.readthedocs.io <https://polsartools.readthedocs.io/en/latest/>`_.
 
 .. Available functions
 .. -------------------
