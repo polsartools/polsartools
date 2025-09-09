@@ -21,6 +21,12 @@ prepare_dem -
 update rgb
 update nisar with output path
 moved repo into polsartools organization
+update uavsar for tif output, output path
+--todo before release
+update uniform args for all sensors 
+update uniform args for all 50 functions
+
+
 
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build

@@ -363,7 +363,7 @@
 <p>The <cite>risat_l11</cite> function extracts Sxy/C2 matrix elements from the given RISAT product folder and saves them into a directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">risat_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prod_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/risat.html#risat_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">risat_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prod_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/risat.html#risat_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts the Sxy/C2 matrix elements from a RISAT-1A compact-pol SLC data</p>
 <section id="example">
 <h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
@@ -383,6 +383,10 @@
 <dt>azlks<span class="classifier">int, optional (default=10)</span></dt><dd><p>The number of azimuth looks for multi-looking.</p>
 </dd>
 <dt>rglks<span class="classifier">int, optional (default=7)</span></dt><dd><p>The number of range looks for multi-looking.</p>
+</dd>
+<dt>outType<span class="classifier">str, optional (default=’tif’)</span></dt><dd><p>The type of output file to save the matrix elements. Valid options are ‘tif’ and ‘bin’.</p>
+</dd>
+<dt>out_dir<span class="classifier">str, optional (default=None)</span></dt><dd><p>The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.</p>
 </dd>
 </dl>
 </section>

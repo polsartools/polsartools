@@ -304,7 +304,10 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
     return temp_paths, x_start, y_start
 
 
-def merge_temp_files(output_filepaths, temp_files, output_width, output_height, output_geotransform, output_projection, num_outputs,cog_flag,cog_overviews,azlks=1, rglks=1):
+def merge_temp_files(output_filepaths, temp_files, output_width, output_height, 
+                     output_geotransform, output_projection, 
+                     num_outputs,cog_flag,cog_overviews,azlks=1, rglks=1):
+    compress = False
     for i in range(num_outputs):
         # Infer dtype from first block
         first_temp_path = temp_files[0][0][i]
@@ -320,9 +323,14 @@ def merge_temp_files(output_filepaths, temp_files, output_width, output_height, 
         # Choose format
         if output_filepaths[i].endswith('.tif'):
             driver = gdal.GetDriverByName('GTiff')
-            options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
+            options = ['BIGTIFF=IF_SAFER']
+            # options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
+            if compress:
+                options += ['COMPRESS=LZW']
             if cog_flag:
-                options.extend(['COG=YES', 'TFW=YES']) 
+                # options.extend(['COG=YES', 'TFW=YES']) 
+                options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
+
             output_dataset = driver.Create(output_filepaths[i], output_width, output_height, 1, dtype, options=options)
         elif output_filepaths[i].endswith('.bin'):
             driver = gdal.GetDriverByName('ENVI')

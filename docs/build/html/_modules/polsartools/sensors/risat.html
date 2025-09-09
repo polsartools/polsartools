@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.risat &#8212; PolSARtools 0.7 documentation</title>
+    <title>polsartools.sensors.risat &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/risat';</script>
@@ -334,15 +334,15 @@
                   
   <h1>Source code for polsartools.sensors.risat</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span><span class="nn">glob</span><span class="o">,</span><span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">RegularGridInterpolator</span>
-<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="nn">glob</span><span class="o">,</span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegularGridInterpolator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
 
-<span class="k">def</span> <span class="nf">get_bandmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bandmeta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="n">metadata_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
@@ -352,8 +352,8 @@
                 <span class="n">metadata_dict</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">metadata_dict</span>
 
-<span class="k">def</span> <span class="nf">extract_lengths</span><span class="p">(</span><span class="n">leader_file</span><span class="p">,</span> <span class="n">data_file</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">htonl</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_lengths</span><span class="p">(</span><span class="n">leader_file</span><span class="p">,</span> <span class="n">data_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">htonl</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert unsigned int from host to network byte order&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&gt;I&quot;</span><span class="p">,</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">tmp</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">32768</span><span class="p">)</span>
@@ -385,7 +385,7 @@
 
     <span class="k">return</span> <span class="n">header_length</span><span class="p">,</span><span class="n">prefix_record_length</span><span class="p">,</span><span class="n">data_record_length</span>
 
-<span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">NoScans</span><span class="p">,</span> <span class="n">header_length</span><span class="p">,</span> <span class="n">record_length</span><span class="p">,</span> <span class="n">prefix_length</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">NoScans</span><span class="p">,</span> <span class="n">header_length</span><span class="p">,</span> <span class="n">record_length</span><span class="p">,</span> <span class="n">prefix_length</span><span class="p">,</span>
                                  <span class="n">bytes_per_pixel</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;&gt;i2&#39;</span><span class="p">)):</span>
     
     <span class="n">prefix_length</span> <span class="o">+=</span> <span class="mi">12</span>
@@ -407,7 +407,7 @@
 
     <span class="k">return</span> <span class="n">image</span>
 
-<span class="k">def</span> <span class="nf">write_rst</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">,</span><span class="n">dtype</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_rst</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">,</span><span class="n">dtype</span><span class="p">):</span>
     <span class="p">[</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">if</span> <span class="s1">&#39;.bin&#39;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
@@ -417,13 +417,13 @@
         <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span>
                                 <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COMPRESS=DEFLATE&#39;</span><span class="p">,</span><span class="s1">&#39;PREDICTOR=2&#39;</span><span class="p">,</span><span class="s1">&#39;ZLEVEL=9&#39;</span><span class="p">,])</span>
     
-
     <span class="n">outdata</span><span class="o">.</span><span class="n">SetDescription</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span> 
+    <span class="n">outdata</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">inrp_inc</span><span class="p">(</span><span class="n">inc_array</span><span class="p">,</span> <span class="n">target_shape</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">inrp_inc</span><span class="p">(</span><span class="n">inc_array</span><span class="p">,</span> <span class="n">target_shape</span><span class="p">):</span>
     <span class="n">input_shape</span> <span class="o">=</span> <span class="n">inc_array</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># scan direction</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># pixel direction</span>
@@ -440,7 +440,7 @@
 
     <span class="k">return</span> <span class="n">interpolated</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">get_inc</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_inc</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
     <span class="n">inc_angles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">num_records</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">num_samples</span> <span class="o">=</span> <span class="kc">None</span>
@@ -475,7 +475,9 @@
 <div class="viewcode-block" id="risat_l11">
 <a class="viewcode-back" href="../../../files/sensors/risat.html#polsartools.risat_l11">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span> <span class="nf">risat_l11</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">risat_l11</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span>
+              <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+              <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the Sxy/C2 matrix elements from a RISAT-1A compact-pol SLC data </span>
@@ -490,15 +492,16 @@
 <span class="sd">    -----------</span>
 <span class="sd">    inFile : str</span>
 <span class="sd">        The path to the RISAT-1A SLCfolder containing the data and metadata.</span>
-<span class="sd">        </span>
 <span class="sd">    matrixType : str, optional (default = &#39;C2&#39;)</span>
 <span class="sd">        Type of matrix to extract. Valid options &#39;Sxy&#39;,&#39;C2&#39;.</span>
-
 <span class="sd">    azlks : int, optional (default=10)</span>
 <span class="sd">        The number of azimuth looks for multi-looking. </span>
-
 <span class="sd">    rglks : int, optional (default=7)</span>
 <span class="sd">        The number of range looks for multi-looking. </span>
+<span class="sd">    outType : str, optional (default=&#39;tif&#39;)</span>
+<span class="sd">        The type of output file to save the matrix elements. Valid options are &#39;tif&#39; and &#39;bin&#39;.</span>
+<span class="sd">    out_dir : str, optional (default=None)</span>
+<span class="sd">        The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
@@ -537,13 +540,18 @@
     <span class="n">target_shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;NoScans&#39;</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">[</span><span class="s1">&#39;NoPixels&#39;</span><span class="p">]))</span>
     <span class="n">resized_inc</span> <span class="o">=</span> <span class="n">inrp_inc</span><span class="p">(</span><span class="n">inc_array</span><span class="p">,</span> <span class="n">target_shape</span><span class="p">)</span>
     
+    <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">prod_dir</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
     <span class="c1"># print(&quot;Resized incidence angle shape:&quot;, resized_inc.shape)</span>
     <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
-        <span class="n">write_rst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="s1">&#39;inc.bin&#39;</span><span class="p">),</span><span class="n">resized_inc</span><span class="p">,</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="s1">&#39;inc.bin&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">write_rst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;inc.bin&#39;</span><span class="p">),</span><span class="n">resized_inc</span><span class="p">,</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;inc.bin&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">write_rst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="s1">&#39;inc.tif&#39;</span><span class="p">),</span><span class="n">resized_inc</span><span class="p">,</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="s1">&#39;inc.tif&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">write_rst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;inc.tif&#39;</span><span class="p">),</span><span class="n">resized_inc</span><span class="p">,</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;inc.tif&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
     <span class="k">del</span> <span class="n">inc_array</span>
     
@@ -573,7 +581,7 @@
                  <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">s21</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">resized_inc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">inc_center</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">))</span><span class="o">/</span><span class="n">cc_lin_rv</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
     
         <span class="k">if</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s1">&#39;Sxy&#39;</span><span class="p">:</span>
-            <span class="n">outFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="s1">&#39;Sxy&#39;</span><span class="p">)</span>
+            <span class="n">outFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;Sxy&#39;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span>  <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             
             <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
@@ -588,7 +596,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span><span class="s1">&#39;s21.tif&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 
         <span class="k">elif</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s1">&#39;C2&#39;</span><span class="p">:</span>
-            <span class="n">outFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prod_dir</span><span class="p">,</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
+            <span class="n">outFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;C2&#39;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span>  <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             
             <span class="n">write_rst</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span><span class="s1">&#39;inc.tif&#39;</span><span class="p">),</span><span class="n">mlook_arr</span><span class="p">(</span><span class="n">resized_inc</span><span class="p">,</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>

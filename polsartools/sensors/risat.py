@@ -82,10 +82,10 @@ def write_rst(file,wdata,dtype):
         outdata = driver.Create(file, rows, cols, 1, dtype,
                                 options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9',])
     
-
     outdata.SetDescription(file)
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache() 
+    outdata = None
 
 
 def inrp_inc(inc_array, target_shape):
@@ -138,7 +138,9 @@ def get_inc(file_path):
     return inc_array.astype(np.float32)
 
 @time_it
-def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
+def risat_l11(prod_dir,matrixType='C2',
+              azlks=10,rglks=7,outType='tif',
+              out_dir = None):
 
     """
     Extracts the Sxy/C2 matrix elements from a RISAT-1A compact-pol SLC data 
@@ -153,15 +155,16 @@ def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
     -----------
     inFile : str
         The path to the RISAT-1A SLCfolder containing the data and metadata.
-        
     matrixType : str, optional (default = 'C2')
         Type of matrix to extract. Valid options 'Sxy','C2'.
-
     azlks : int, optional (default=10)
         The number of azimuth looks for multi-looking. 
-
     rglks : int, optional (default=7)
         The number of range looks for multi-looking. 
+    outType : str, optional (default='tif')
+        The type of output file to save the matrix elements. Valid options are 'tif' and 'bin'.
+    out_dir : str, optional (default=None)
+        The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.
 
     Returns:
     --------
@@ -200,13 +203,18 @@ def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
     target_shape = (int(metadata_dict['NoScans']), int(metadata_dict['NoPixels']))
     resized_inc = inrp_inc(inc_array, target_shape)
     
+    if out_dir is None:
+        out_dir = prod_dir
+    else:
+        os.makedirs(out_dir, exist_ok=True)
+    
     # print("Resized incidence angle shape:", resized_inc.shape)
     if outType=='bin':
-        write_rst(os.path.join(prod_dir,'inc.bin'),resized_inc,gdal.GDT_Float32)
-        print(f"Saved file: {os.path.join(prod_dir,'inc.bin')}")
+        write_rst(os.path.join(out_dir,'inc.bin'),resized_inc,gdal.GDT_Float32)
+        print(f"Saved file: {os.path.join(out_dir,'inc.bin')}")
     else:
-        write_rst(os.path.join(prod_dir,'inc.tif'),resized_inc,gdal.GDT_Float32)
-        print(f"Saved file: {os.path.join(prod_dir,'inc.tif')}")
+        write_rst(os.path.join(out_dir,'inc.tif'),resized_inc,gdal.GDT_Float32)
+        print(f"Saved file: {os.path.join(out_dir,'inc.tif')}")
         
     del inc_array
     
@@ -236,7 +244,7 @@ def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
                  1j*(s21[:,:,1]*np.sqrt(np.sin(resized_inc*np.pi/180)/np.sin(inc_center*np.pi/180))/cc_lin_rv)).astype(np.complex64)
     
         if matrixType == 'Sxy':
-            outFolder = os.path.join(prod_dir,'Sxy')
+            outFolder = os.path.join(out_dir,'Sxy')
             os.makedirs(outFolder,  exist_ok=True)
             
             if outType=='bin':
@@ -251,7 +259,7 @@ def risat_l11(prod_dir,matrixType='C2',azlks=10,rglks=7,outType='tif'):
                 print(f"Saved file: {os.path.join(outFolder,'s21.tif')}")
                 
         elif matrixType == 'C2':
-            outFolder = os.path.join(prod_dir,'C2')
+            outFolder = os.path.join(out_dir,'C2')
             os.makedirs(outFolder,  exist_ok=True)
             
             write_rst(os.path.join(outFolder,'inc.tif'),mlook_arr(resized_inc,azlks,rglks).astype(np.float32),

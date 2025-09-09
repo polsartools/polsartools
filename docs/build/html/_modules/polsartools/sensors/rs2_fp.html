@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.rs2_fp &#8212; PolSARtools 0.7 documentation</title>
+    <title>polsartools.sensors.rs2_fp &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/rs2_fp';</script>
@@ -333,22 +333,22 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.sensors.rs2_fp</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span><span class="n">mlook_arr</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.io_utils</span> <span class="kn">import</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ET</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span><span class="n">mlook_arr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_T3</span><span class="p">,</span> <span class="n">write_C3</span>
 
-<span class="k">def</span> <span class="nf">read_rs2_tif</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_rs2_tif</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="n">band1</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
     <span class="n">band2</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
     <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">band1</span><span class="p">,</span><span class="n">band2</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">write_s2_bin</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_s2_bin</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">):</span>
     <span class="p">[</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
     <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
@@ -356,10 +356,29 @@
     <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">write_rst</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">,</span><span class="n">dtype</span><span class="p">):</span>
+    <span class="p">[</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="s1">&#39;.bin&#39;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
+        <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;GTiff&quot;</span><span class="p">)</span>
+        <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span>
+                                <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COMPRESS=DEFLATE&#39;</span><span class="p">,</span><span class="s1">&#39;PREDICTOR=2&#39;</span><span class="p">,</span><span class="s1">&#39;ZLEVEL=9&#39;</span><span class="p">,])</span>
+    
+
+    <span class="n">outdata</span><span class="o">.</span><span class="n">SetDescription</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
+    <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span> 
+    <span class="n">outdata</span><span class="o">=</span><span class="kc">None</span>
+
+
 <div class="viewcode-block" id="rs2_fp">
 <a class="viewcode-back" href="../../../files/sensors/radarsat2.html#polsartools.rs2_fp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span> <span class="nf">rs2_fp</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span><span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rs2_fp</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span>
+           <span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+           <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span> <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.</span>
 
@@ -442,15 +461,22 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown type </span><span class="si">{</span><span class="nb">type</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> Available types: sigma0,gamma0,beta0&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s1">&#39;S2&#39;</span><span class="p">:</span>
-
-        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s2">&quot;S2&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s2">&quot;S2&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s2">&quot;S2&quot;</span><span class="p">)</span>
+            
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Considering S12 = S21&quot;</span><span class="p">)</span>
         <span class="n">inFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s2">&quot;imagery_HH.tif&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">read_rs2_tif</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
-        <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s11.bin&#39;</span><span class="p">)</span>
-        <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s11.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s11.tif&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
         
         <span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
@@ -464,19 +490,36 @@
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_xy</span><span class="o">+</span><span class="n">data_yx</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
         <span class="k">del</span> <span class="n">data_xy</span><span class="p">,</span><span class="n">data_yx</span>
 
-        <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s12.bin&#39;</span><span class="p">)</span>
-        
-        <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
-        <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s21.bin&#39;</span><span class="p">)</span>
-        <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s12.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s21.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s12.tif&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s21.tif&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+
 
         <span class="n">inFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s2">&quot;imagery_VV.tif&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">read_rs2_tif</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
-        <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s22.bin&#39;</span><span class="p">)</span>
-        <span class="n">write_s2_bin</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s22.bin&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s1">&#39;s22.tif&#39;</span><span class="p">)</span>
+            <span class="n">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">lut</span><span class="p">),</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved file &quot;</span><span class="o">+</span><span class="n">out_file</span><span class="p">)</span>
+        <span class="c1"># out_file = os.path.join(out_dir,&#39;s22.bin&#39;)</span>
+        <span class="c1"># write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))</span>
+        <span class="c1"># print(&quot;Saved file &quot;+out_file)</span>
         
         <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_dir</span> <span class="o">+</span><span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Nrow</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">Ncol</span><span class="se">\n</span><span class="si">%d</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarCase</span><span class="se">\n</span><span class="s1">monostatic</span><span class="se">\n</span><span class="s1">---------</span><span class="se">\n</span><span class="s1">PolarType</span><span class="se">\n</span><span class="s1">full&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">))</span>
@@ -520,16 +563,21 @@
         <span class="n">T23</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kp</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
 
         <span class="k">del</span> <span class="n">Kp</span>
-        <span class="n">T3Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s1">&#39;T3&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s2">&quot;T3&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s2">&quot;T3&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># T3Folder = os.path.join(inFolder,&#39;T3&#39;)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;T3 folder does not exist. </span><span class="se">\n</span><span class="s2">Creating folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">))</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">T3Folder</span><span class="p">)</span>
+        <span class="c1"># if not os.path.isdir(T3Folder):</span>
+        <span class="c1">#     print(&quot;T3 folder does not exist. \nCreating folder {}&quot;.format(T3Folder))</span>
+        <span class="c1">#     os.mkdir(T3Folder)</span>
             
         <span class="c1"># write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)</span>
         <span class="n">write_T3</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T13</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T13</span><span class="p">),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T22</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span>
-                  <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T33</span><span class="p">)],</span><span class="n">T3Folder</span><span class="p">)</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T33</span><span class="p">)],</span><span class="n">out_dir</span><span class="p">)</span>
         
         
     <span class="k">elif</span> <span class="n">matrixType</span> <span class="o">==</span> <span class="s1">&#39;C3&#39;</span><span class="p">:</span>
@@ -566,16 +614,22 @@
         <span class="n">C13</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
         <span class="n">C23</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">Kl</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="n">azlks</span><span class="p">,</span><span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
 
-        <span class="n">C3Folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="s2">&quot;C3&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="s2">&quot;C3&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># C3Folder = os.path.join(inFolder,&#39;C3&#39;)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C3 folder does not exist. </span><span class="se">\n</span><span class="s2">Creating folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">))</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">C3Folder</span><span class="p">)</span>
+        <span class="c1"># if not os.path.isdir(C3Folder):</span>
+        <span class="c1">#     print(&quot;C3 folder does not exist. \nCreating folder {}&quot;.format(C3Folder))</span>
+        <span class="c1">#     os.mkdir(C3Folder)</span>
         
         <span class="c1"># write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)</span>
         <span class="n">write_C3</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C13</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C13</span><span class="p">),</span>
                   <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C22</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C23</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">C23</span><span class="p">),</span>
-                  <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C33</span><span class="p">)],</span><span class="n">C3Folder</span><span class="p">)</span>
+                  <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">C33</span><span class="p">)],</span><span class="n">out_dir</span><span class="p">)</span>
         
         
     <span class="k">else</span><span class="p">:</span>

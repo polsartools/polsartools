@@ -123,4 +123,6 @@ def process_chunk_T3C3(chunks, window_size, input_filepaths, *args):
         T_T1 = np.array([[t11f, t12f, t13f], [t21f, t22f, t23f], [t31f, t32f, t33f]])
 
 
-    return T_T1[0,0,:,:], T_T1[0,1,:,:].real, T_T1[0,1,:,:].imag, T_T1[0,2,:,:].real, T_T1[0,2,:,:].imag, T_T1[1,1,:,:], T_T1[1,2,:,:].real, T_T1[1,2,:,:].imag, T_T1[2,2,:,:]
+    # return T_T1[0,0,:,:], T_T1[0,1,:,:].real, T_T1[0,1,:,:].imag, T_T1[0,2,:,:].real, T_T1[0,2,:,:].imag, T_T1[1,1,:,:], T_T1[1,2,:,:].real, T_T1[1,2,:,:].imag, T_T1[2,2,:,:]
+
+    return T_T1[0,0,:,:].astype(np.float32), T_T1[0,1,:,:].real.astype(np.float32), T_T1[0,1,:,:].imag.astype(np.float32), T_T1[0,2,:,:].real.astype(np.float32), T_T1[0,2,:,:].imag.astype(np.float32), T_T1[1,1,:,:].astype(np.float32), T_T1[1,2,:,:].real.astype(np.float32), T_T1[1,2,:,:].imag.astype(np.float32), T_T1[2,2,:,:].astype(np.float32)

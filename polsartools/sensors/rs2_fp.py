@@ -21,8 +21,27 @@ def write_s2_bin(file,wdata):
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache()
 
+def write_rst(file,wdata,dtype):
+    [cols, rows] = wdata.shape
+    if '.bin' in file:
+        driver = gdal.GetDriverByName("ENVI")
+        outdata = driver.Create(file, rows, cols, 1, dtype)
+    else:
+        driver = gdal.GetDriverByName("GTiff")
+        outdata = driver.Create(file, rows, cols, 1, dtype,
+                                options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9',])
+    
+
+    outdata.SetDescription(file)
+    outdata.GetRasterBand(1).WriteArray(wdata)
+    outdata.FlushCache() 
+    outdata=None
+
+
 @time_it
-def rs2_fp(inFolder,matrixType='T3',azlks=8,rglks=2,type='sigma0'):
+def rs2_fp(inFolder,matrixType='T3',
+           azlks=8,rglks=2,outType='tif',
+           type='sigma0', out_dir = None):
     """
     Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.
 
@@ -105,15 +124,22 @@ def rs2_fp(inFolder,matrixType='T3',azlks=8,rglks=2,type='sigma0'):
         raise ValueError(f'Unknown type {type} \n Available types: sigma0,gamma0,beta0')
 
     if matrixType == 'S2':
-
-        out_dir = os.path.join(inFolder,"S2")
+        if out_dir is None:
+            out_dir = os.path.join(inFolder,"S2")
+        else:
+            out_dir = os.path.join(out_dir,"S2")
+            
         os.makedirs(out_dir,exist_ok=True)
 
         print("Considering S12 = S21")
         inFile = os.path.join(inFolder,"imagery_HH.tif")
         data = read_rs2_tif(inFile)
-        out_file = os.path.join(out_dir,'s11.bin')
-        write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))
+        if outType=='bin':
+            out_file = os.path.join(out_dir,'s11.bin')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+        else:
+            out_file = os.path.join(out_dir,'s11.tif')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
         print("Saved file "+out_file)
         
         rows,cols,_ = data.shape
@@ -127,19 +153,36 @@ def rs2_fp(inFolder,matrixType='T3',azlks=8,rglks=2,type='sigma0'):
         data = (data_xy+data_yx)*0.5
         del data_xy,data_yx
 
-        out_file = os.path.join(out_dir,'s12.bin')
-        
-        write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))
-        print("Saved file "+out_file)
-        out_file = os.path.join(out_dir,'s21.bin')
-        write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))
-        print("Saved file "+out_file)
+        if outType=='bin':
+            out_file = os.path.join(out_dir,'s12.bin')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+            out_file = os.path.join(out_dir,'s21.bin')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+        else:
+            out_file = os.path.join(out_dir,'s12.tif')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+            out_file = os.path.join(out_dir,'s21.tif')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+
 
         inFile = os.path.join(inFolder,"imagery_VV.tif")
         data = read_rs2_tif(inFile)
-        out_file = os.path.join(out_dir,'s22.bin')
-        write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))
-        print("Saved file "+out_file)
+        
+        if outType=='bin':
+            out_file = os.path.join(out_dir,'s22.bin')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+        else:
+            out_file = os.path.join(out_dir,'s22.tif')
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+        # out_file = os.path.join(out_dir,'s22.bin')
+        # write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))
+        # print("Saved file "+out_file)
         
         file = open(out_dir +'/config.txt',"w+")
         file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
@@ -183,16 +226,21 @@ def rs2_fp(inFolder,matrixType='T3',azlks=8,rglks=2,type='sigma0'):
         T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
         del Kp
-        T3Folder = os.path.join(inFolder,'T3')
+        if out_dir is None:
+            out_dir = os.path.join(inFolder,"T3")
+        else:
+            out_dir = os.path.join(out_dir,"T3")
+        os.makedirs(out_dir,exist_ok=True)
+        # T3Folder = os.path.join(inFolder,'T3')
 
-        if not os.path.isdir(T3Folder):
-            print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
-            os.mkdir(T3Folder)
+        # if not os.path.isdir(T3Folder):
+        #     print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
+        #     os.mkdir(T3Folder)
             
         # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
         write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),
                   np.real(T22),np.real(T23),np.imag(T23),
-                  np.real(T33)],T3Folder)
+                  np.real(T33)],out_dir)
         
         
     elif matrixType == 'C3':
@@ -229,16 +277,22 @@ def rs2_fp(inFolder,matrixType='T3',azlks=8,rglks=2,type='sigma0'):
         C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
         C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
-        C3Folder = os.path.join(inFolder,'C3')
+        if out_dir is None:
+            out_dir = os.path.join(inFolder,"C3")
+        else:
+            out_dir = os.path.join(out_dir,"C3")
+        os.makedirs(out_dir,exist_ok=True)
+        
+        # C3Folder = os.path.join(inFolder,'C3')
 
-        if not os.path.isdir(C3Folder):
-            print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
-            os.mkdir(C3Folder)
+        # if not os.path.isdir(C3Folder):
+        #     print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
+        #     os.mkdir(C3Folder)
         
         # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
         write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
                   np.real(C22),np.real(C23),np.imag(C23),
-                  np.real(C33)],C3Folder)
+                  np.real(C33)],out_dir)
         
         
     else:

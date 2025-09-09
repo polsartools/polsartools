@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.uavsar &#8212; PolSARtools 0.7 documentation</title>
+    <title>polsartools.sensors.uavsar &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=48f8e935"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/uavsar';</script>
@@ -333,61 +333,30 @@
                 <article class="bd-article">
                   
   <h1>Source code for polsartools.sensors.uavsar</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span><span class="n">osr</span>
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="c1"># import simplekml</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">polsartools.utils.utils</span> <span class="kn">import</span> <span class="n">time_it</span>
-<span class="kn">from</span> <span class="nn">polsartools.preprocess.convert_C3_T3</span> <span class="kn">import</span> <span class="n">convert_C3_T3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.preprocess.convert_C3_T3</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_C3_T3</span>
 
-<span class="k">def</span> <span class="nf">write_bin_uav_old</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">wdata</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">):</span>
-    
-    <span class="p">[</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
-
-    <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
-    <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
-    <span class="n">outdata</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">([</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">dy</span><span class="p">])</span>
-    <span class="n">outdata</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
-    <span class="n">outdata</span><span class="o">.</span><span class="n">SetDescription</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-    <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
-    <span class="c1"># outdata.GetRasterBand(1).SetNoDataValue(np.NaN)##if you want these values transparent</span>
-    <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span> <span class="c1">##saves to disk!!</span>
-
-<span class="k">def</span> <span class="nf">write_bin_uav</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">wdata</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">sensor_type</span><span class="o">=</span><span class="s2">&quot;UAVSAR&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_bin_uav</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">wdata</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">sensor_type</span><span class="o">=</span><span class="s2">&quot;UAVSAR&quot;</span><span class="p">):</span>
     <span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;ENVI&quot;</span><span class="p">)</span>
     <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">([</span><span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
-    <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
+    <span class="n">band</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">SetNoDataValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
-    <span class="c1"># if dy&lt;0:</span>
-    <span class="c1">#     dy = -dy</span>
-    <span class="c1"># Write the header file</span>
-    <span class="c1"># header_filename = file.replace(&#39;.bin&#39;, &#39;.hdr&#39;) </span>
-    <span class="c1"># with open(header_filename, &#39;w&#39;) as header_file:</span>
-    <span class="c1">#     header_file.write(&quot;ENVI\n&quot;)</span>
-    <span class="c1">#     header_file.write(f&quot;description = {{{file}}}\n&quot;)</span>
-    <span class="c1">#     header_file.write(f&quot;samples = {cols}\n&quot;)</span>
-    <span class="c1">#     header_file.write(f&quot;lines = {rows}\n&quot;)</span>
-    <span class="c1">#     header_file.write(&quot;bands = 1\n&quot;)</span>
-    <span class="c1">#     header_file.write(&quot;header offset = 0\n&quot;)</span>
-    <span class="c1">#     header_file.write(&quot;file type = ENVI Standard\n&quot;)</span>
-    <span class="c1">#     header_file.write(&quot;data type = 4\n&quot;)  # Float32</span>
-    <span class="c1">#     header_file.write(&quot;interleave = bsq\n&quot;)</span>
-    <span class="c1">#     # header_file.write(&quot;wavelength units = METERS\n&quot;)</span>
-    <span class="c1">#     header_file.write(&quot;byte order = 0\n&quot;)</span>
-    <span class="c1">#     header_file.write(f&quot;sensor type = {sensor_type}\n&quot;)</span>
-    <span class="c1">#     map_info = f&quot;map info = {{Geographic Lat/Lon, 1, 1, {lon}, {lat}, {dx}, {dy}, WGS-84}}\n&quot;</span>
-    <span class="c1">#     header_file.write(map_info)</span>
-    <span class="c1">#     # Write the projection information</span>
-    <span class="c1">#     # header_file.write(&quot;projection = GEOGCS[\&quot;WGS 84\&quot;,DATUM[\&quot;WGS_1984\&quot;,SPHEROID[\&quot;WGS_84\&quot;,6378137,298.257223563]],PRIMEM[\&quot;Greenwich\&quot;,0],UNIT[\&quot;degree\&quot;,0.017453292519943295],AUTHORITY[\&quot;EPSG\&quot;,\&quot;4326\&quot;]]\n&quot;)</span>
-    <span class="c1">#     header_file.write(f&quot;band names = {{{os.path.basename(file)}}}\n&quot;)</span>
-<span class="k">def</span> <span class="nf">update_hdr</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">):</span>
+    <span class="n">outdata</span> <span class="o">=</span> <span class="kc">None</span>
+    
+<span class="k">def</span><span class="w"> </span><span class="nf">update_hdr</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
@@ -399,6 +368,35 @@
     <span class="c1"># Write the modified content back to the file</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hdrFile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">write_geotiff</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">wdata</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">save_cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_oviews</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">compress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">wdata</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;GTiff&quot;</span><span class="p">)</span>
+    
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BIGTIFF=IF_SAFER&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">compress</span><span class="p">:</span>
+        <span class="c1"># options += [&#39;COMPRESS=DEFLATE&#39;, &#39;PREDICTOR=2&#39;, &#39;ZLEVEL=9&#39;]</span>
+        <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;COMPRESS=LZW&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">save_cog</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKXSIZE=512&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKYSIZE=512&#39;</span><span class="p">]</span>
+
+    <span class="n">outdata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+    <span class="n">outdata</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">([</span><span class="n">lon</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">)])</span>  <span class="c1"># north-up orientation</span>
+
+    <span class="n">srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
+    <span class="n">srs</span><span class="o">.</span><span class="n">ImportFromEPSG</span><span class="p">(</span><span class="mi">4326</span><span class="p">)</span>  <span class="c1"># WGS84</span>
+    <span class="n">outdata</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="n">srs</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">())</span>
+
+    <span class="n">band</span> <span class="o">=</span> <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">SetNoDataValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_cog</span><span class="p">:</span>
+        <span class="n">outdata</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">cog_oviews</span><span class="p">)</span>
+
+    <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
+    <span class="n">outdata</span> <span class="o">=</span> <span class="kc">None</span>
+    
 <span class="c1"># def create_kml_polygon(corner_coords, output_filename):</span>
     
 <span class="c1">#     kml = simplekml.Kml()</span>
@@ -408,7 +406,7 @@
 <span class="c1">#     pol.style.polystyle.color = simplekml.Color.changealphaint(150, simplekml.Color.red)  </span>
 <span class="c1">#     kml.save(output_filename)</span>
 
-<span class="k">def</span> <span class="nf">create_extent</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_extent</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span>
     <span class="n">annFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">annFile</span><span class="p">:</span>
@@ -462,7 +460,7 @@
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">geojson_polygon</span><span class="p">,</span> <span class="n">out_file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">grdList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grdList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
     <span class="n">grdkeys</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;grdHHHH&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;grdHVHV&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -482,7 +480,7 @@
     
     <span class="k">return</span> <span class="n">grdkeys</span>                
 
-<span class="k">def</span> <span class="nf">mlcList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mlcList</span><span class="p">(</span><span class="n">annFile</span><span class="p">):</span>
     <span class="n">mlckeys</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;mlcHHHH&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;mlcHVHV&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -506,46 +504,56 @@
 <div class="viewcode-block" id="uavsar_grd">
 <a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.uavsar_grd">[docs]</a>
 <span class="nd">@time_it</span>    
-<span class="k">def</span> <span class="nf">uavsar_grd</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">uavsar_grd</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+            <span class="n">save_cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">cog_oviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">compress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them </span>
-<span class="sd">    into respective directories (C3 or T3).</span>
+<span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR GRD .ann file and saves them </span>
+<span class="sd">    as georeferenced raster files in the specified format.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
-<span class="sd">    This will extract the C3 matrix elements from the specified .ann file and </span>
-<span class="sd">    save them in the &#39;C3&#39; directory.</span>
+<span class="sd">    Extracts C3 matrix elements and saves them as GeoTIFFs in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;)</span>
-<span class="sd">    This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
-<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;, outType=&#39;tif&#39;, save_cog=True, compress=True)</span>
+<span class="sd">    Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.</span>
+
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    annFile : str</span>
-<span class="sd">        The path to the UAVSAR annotation file (.ann) that contains the radar data metadata.</span>
+<span class="sd">        Path to the UAVSAR annotation file (.ann) containing metadata for the radar data.</span>
 
-<span class="sd">    matrix : str, optional (default=&#39;C3&#39;)</span>
-<span class="sd">        The type of matrix to extract. Can either be &#39;C3&#39; or &#39;T3&#39;. </span>
-<span class="sd">        </span>
-<span class="sd">        - &#39;C3&#39; will extract the C3 matrix elements.</span>
-<span class="sd">        - &#39;T3&#39; will extract the T3 matrix elements.</span>
+<span class="sd">    mat : str, optional (default=&#39;C3&#39;)</span>
+<span class="sd">        Type of matrix to extract. Must be either &#39;C3&#39; or &#39;T3&#39;.</span>
+
+<span class="sd">    outType : str, optional (default=&#39;tif&#39;)</span>
+<span class="sd">        Output file format. Currently supports &#39;tif&#39; (GeoTIFF) and &#39;bin&#39; (ENVI/PolSARpro/binary).</span>
+
+<span class="sd">    save_cog : bool, optional (default=False)</span>
+<span class="sd">        If True, output files will be saved as Cloud Optimized GeoTIFFs (COGs) with tiling and overviews.</span>
+
+<span class="sd">    cog_oviews : list of int, optional (default=[2, 4, 8, 16])</span>
+<span class="sd">        Overview levels to generate for COGs. Ignored if save_cog is False.</span>
+
+<span class="sd">    compress : bool, optional (default=False)</span>
+<span class="sd">        If True, applies LZW compression to reduce file size.</span>
+
+<span class="sd">    out_dir : str or None, optional (default=None)</span>
+<span class="sd">        Directory to save output files. If None, a subdirectory named after the matrix type (&#39;C3&#39; or &#39;T3&#39;) will be created.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    None</span>
-<span class="sd">        The function does not return any value. Instead, it creates a directory (C3 or T3) </span>
-<span class="sd">        and populates it with the corresponding matrix elements.</span>
+<span class="sd">        The function writes matrix element files to disk. No value is returned.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">    -------</span>
 <span class="sd">    FileNotFoundError</span>
-<span class="sd">        If the specified .ann file does not exist or cannot be found.</span>
+<span class="sd">        If the specified .ann file does not exist.</span>
 
 <span class="sd">    ValueError</span>
 <span class="sd">        If the matrix argument is not one of &#39;C3&#39; or &#39;T3&#39;.</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span>
@@ -566,10 +574,17 @@
         <span class="k">if</span> <span class="s2">&quot;grd_mag.col_mult&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;(deg/pixel)&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
             <span class="n">dx</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="n">matrix</span><span class="o">!=</span><span class="s1">&#39;C3&#39;</span> <span class="ow">or</span> <span class="n">matrix</span><span class="o">!=</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="s1">&#39;T3&#39;</span><span class="p">]:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid matrix type. Defaulting to C3&quot;</span><span class="p">)</span>
-
-    <span class="n">outFolder</span> <span class="o">=</span> <span class="n">inFolder</span><span class="o">+</span><span class="s1">&#39;/C3&#39;</span>
+    <span class="k">if</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Note: First extracting C3 matrix elements and then converting to T3...&quot;</span><span class="p">)</span>
+    
+    
+    <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outFolder</span> <span class="o">=</span> <span class="n">inFolder</span><span class="o">+</span><span class="s1">&#39;/C3&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">outFolder</span> <span class="o">=</span> <span class="n">out_dir</span><span class="o">+</span><span class="s1">&#39;/C3&#39;</span>
+        
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outFolder</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C3 folder does not exist. </span><span class="se">\n</span><span class="s2">Creating folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">))</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
@@ -577,43 +592,85 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C3 folder exists. </span><span class="se">\n</span><span class="s2">Replacing C3 elements in folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">))</span>
 
     <span class="n">hhhh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">grdfiles</span><span class="p">[</span><span class="s1">&#39;grdHHHH&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.bin&#39;</span><span class="p">,</span><span class="n">hhhh</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.bin&#39;</span><span class="p">,</span><span class="n">hhhh</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.hdr&#39;</span><span class="p">)</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.tif&#39;</span><span class="p">,</span><span class="n">hhhh</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C11.tif&quot;</span><span class="p">)</span>
+    
     <span class="k">del</span> <span class="n">hhhh</span>
+    
     <span class="n">vvvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">grdfiles</span><span class="p">[</span><span class="s1">&#39;grdVVVV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.bin&#39;</span><span class="p">,</span><span class="n">vvvv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C33.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.bin&#39;</span><span class="p">,</span><span class="n">vvvv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C33.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.tif&#39;</span><span class="p">,</span><span class="n">vvvv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C33.tif&quot;</span><span class="p">)</span>
+        
     <span class="k">del</span> <span class="n">vvvv</span>
+    
+    
     <span class="n">hvhv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">grdfiles</span><span class="p">[</span><span class="s1">&#39;grdHVHV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.bin&#39;</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">hvhv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.hdr&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.bin&#39;</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">hvhv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.tif&#39;</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">hvhv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C22.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hvhv</span>
+    
+    
     <span class="n">hhhv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">grdfiles</span><span class="p">[</span><span class="s1">&#39;grdHHHV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;F&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.hdr&#39;</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.hdr&#39;</span><span class="p">)</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_real.tif&quot;</span><span class="p">)</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_imag.tif&quot;</span><span class="p">)</span>    
+    
     <span class="k">del</span> <span class="n">hhhv</span>
     <span class="n">hhvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">grdfiles</span><span class="p">[</span><span class="s1">&#39;grdHHVV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;F&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.hdr&#39;</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_imag.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.hdr&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.hdr&#39;</span><span class="p">)</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_imag.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_real.tif&quot;</span><span class="p">)</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_imag.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hhvv</span>
+    
     <span class="n">hvvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">grdfiles</span><span class="p">[</span><span class="s1">&#39;grdHVVV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;F&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.hdr&#39;</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_imag.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.hdr&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.hdr&#39;</span><span class="p">)</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_imag.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_real.tif&quot;</span><span class="p">)</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_imag.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hvvv</span>
 
     <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outFolder</span> <span class="o">+</span><span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
@@ -621,7 +678,7 @@
     <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracted C3 files to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">outFolder</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">matrix</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Converting C3 to T3&quot;</span><span class="p">)</span>
         <span class="n">convert_C3_T3</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span></div>
 
@@ -631,46 +688,56 @@
 <div class="viewcode-block" id="uavsar_mlc">
 <a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.uavsar_mlc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span> <span class="nf">uavsar_mlc</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">uavsar_mlc</span><span class="p">(</span><span class="n">annFile</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+            <span class="n">save_cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">cog_oviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">compress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR .ann file and saves them </span>
-<span class="sd">    into respective directories (C3 or T3).</span>
+<span class="sd">    Extracts specified matrix elements (C3 or T3) from a UAVSAR GRD .ann file and saves them </span>
+<span class="sd">    as raster files in the specified format.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
-<span class="sd">    This will extract the C3 matrix elements from the specified .ann file and </span>
-<span class="sd">    save them in the &#39;C3&#39; directory.</span>
+<span class="sd">    Extracts C3 matrix elements and saves them as GeoTIFFs in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;)</span>
-<span class="sd">    This will extract the T3 matrix elements and save them in the &#39;T3&#39; directory.</span>
+<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;, outType=&#39;tif&#39;, save_cog=True, compress=True)</span>
+<span class="sd">    Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    annFile : str</span>
-<span class="sd">        The path to the UAVSAR annotation file (.ann) that contains the radar data metadata.</span>
+<span class="sd">        Path to the UAVSAR annotation file (.ann) containing metadata for the radar data.</span>
 
-<span class="sd">    matrix : str, optional (default=&#39;C3&#39;)</span>
-<span class="sd">        The type of matrix to extract. Can either be &#39;C3&#39; or &#39;T3&#39;. </span>
-<span class="sd">        </span>
-<span class="sd">        - &#39;C3&#39; will extract the C3 matrix elements.</span>
-<span class="sd">        - &#39;T3&#39; will extract the T3 matrix elements.</span>
+<span class="sd">    mat : str, optional (default=&#39;C3&#39;)</span>
+<span class="sd">        Type of matrix to extract. Must be either &#39;C3&#39; or &#39;T3&#39;.</span>
+
+<span class="sd">    outType : str, optional (default=&#39;tif&#39;)</span>
+<span class="sd">        Output file format. Currently supports &#39;tif&#39; (GeoTIFF) and &#39;bin&#39; (ENVI/PolSARpro/binary).</span>
+
+<span class="sd">    save_cog : bool, optional (default=False)</span>
+<span class="sd">        If True, output files will be saved as Cloud Optimized GeoTIFFs (COGs) with tiling and overviews.</span>
+
+<span class="sd">    cog_oviews : list of int, optional (default=[2, 4, 8, 16])</span>
+<span class="sd">        Overview levels to generate for COGs. Ignored if save_cog is False.</span>
+
+<span class="sd">    compress : bool, optional (default=False)</span>
+<span class="sd">        If True, applies LZW compression to reduce file size.</span>
+
+<span class="sd">    out_dir : str or None, optional (default=None)</span>
+<span class="sd">        Directory to save output files. If None, a subdirectory named after the matrix type (&#39;C3&#39; or &#39;T3&#39;) will be created.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    None</span>
-<span class="sd">        The function does not return any value. Instead, it creates a directory (C3 or T3) </span>
-<span class="sd">        and populates it with the corresponding matrix elements.</span>
+<span class="sd">        The function writes matrix element files to disk. No value is returned.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">    -------</span>
 <span class="sd">    FileNotFoundError</span>
-<span class="sd">        If the specified .ann file does not exist or cannot be found.</span>
+<span class="sd">        If the specified .ann file does not exist.</span>
 
 <span class="sd">    ValueError</span>
 <span class="sd">        If the matrix argument is not one of &#39;C3&#39; or &#39;T3&#39;.</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">create_extent</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span>
@@ -700,7 +767,16 @@
         <span class="c1"># if &quot;mlc_mag.col_mult&quot; in line and &quot;(m/pixel) &quot; in line:</span>
         <span class="c1">#     dx = float(line.split(&#39;=&#39;)[1].split(&#39;;&#39;)[0])*0.00001</span>
 
-    <span class="n">outFolder</span> <span class="o">=</span> <span class="n">inFolder</span><span class="o">+</span><span class="s1">&#39;/C3&#39;</span>
+    <span class="k">if</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="s1">&#39;T3&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid matrix type. Defaulting to C3&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Note: First extracting C3 matrix elements and then converting to T3...&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">outFolder</span> <span class="o">=</span> <span class="n">inFolder</span><span class="o">+</span><span class="s1">&#39;/C3&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">outFolder</span> <span class="o">=</span> <span class="n">out_dir</span><span class="o">+</span><span class="s1">&#39;/C3&#39;</span>
+        
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outFolder</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;C3 folder does not exist. </span><span class="se">\n</span><span class="s2">Creating folder </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">))</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
@@ -709,43 +785,73 @@
 
         
     <span class="n">hhhh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">mlcfiles</span><span class="p">[</span><span class="s1">&#39;mlcHHHH&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.bin&#39;</span><span class="p">,</span><span class="n">hhhh</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.bin&#39;</span><span class="p">,</span><span class="n">hhhh</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C11.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.hdr&#39;</span><span class="p">)</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C11.tif&#39;</span><span class="p">,</span><span class="n">hhhh</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C11.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hhhh</span>
     <span class="n">vvvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">mlcfiles</span><span class="p">[</span><span class="s1">&#39;mlcVVVV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.bin&#39;</span><span class="p">,</span><span class="n">vvvv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C33.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.bin&#39;</span><span class="p">,</span><span class="n">vvvv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C33.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C33.tif&#39;</span><span class="p">,</span><span class="n">vvvv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C33.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">vvvv</span>
     <span class="n">hvhv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">mlcfiles</span><span class="p">[</span><span class="s1">&#39;mlcHVHV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;f&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.bin&#39;</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">hvhv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.bin&#39;</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">hvhv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C22.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C22.tif&#39;</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">hvhv</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C22.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hvhv</span>
     <span class="n">hhhv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">mlcfiles</span><span class="p">[</span><span class="s1">&#39;mlcHHHV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;F&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.hdr&#39;</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.hdr&#39;</span><span class="p">)</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_imag.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_real.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_real.tif&quot;</span><span class="p">)</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C12_imag.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hhhv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C12_imag.tif&quot;</span><span class="p">)</span>    
     <span class="k">del</span> <span class="n">hhhv</span>
     <span class="n">hhvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">mlcfiles</span><span class="p">[</span><span class="s1">&#39;mlcHHVV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;F&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.hdr&#39;</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_imag.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.hdr&#39;</span><span class="p">)</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_imag.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_real.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_real.tif&quot;</span><span class="p">)</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C13_imag.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">hhvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C13_imag.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hhvv</span>
     <span class="n">hvvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">mlcfiles</span><span class="p">[</span><span class="s1">&#39;mlcHVVV&#39;</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;F&#39;</span><span class="p">,)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_real.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.hdr&#39;</span><span class="p">)</span>
-    <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_imag.bin&quot;</span><span class="p">)</span>
-    <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outType</span><span class="o">==</span><span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_real.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.hdr&#39;</span><span class="p">)</span>
+        <span class="n">write_bin_uav</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.bin&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_imag.bin&quot;</span><span class="p">)</span>
+        <span class="n">update_hdr</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.hdr&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_real.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_real.tif&quot;</span><span class="p">)</span>
+        <span class="n">write_geotiff</span><span class="p">(</span><span class="n">outFolder</span><span class="o">+</span><span class="s1">&#39;/C23_imag.tif&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">hvvv</span><span class="p">),</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">save_cog</span><span class="p">,</span><span class="n">cog_oviews</span><span class="p">,</span><span class="n">compress</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file </span><span class="si">{</span><span class="n">outFolder</span><span class="si">}</span><span class="s2">/C23_imag.tif&quot;</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">hvvv</span>
 
     <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outFolder</span> <span class="o">+</span><span class="s1">&#39;/config.txt&#39;</span><span class="p">,</span><span class="s2">&quot;w+&quot;</span><span class="p">)</span>
@@ -753,7 +859,7 @@
     <span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracted C3 files to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">outFolder</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">matrix</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Converting C3 to T3&quot;</span><span class="p">)</span>
         <span class="n">convert_C3_T3</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span></div>
 
