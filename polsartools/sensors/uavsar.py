@@ -205,18 +205,6 @@ def uavsar_grd(ann,mat='C3',fmt='tif',
     out_dir : str or None, optional (default=None)
         Directory to save output files. If None, a subdirectory named after the matrix type ('C3' or 'T3') will be created.
 
-    Returns:
-    --------
-    None
-        The function writes matrix element files to disk. No value is returned.
-
-    Raises:
-    -------
-    FileNotFoundError
-        If the specified .ann file does not exist.
-
-    ValueError
-        If the matrix argument is not one of 'C3' or 'T3'.
     """
     
     inFolder = os.path.dirname(ann)
@@ -357,10 +345,10 @@ def uavsar_mlc(ann,mat='C3',fmt='tif',
 
     Example:
     --------
-    >>> uavsar_mlc("path_to_file.ann", matrix='C3')
+    >>> uavsar_mlc("path_to_file.ann", mat='C3')
     Extracts C3 matrix elements and saves them as GeoTIFFs in the 'C3' directory.
 
-    >>> uavsar_mlc("path_to_file.ann", matrix='T3', fmt='tif', save_cog=True, compress=True)
+    >>> uavsar_mlc("path_to_file.ann", mat='T3', fmt='tif', cog=True, comp=True)
     Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.
 
     Parameters:
@@ -386,18 +374,6 @@ def uavsar_mlc(ann,mat='C3',fmt='tif',
     out_dir : str or None, optional (default=None)
         Directory to save output files. If None, a subdirectory named after the matrix type ('C3' or 'T3') will be created.
 
-    Returns:
-    --------
-    None
-        The function writes matrix element files to disk. No value is returned.
-
-    Raises:
-    -------
-    FileNotFoundError
-        If the specified .ann file does not exist.
-
-    ValueError
-        If the matrix argument is not one of 'C3' or 'T3'.
     """
     
     create_extent(ann)

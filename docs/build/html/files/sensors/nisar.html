@@ -398,21 +398,6 @@ in the same location as the input file.</p></li>
 </ul>
 </dd>
 </dl>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>None</dt><dd><p>The function does not return any value. Instead, it creates a folder
-named <cite>C2/S2/C3/T3</cite> and saves the respective files.</p>
-</dd>
-</dl>
-</section>
-<section id="raises">
-<h3>Raises:<a class="headerlink" href="#raises" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>Exception</dt><dd><p>If the RSLC HDF5 file is invalid or cannot be read.</p>
-</dd>
-</dl>
-</section>
 </dd></dl>
 
 </section>
@@ -453,21 +438,6 @@ GeoTIFF or binary format. Optional support for Cloud Optimized GeoTIFFs (COGs), 
 <li><p><strong>out_dir</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Directory to save output files. If None, a folder named after the matrix type will be created
 in the same location as the input file.</p></li>
 <li><p><strong>max_workers</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Number of parallel workers for processing. If None, uses all available cores minus one.</p></li>
-<li><p><strong>Returns</strong></p></li>
-<li><p><strong>--------</strong></p></li>
-<li><p><strong>None</strong> – <p>The function does not return any value. Instead, it creates a folder
-named <cite>C2</cite> (if not already present) and saves the following binary files:</p>
-<ul>
-<li><p><cite>C11.tif</cite>: Contains the C11 matrix elements.</p></li>
-<li><p><cite>C22.tif</cite>: Contains the C22 matrix elements.</p></li>
-<li><p><cite>C12_real.tif</cite>: Contains the real part of the C12 matrix.</p></li>
-<li><p><cite>C12_imag.tif</cite>: Contains the imaginary part of the C12 matrix.</p></li>
-<li><p><cite>config.txt</cite>: A text file containing grid dimensions and polarimetric configuration.</p></li>
-</ul>
-</p></li>
-<li><p><strong>Raises</strong></p></li>
-<li><p><strong>-------</strong></p></li>
-<li><p><strong>Exception</strong> – If the GSLC HDF5 file is invalid or cannot be read.</p></li>
 </ul>
 </dd>
 </dl>

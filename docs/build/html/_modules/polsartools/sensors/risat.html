@@ -488,17 +488,20 @@
 <span class="w">    </span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    </span>
 <span class="sd">    Extracts Sxy or C2 matrix elements from RISAT-1A compact-pol SLC data and saves them as raster files.</span>
 
 <span class="sd">    This function performs multi-looking using specified azimuth and range looks, and outputs matrix elements</span>
 <span class="sd">    in either GeoTIFF or binary format. It also extracts the incidence angle map and saves it alongside the matrix outputs.</span>
 <span class="sd">    Optional support for Cloud Optimized GeoTIFFs (COGs), compression, and custom output directories.</span>
 
+<span class="sd">    </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; risat_l11(&quot;path_to_folder&quot;, mat=&#39;C2&#39;, azlks=10, rglks=7, fmt=&#39;tif&#39;)</span>
 <span class="sd">    Extracts C2 matrix elements and the incidence angle map from RISAT-1A SLC data and saves them as GeoTIFFs.</span>
 
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    in_dir : str</span>
@@ -533,11 +536,6 @@
 <span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
 <span class="sd">        in the same location as the input folder.</span>
 <span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    None</span>
-<span class="sd">        The function does not return any value. Instead, it creates a folder </span>
-<span class="sd">        named `Sxy/C2` (if not already present) and saves the geotiff/binary files:</span>
 
 
 <span class="sd">    &quot;&quot;&quot;</span>   

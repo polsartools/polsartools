@@ -502,23 +502,6 @@
 <span class="sd">    max_workers : int or None, optional (default=None)</span>
 <span class="sd">        Number of parallel workers for processing. If None, uses all available cores minus one.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    None</span>
-<span class="sd">        The function does not return any value. Instead, it creates a folder </span>
-<span class="sd">        named `C2` (if not already present) and saves the following binary files:</span>
-<span class="sd">        </span>
-<span class="sd">        - `C11.tif`: Contains the C11 matrix elements.</span>
-<span class="sd">        - `C22.tif`: Contains the C22 matrix elements.</span>
-<span class="sd">        - `C12_real.tif`: Contains the real part of the C12 matrix.</span>
-<span class="sd">        - `C12_imag.tif`: Contains the imaginary part of the C12 matrix.</span>
-<span class="sd">        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">    -------</span>
-<span class="sd">    Exception</span>
-<span class="sd">        If the GSLC HDF5 file is invalid or cannot be read.</span>
-
 
 <span class="sd">    &quot;&quot;&quot;</span>
         
@@ -976,20 +959,6 @@
 <span class="sd">    max_workers : int or None, optional (default=None)</span>
 <span class="sd">        Number of parallel workers for processing. If None, uses all available cores minus one.</span>
 <span class="sd"> </span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    None</span>
-<span class="sd">        The function does not return any value. Instead, it creates a folder </span>
-<span class="sd">        named `C2/S2/C3/T3` and saves the respective files.</span>
-
-
-<span class="sd">    Raises:</span>
-<span class="sd">    -------</span>
-<span class="sd">    Exception</span>
-<span class="sd">        If the RSLC HDF5 file is invalid or cannot be read.</span>
-
-
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">rslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>

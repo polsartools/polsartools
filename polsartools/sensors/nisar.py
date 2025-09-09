@@ -165,23 +165,6 @@ def nisar_gslc(inFile, mat='C3',
     max_workers : int or None, optional (default=None)
         Number of parallel workers for processing. If None, uses all available cores minus one.
 
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `C2` (if not already present) and saves the following binary files:
-        
-        - `C11.tif`: Contains the C11 matrix elements.
-        - `C22.tif`: Contains the C22 matrix elements.
-        - `C12_real.tif`: Contains the real part of the C12 matrix.
-        - `C12_imag.tif`: Contains the imaginary part of the C12 matrix.
-        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
-
-    Raises:
-    -------
-    Exception
-        If the GSLC HDF5 file is invalid or cannot be read.
-
 
     """
         
@@ -636,20 +619,6 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
     max_workers : int or None, optional (default=None)
         Number of parallel workers for processing. If None, uses all available cores minus one.
  
-
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `C2/S2/C3/T3` and saves the respective files.
-
-
-    Raises:
-    -------
-    Exception
-        If the RSLC HDF5 file is invalid or cannot be read.
-
-
     """
     
     freq_band,listOfPolarizations = rslc_meta(inFile)

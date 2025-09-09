@@ -542,18 +542,6 @@
 <span class="sd">    out_dir : str or None, optional (default=None)</span>
 <span class="sd">        Directory to save output files. If None, a subdirectory named after the matrix type (&#39;C3&#39; or &#39;T3&#39;) will be created.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    None</span>
-<span class="sd">        The function writes matrix element files to disk. No value is returned.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">    -------</span>
-<span class="sd">    FileNotFoundError</span>
-<span class="sd">        If the specified .ann file does not exist.</span>
-
-<span class="sd">    ValueError</span>
-<span class="sd">        If the matrix argument is not one of &#39;C3&#39; or &#39;T3&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>
@@ -697,10 +685,10 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;C3&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, mat=&#39;C3&#39;)</span>
 <span class="sd">    Extracts C3 matrix elements and saves them as GeoTIFFs in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, matrix=&#39;T3&#39;, fmt=&#39;tif&#39;, save_cog=True, compress=True)</span>
+<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, mat=&#39;T3&#39;, fmt=&#39;tif&#39;, cog=True, comp=True)</span>
 <span class="sd">    Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.</span>
 
 <span class="sd">    Parameters:</span>
@@ -726,18 +714,6 @@
 <span class="sd">    out_dir : str or None, optional (default=None)</span>
 <span class="sd">        Directory to save output files. If None, a subdirectory named after the matrix type (&#39;C3&#39; or &#39;T3&#39;) will be created.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    None</span>
-<span class="sd">        The function writes matrix element files to disk. No value is returned.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">    -------</span>
-<span class="sd">    FileNotFoundError</span>
-<span class="sd">        If the specified .ann file does not exist.</span>
-
-<span class="sd">    ValueError</span>
-<span class="sd">        If the matrix argument is not one of &#39;C3&#39; or &#39;T3&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">create_extent</span><span class="p">(</span><span class="n">ann</span><span class="p">)</span>

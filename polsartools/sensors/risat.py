@@ -151,17 +151,20 @@ def risat_l11(in_dir,mat='C2',
     
 
     """
+    
     Extracts Sxy or C2 matrix elements from RISAT-1A compact-pol SLC data and saves them as raster files.
 
     This function performs multi-looking using specified azimuth and range looks, and outputs matrix elements
     in either GeoTIFF or binary format. It also extracts the incidence angle map and saves it alongside the matrix outputs.
     Optional support for Cloud Optimized GeoTIFFs (COGs), compression, and custom output directories.
 
+    
     Examples
     --------
     >>> risat_l11("path_to_folder", mat='C2', azlks=10, rglks=7, fmt='tif')
     Extracts C2 matrix elements and the incidence angle map from RISAT-1A SLC data and saves them as GeoTIFFs.
 
+    
     Parameters
     ----------
     in_dir : str
@@ -196,11 +199,6 @@ def risat_l11(in_dir,mat='C2',
         Directory to save output files. If None, a folder named after the matrix type will be created
         in the same location as the input folder.
         
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `Sxy/C2` (if not already present) and saves the geotiff/binary files:
 
 
     """   
