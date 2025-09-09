@@ -4,9 +4,7 @@ from osgeo import gdal,osr
 gdal.UseExceptions()
 import os,tempfile
 import tables
-from skimage.util.shape import view_as_blocks
-from polsartools.utils.utils import time_it, mlook_arr
-from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
+from polsartools.utils.utils import time_it
 from polsartools.utils.h5_utils import h5_polsar, get_ml_chunk
 from netCDF4 import Dataset
 #%%

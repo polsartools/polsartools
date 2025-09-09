@@ -363,41 +363,40 @@
 <p>The <cite>risat_l11</cite> function extracts Sxy/C2 matrix elements from the given RISAT product folder and saves them into a directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">risat_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prod_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/risat.html#risat_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Extracts the Sxy/C2 matrix elements from a RISAT-1A compact-pol SLC data</p>
-<section id="example">
-<h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">risat_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
-<span class="go">This will extract the C2 from compact-pol RISAT-1A SLC data and save them as geotiff files.</span>
-<span class="go">Additionally, it will also extract the incidence angle map and save it as a geotiff file.</span>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">risat_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/risat.html#risat_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts Sxy or C2 matrix elements from RISAT-1A compact-pol SLC data and saves them as raster files.</p>
+<p>This function performs multi-looking using specified azimuth and range looks, and outputs matrix elements
+in either GeoTIFF or binary format. It also extracts the incidence angle map and saves it alongside the matrix outputs.
+Optional support for Cloud Optimized GeoTIFFs (COGs), compression, and custom output directories.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">risat_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
+<span class="go">Extracts C2 matrix elements and the incidence angle map from RISAT-1A SLC data and saves them as GeoTIFFs.</span>
 </pre></div>
 </div>
-</section>
-<section id="parameters">
-<h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>inFile<span class="classifier">str</span></dt><dd><p>The path to the RISAT-1A SLCfolder containing the data and metadata.</p>
-</dd>
-<dt>matrixType<span class="classifier">str, optional (default = ‘C2’)</span></dt><dd><p>Type of matrix to extract. Valid options ‘Sxy’,’C2’.</p>
-</dd>
-<dt>azlks<span class="classifier">int, optional (default=10)</span></dt><dd><p>The number of azimuth looks for multi-looking.</p>
-</dd>
-<dt>rglks<span class="classifier">int, optional (default=7)</span></dt><dd><p>The number of range looks for multi-looking.</p>
-</dd>
-<dt>outType<span class="classifier">str, optional (default=’tif’)</span></dt><dd><p>The type of output file to save the matrix elements. Valid options are ‘tif’ and ‘bin’.</p>
-</dd>
-<dt>out_dir<span class="classifier">str, optional (default=None)</span></dt><dd><p>The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_dir</strong> (<em>str</em>) – Path to the RISAT-1A SLC folder containing the data and metadata.</p></li>
+<li><p><strong>mat</strong> (<em>str</em><em>, </em><em>optional</em><em> (</em><em>default='C2'</em><em>)</em>) – Type of matrix to extract. Valid options are:
+- ‘Sxy’: Scattering matrix elements
+- ‘C2’ : Covariance matrix for compact-pol</p></li>
+<li><p><strong>azlks</strong> (<em>int</em><em>, </em><em>optional</em><em> (</em><em>default=10</em><em>)</em>) – Number of azimuth looks for multi-looking.</p></li>
+<li><p><strong>rglks</strong> (<em>int</em><em>, </em><em>optional</em><em> (</em><em>default=7</em><em>)</em>) – Number of range looks for multi-looking.</p></li>
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>optional</em><em> (</em><em>default='tif'</em><em>)</em>) – Output format:
+- ‘tif’: GeoTIFF in slant range
+- ‘bin’: Raw binary format</p></li>
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</p></li>
+<li><p><strong>ovr</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em><em> (</em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em><em>)</em>) – Overview levels for COG generation. Ignored if cog=False.</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – If True, applies LZW compression to GeoTIFF outputs.</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – Directory to save output files. If None, a folder named after the matrix type will be created
+in the same location as the input folder.</p></li>
+<li><p><strong>Returns</strong></p></li>
+<li><p><strong>--------</strong></p></li>
+<li><p><strong>None</strong> – The function does not return any value. Instead, it creates a folder
+named <cite>Sxy/C2</cite> (if not already present) and saves the geotiff/binary files:</p></li>
+</ul>
 </dd>
 </dl>
-</section>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>None</dt><dd><p>The function does not return any value. Instead, it creates a folder
-named <cite>Sxy/C2</cite> (if not already present) and saves the geotiff/binary files:</p>
-</dd>
-</dl>
-</section>
 </dd></dl>
 
 </section>

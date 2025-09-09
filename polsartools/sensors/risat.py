@@ -72,15 +72,21 @@ def load_data(filepath, NoScans, header_length, record_length, prefix_length,
 
     return image
 
-def write_rst(file,wdata,dtype):
+def write_rst(file,wdata,dtype,cog=False,ovr=[2,4,8,16],comp=False):
     [cols, rows] = wdata.shape
     if '.bin' in file:
         driver = gdal.GetDriverByName("ENVI")
         outdata = driver.Create(file, rows, cols, 1, dtype)
     else:
         driver = gdal.GetDriverByName("GTiff")
-        outdata = driver.Create(file, rows, cols, 1, dtype,
-                                options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9',])
+        
+        options = ['BIGTIFF=IF_SAFER']
+        if comp:
+            options += ['COMPRESS=LZW']
+        if cog:
+            options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
+            
+        outdata = driver.Create(file, rows, cols, 1, dtype,options)
     
     outdata.SetDescription(file)
     outdata.GetRasterBand(1).WriteArray(wdata)
@@ -138,34 +144,58 @@ def get_inc(file_path):
     return inc_array.astype(np.float32)
 
 @time_it
-def risat_l11(prod_dir,matrixType='C2',
-              azlks=10,rglks=7,outType='tif',
+def risat_l11(in_dir,mat='C2',
+              azlks=10,rglks=7,
+              fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
               out_dir = None):
+    
 
     """
-    Extracts the Sxy/C2 matrix elements from a RISAT-1A compact-pol SLC data 
-    
-    Example:
-    --------
-    >>> risat_l11("path_to_folder", matrixType='C2', azlks=10, rglks=7, outType='tif')
-    This will extract the C2 from compact-pol RISAT-1A SLC data and save them as geotiff files.
-    Additionally, it will also extract the incidence angle map and save it as a geotiff file.
-    
-    Parameters:
-    -----------
-    inFile : str
-        The path to the RISAT-1A SLCfolder containing the data and metadata.
-    matrixType : str, optional (default = 'C2')
-        Type of matrix to extract. Valid options 'Sxy','C2'.
-    azlks : int, optional (default=10)
-        The number of azimuth looks for multi-looking. 
-    rglks : int, optional (default=7)
-        The number of range looks for multi-looking. 
-    outType : str, optional (default='tif')
-        The type of output file to save the matrix elements. Valid options are 'tif' and 'bin'.
-    out_dir : str, optional (default=None)
-        The path to the output directory. If not provided, the function will create a matrix folder at the inFile directory.
+    Extracts Sxy or C2 matrix elements from RISAT-1A compact-pol SLC data and saves them as raster files.
 
+    This function performs multi-looking using specified azimuth and range looks, and outputs matrix elements
+    in either GeoTIFF or binary format. It also extracts the incidence angle map and saves it alongside the matrix outputs.
+    Optional support for Cloud Optimized GeoTIFFs (COGs), compression, and custom output directories.
+
+    Examples
+    --------
+    >>> risat_l11("path_to_folder", mat='C2', azlks=10, rglks=7, fmt='tif')
+    Extracts C2 matrix elements and the incidence angle map from RISAT-1A SLC data and saves them as GeoTIFFs.
+
+    Parameters
+    ----------
+    in_dir : str
+        Path to the RISAT-1A SLC folder containing the data and metadata.
+
+    mat : str, optional (default='C2')
+        Type of matrix to extract. Valid options are:
+        - 'Sxy': Scattering matrix elements
+        - 'C2' : Covariance matrix for compact-pol
+
+    azlks : int, optional (default=10)
+        Number of azimuth looks for multi-looking. 
+
+    rglks : int, optional (default=7)
+        Number of range looks for multi-looking.
+
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF in slant range
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input folder.
+        
     Returns:
     --------
     None
@@ -173,11 +203,10 @@ def risat_l11(prod_dir,matrixType='C2',
         named `Sxy/C2` (if not already present) and saves the geotiff/binary files:
 
 
-
     """   
 
 
-    band_meta = os.path.join(prod_dir,'BAND_META.txt')
+    band_meta = os.path.join(in_dir,'BAND_META.txt')
     metadata_dict = get_bandmeta(band_meta)
     ImagingMode = str(metadata_dict['ImagingMode'])
     NoOfPolarizations=int(metadata_dict['NoOfPolarizations'])
@@ -189,9 +218,9 @@ def risat_l11(prod_dir,matrixType='C2',
     print(f"Detected {ImagingMode}: {polList} acquired on {metadata_dict['DateOfPass']}")
     
     
-    sr_grid = glob.glob(os.path.join(prod_dir,f'*{polList[0]}_L1_SlantRange_grid.txt'))[0]
-    leader_file = glob.glob(os.path.join(prod_dir,f'scene_{polList[0]}/lea_01.001'))[0]
-    data_file = glob.glob(os.path.join(prod_dir,f'scene_{polList[0]}/dat_01.001'))[0]
+    sr_grid = glob.glob(os.path.join(in_dir,f'*{polList[0]}_L1_SlantRange_grid.txt'))[0]
+    leader_file = glob.glob(os.path.join(in_dir,f'scene_{polList[0]}/lea_01.001'))[0]
+    data_file = glob.glob(os.path.join(in_dir,f'scene_{polList[0]}/dat_01.001'))[0]
     
     header_length,prefix_length,record_length = extract_lengths(leader_file, data_file)
     
@@ -204,23 +233,23 @@ def risat_l11(prod_dir,matrixType='C2',
     resized_inc = inrp_inc(inc_array, target_shape)
     
     if out_dir is None:
-        out_dir = prod_dir
+        out_dir = in_dir
     else:
         os.makedirs(out_dir, exist_ok=True)
     
     # print("Resized incidence angle shape:", resized_inc.shape)
-    if outType=='bin':
+    if fmt=='bin':
         write_rst(os.path.join(out_dir,'inc.bin'),resized_inc,gdal.GDT_Float32)
         print(f"Saved file: {os.path.join(out_dir,'inc.bin')}")
     else:
-        write_rst(os.path.join(out_dir,'inc.tif'),resized_inc,gdal.GDT_Float32)
+        write_rst(os.path.join(out_dir,'inc.tif'),resized_inc,gdal.GDT_Float32,cog,ovr,comp)
         print(f"Saved file: {os.path.join(out_dir,'inc.tif')}")
         
     del inc_array
     
     
     if 'RH' in polList and 'RV' in polList:
-        inFile = glob.glob(os.path.join(prod_dir,'scene_RH/dat_01.001'))[0]
+        inFile = glob.glob(os.path.join(in_dir,'scene_RH/dat_01.001'))[0]
         s11 = load_data(inFile, int(metadata_dict['NoScans']), 
                          header_length, record_length, prefix_length,
                          bytes_per_pixel=int(metadata_dict['BytesPerPixel']), dtype=np.dtype('>i2'))
@@ -233,7 +262,7 @@ def risat_l11(prod_dir,matrixType='C2',
                  1j*(s11[:,:,1]*np.sqrt(np.sin(resized_inc*np.pi/180)/np.sin(inc_center*np.pi/180))/cc_lin_rh)).astype(np.complex64)
     
         
-        inFile = glob.glob(os.path.join(prod_dir,'scene_RV/dat_01.001'))[0]
+        inFile = glob.glob(os.path.join(in_dir,'scene_RV/dat_01.001'))[0]
         s21 = load_data(inFile, int(metadata_dict['NoScans']), 
                          header_length, record_length, prefix_length,
                          bytes_per_pixel=int(metadata_dict['BytesPerPixel']), dtype=np.dtype('>i2'))
@@ -243,39 +272,40 @@ def risat_l11(prod_dir,matrixType='C2',
         s21 = ((s21[:,:,0]*np.sqrt(np.sin(resized_inc*np.pi/180)/np.sin(inc_center*np.pi/180))/cc_lin_rv)+\
                  1j*(s21[:,:,1]*np.sqrt(np.sin(resized_inc*np.pi/180)/np.sin(inc_center*np.pi/180))/cc_lin_rv)).astype(np.complex64)
     
-        if matrixType == 'Sxy':
+        if mat == 'Sxy':
             outFolder = os.path.join(out_dir,'Sxy')
             os.makedirs(outFolder,  exist_ok=True)
             
-            if outType=='bin':
+            if fmt=='bin':
                 write_rst(os.path.join(outFolder,'s11.bin'),s11,gdal.GDT_CFloat32)
                 print(f"Saved file: {os.path.join(outFolder,'s11.bin')}")
                 write_rst(os.path.join(outFolder,'s21.bin'),s21,gdal.GDT_CFloat32)
                 print(f"Saved file: {os.path.join(outFolder,'s21.bin')}")
             else:
-                write_rst(os.path.join(outFolder,'s11.tif'),s11,gdal.GDT_CFloat32)
+                write_rst(os.path.join(outFolder,'s11.tif'),s11,gdal.GDT_CFloat32,cog,ovr,comp)
                 print(f"Saved file: {os.path.join(outFolder,'s11.tif')}")
-                write_rst(os.path.join(outFolder,'s21.tif'),s21,gdal.GDT_CFloat32)
+                write_rst(os.path.join(outFolder,'s21.tif'),s21,gdal.GDT_CFloat32,cog,ovr,comp)
                 print(f"Saved file: {os.path.join(outFolder,'s21.tif')}")
                 
-        elif matrixType == 'C2':
+        elif mat == 'C2':
             outFolder = os.path.join(out_dir,'C2')
             os.makedirs(outFolder,  exist_ok=True)
             
             write_rst(os.path.join(outFolder,'inc.tif'),mlook_arr(resized_inc,azlks,rglks).astype(np.float32),
-                      gdal.GDT_Float32)
+                      gdal.GDT_Float32,cog,ovr,comp)
+            print(f"Saved file: {os.path.join(outFolder,'inc.tif')}")
             
             del resized_inc
             
-            if outType=='bin':
+            if fmt=='bin':
                 write_rst(os.path.join(outFolder,'C11.bin'),mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C11.bin')}")
                 write_rst(os.path.join(outFolder,'C22.bin'),mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C22.bin')}")            
             else:
-                write_rst(os.path.join(outFolder,'C11.tif'),mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
+                write_rst(os.path.join(outFolder,'C11.tif'),mlook_arr(np.abs(s11)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32,cog,ovr,comp)
                 print(f"Saved file: {os.path.join(outFolder,'C11.tif')}")
-                write_rst(os.path.join(outFolder,'C22.tif'),mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32)
+                write_rst(os.path.join(outFolder,'C22.tif'),mlook_arr(np.abs(s21)**2,azlks,rglks).astype(np.float32),gdal.GDT_Float32,cog,ovr,comp)
                 print(f"Saved file: {os.path.join(outFolder,'C22.tif')}")
 
             
@@ -283,15 +313,15 @@ def risat_l11(prod_dir,matrixType='C2',
             
 
             rows,cols = C12.shape
-            if outType=='bin':
+            if fmt=='bin':
                 write_rst(os.path.join(outFolder,'C12_real.bin'),np.real(C12).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C12_real.bin')}")
                 write_rst(os.path.join(outFolder,'C12_imag.bin'),np.imag(C12).astype(np.float32),gdal.GDT_Float32)
                 print(f"Saved file: {os.path.join(outFolder,'C12_imag.bin')}")
             else:
-                write_rst(os.path.join(outFolder,'C12_real.tif'),np.real(C12).astype(np.float32),gdal.GDT_Float32)
+                write_rst(os.path.join(outFolder,'C12_real.tif'),np.real(C12).astype(np.float32),gdal.GDT_Float32,cog,ovr,comp)
                 print(f"Saved file: {os.path.join(outFolder,'C12_real.tif')}")
-                write_rst(os.path.join(outFolder,'C12_imag.tif'),np.imag(C12).astype(np.float32),gdal.GDT_Float32)
+                write_rst(os.path.join(outFolder,'C12_imag.tif'),np.imag(C12).astype(np.float32),gdal.GDT_Float32,cog,ovr,comp)
                 print(f"Saved file: {os.path.join(outFolder,'C12_imag.tif')}")
 
 
@@ -301,5 +331,5 @@ def risat_l11(prod_dir,matrixType='C2',
             file.close()  
         else:
             print("Only Sxy, C2 matrices are supported for RISAT compact-pol data.\
-                  Please check the matrixType argument.\
-                  Example matrixType='C2' or 'Sxy'")
+                  Please check the mat argument.\
+                  Example mat='C2' or 'Sxy'")
