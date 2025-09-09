@@ -35,15 +35,15 @@ def update_hdr(hdrFile):
         file.write(content)
 
 
-def write_geotiff(file, wdata, lat, lon, dx, dy, save_cog=False, cog_oviews=[2, 4, 8, 16], compress=False):
+def write_geotiff(file, wdata, lat, lon, dx, dy, cog=False, ovr=[2, 4, 8, 16], comp=False):
     rows, cols = wdata.shape
     driver = gdal.GetDriverByName("GTiff")
     
     options = ['BIGTIFF=IF_SAFER']
-    if compress:
+    if comp:
         # options += ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9']
         options += ['COMPRESS=LZW']
-    if save_cog:
+    if cog:
         options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
 
     outdata = driver.Create(file, cols, rows, 1, gdal.GDT_Float32, options)
@@ -56,8 +56,8 @@ def write_geotiff(file, wdata, lat, lon, dx, dy, save_cog=False, cog_oviews=[2, 
     band = outdata.GetRasterBand(1)
     band.SetNoDataValue(0)
     band.WriteArray(wdata)
-    if save_cog:
-        outdata.BuildOverviews("NEAREST", cog_oviews)
+    if cog:
+        outdata.BuildOverviews("NEAREST", ovr)
 
     outdata.FlushCache()
     outdata = None
@@ -167,8 +167,8 @@ def mlcList(annFile):
 
 
 @time_it    
-def uavsar_grd(annFile,mat='C3',outType='tif',
-            save_cog=False,cog_oviews = [2, 4, 8, 16],compress=False,
+def uavsar_grd(ann,mat='C3',fmt='tif',
+            cog=False,ovr = [2, 4, 8, 16],comp=False,
             out_dir = None):
     """
     Extracts specified matrix elements (C3 or T3) from a UAVSAR GRD .ann file and saves them 
@@ -176,30 +176,30 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
 
     Example:
     --------
-    >>> uavsar_grd("path_to_file.ann", matrix='C3')
+    >>> uavsar_grd("path_to_file.ann", mat='C3')
     Extracts C3 matrix elements and saves them as GeoTIFFs in the 'C3' directory.
 
-    >>> uavsar_grd("path_to_file.ann", matrix='T3', outType='tif', save_cog=True, compress=True)
+    >>> uavsar_grd("path_to_file.ann", mat='T3', fmt='tif', cog=True, comp=True)
     Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.
 
     Parameters:
     -----------
-    annFile : str
+    ann : str
         Path to the UAVSAR annotation file (.ann) containing metadata for the radar data.
 
     mat : str, optional (default='C3')
         Type of matrix to extract. Must be either 'C3' or 'T3'.
 
-    outType : str, optional (default='tif')
+    fmt : str, optional (default='tif')
         Output file format. Currently supports 'tif' (GeoTIFF) and 'bin' (ENVI/PolSARpro/binary).
 
-    save_cog : bool, optional (default=False)
+    cog : bool, optional (default=False)
         If True, output files will be saved as Cloud Optimized GeoTIFFs (COGs) with tiling and overviews.
 
-    cog_oviews : list of int, optional (default=[2, 4, 8, 16])
-        Overview levels to generate for COGs. Ignored if save_cog is False.
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels to generate for COGs. Ignored if cog is False.
 
-    compress : bool, optional (default=False)
+    comp : bool, optional (default=False)
         If True, applies LZW compression to reduce file size.
 
     out_dir : str or None, optional (default=None)
@@ -219,10 +219,10 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
         If the matrix argument is not one of 'C3' or 'T3'.
     """
     
-    inFolder = os.path.dirname(annFile)
-    grdfiles = grdList(annFile)
-    create_extent(annFile)
-    ann_ = open(annFile, 'r')
+    inFolder = os.path.dirname(ann)
+    grdfiles = grdList(ann)
+    create_extent(ann)
+    ann_ = open(ann, 'r')
     for line in ann_:
         if "grd_mag.set_rows" in line:
             rows = int(line.split('=')[1].split(';')[0])
@@ -255,23 +255,23 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
         print("C3 folder exists. \nReplacing C3 elements in folder {}".format(outFolder))
 
     hhhh = np.fromfile(os.path.join(inFolder,grdfiles['grdHHHH']), dtype='<f',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C11.bin',hhhh,lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C11.bin")
         update_hdr(outFolder+'/C11.hdr') 
     else:
-        write_geotiff(outFolder+'/C11.tif',hhhh,lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C11.tif',hhhh,lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C11.tif")
     
     del hhhh
     
     vvvv = np.fromfile(os.path.join(inFolder,grdfiles['grdVVVV']), dtype='<f',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C33.bin',vvvv,lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C33.bin")
         update_hdr(outFolder+'/C33.hdr')
     else:
-        write_geotiff(outFolder+'/C33.tif',vvvv,lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C33.tif',vvvv,lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C33.tif")
         
     del vvvv
@@ -279,18 +279,18 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
     
     hvhv = np.fromfile(os.path.join(inFolder,grdfiles['grdHVHV']), dtype='<f',).reshape(rows,cols)
     
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C22.bin',2*hvhv,lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C22.bin")
         update_hdr(outFolder+'/C22.hdr')
     else:
-        write_geotiff(outFolder+'/C22.tif',2*hvhv,lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C22.tif',2*hvhv,lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C22.tif")
     del hvhv
     
     
     hhhv = np.fromfile(os.path.join(inFolder,grdfiles['grdHHHV']), dtype='<F',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C12_real.bin',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C12_real.bin")
         update_hdr(outFolder+'/C12_real.hdr')
@@ -298,15 +298,15 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
         print(f"Saved file {outFolder}/C12_imag.bin")
         update_hdr(outFolder+'/C12_imag.hdr')
     else:
-        write_geotiff(outFolder+'/C12_real.tif',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C12_real.tif',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C12_real.tif")
-        write_geotiff(outFolder+'/C12_imag.tif',np.imag(np.sqrt(2)*hhhv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C12_imag.tif',np.imag(np.sqrt(2)*hhhv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C12_imag.tif")    
     
     del hhhv
     hhvv = np.fromfile(os.path.join(inFolder,grdfiles['grdHHVV']), dtype='<F',).reshape(rows,cols)
     
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C13_real.bin',np.real(hhvv),lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C13_real.bin")
         update_hdr(outFolder+'/C13_real.hdr')
@@ -314,15 +314,15 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
         print(f"Saved file {outFolder}/C13_imag.bin")
         update_hdr(outFolder+'/C13_imag.hdr')
     else:
-        write_geotiff(outFolder+'/C13_real.tif',np.real(hhvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C13_real.tif',np.real(hhvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C13_real.tif")
-        write_geotiff(outFolder+'/C13_imag.tif',np.imag(hhvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C13_imag.tif',np.imag(hhvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C13_imag.tif")
     del hhvv
     
     hvvv = np.fromfile(os.path.join(inFolder,grdfiles['grdHVVV']), dtype='<F',).reshape(rows,cols)
     
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C23_real.bin',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C23_real.bin")
         update_hdr(outFolder+'/C23_real.hdr')
@@ -330,9 +330,9 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
         print(f"Saved file {outFolder}/C23_imag.bin")
         update_hdr(outFolder+'/C23_imag.hdr')
     else:
-        write_geotiff(outFolder+'/C23_real.tif',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C23_real.tif',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C23_real.tif")
-        write_geotiff(outFolder+'/C23_imag.tif',np.imag(np.sqrt(2)*hvvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C23_imag.tif',np.imag(np.sqrt(2)*hvvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C23_imag.tif")
     del hvvv
 
@@ -348,8 +348,8 @@ def uavsar_grd(annFile,mat='C3',outType='tif',
 
     
 @time_it  
-def uavsar_mlc(annFile,mat='C3',outType='tif',
-            save_cog=False,cog_oviews = [2, 4, 8, 16],compress=False,
+def uavsar_mlc(ann,mat='C3',fmt='tif',
+            cog=False,ovr = [2, 4, 8, 16],comp=False,
             out_dir = None):
     """
     Extracts specified matrix elements (C3 or T3) from a UAVSAR GRD .ann file and saves them 
@@ -360,27 +360,27 @@ def uavsar_mlc(annFile,mat='C3',outType='tif',
     >>> uavsar_mlc("path_to_file.ann", matrix='C3')
     Extracts C3 matrix elements and saves them as GeoTIFFs in the 'C3' directory.
 
-    >>> uavsar_mlc("path_to_file.ann", matrix='T3', outType='tif', save_cog=True, compress=True)
+    >>> uavsar_mlc("path_to_file.ann", matrix='T3', fmt='tif', save_cog=True, compress=True)
     Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.
 
     Parameters:
     -----------
-    annFile : str
+    ann : str
         Path to the UAVSAR annotation file (.ann) containing metadata for the radar data.
 
     mat : str, optional (default='C3')
         Type of matrix to extract. Must be either 'C3' or 'T3'.
 
-    outType : str, optional (default='tif')
+    fmt : str, optional (default='tif')
         Output file format. Currently supports 'tif' (GeoTIFF) and 'bin' (ENVI/PolSARpro/binary).
 
-    save_cog : bool, optional (default=False)
+    cog : bool, optional (default=False)
         If True, output files will be saved as Cloud Optimized GeoTIFFs (COGs) with tiling and overviews.
 
-    cog_oviews : list of int, optional (default=[2, 4, 8, 16])
-        Overview levels to generate for COGs. Ignored if save_cog is False.
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels to generate for COGs. Ignored if cog is False.
 
-    compress : bool, optional (default=False)
+    comp : bool, optional (default=False)
         If True, applies LZW compression to reduce file size.
 
     out_dir : str or None, optional (default=None)
@@ -400,11 +400,11 @@ def uavsar_mlc(annFile,mat='C3',outType='tif',
         If the matrix argument is not one of 'C3' or 'T3'.
     """
     
-    create_extent(annFile)
-    mlcfiles = mlcList(annFile)
-    inFolder = os.path.dirname(annFile)
-    create_extent(annFile)
-    ann_ = open(annFile, 'r')
+    create_extent(ann)
+    mlcfiles = mlcList(ann)
+    inFolder = os.path.dirname(ann)
+    create_extent(ann)
+    ann_ = open(ann, 'r')
     for line in ann_:
         if "mlc_mag.set_rows" in line:
             rows = int(line.split('=')[1].split(';')[0])
@@ -445,34 +445,34 @@ def uavsar_mlc(annFile,mat='C3',outType='tif',
 
         
     hhhh = np.fromfile(os.path.join(inFolder,mlcfiles['mlcHHHH']), dtype='<f',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C11.bin',hhhh,lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C11.bin")
         update_hdr(outFolder+'/C11.hdr') 
     else:
-        write_geotiff(outFolder+'/C11.tif',hhhh,lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C11.tif',hhhh,lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C11.tif")
     del hhhh
     vvvv = np.fromfile(os.path.join(inFolder,mlcfiles['mlcVVVV']), dtype='<f',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C33.bin',vvvv,lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C33.bin")
         update_hdr(outFolder+'/C33.hdr')
     else:
-        write_geotiff(outFolder+'/C33.tif',vvvv,lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C33.tif',vvvv,lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C33.tif")
     del vvvv
     hvhv = np.fromfile(os.path.join(inFolder,mlcfiles['mlcHVHV']), dtype='<f',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C22.bin',2*hvhv,lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C22.bin")
         update_hdr(outFolder+'/C22.hdr')
     else:
-        write_geotiff(outFolder+'/C22.tif',2*hvhv,lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C22.tif',2*hvhv,lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C22.tif")
     del hvhv
     hhhv = np.fromfile(os.path.join(inFolder,mlcfiles['mlcHHHV']), dtype='<F',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C12_real.bin',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C12_real.bin")
         update_hdr(outFolder+'/C12_real.hdr')
@@ -480,13 +480,13 @@ def uavsar_mlc(annFile,mat='C3',outType='tif',
         print(f"Saved file {outFolder}/C12_imag.bin")
         update_hdr(outFolder+'/C12_imag.hdr')
     else:
-        write_geotiff(outFolder+'/C12_real.tif',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C12_real.tif',np.real(np.sqrt(2)*hhhv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C12_real.tif")
-        write_geotiff(outFolder+'/C12_imag.tif',np.imag(np.sqrt(2)*hhhv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C12_imag.tif',np.imag(np.sqrt(2)*hhhv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C12_imag.tif")    
     del hhhv
     hhvv = np.fromfile(os.path.join(inFolder,mlcfiles['mlcHHVV']), dtype='<F',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C13_real.bin',np.real(hhvv),lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C13_real.bin")
         update_hdr(outFolder+'/C13_real.hdr')
@@ -494,13 +494,13 @@ def uavsar_mlc(annFile,mat='C3',outType='tif',
         print(f"Saved file {outFolder}/C13_imag.bin")
         update_hdr(outFolder+'/C13_imag.hdr')
     else:
-        write_geotiff(outFolder+'/C13_real.tif',np.real(hhvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C13_real.tif',np.real(hhvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C13_real.tif")
-        write_geotiff(outFolder+'/C13_imag.tif',np.imag(hhvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C13_imag.tif',np.imag(hhvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C13_imag.tif")
     del hhvv
     hvvv = np.fromfile(os.path.join(inFolder,mlcfiles['mlcHVVV']), dtype='<F',).reshape(rows,cols)
-    if outType=='bin':
+    if fmt=='bin':
         write_bin_uav(outFolder+'/C23_real.bin',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy)
         print(f"Saved file {outFolder}/C23_real.bin")
         update_hdr(outFolder+'/C23_real.hdr')
@@ -508,9 +508,9 @@ def uavsar_mlc(annFile,mat='C3',outType='tif',
         print(f"Saved file {outFolder}/C23_imag.bin")
         update_hdr(outFolder+'/C23_imag.hdr')
     else:
-        write_geotiff(outFolder+'/C23_real.tif',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C23_real.tif',np.real(np.sqrt(2)*hvvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C23_real.tif")
-        write_geotiff(outFolder+'/C23_imag.tif',np.imag(np.sqrt(2)*hvvv),lat,lon,dx,dy,save_cog,cog_oviews,compress)
+        write_geotiff(outFolder+'/C23_imag.tif',np.imag(np.sqrt(2)*hvvv),lat,lon,dx,dy,cog,ovr,comp)
         print(f"Saved file {outFolder}/C23_imag.tif")
     del hvvv
 
