@@ -6,7 +6,7 @@ The example notebooks that were previously part of this repository have now been
 
 You can find the example notebooks in the new repository:
 
-[**`polsartools` Example Notebooks**](https://github.com/Narayana-Rao/polsartools-notebooks)
+[**`polsartools` Example Notebooks**](https://github.com/polsartools/polsartools-tutorials)
 
 In this new repository, you’ll find various Jupyter notebooks demonstrating how to use the package and its features.
 
@@ -14,7 +14,7 @@ In this new repository, you’ll find various Jupyter notebooks demonstrating ho
 
 To access the example notebooks:
 
-1. Visit the [Example Notebooks Repo](https://github.com/Narayana-Rao/polsartools-notebooks).
+1. Visit the [Example Notebooks Repo](https://github.com/polsartools/polsartools-tutorials).
 2. Clone the repository or view the notebooks directly in GitHub.
 3. Follow the instructions in the notebooks to get started with the package.
 
@@ -41,5 +41,5 @@ pip install polsartools
 If you encounter an error like "function not found" or need the latest version, you can install the updated version directly from GitHub:
 
 ```bash
-pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
+pip install git+https://github.com/polsartools/polsartools.git#egg=polsartools
 ```

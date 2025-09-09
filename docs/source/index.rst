@@ -14,7 +14,7 @@ It supports input from various SAR sensors or directly from **polarimetric matri
 ----------------------
 
 Get started quickly with hands-on examples! Explore our step-by-step tutorials here:  
-👉 `polsartools-notebooks <https://github.com/polsartools/polsartools-notebooks>`_ 📓✨
+👉 `polsartools-notebooks <https://github.com/polsartools/polsartools-tutorials>`_ 📓✨
 
 
 🤝 Community & Contributions
