@@ -11,7 +11,7 @@ dependencies:
   - scikit-image
   - pip
   - pip:
-      - git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
+      - git+https://github.com/polsartools/polsartools.git#egg=polsartools
       - pytest
       - cibuildwheel
       - tables

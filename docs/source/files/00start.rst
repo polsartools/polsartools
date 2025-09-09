@@ -5,8 +5,8 @@ Getting started
 
 **PolSARtools** package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from different SAR sensors or input polarimetric matrix (C3, T3, C2, T2).
 
-💾 Installation
-----------------
+Installation
+-------------
 
 1. Install **`gdal`** Package
 
@@ -26,12 +26,12 @@ If you encounter an error like "function not found" or need the latest version, 
 
 .. code-block:: bash
 
-    pip install git+https://github.com/Narayana-Rao/polsartools.git#egg=polsartools
+    pip install git+https://github.com/polsartools/polsartools.git#egg=polsartools
 
 Example Usage
 -------------
 
-Sample use cases and notebooks are provided at `polsartools-notebooks <https://github.com/Narayana-Rao/polsartools-notebooks>`_ repo. Detailed documentation is available at `polsartools.readthedocs.io <https://polsartools.readthedocs.io/en/latest/>`_.
+Sample use cases and notebooks are provided at `polsartools-notebooks <https://github.com/polsartools/polsartools-notebooks>`_ repo. Detailed documentation is available at `polsartools.readthedocs.io <https://polsartools.readthedocs.io/en/latest/>`_.
 
 .. Available functions
 .. -------------------
@@ -90,8 +90,8 @@ Sample use cases and notebooks are provided at `polsartools-notebooks <https://g
 
 
 
-🤝 Contributing
-----------------
+Contributing
+-------------
 
 We welcome contributions! Whether it's fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
 
@@ -104,7 +104,7 @@ How to Contribute
 
    .. code-block:: bash
 
-       git clone https://github.com/Narayana-Rao/polsartools.git
+       git clone https://github.com/polsartools/polsartools.git
 
 3. Create a branch - Create a new branch for your changes:
 
@@ -125,12 +125,12 @@ How to Contribute
 
 7. **Create a Pull Request** - Open a pull request to the main repository with a clear description of the changes.
 
-🐞 Bug Reporting
------------------
+Bug Reporting
+~~~~~~~~~~~~~~
 
 If you encounter a bug or issue, please follow these steps to report it:
 
-1. Check the existing issues: Before submitting a new bug report, check if the issue has already been reported in the `Issues section <https://github.com/Narayana-Rao/polsartools/issues>`_.
+1. Check the existing issues: Before submitting a new bug report, check if the issue has already been reported in the `Issues section <https://github.com/polsartools/polsartools/issues>`_.
 
 2. Submit a bug report: If the issue hasn’t been reported, please open a new issue and include the following information:
     * A clear description of the problem.
@@ -140,50 +140,21 @@ If you encounter a bug or issue, please follow these steps to report it:
     * Relevant code snippets or files if possible.
     * Version of `polsartools` and Python you're using.
 
-`Click here to report a bug <https://github.com/Narayana-Rao/polsartools/issues/new?template=bug_report.md>`_
+`Click here to report a bug <https://github.com/polsartools/polsartools/issues/new?template=bug_report.md>`_
 
-💡 Feature Requests
---------------------
+Feature Requests
+~~~~~~~~~~~~~~~~~
 We’re always open to suggestions for new features or improvements!
 
-1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the `Issues section <https://github.com/Narayana-Rao/polsartools/issues>`_.
+1. **Check existing feature requests:** Please make sure the feature request hasn't already been made in the `Issues section <https://github.com/polsartools/polsartools/issues>`_.
 
 2. **Submit a feature request:** If it hasn’t been requested already, please open a new issue with the following information:
     * A clear description of the feature.
     * Why you think this feature would be beneficial.
     * Any specific use cases or examples.
 
-`Click here to request a feature <https://github.com/Narayana-Rao/polsartools/issues/new?template=feature_request.md>`_
+`Click here to request a feature <https://github.com/polsartools/polsartools/issues/new?template=feature_request.md>`_
 
-📚 Cite Us!
-------------
-
-If you use **PolSARtools** in your research or projects, we'd really appreciate a citation! 🛰️✨
-
-Please cite our work as:
-
-    Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A., and Rao, Y.S. (2021). 
-    *PolSAR tools: A QGIS plugin for generating SAR descriptors*. 
-    Journal of Open Source Software, **6(60)**, p.2970.  
-    🔗 https://doi.org/10.21105/joss.02970
-
-BibTeX 📄
-~~~~~~~~~
-
-.. code-block:: bibtex
-
-    @article{bhogapurapu2021polsar,
-      title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
-      author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
-      journal={Journal of Open Source Software},
-      volume={6},
-      number={60},
-      pages={2970},
-      year={2021},
-      doi={10.21105/joss.02970}
-    }
-
-🙏 Your support means a lot and helps us keep improving PolSARtools!
 
 
 
@@ -193,4 +164,4 @@ BibTeX 📄
 .. _scipy: https://scipy.org/
 .. _numpy: https://numpy.org/
 .. _matplotlib: https://matplotlib.org/
-.. _releases: https://github.com/Narayana-Rao/SAR-tools/releases
+.. _releases: https://github.com/polsartools/polsartools/releases

@@ -6,9 +6,8 @@ The following versions of **PolSARtools** are currently supported with security 
 
 | Version   | Supported          |
 |-----------|--------------------|
-| 0.7.x     | ✅ Yes              |
-| 0.6.1     | ✅ Yes              |
-| < 0.6.1     | ❌ No               |
+| 0.9       | ✅ Yes             |
+| < 0.8     | ❌ No              |
 
 We recommend using the latest version to benefit from ongoing improvements and security maintenance.
 
@@ -23,7 +22,7 @@ At present, **PolSARtools** has no known security vulnerabilities. However, we t
 If you discover a potential security issue, please report it privately via:
 
 - Email: **narayanarao.bhogapurapu@gmail.com**
-- GitHub: Open a [private issue](https://github.com/Narayana-Rao/polsartools/issues)
+- GitHub: Open a [private issue](https://github.com/polsartools/polsartools/issues)
 
 Please do **not** disclose vulnerabilities publicly until we’ve had a chance to investigate and respond.
 

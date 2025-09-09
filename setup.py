@@ -80,7 +80,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Narayanarao Bhogapurapu',
     author_email='bnarayanarao@iitb.ac.in',
-    url='https://github.com/Narayana-Rao/polsartools',
+    url='https://github.com/polsartools/polsartools',
     packages=find_packages(),
     package_dir={'polsartools': 'polsartools'},
     include_package_data=True,

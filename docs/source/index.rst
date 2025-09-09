@@ -14,43 +14,34 @@ It supports input from various SAR sensors or directly from **polarimetric matri
 ----------------------
 
 Get started quickly with hands-on examples! Explore our step-by-step tutorials here:  
-👉 `polsartools-notebooks <https://github.com/Narayana-Rao/polsartools-notebooks>`_ 📓✨
+👉 `polsartools-notebooks <https://github.com/polsartools/polsartools-notebooks>`_ 📓✨
 
 
-📚 Cite Us!
-------------
+🤝 Community & Contributions
+------------------------------
 
-If you use **PolSARtools** in your research or projects, we'd really appreciate a citation! 🛰️✨
+Your support means the world to us and helps drive continuous improvement in **PolSARtools**. Whether you're reporting bugs, suggesting features, or submitting pull requests - every contribution helps us advance open SAR.
 
-Please cite our work as:
+Ways to get involved
+~~~~~~~~~~~~~~~~~~~~
 
-    Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A., and Rao, Y.S. (2021). 
-    *PolSAR tools: A QGIS plugin for generating SAR descriptors*. 
-    Journal of Open Source Software, **6(60)**, p.2970.  
-    🔗 https://doi.org/10.21105/joss.02970
+🐛 **Report issues**  
+Found a bug or have a question? Open an issue and let us know.
 
-BibTeX 📄
-~~~~~~~~~
+✨ **Suggest features**  
+We welcome ideas that make PolSARtools more powerful and user-friendly.
 
-.. code-block:: bibtex
+🔧 **Submit pull requests**  
+Help us improve the codebase - big or small, every PR counts.
 
-    @article{bhogapurapu2021polsar,
-      title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
-      author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
-      journal={Journal of Open Source Software},
-      volume={6},
-      number={60},
-      pages={2970},
-      year={2021},
-      doi={10.21105/joss.02970}
-    }
-
-🙏 Your support means a lot and helps us keep improving PolSARtools!
+📣 **Spread the word**  
+Share PolSARtools with fellow researchers, developers, and geospatial enthusiasts.
 
 
 .. toctree::
    :maxdepth: 3
    :caption: Contents:
+   :hidden:
 
    files/00start
    files/01sensors
@@ -68,20 +59,27 @@ BibTeX 📄
 
 
 
-
 Disclaimer
-----------
+-----------
+PolSARtools is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0).  
+You are free to use, modify, and share the software under the terms of this license.
 
-PolSARtools is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
-This means you are free to use, modify, and distribute the software, provided you adhere to the terms of the license.
+This software is provided *as is*, without any warranties. Use at your own risk.
 
-No Warranty
-~~~~~~~~~~~
 
-This software is provided **"as is"**, **without warranty of any kind**, either express or implied, including but not limited to 
-the warranties of **merchantability**, **fitness for a particular purpose**, and **non-infringement**. In no event shall the 
-authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, 
-or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+.. Disclaimer
+.. ----------
 
-Use this software at your own risk. While efforts have been made to ensure reliability and accuracy, no guarantee is provided 
-regarding its suitability for any particular application.
+.. PolSARtools is released under the `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.html>`_ (GPL-3.0). 
+.. This means you are free to use, modify, and distribute the software, provided you adhere to the terms of the license.
+
+.. No Warranty
+.. ~~~~~~~~~~~
+
+.. This software is provided **"as is"**, **without warranty of any kind**, either express or implied, including but not limited to 
+.. the warranties of **merchantability**, **fitness for a particular purpose**, and **non-infringement**. In no event shall the 
+.. authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, 
+.. or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+.. Use this software at your own risk. While efforts have been made to ensure reliability and accuracy, no guarantee is provided 
+.. regarding its suitability for any particular application.
