@@ -363,12 +363,12 @@
 <p>The <cite>chyaan2_fp</cite> function extracts matrix elements (S2, C3 or T3) from the given Chandrayaan-II folder and saves them into respective directories (S2, C3 or T3).</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">chyaan2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#chyaan2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">chyaan2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#chyaan2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data
 and saves them into respective directories.</p>
 <section id="example">
 <h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chyaan2_fp</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chyaan2_fp</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="go">This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data</span>
 <span class="go">in the specified folder and save them in the &#39;T3&#39; directory.</span>
 </pre></div>
@@ -377,9 +377,9 @@ and saves them into respective directories.</p>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
 <dl class="simple">
-<dt>inFolder<span class="classifier">str</span></dt><dd><p>The path to the folder containing the Chandrayaan-II DFSAR Full-Pol data files.</p>
+<dt>in_dir<span class="classifier">str</span></dt><dd><p>The path to the folder containing the Chandrayaan-II DFSAR Full-Pol data files.</p>
 </dd>
-<dt>matrixType<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to extract. Can either be ‘S2’, ‘T3’, or ‘C3’.</p>
+<dt>mat<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to extract. Can either be ‘S2’, ‘T3’, or ‘C3’.</p>
 <ul class="simple">
 <li><p>‘S2’ will extract the S2 matrix elements.</p></li>
 <li><p>‘T3’ will extract the T3 matrix elements.</p></li>
@@ -390,40 +390,6 @@ and saves them into respective directories.</p>
 the ground range and output line spacing.</p>
 </dd>
 <dt>rglks<span class="classifier">int, optional (default=None)</span></dt><dd><p>The number of range looks for multi-looking. If not specified, the value is set to 1.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h3>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>None</dt><dd><p>The function does not return any value. Instead, it creates a folder named <cite>S2</cite>, <cite>T3</cite>, or <cite>C3</cite>
-(depending on the chosen matrix) and saves the corresponding binary files.</p>
-<ul class="simple">
-<li><p>For ‘S2’:
-- <cite>s11.bin</cite>: Contains the S11 matrix elements.
-- <cite>s12.bin</cite>: Contains the S12 matrix elements.
-- <cite>s21.bin</cite>: Contains the S21 matrix elements.
-- <cite>s22.bin</cite>: Contains the S22 matrix elements.
-- <cite>config.txt</cite>: Contains metadata including multilook parameters.
-- <cite>multilook_info.txt</cite>: Contains detailed information about the multilook parameters.</p></li>
-<li><p>For ‘T3’:
-- <cite>t11.bin</cite>, <cite>t12.bin</cite>, <cite>t13.bin</cite>, <cite>t22.bin</cite>, <cite>t23.bin</cite>, <cite>t33.bin</cite>: Contain the T3 matrix elements.
-- <cite>config.txt</cite>: Contains metadata including multilook parameters.
-- <cite>multilook_info.txt</cite>: Contains detailed information about the multilook parameters.</p></li>
-<li><p>For ‘C3’:
-- <cite>c11.bin</cite>, <cite>c12.bin</cite>, <cite>c13.bin</cite>, <cite>c22.bin</cite>, <cite>c23.bin</cite>, <cite>c33.bin</cite>: Contain the C3 matrix elements.
-- <cite>config.txt</cite>: Contains metadata including multilook parameters.
-- <cite>multilook_info.txt</cite>: Contains detailed information about the multilook parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="raises">
-<h3>Raises:<a class="headerlink" href="#raises" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>FileNotFoundError</dt><dd><p>If the required files for the specified matrix type cannot be found in the folder.</p>
-</dd>
-<dt>ValueError</dt><dd><p>If an invalid matrix type is provided (valid options are ‘S2’, ‘T3’, or ‘C3’).</p>
 </dd>
 </dl>
 </section>

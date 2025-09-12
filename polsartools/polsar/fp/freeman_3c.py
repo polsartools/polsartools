@@ -5,8 +5,8 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def freeman_3c(infolder,  window_size=1, outType="tif", cog_flag=False, 
-          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+def freeman_3c(in_dir,  win=1, fmt="tif", cog=False, 
+          ovr = [2, 4, 8, 16], comp=False, 
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
           ):
@@ -24,32 +24,32 @@ def freeman_3c(infolder,  window_size=1, outType="tif", cog_flag=False,
     
     >>> # Advanced usage with custom parameters
     >>> freeman_3c(
-    ...     infolder="/path/to/fullpol_data",
-    ...     window_size=5,
-    ...     outType="tif",
-    ...     cog_flag=True,
+    ...     in_dir="/path/to/fullpol_data",
+    ...     win=5,
+    ...     fmt="tif",
+    ...     cog=True,
     ...     block_size=(1024, 1024)
     ... )
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Path to the input folder containing full-pol T3 or C3 matrix files.
-    window_size : int, default=1
+    win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format:
         - 'tif': GeoTIFF format with georeferencing information
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
         and overviews for efficient web access.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG creation. Each number represents the
         decimation factor for that overview level.
-    write_flag : bool, default=True
-        If True, writes results to disk. If False, only processes data in memory.
+    comp : bool, default=False
+        If True, uses LZW compression for GeoTIFF outputs.
     max_workers : int | None, default=None
         Maximum number of parallel processing workers. If None, uses
         CPU count - 1 workers.
@@ -67,25 +67,24 @@ def freeman_3c(infolder,  window_size=1, outType="tif", cog_flag=False,
         3. Freeman_3c_vol: Volume scattering power component
     """
     
-    
-    input_filepaths = fp_c3t3files(infolder)
+    write_flag=True
+    input_filepaths = fp_c3t3files(in_dir)
 
     output_filepaths = []
-    if outType == "bin":
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_odd.bin"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_dbl.bin"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_vol.bin"))
+    if fmt == "bin":
+        output_filepaths.append(os.path.join(in_dir, "Freeman_3c_odd.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Freeman_3c_dbl.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Freeman_3c_vol.bin"))
     else:
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_odd.tif"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_dbl.tif"))
-        output_filepaths.append(os.path.join(infolder, "Freeman_3c_vol.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Freeman_3c_odd.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Freeman_3c_dbl.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Freeman_3c_vol.tif"))
         
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                            window_size=window_size, write_flag=write_flag,
+                            window_size=win, write_flag=write_flag,
                         processing_func=process_chunk_free3c,block_size=block_size, 
                         max_workers=max_workers,  num_outputs=len(output_filepaths),
-                        cog_flag=cog_flag,
-                        cog_overviews=cog_overviews,
+                        cog=cog,ovr=ovr,comp=comp,
                         progress_callback=progress_callback
                         )
 

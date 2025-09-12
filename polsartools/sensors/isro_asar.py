@@ -13,637 +13,6 @@ from polsartools.utils.h5_utils import h5_polsar, get_ml_chunk
 from netCDF4 import Dataset
 
 
-def asar_geo_T3(inFile,azlks,rglks,cc_linear):
-    print("Considering S12 = S21")
-           
-    try:
-        h5File = h5py.File(inFile,"r")
-    except:
-        raise('Invalid .h5 file !!')
-    
-    
-    h5File = h5py.File(inFile,"r")
-    if '/science/LSAR' in h5File:
-        freq_band = 'L'            
-        print("Detected L-band data ")
-    elif '/science/SSAR' in h5File:
-        freq_band = 'S'
-        print("Detected S-band data")
-    else:
-        print("Neither LSAR nor SSAR data found in the file.")
-        h5File.close()
-        return
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-    S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-    S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-    
-    # xCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing'])
-    # yCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing'])
-    # xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates'])
-    # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
-    # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
-
-    sceneCenterAlongTrackSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
-    sceneCenterGroundRangeSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
-    slantRange = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/slantRange'])
-    slantRangeSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
-    coordinateX = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/coordinateX' ])[1,:,:] # at 0 height
-    coordinateY = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/coordinateY'])[1,:,:] # at 0 height
-    epsg = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/epsg'])
-
-    multi_look_factor = slantRangeSpacing/sceneCenterAlongTrackSpacing
-
-
-    h5File.close()
-
-
-    mlrows,mlcols = S11.shape[0]//azlks,S11.shape[1]//rglks
-
-
-    inFolder = os.path.dirname(inFile)   
-    if not inFolder:
-        inFolder = "."
-    T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-    # os.makedirs(T3Folder,exist_ok=True)
-
-    if not os.path.isdir(T3Folder):
-        print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
-        # os.mkdir(T3Folder)
-        os.makedirs(T3Folder,exist_ok=True)
-    
-    os.chdir(T3Folder)
-    ######################################################
-    lat_interp = intp_grid(coordinateY,(mlrows,mlcols))
-    write_latlon('lat.bin', lat_interp)
-    long_interp = intp_grid(coordinateX,(mlrows,mlcols))
-    write_latlon('lon.bin', long_interp)
-
-    # print('lat lon saved')
-    gdal.Translate('lat.vrt', 'lat.bin')
-    gdal.Translate('lon.vrt', 'lon.bin')
-
-    minX, maxX = np.nanmin(long_interp),np.nanmax(long_interp)
-    minY,maxY = np.nanmin(lat_interp),np.nanmax(lat_interp)
-
-    x_res_m = sceneCenterAlongTrackSpacing*azlks  # in meters
-    y_res_m = slantRangeSpacing*rglks
-    mean_lat = np.nanmean(lat_interp) 
-    x_res_deg = x_res_m / (111320 * np.cos(np.deg2rad(mean_lat)))
-    y_res_deg = y_res_m / 111320.0
-
-    bbox = [minX, minY, maxX, maxY]
-
-    #######################################################
-
-    # 3x1 Pauli Coherency Matrix
-    Kp = (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21])
-
-    del S11,S12,S21,S22
-
-
-    def write_element(data,outname):
-        write_latlon('data.bin', data)
-        gdal.Translate('data.vrt', 'data.bin')
-        update_vrt('data.vrt')
-        input_vrt = "data.vrt"
-        geocode_grid(input_vrt, outname, 'bin', x_res_deg, y_res_deg, bbox,resampleAlg="near")
-        os.remove('data.vrt')
-        os.remove('data.bin')
-        os.remove('data.hdr')
-        
-    # 3x3 Pauli Coherency Matrix elements
-    T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-    write_element(T11,'T11.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T11.bin')}")
-    del T11
-    T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-    write_element(T22,'T22.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T22.bin')}")
-    del T22
-    T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
-    write_element(T33,'T33.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T33.bin')}")
-    del T33
-    T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(T12),'T12_real.bin') 
-    print(f"Saved file {os.path.join(T3Folder,'T12_real.bin')}")
-    write_element(np.imag(T12),'T12_imag.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T12_imag.bin')}")
-    del T12
-    
-    T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(T13),'T13_real.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T13_real.bin')}")
-    write_element(np.imag(T13),'T13_imag.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T13_imag.bin')}")
-    del T13
-    
-    T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(T23),'T23_real.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T23_real.bin')}")
-    write_element(np.imag(T23),'T23_imag.bin')
-    print(f"Saved file {os.path.join(T3Folder,'T23_imag.bin')}")
-
-    del Kp,T23
-    
-    os.remove('lat.bin')
-    os.remove('lat.vrt')
-    os.remove('lat.hdr')
-    os.remove('lon.bin')
-    os.remove('lon.vrt')
-    os.remove('lon.hdr')
-    
-def asar_T3(inFile,azlks,rglks,cc_linear):
-    print("Considering S12 = S21")
-           
-    try:
-        h5File = h5py.File(inFile,"r")
-    except:
-        raise('Invalid .h5 file !!')
-    
-    
-    h5File = h5py.File(inFile,"r")
-    if '/science/LSAR' in h5File:
-        freq_band = 'L'            
-        print("Detected L-band data ")
-    elif '/science/SSAR' in h5File:
-        freq_band = 'S'
-        print("Detected S-band data")
-    else:
-        print("Neither LSAR nor SSAR data found in the file.")
-        h5File.close()
-        return
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-    S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-    S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-
-    h5File.close()
-
-    # 3x1 Pauli Coherency Matrix
-    Kp = (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21])
-
-    del S11,S12,S21,S22
-
-    # 3x3 Pauli Coherency Matrix elements
-    T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)
-    T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)
-    T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)
-
-    T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)
-    T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-    T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
-
-    del Kp
-    
-    
-    inFolder = os.path.dirname(inFile)   
-    if not inFolder:
-        inFolder = "."
-    T3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-    os.makedirs(T3Folder,exist_ok=True)
-
-    if not os.path.isdir(T3Folder):
-        print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
-        os.mkdir(T3Folder)
-        
-    # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
-    write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),
-                np.real(T22),np.real(T23),np.imag(T23),
-                np.real(T33)],T3Folder)
-
-def asar_geo_C3(inFile,azlks,rglks,cc_linear):
-    print("Considering S12 = S21")
-    try:
-        h5File = h5py.File(inFile,"r")
-    except:
-        raise('Invalid .h5 file !!')
-    
-    
-    h5File = h5py.File(inFile,"r")
-    if '/science/LSAR' in h5File:
-        freq_band = 'L'            
-        print("Detected L-band data ")
-    elif '/science/SSAR' in h5File:
-        freq_band = 'S'
-        print(" Detected S-band data")
-    else:
-        print("Neither LSAR nor SSAR data found in the file.")
-        h5File.close()
-        return
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-    S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-    S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-    
-    sceneCenterAlongTrackSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
-    sceneCenterGroundRangeSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
-    slantRange = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/slantRange'])
-    slantRangeSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
-    coordinateX = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/coordinateX' ])[1,:,:] # at 0 height
-    coordinateY = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/coordinateY'])[1,:,:] # at 0 height
-    epsg = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/epsg'])
-
-    multi_look_factor = slantRangeSpacing/sceneCenterAlongTrackSpacing
-
-
-    h5File.close()
-
-
-    mlrows,mlcols = S11.shape[0]//azlks,S11.shape[1]//rglks
-
-
-    inFolder = os.path.dirname(inFile)   
-    if not inFolder:
-        inFolder = "."
-    C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-    
-    
-    if not os.path.isdir(C3Folder):
-        print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
-        os.makedirs(C3Folder,exist_ok=True)
-    
-    os.chdir(C3Folder)
-    ######################################################
-    lat_interp = intp_grid(coordinateY,(mlrows,mlcols))
-    write_latlon('lat.bin', lat_interp)
-    long_interp = intp_grid(coordinateX,(mlrows,mlcols))
-    write_latlon('lon.bin', long_interp)
-
-    # print('lat lon saved')
-    gdal.Translate('lat.vrt', 'lat.bin')
-    gdal.Translate('lon.vrt', 'lon.bin')
-
-    minX, maxX = np.nanmin(long_interp),np.nanmax(long_interp)
-    minY,maxY = np.nanmin(lat_interp),np.nanmax(lat_interp)
-
-    x_res_m = sceneCenterAlongTrackSpacing*azlks  # in meters
-    y_res_m = slantRangeSpacing*rglks
-    mean_lat = np.nanmean(lat_interp) 
-    x_res_deg = x_res_m / (111320 * np.cos(np.deg2rad(mean_lat)))
-    y_res_deg = y_res_m / 111320.0
-
-    bbox = [minX, minY, maxX, maxY]
-
-    #######################################################
-
-
-    # Kl- 3-D Lexicographic feature vector
-    Kl = np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22])
-    del S11, S12, S21, S22
-    def write_element(data,outname):
-        write_latlon('data.bin', data)
-        gdal.Translate('data.vrt', 'data.bin')
-        update_vrt('data.vrt')
-        input_vrt = "data.vrt"
-        geocode_grid(input_vrt, outname, 'bin', x_res_deg, y_res_deg, bbox,resampleAlg="near")
-        os.remove('data.vrt')
-        os.remove('data.bin')
-        os.remove('data.hdr')
-        
-        
-    # 3x3 COVARIANCE Matrix elements
-
-    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-    write_element(C11,'C11.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C11.bin')}")
-    del C11
-    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-    write_element(C22,'C22.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C22.bin')}")
-    del C22
-    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-    write_element(C33,'C33.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C33.bin')}")
-    del C33 
-
-    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C12),'C12_real.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C12_real.bin')}")
-    write_element(np.imag(C12),'C12_imag.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C12_imag.bin')}")
-    del C12
-    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C13),'C13_real.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C13_real.bin')}")
-    write_element(np.imag(C13),'C13_imag.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C13_imag.bin')}")
-    del C13
-    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C23),'C23_real.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C23_real.bin')}")
-    write_element(np.imag(C23),'C23_imag.bin')
-    print(f"Saved file {os.path.join(C3Folder,'C23_imag.bin')}")
-    del C23, Kl
-    os.remove('lat.bin')
-    os.remove('lat.vrt')
-    os.remove('lat.hdr')
-    os.remove('lon.bin')
-    os.remove('lon.vrt')
-    os.remove('lon.hdr')
-
-
-def asar_C3(inFile,azlks,rglks,cc_linear):    
-    
-    print("Considering S12 = S21")
-    try:
-        h5File = h5py.File(inFile,"r")
-    except:
-        raise('Invalid .h5 file !!')
-    
-    
-    h5File = h5py.File(inFile,"r")
-    if '/science/LSAR' in h5File:
-        freq_band = 'L'            
-        print("Detected L-band data ")
-    elif '/science/SSAR' in h5File:
-        freq_band = 'S'
-        print(" Detected S-band data")
-    else:
-        print("Neither LSAR nor SSAR data found in the file.")
-        h5File.close()
-        return
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-    S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-    S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-    
-    # xCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing'])
-    # yCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing'])
-    # xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates'])
-    # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
-    # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
-
-    h5File.close()
-
-
-    # Kl- 3-D Lexicographic feature vector
-    Kl = np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22])
-    del S11, S12, S21, S22
-
-    # 3x3 COVARIANCE Matrix elements
-
-    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-
-    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-
-
-    inFolder = os.path.dirname(inFile)   
-    if not inFolder:
-        inFolder = "."
-    C3Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-    os.makedirs(C3Folder,exist_ok=True)
-    
-    if not os.path.isdir(C3Folder):
-        print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
-        os.mkdir(C3Folder)
-    
-    # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
-    write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
-                np.real(C22),np.real(C23),np.imag(C23),
-                np.real(C33)],C3Folder)
-
-
-
-def asar_geo_C4(inFile,azlks,rglks,cc_linear):
-    # print("Considering S12 = S21")
-    try:
-        h5File = h5py.File(inFile,"r")
-    except:
-        raise('Invalid .h5 file !!')
-    
-    
-    h5File = h5py.File(inFile,"r")
-    if '/science/LSAR' in h5File:
-        freq_band = 'L'            
-        print("Detected L-band data ")
-    elif '/science/SSAR' in h5File:
-        freq_band = 'S'
-        print(" Detected S-band data")
-    else:
-        print("Neither LSAR nor SSAR data found in the file.")
-        h5File.close()
-        return
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-    S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-    S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-    
-    sceneCenterAlongTrackSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/sceneCenterAlongTrackSpacing' ])
-    sceneCenterGroundRangeSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/sceneCenterGroundRangeSpacing'])
-    slantRange = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/slantRange'])
-    slantRangeSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/slantRangeSpacing'])
-    coordinateX = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/coordinateX' ])[1,:,:] # at 0 height
-    coordinateY = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/coordinateY'])[1,:,:] # at 0 height
-    epsg = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/geolocationGrid/epsg'])
-
-    multi_look_factor = slantRangeSpacing/sceneCenterAlongTrackSpacing
-
-
-    h5File.close()
-
-
-    mlrows,mlcols = S11.shape[0]//azlks,S11.shape[1]//rglks
-
-
-    inFolder = os.path.dirname(inFile)   
-    if not inFolder:
-        inFolder = "."
-    C4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-    
-    
-    if not os.path.isdir(C4Folder):
-        print("C4 folder does not exist. \nCreating folder {}".format(C4Folder))
-        os.makedirs(C4Folder,exist_ok=True)
-    
-    os.chdir(C4Folder)
-    ######################################################
-    lat_interp = intp_grid(coordinateY,(mlrows,mlcols))
-    write_latlon('lat.bin', lat_interp)
-    long_interp = intp_grid(coordinateX,(mlrows,mlcols))
-    write_latlon('lon.bin', long_interp)
-
-    # print('lat lon saved')
-    gdal.Translate('lat.vrt', 'lat.bin')
-    gdal.Translate('lon.vrt', 'lon.bin')
-
-    minX, maxX = np.nanmin(long_interp),np.nanmax(long_interp)
-    minY,maxY = np.nanmin(lat_interp),np.nanmax(lat_interp)
-
-    x_res_m = sceneCenterAlongTrackSpacing*azlks  # in meters
-    y_res_m = slantRangeSpacing*rglks
-    mean_lat = np.nanmean(lat_interp) 
-    x_res_deg = x_res_m / (111320 * np.cos(np.deg2rad(mean_lat)))
-    y_res_deg = y_res_m / 111320.0
-
-    bbox = [minX, minY, maxX, maxY]
-
-    #######################################################
-
-
-    # Kl- 3-D Lexicographic feature vector
-    Kl = np.array([S11, S12, S21, S22])
-    del S11, S12, S21, S22
-    def write_element(data,outname):
-        write_latlon('data.bin', data)
-        gdal.Translate('data.vrt', 'data.bin')
-        update_vrt('data.vrt')
-        input_vrt = "data.vrt"
-        geocode_grid(input_vrt, outname, 'bin', x_res_deg, y_res_deg, bbox,resampleAlg="near")
-        os.remove('data.vrt')
-        os.remove('data.bin')
-        os.remove('data.hdr')
-        
-        
-    # 3x3 COVARIANCE Matrix elements
-
-    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-    write_element(C11,'C11.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C11.bin')}")
-    del C11
-    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-    write_element(C22,'C22.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C22.bin')}")
-    del C22
-    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-    write_element(C33,'C33.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C33.bin')}")
-    del C33 
-    C44 = mlook_arr(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
-    write_element(C44,'C44.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C44.bin')}")
-    del C44
-
-    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C12),'C12_real.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C12_real.bin')}")
-    write_element(np.imag(C12),'C12_imag.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C12_imag.bin')}")
-    del C12
-    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C13),'C13_real.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C13_real.bin')}")
-    write_element(np.imag(C13),'C13_imag.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C13_imag.bin')}")
-    del C13
-    C14 = mlook_arr(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C14),'C14_real.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C14_real.bin')}")
-    write_element(np.imag(C14),'C14_imag.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C14_imag.bin')}")
-    del C14
-    
-    
-    
-    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C23),'C23_real.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C23_real.bin')}")
-    write_element(np.imag(C23),'C23_imag.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C23_imag.bin')}")
-    del C23
-    
-    C24 = mlook_arr(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C24),'C24_real.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C24_real.bin')}")
-    write_element(np.imag(C24),'C24_imag.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C24_imag.bin')}")
-    del C24
-    
-    C34 = mlook_arr(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-    write_element(np.real(C34),'C34_real.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C34_real.bin')}")
-    write_element(np.imag(C34),'C34_imag.bin')
-    print(f"Saved file {os.path.join(C4Folder,'C34_imag.bin')}")
-    del C34,kl
-    
-    os.remove('lat.bin')
-    os.remove('lat.vrt')
-    os.remove('lat.hdr')
-    os.remove('lon.bin')
-    os.remove('lon.vrt')
-    os.remove('lon.hdr')
-    
-def asar_C4(inFile,azlks,rglks,cc_linear):    
-    
-    # print("Considering S12 = S21")
-    try:
-        h5File = h5py.File(inFile,"r")
-    except:
-        raise('Invalid .h5 file !!')
-    
-    
-    h5File = h5py.File(inFile,"r")
-    if '/science/LSAR' in h5File:
-        freq_band = 'L'            
-        print("Detected L-band data ")
-    elif '/science/SSAR' in h5File:
-        freq_band = 'S'
-        print(" Detected S-band data")
-    else:
-        print("Neither LSAR nor SSAR data found in the file.")
-        h5File.close()
-        return
-    
-    S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-    S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-    S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-    S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-    
-    # xCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinateSpacing'])
-    # yCoordinateSpacing = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinateSpacing'])
-    # xCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/xCoordinates'])
-    # yCoordinates = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/yCoordinates'])
-    # projection = np.array(h5File[f'/science/{freq_band}SAR/RSLC/metadata/radarGrid/projection'])
-
-    h5File.close()
-
-
-    # Kl- 4-D Lexicographic feature vector
-    Kl = np.array([S11, S12, S21, S22])
-    del S11, S12, S21, S22
-
-    # 3x3 COVARIANCE Matrix elements
-
-    C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)
-    C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)
-    C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)
-    C44 = mlook_arr(np.abs(Kl[3])**2,azlks,rglks).astype(np.float32)
-    
-    C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)
-    C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    C14 = mlook_arr(Kl[0]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-
-    C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
-    C24 = mlook_arr(Kl[1]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-
-    C34 = mlook_arr(Kl[2]*np.conj(Kl[3]),azlks,rglks).astype(np.complex64)
-
-
-    inFolder = os.path.dirname(inFile)   
-    if not inFolder:
-        inFolder = "."
-    C4Folder = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-    os.makedirs(C4Folder,exist_ok=True)
-    
-    if not os.path.isdir(C4Folder):
-        print("C4 folder does not exist. \nCreating folder {}".format(C4Folder))
-        os.mkdir(C4Folder)
-    
-    write_C4([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),np.real(C14),np.imag(C14),
-                np.real(C22),np.real(C23),np.imag(C23),np.real(C24),np.imag(C24),
-                np.real(C33),np.real(C34),np.imag(C34),
-                np.real(C44)],C4Folder)
-
 def load_asar_meta(filepath):
     data_dict = {}
 
@@ -655,8 +24,8 @@ def load_asar_meta(filepath):
                 data_dict[key.strip()] = value.strip()
     return data_dict
 
-
-def convert_l1_tif_dB(infolder,  backscatter=1, complex_flag=0, outType="tif", 
+@time_it
+def convert_l1_tif_dB(infolder,  backscatter=1, complex_flag=0, fmt="tif", 
                    cog_flag=False, cog_overviews = [2, 4, 8, 16], 
                    write_flag=True, max_workers=None):
     
@@ -705,14 +74,14 @@ def convert_l1_tif_dB(infolder,  backscatter=1, complex_flag=0, outType="tif",
         out_paths = []
         for file in band_files:
             pol = file.split("_LEVEL1_")[1].split(".tif")[0]  # Extract polarization (e.g., HH, HV, VH, VV)
-            out_paths.append(os.path.join(infolder, f"{prefix}_{pol}_{out_fix}_dB.{outType}"))
+            out_paths.append(os.path.join(infolder, f"{prefix}_{pol}_{out_fix}_dB.{fmt}"))
         return out_paths
     def output_names_complex(band_files, prefix):
         out_paths = []
         for file in band_files:
             pol = file.split("_LEVEL1_")[1].split(".tif")[0]  # Extract polarization (e.g., HH, HV, VH, VV)           
-            real_path = os.path.join(infolder, f"{prefix}_{pol}_{out_fix}_real.{outType}")
-            imag_path = os.path.join(infolder, f"{prefix}_{pol}_{out_fix}_imag.{outType}")
+            real_path = os.path.join(infolder, f"{prefix}_{pol}_{out_fix}_real.{fmt}")
+            imag_path = os.path.join(infolder, f"{prefix}_{pol}_{out_fix}_imag.{fmt}")
         
             out_paths.extend([real_path, imag_path]) 
         return out_paths
@@ -907,48 +276,65 @@ def rslc_meta(inFile):
     return freq_band,listOfPolarizations
 
 @time_it
-def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10, 
-               outType='tif',max_workers=None, 
+def isro_asar( inFile, mat='C3', azlks=5,rglks=5, 
+               fmt='tif',
+               cog=False,ovr = [2, 4, 8, 16],comp=False,
+               out_dir=None,
+               max_workers=None, 
                geocode_flag=False, calibration_constant = 42
               ):
     """
-    Extracts the S2/C3/T3  matrix elements from a ASAR RSLC HDF5 file 
-    and saves them into respective binary files.
-    
-    Example:
+    Extracts PolSAR matrix elements from a ISRO ASAR RSLC HDF5 file and saves them as slant range raster files.
+
+    This function supports both dual-polarimetric and full-polarimetric RSLC data. It performs multi-looking
+    using specified azimuth and range looks, and outputs matrix elements in either GeoTIFF or binary format.
+    Optional support for Cloud Optimized GeoTIFFs (COGs), and TIFF compression.
+
+    Examples
     --------
-    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract T3 matrix elements from the specified ASAR RSLC file 
-    and save them in the respective folders.
-    
-    Parameters:
-    -----------
+    >>> isro_asar("path_to_file.h5", azlks=30, rglks=15)
+    Extracts matrix elements with 30x15 multi-looking and saves them in the default output folder.
+
+    >>> isro_asar("path_to_file.h5", mat='T3', fmt='tif', cog=True, comp=True)
+    Extracts T3 matrix elements and saves them as compressed Cloud Optimized GeoTIFFs.
+
+    Parameters
+    ----------
     inFile : str
-        The path to the ASAR RSLC HDF5 file containing the radar data.
+        Path to the NISAR RSLC HDF5 file containing dual-pol or full-pol SAR data.
 
-    azlks : int, optional (default=8)
-        The number of azimuth looks for multi-looking. 
+    mat : str, optional (default='C3')
+        Matrix type to extract. Valid options include:
+        - Full-pol: 'S2', 'C4', 'C3', 'T3', 'T4', 'C2HV', 'C2HX', 'C2VX', 'T2HV'
+        - Dual-pol: 'C2' (or leave empty to auto-detect)
 
-    rglks : int, optional (default=6)
-        The number of range looks for multi-looking. 
-        
-    matrixType : str, optional (default = T3)
-        Type of matrix to extract. Valid options are 'S2', 'C3', and 'T3'.
-         
+    azlks : int, optional (default=5)
+        Number of azimuth looks for multi-looking.
 
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `C2/S2/C3/T3` (if not already present) and saves the following raster files:
+    rglks : int, optional (default=5)
+        Number of range looks for multi-looking.
 
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF in slant range
+        - 'bin': Raw binary format
 
-    Raises:
-    -------
-    Exception
-        If the RSLC HDF5 file is invalid or cannot be read.
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
 
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
 
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
+
+    max_workers : int or None, optional (default=None)
+        Number of parallel workers for processing. If None, uses all available cores minus one.
+ 
     """
     
 
@@ -994,7 +380,7 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                        outType=outType,
+                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         # inshape=inshape,
                         # outshape=outshape,
@@ -1022,7 +408,7 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                        outType=outType,
+                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         # inshape=inshape,
                         # outshape=outshape,
@@ -1049,7 +435,7 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                        outType=outType,
+                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         # inshape=inshape,
                         # outshape=outshape,
@@ -1063,7 +449,7 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
         
 
     elif nchannels==4:
-        if matrixType=='S2':
+        if mat=='S2':
             print("Extracting S2 matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2','temp')
@@ -1085,14 +471,14 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=outType,
+                outType=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.complex64,
                 # inshape=inshape,
                 # outshape=outshape,
                 calibration_constant=cc_linear
             )
             
-        elif matrixType=='T4':
+        elif mat=='T4':
             print("Extracting T4 matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4','temp')
@@ -1114,14 +500,14 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType,
+                outType=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape,
                 calibration_constant=cc_linear
             )
 
-        elif matrixType=='T3':
+        elif mat=='T3':
             print("Extracting T3 matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3','temp')
@@ -1143,13 +529,13 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType,
+                outType=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape,
                 calibration_constant=cc_linear
             )
-        elif matrixType=='C4':
+        elif mat=='C4':
             print("Extracting C4 matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4','temp')
@@ -1171,13 +557,13 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType,
+                outType=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape,
                 calibration_constant=cc_linear            
             )   
-        elif matrixType=='C3':
+        elif mat=='C3':
             print("Extracting C3 matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3','temp')
@@ -1199,14 +585,14 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType,            
+                outType=fmt,cog=cog,ovr=ovr,comp=comp,            
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape,
                 calibration_constant=cc_linear            
             )
         
-        elif matrixType=='C2HV':
+        elif mat=='C2HV':
             print("Extracting C2HV matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
@@ -1220,12 +606,12 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'C2HV', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType, dtype = np.float32, 
+                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape,
                 calibration_constant=cc_linear            
             )
 
-        elif matrixType=='C2HX':
+        elif mat=='C2HX':
             print("Extracting C2HX matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
@@ -1239,12 +625,12 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'C2HX', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType, dtype = np.float32, 
+                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape,
                 calibration_constant=cc_linear            
             )
 
-        elif matrixType=='C2VX':
+        elif mat=='C2VX':
             print("Extracting C2VX matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
@@ -1258,12 +644,12 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'C2VX', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType, dtype = np.float32, 
+                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape,
                 calibration_constant=cc_linear            
             )
 
-        elif matrixType=='T2HV':
+        elif mat=='T2HV':
             print("Extracting T2HV matrix elements...")
             out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV')
             temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV','temp')
@@ -1277,138 +663,12 @@ def isro_asar( inFile, matrixType='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'T2HV', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=outType, dtype = np.float32, 
+                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape,
                 calibration_constant=cc_linear            
             )
             
         else:
-            raise ValueError(f"Unsupported matrix type: {matrixType} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX")
+            raise ValueError(f"Unsupported matrix type: {mat} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX")
 
-    
-@time_it
-def isro_asar_old(inFile,matrix='T3',azlks=8,rglks=6,geocode_flag=False,calibration_constant = 42):
-    """
-    Extracts the S2/C3/T3  matrix elements from a ASAR RSLC HDF5 file 
-    and saves them into respective binary files.
-    
-    Example:
-    --------
-    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract T3 matrix elements from the specified ASAR RSLC file 
-    and save them in the respective folders.
-    
-    Parameters:
-    -----------
-    inFile : str
-        The path to the ASAR RSLC HDF5 file containing the radar data.
-
-    azlks : int, optional (default=8)
-        The number of azimuth looks for multi-looking. 
-
-    rglks : int, optional (default=6)
-        The number of range looks for multi-looking. 
-        
-    matrixType : str, optional (default = T3)
-        Type of matrix to extract. Valid options are 'S2', 'C3', and 'T3'.
-         
-
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `C2/S2/C3/T3` (if not already present) and saves the following binary files:
-
-
-    Raises:
-    -------
-    Exception
-        If the RSLC HDF5 file is invalid or cannot be read.
-
-
-    """
-
-    
-    
-    cc_linear = np.sqrt(10**(calibration_constant/10))
-
-    if matrix == 'S2':
-
-
-        print("Considering S12 = S21")
-            
-        try:
-            h5File = h5py.File(inFile,"r")
-        except:
-            raise('Invalid .h5 file !!')
-        
-        h5File = h5py.File(inFile,"r")
-        if '/science/LSAR' in h5File:
-            freq_band = 'L'            
-            print("Detected L-band data ")
-        elif '/science/SSAR' in h5File:
-            freq_band = 'S'
-            print(" Detected S-band data")
-        else:
-            print("Neither LSAR nor SSAR data found in the file.")
-            h5File.close()
-            return
-        
-        S11 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HH'])/cc_linear
-        S12 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/HV'])/cc_linear
-        S21 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VH'])/cc_linear
-        S22 = np.array(h5File[f'/science/{freq_band}SAR/RSLC/swaths/frequencyA/VV'])/cc_linear
-
-        h5File.close()
-        
-        
-        rows,cols = S11.shape
-        inFolder = os.path.dirname(inFile)   
-        if not inFolder:
-            inFolder = "."
-        out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
-        os.makedirs(out_dir,exist_ok=True)
-       
-        
-        out_file = os.path.join(out_dir,'s11.bin')
-        write_s2_bin(out_file,S11)
-        print("Saved file "+out_file)
-        
-        out_file = os.path.join(out_dir,'s12.bin')
-        write_s2_bin(out_file,(S12+S21)/2)
-        print("Saved file "+out_file)
-        
-        out_file = os.path.join(out_dir,'s21.bin')
-        write_s2_bin(out_file,(S12+S21)/2)
-        print("Saved file "+out_file)
-        
-        out_file = os.path.join(out_dir,'s22.bin')
-        write_s2_bin(out_file,S22)
-        print("Saved file "+out_file)
-        
-        file = open(out_dir +'/config.txt',"w+")
-        file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-        file.close() 
-        
-    elif matrix == 'T3':
-        
-        if geocode_flag:
-            asar_geo_T3(inFile,azlks,rglks,cc_linear)
-        else:
-            asar_T3(inFile,azlks,rglks,cc_linear)
-
-    elif matrix == 'C3':
-        if geocode_flag:
-            asar_geo_C3(inFile,azlks,rglks,cc_linear)
-        else:
-            asar_C3(inFile,azlks,rglks,cc_linear)
-            
-    elif matrix == 'C4':
-        if geocode_flag:
-            asar_geo_C4(inFile,azlks,rglks,cc_linear)
-        else:
-            asar_C4(inFile,azlks,rglks,cc_linear)
-        
-
-    else:
-        raise ValueError('Invalid matrix type. Valid types are "S2", "C4", "T3" and "C3"')
+ 

@@ -47,17 +47,17 @@ def mlook_arr(data, az, rg):
 
 
 
-def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,calibration_constant=1):
+def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,calibration_constant=1):
     if matrix_type == "S2":
-        return compute_s2(chunks,calibration_constant)     
+        return compute_s2(chunks,recip,calibration_constant)     
     elif matrix_type == "C4":
-        return compute_c4(chunks, azlks, rglks, apply_multilook,calibration_constant)    
+        return compute_c4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant)    
     elif matrix_type == "C3":
         return compute_c3(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "T3":
         return compute_t3(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "T4":
-        return compute_t4(chunks, azlks, rglks, apply_multilook,calibration_constant) 
+        return compute_t4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant) 
     elif matrix_type == "T2HV":
         return compute_t2hv(chunks, azlks, rglks, apply_multilook,calibration_constant)   
     elif matrix_type == "C2HV":
@@ -91,8 +91,10 @@ def compute_c3(chunks, azlks, rglks, apply_multilook,calibration_constant):
         "C33": opt_mlook(np.real(np.abs(Kl[2])**2))
     }
 
-def compute_s2(chunks,calibration_constant):
-
+def compute_s2(chunks,recip,calibration_constant):
+    if recip:
+        chunks["HV"] = (chunks["HV"] + chunks["VH"])/2
+        chunks["VH"] = chunks["HV"]
     return {
         "s11": chunks["HH"]/calibration_constant,
         "s12": chunks["HV"]/calibration_constant,
@@ -100,7 +102,11 @@ def compute_s2(chunks,calibration_constant):
         "s22": chunks["VV"]/calibration_constant,
     }
 
-def compute_c4(chunks, azlks, rglks, apply_multilook,calibration_constant):
+def compute_c4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant):
+    
+    if recip:
+        chunks["HV"] = (chunks["HV"] + chunks["VH"])/2
+        chunks["VH"] = chunks["HV"].copy()
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
 
@@ -214,7 +220,10 @@ def compute_t3(chunks, azlks, rglks, apply_multilook,calibration_constant):
         "T33": opt_mlook(np.real(np.abs(Kp[2])**2))
     }
 
-def compute_t4(chunks, azlks, rglks, apply_multilook,calibration_constant):
+def compute_t4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant):
+    if recip:
+        chunks["HV"] = (chunks["HV"] + chunks["VH"])/2
+        chunks["VH"] = chunks["HV"].copy()
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
 
@@ -265,7 +274,7 @@ def get_chunk_jobs(h5_file, dataset_path, chunk_size_x, chunk_size_y):
 
 
 def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_type,apply_multilook, temp_dir,
-                           start_x, start_y, xres, yres, epsg,
+                           start_x, start_y, xres, yres, epsg, recip,
                            calibration_constant=1):
     os.makedirs(temp_dir, exist_ok=True)
     x0, x1, y0, y1 = job["x_start"], job["x_end"], job["y_start"], job["y_end"]
@@ -276,7 +285,7 @@ def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_ty
             chunks[name] = h5.get_node(path)[y0:y1, x0:x1]
 
     # results = compute_c3_elements(chunks, azlks, rglks, apply_multilook)
-    results = compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,calibration_constant)
+    results = compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,calibration_constant)
 
     for name, data in results.items():
         save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
@@ -420,7 +429,7 @@ def cleanup_temp_files(temp_dir):
 
 
 def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
-                            azlks, rglks,matrix_type, apply_multilook,
+                            azlks, rglks,matrix_type, apply_multilook,recip=False, 
                             chunk_size_x=512, chunk_size_y=512,
                             max_workers=None,
                             start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
@@ -438,7 +447,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
 
     with ProcessPoolExecutor(max_workers=max_workers) as pool:
         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,
-                               azlks, rglks, matrix_type, apply_multilook, temp_dir, 
+                               azlks, rglks, matrix_type, apply_multilook,recip, temp_dir, 
                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
                                calibration_constant=calibration_constant) for job in jobs]
         with tqdm(total=len(futures), desc="Progress") as pbar:
@@ -449,7 +458,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
     dummy_shape = (azlks * 2, rglks * 2)
     dummy_data = {k: np.zeros(dummy_shape, dtype=np.complex64) for k in dataset_paths.keys()}
     keys = compute_elements(dummy_data, matrix_type, azlks, rglks, 
-                            apply_multilook,calibration_constant).keys()
+                            apply_multilook,recip,calibration_constant).keys()
 
     for name in keys:
         mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,

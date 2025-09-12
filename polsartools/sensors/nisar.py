@@ -110,7 +110,7 @@ def gslc_meta(inFile):
 def nisar_gslc(inFile, mat='C3', 
                azlks=2, rglks=2, 
                fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
-               out_dir = None,
+               out_dir = None,recip=False,
                max_workers=None):
 
     """
@@ -161,7 +161,10 @@ def nisar_gslc(inFile, mat='C3',
     out_dir : str or None, optional (default=None)
         Directory to save output files. If None, a folder named after the matrix type will be created
         in the same location as the input file.
-
+        
+    recip : bool, optional (default=False)
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
+        
     max_workers : int or None, optional (default=None)
         Number of parallel workers for processing. If None, uses all available cores minus one.
 
@@ -330,6 +333,7 @@ def nisar_gslc(inFile, mat='C3',
                 rglks=rglks,
                 matrix_type = 'S2',
                 apply_multilook=False,
+                recip=recip,
                 chunk_size_x=get_ml_chunk(rglks, 512),
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
@@ -363,6 +367,7 @@ def nisar_gslc(inFile, mat='C3',
                 rglks=rglks,
                 matrix_type = 'T4',
                 apply_multilook=True,
+                recip=recip,
                 chunk_size_x=get_ml_chunk(rglks, 512),
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
@@ -428,6 +433,7 @@ def nisar_gslc(inFile, mat='C3',
                 rglks=rglks,
                 matrix_type = 'C4',
                 apply_multilook=True,
+                recip=recip,
                 chunk_size_x=get_ml_chunk(rglks, 512),
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
@@ -565,7 +571,7 @@ def nisar_gslc(inFile, mat='C3',
 @time_it  
 def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10, 
                fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
-               out_dir=None,
+               out_dir=None,recip=False,
                max_workers=None ):
     """
     Extracts PolSAR matrix elements from a NISAR RSLC HDF5 file and saves them as slant range raster files.
@@ -593,7 +599,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
         - Dual-pol: 'C2' (or leave empty to auto-detect)
 
     azlks : int, optional (default=22)
-        Number of azimuth looks for multi-looking. Higher values reduce speckle but lower resolution.
+        Number of azimuth looks for multi-looking. 
 
     rglks : int, optional (default=10)
         Number of range looks for multi-looking.
@@ -616,6 +622,9 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
         Directory to save output files. If None, a folder named after the matrix type will be created
         in the same location as the input file.
 
+    recip : bool, optional (default=False)
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
+        
     max_workers : int or None, optional (default=None)
         Number of parallel workers for processing. If None, uses all available cores minus one.
  
@@ -767,6 +776,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 rglks=rglks,
                 matrix_type = 'S2',
                 apply_multilook=False,
+                recip=recip,
                 chunk_size_x=get_ml_chunk(rglks, 512),
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
@@ -800,6 +810,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 rglks=rglks,
                 matrix_type = 'T4',
                 apply_multilook=True,
+                recip=recip,
                 chunk_size_x=get_ml_chunk(rglks, 512),
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
@@ -865,6 +876,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 rglks=rglks,
                 matrix_type = 'C4',
                 apply_multilook=True,
+                recip=recip,
                 chunk_size_x=get_ml_chunk(rglks, 512),
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,

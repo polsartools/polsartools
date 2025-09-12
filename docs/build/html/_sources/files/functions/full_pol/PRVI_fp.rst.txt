@@ -1,5 +1,5 @@
-Polarimetric Radar Vegetation Index (``prvifp`` )
-=================================================
+Polarimetric Radar Vegetation Index (``prvi_fp`` )
+==================================================
 .. This functionality computes the polarimetric Radar vegetation index for full polarimetric SAR data. The required input and the computed output are as follows:
 
 .. .. code-block:: python
@@ -7,7 +7,7 @@ Polarimetric Radar Vegetation Index (``prvifp`` )
 ..         input : input_T3/C3_folder, window_size
 ..         output: PRVI_FP.bin
 
-.. autofunction:: polsartools.prvifp
+.. autofunction:: polsartools.prvi_fp
    :noindex:
 
    

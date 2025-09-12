@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.fp.freeman_2c &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.polsar.fp.dop_fp &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/fp/freeman_2c';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/fp/dop_fp';</script>
     <link rel="icon" href="../../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.fp.freeman_2c</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.fp.dop_fp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,61 +332,62 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.polsar.fp.freeman_2c</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.polsar.fp.dop_fp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.convert_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">T3_C3_mat</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.convert_matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">C3_T3_mat</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.fp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">fp_c3t3files</span>
-<div class="viewcode-block" id="freeman_2c">
-<a class="viewcode-back" href="../../../../files/functions/full_pol/freeman_2c.html#polsartools.freeman_2c">[docs]</a>
+<div class="viewcode-block" id="dop_fp">
+<a class="viewcode-back" href="../../../../files/functions/full_pol/DOP_fp.html#polsartools.dop_fp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">freeman_2c</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">dop_fp</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
           <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
           <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
           <span class="p">):</span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Freeman 2-Component Decomposition for full-pol SAR data.</span>
 
-<span class="sd">    This function implements thetwo-component decomposition for</span>
-<span class="sd">    full-polarimetric SAR data, decomposing the total scattered power into ground (Ps),</span>
-<span class="sd">    and volume (Pv) scattering components.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Barakat Degree of Polarization from full-pol SAR coherency/covariance matrix.</span>
+
+<span class="sd">    This function computes the Barakat Degree of Polarization (DoP) from full-polarimetric</span>
+<span class="sd">    SAR data using either the coherency (T3) or covariance (C3) matrix. The Barakat DoP</span>
+<span class="sd">    provides a generalized measure of the polarization state for partially polarized waves</span>
+<span class="sd">    in full-pol SAR systems.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
-<span class="sd">    &gt;&gt;&gt; freeman_2c(&quot;/path/to/fullpol_data&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; dop_fp(&quot;/path/to/fullpol_data&quot;)</span>
 <span class="sd">    </span>
 <span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
-<span class="sd">    &gt;&gt;&gt; freeman_2c(</span>
+<span class="sd">    &gt;&gt;&gt; dop_fp(</span>
 <span class="sd">    ...     in_dir=&quot;/path/to/fullpol_data&quot;,</span>
 <span class="sd">    ...     win=5,</span>
 <span class="sd">    ...     fmt=&quot;tif&quot;,</span>
 <span class="sd">    ...     cog=True,</span>
 <span class="sd">    ...     block_size=(1024, 1024)</span>
 <span class="sd">    ... )</span>
-
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    in_dir : str</span>
-<span class="sd">        Path to the input folder containing full-pol T3 or C3 matrix files.</span>
+<span class="sd">        Path to the input folder containing full-pol C3 or T3 matrix files.</span>
 <span class="sd">    win : int, default=1</span>
-<span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
-<span class="sd">        but decrease spatial resolution.</span>
+<span class="sd">        Size of the spatial averaging window. Larger windows improve DoP estimation</span>
+<span class="sd">        accuracy but decrease spatial resolution.</span>
 <span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
 <span class="sd">        Output file format:</span>
 <span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
 <span class="sd">        - &#39;bin&#39;: Raw binary format</span>
 <span class="sd">    cog : bool, default=False</span>
-<span class="sd">        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling</span>
+<span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
 <span class="sd">        and overviews for efficient web access.</span>
 <span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
 <span class="sd">        Overview levels for COG creation. Each number represents the</span>
 <span class="sd">        decimation factor for that overview level.</span>
 <span class="sd">    comp : bool, default=False</span>
-<span class="sd">        If True, uses LZW compression for GeoTIFF outputs.</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF files.</span>
 <span class="sd">    max_workers : int | None, default=None</span>
 <span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
 <span class="sd">        CPU count - 1 workers.</span>
@@ -397,34 +398,31 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">        Writes two output files to disk:</span>
-<span class="sd">        </span>
-<span class="sd">        1. Freeman_2c_grd: Surface scattering power component</span>
-<span class="sd">        2. Freeman_2c_vol: Volume scattering power component</span>
+<span class="sd">        Writes one output file to disk:</span>
+<span class="sd">        - &#39;dop_fp.tif&#39; or &#39;dop_fp.bin&#39;: Barakat Degree of Polarization image</span>
+<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    
     <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
     <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">fp_c3t3files</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
-
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Freeman_2c_grd.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Freeman_2c_vol.bin&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;dop_fp.bin&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Freeman_2c_grd.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Freeman_2c_vol.tif&quot;</span><span class="p">))</span>
-
-        
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;dop_fp.tif&quot;</span><span class="p">))</span>
+    
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
                             <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
-                        <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_free2c</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
-                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                        <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_dopfp</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
+                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span>
+                        <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span>
+                        <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                         <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                         <span class="p">)</span></div>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_free2c</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">input_filepaths</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dopfp</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="n">input_filepaths</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="s1">&#39;T11&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;T22&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;T33&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
         <span class="n">t11_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -437,10 +435,9 @@
         <span class="n">t32_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">t23_T1</span><span class="p">)</span>
         <span class="n">t33_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
 
-        <span class="n">T3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">t11_T1</span><span class="p">,</span> <span class="n">t12_T1</span><span class="p">,</span> <span class="n">t13_T1</span><span class="p">],</span> 
+        <span class="n">T_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">t11_T1</span><span class="p">,</span> <span class="n">t12_T1</span><span class="p">,</span> <span class="n">t13_T1</span><span class="p">],</span> 
                      <span class="p">[</span><span class="n">t21_T1</span><span class="p">,</span> <span class="n">t22_T1</span><span class="p">,</span> <span class="n">t23_T1</span><span class="p">],</span> 
                      <span class="p">[</span><span class="n">t31_T1</span><span class="p">,</span> <span class="n">t32_T1</span><span class="p">,</span> <span class="n">t33_T1</span><span class="p">]])</span>
-        <span class="n">T_T1</span> <span class="o">=</span> <span class="n">T3_C3_mat</span><span class="p">(</span><span class="n">T3</span><span class="p">)</span>
 
 
     <span class="k">if</span> <span class="s1">&#39;C11&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;C22&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;C33&#39;</span> <span class="ow">in</span> <span class="n">input_filepaths</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
@@ -453,14 +450,16 @@
         <span class="n">C31</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">C13</span><span class="p">)</span>
         <span class="n">C32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">C23</span><span class="p">)</span>
         <span class="n">C33</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
-        <span class="n">T_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">C11</span><span class="p">,</span> <span class="n">C12</span><span class="p">,</span> <span class="n">C13</span><span class="p">],</span> 
+        <span class="n">C3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">C11</span><span class="p">,</span> <span class="n">C12</span><span class="p">,</span> <span class="n">C13</span><span class="p">],</span> 
                          <span class="p">[</span><span class="n">C21</span><span class="p">,</span> <span class="n">C22</span><span class="p">,</span> <span class="n">C23</span><span class="p">],</span> 
                          <span class="p">[</span><span class="n">C31</span><span class="p">,</span> <span class="n">C32</span><span class="p">,</span> <span class="n">C33</span><span class="p">]])</span>
 
-    <span class="c1"># print(&quot;Window size: &quot;,window_size)</span>
+        <span class="n">T_T1</span> <span class="o">=</span> <span class="n">C3_T3_mat</span><span class="p">(</span><span class="n">C3</span><span class="p">)</span>
+
+
     <span class="k">if</span> <span class="n">window_size</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
-        <span class="c1"># print(&#39;Filtering with window size: &#39;, window_size)</span>
+
         <span class="n">t11f</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,:],</span><span class="n">kernel</span><span class="p">)</span>
         <span class="n">t12f</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,:,:]),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,:,:]),</span><span class="n">kernel</span><span class="p">)</span>
         <span class="n">t13f</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,:,:]),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,:,:]),</span><span class="n">kernel</span><span class="p">)</span>
@@ -475,56 +474,17 @@
 
         <span class="n">T_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">t11f</span><span class="p">,</span> <span class="n">t12f</span><span class="p">,</span> <span class="n">t13f</span><span class="p">],</span> <span class="p">[</span><span class="n">t21f</span><span class="p">,</span> <span class="n">t22f</span><span class="p">,</span> <span class="n">t23f</span><span class="p">],</span> <span class="p">[</span><span class="n">t31f</span><span class="p">,</span> <span class="n">t32f</span><span class="p">,</span> <span class="n">t33f</span><span class="p">]])</span>
 
-    <span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">rows</span><span class="p">,</span><span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">T_T1</span><span class="p">)</span>
-    <span class="n">T_T1</span> <span class="o">=</span> <span class="n">T_T1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
-    
-    <span class="n">C11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:])</span>
-    <span class="n">C22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">4</span><span class="p">,:,:])</span>
-    <span class="n">C33</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">8</span><span class="p">,:,:])</span>
-    <span class="n">C13_re</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,:,:])</span>
-    <span class="n">C13_im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T_T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,:,:])</span>
-    
-    <span class="k">del</span> <span class="n">T_T1</span>
-    <span class="n">Span</span> <span class="o">=</span> <span class="n">C11</span><span class="o">+</span><span class="n">C22</span><span class="o">+</span><span class="n">C33</span>
-    <span class="n">SpanMax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">Span</span><span class="p">)</span>
-    <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-10</span>
-    
-    
-    <span class="n">z1</span> <span class="o">=</span> <span class="n">C11</span> <span class="o">-</span> <span class="n">C33</span>
-    <span class="n">z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="n">z1</span><span class="p">)</span>
 
-    <span class="n">z2r</span> <span class="o">=</span> <span class="n">C22</span> <span class="o">+</span> <span class="n">C13_re</span> <span class="o">-</span> <span class="n">C11</span>
-    <span class="n">z2i</span> <span class="o">=</span> <span class="n">C13_im</span>
+    <span class="n">reshaped_arr</span> <span class="o">=</span> <span class="n">T_T1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">det_T3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">reshaped_arr</span><span class="p">)</span>
+    <span class="c1"># del reshaped_arr</span>
+    <span class="n">det_T3</span> <span class="o">=</span> <span class="n">det_T3</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">T_T1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">T_T1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
-    <span class="n">z3r</span> <span class="o">=</span> <span class="n">z2r</span> <span class="o">/</span> <span class="n">z1</span>
-    <span class="n">z3i</span> <span class="o">=</span> <span class="n">z2i</span> <span class="o">/</span> <span class="n">z1</span>
-
-    <span class="n">denom</span> <span class="o">=</span> <span class="n">z3r</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">z3i</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">eps</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">z3i</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">z3r</span><span class="p">))</span> <span class="o">/</span> <span class="n">denom</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">z3r</span> <span class="o">/</span> <span class="p">(</span><span class="n">z3i</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span>
-
-    <span class="n">denom_fg</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span>
-    <span class="c1"># denom_fg = np.where(denom_fg == 0, eps, denom_fg)</span>
-    <span class="n">FG</span> <span class="o">=</span> <span class="n">z1</span> <span class="o">/</span> <span class="n">denom_fg</span>
-    <span class="n">FV</span> <span class="o">=</span> <span class="n">C11</span> <span class="o">-</span> <span class="n">FG</span>
-    <span class="n">RHO</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">C22</span><span class="o">/</span> <span class="p">(</span><span class="n">FV</span> <span class="o">+</span> <span class="n">eps</span><span class="p">))</span>
-
-    <span class="n">vol</span> <span class="o">=</span> <span class="n">FV</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">-</span> <span class="n">RHO</span><span class="p">)</span>
-    <span class="n">grd</span> <span class="o">=</span> <span class="n">FG</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-
-    <span class="n">grd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">grd</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">SpanMax</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">vol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">vol</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">SpanMax</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">trace_T3</span> <span class="o">=</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,:]</span> <span class="o">+</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,:,:]</span> <span class="o">+</span> <span class="n">T_T1</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,:,:]</span>
+    <span class="n">m1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="mi">27</span><span class="o">*</span><span class="p">(</span><span class="n">det_T3</span><span class="o">/</span><span class="p">(</span><span class="n">trace_T3</span><span class="o">**</span><span class="mi">3</span><span class="p">)))))</span>
     
-    <span class="n">mask1</span> <span class="o">=</span> <span class="p">(</span><span class="n">grd</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">vol</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="p">)</span>
-    <span class="n">mask2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">C11</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">C22</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">C33</span><span class="p">)</span>
-    <span class="n">mask3</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">C11</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">C22</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">C33</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">eps</span><span class="p">)</span>
-    <span class="n">combined_mask</span> <span class="o">=</span> <span class="n">mask1</span> <span class="o">|</span> <span class="n">mask2</span> <span class="o">|</span> <span class="n">mask3</span>
 
-    <span class="n">grd</span><span class="p">[</span><span class="n">combined_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">vol</span><span class="p">[</span><span class="n">combined_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    
-    
-    <span class="k">return</span> <span class="n">grd</span><span class="p">,</span> <span class="n">vol</span>
+    <span class="k">return</span> <span class="n">m1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
                 </article>

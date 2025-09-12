@@ -30,18 +30,18 @@ def cp_processing(compact_c2, chi_in=45, window_size=3):
 def full_pol_processing(full_T3, window_size=3):
     
     """ Decompositions"""
-    pst.halphafp(full_T3, window_size=window_size)
-    pst.neufp(full_T3, window_size=window_size)
-    pst.nnedfp(full_T3, window_size=window_size)    
-    pst.mf3cf(full_T3, window_size=window_size)
-    pst.mf4cf(full_T3, window_size=window_size)
+    pst.halpha_fp(full_T3, win=window_size)
+    pst.neu_fp(full_T3, win=window_size)
+    pst.nned_fp(full_T3, win=window_size)    
+    pst.mf3cf(full_T3, win=window_size)
+    pst.mf4cf(full_T3, win=window_size)
     
     """ Descriptors """   
-    pst.dopfp(full_T3, window_size=window_size)
-    pst.grvi(full_T3, window_size=window_size)
-    pst.rvifp(full_T3, window_size=window_size)
-    pst.prvifp(full_T3, window_size=window_size)
-    pst.shannon_h_fp(full_T3, window_size=window_size)
+    pst.dop_fp(full_T3, win=window_size)
+    pst.grvi(full_T3, win=window_size)
+    pst.rvi_fp(full_T3, win=window_size)
+    pst.prvi_fp(full_T3, win=window_size)
+    pst.shannon_h_fp(full_T3, win=window_size)
     
 
 def dual_cross_pol_processing(dxp_C2, window_size=3):

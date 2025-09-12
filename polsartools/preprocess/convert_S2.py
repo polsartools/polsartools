@@ -8,14 +8,14 @@ import os
 from osgeo import gdal
 gdal.UseExceptions()
 
-# def get_s2_input_filepaths(infolder):
+# def get_s2_input_filepaths(in_dir):
 #     """
 #     Searches for s11/s12/s21/s22 files in .bin or .tif format.
 #     Returns input file paths or raises an exception if files are missing.
 #     """
 #     def find_file(base):
 #         for ext in [".bin", ".tif"]:
-#             path = os.path.join(infolder, f"{base}{ext}")
+#             path = os.path.join(in_dir, f"{base}{ext}")
 #             if os.path.isfile(path):
 #                 return path
 #         return None
@@ -28,16 +28,16 @@ gdal.UseExceptions()
     
 #     return input_filepaths
 
-def find_file(base, infolder):
+def find_file(base, in_dir):
     for ext in [".bin", ".tif"]:
-        path = os.path.join(infolder, f"{base}{ext}")
+        path = os.path.join(in_dir, f"{base}{ext}")
         if os.path.isfile(path):
             return path
     return None
 
-# def get_s_input_filepaths(infolder):
+# def get_s_input_filepaths(in_dir):
 #     keys = ["s11", "s12", "s21", "s22"]
-#     found_files = {k: find_file(k, infolder) for k in keys}
+#     found_files = {k: find_file(k, in_dir) for k in keys}
 #     available = {k: v for k, v in found_files.items() if v is not None}
 
 #     if len(available) in [2, 4]:
@@ -48,9 +48,9 @@ def find_file(base, infolder):
 #     else:
 #         raise FileNotFoundError
 
-def get_s_input_filepaths(infolder):
+def get_s_input_filepaths(in_dir):
     keys = ["s11", "s12", "s21", "s22"]
-    found_files = {k: find_file(k, infolder) for k in keys}
+    found_files = {k: find_file(k, in_dir) for k in keys}
     available = [v for v in found_files.values() if v is not None]
     if len(available) in [2, 4]:
         # print(f"Found valid S-matrix set with {len(available)} files:")
@@ -61,7 +61,7 @@ def get_s_input_filepaths(infolder):
         raise FileNotFoundError(f"Only found {len(available)} S-matrix files; need exactly 2 or 4.")
 
 
-def get_output_filepaths(infolder, outfolder, matrix, outType):
+def get_output_filepaths(in_dir, out_dir, matrix, fmt):
     """
     Returns output filepaths for the specified matrix and output type (bin or tif).
     Also ensures the target directory exists.
@@ -88,18 +88,19 @@ def get_output_filepaths(infolder, outfolder, matrix, outType):
     if matrix not in matrix_keys:
         raise ValueError(f"Invalid matrix type '{matrix}'")
 
-    ext = ".bin" if outType == "bin" else ".tif"
-    if outfolder is None:
-        outfolder = os.path.join(infolder, matrix)
-    os.makedirs(outfolder, exist_ok=True)
+    ext = ".bin" if fmt == "bin" else ".tif"
+    if out_dir is None:
+        out_dir = os.path.join(in_dir, matrix)
+    os.makedirs(out_dir, exist_ok=True)
 
-    return [os.path.join(outfolder, f"{name}{ext}") for name in matrix_keys[matrix]]
+    return [os.path.join(out_dir, f"{name}{ext}") for name in matrix_keys[matrix]]
 
 @time_it
-def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1, 
-                  outType="tif", outfolder=None,
-                  cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                  write_flag=True, max_workers=None,block_size=(512, 512),
+def convert_S(in_dir, mat='T3', azlks=4,rglks=2,  
+                  fmt="tif", cog=False,ovr = [2, 4, 8, 16],comp=False,
+                  recip=True,
+                  cf = 1, out_dir=None,
+                  max_workers=None,block_size=(512, 512),
                   progress_callback=None,  # for QGIS plugin
                   ):
     """
@@ -110,16 +111,16 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1,
     Examples
     --------
     >>> # Convert to C3 matrix with 10x5 multi-looking
-    >>> convert_S("/path/to/S_data", matrix="C3", azlks=10, rglks=5)
+    >>> convert_S("/path/to/S_data", mat="C3", azlks=10, rglks=5)
 
     >>> # Output as tiled GeoTIFF with Cloud Optimized overviews
-    >>> convert_S("/data/S_data", matrix="C2", cog_flag=True)
+    >>> convert_S("/data/S_data", mat="C2", cog=True)
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Path to the input folder containing S11, S12, S21, S22 scattering components.
-    matrixType : str, default='T3'
+    mat : str, default='T3'
         Output matrix format. Supported values:
         - 'T4', 'T3', 'T2HV' (Coherency)
         - 'C4', 'C3', 'C2HX', 'C2VX', 'C2HV' (Covariance)
@@ -127,39 +128,38 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1,
         Number of looks in azimuth direction.
     rglks : int, default=2
         Number of looks in range direction.
+    fmt : {'tif', 'bin'}, default='tif'
+        Output format type.
+    cog : bool, default=False
+        If True, creates Cloud Optimized GeoTIFF (COG).
+    ovr : list[int], default=[2, 4, 8, 16]
+        Levels of pyramid overviews for COG generation.
+    comp : bool, default=False
+        If True, applies LZW compression to output GeoTIFF files.
+    recip : bool, default=True
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
     cf : float, default=1
         Calibration factor (linear) to adjust the amplitude of S2 data.
-    outType : {'tif', 'bin'}, default='tif'
-        Output format type.
-    cog_flag : bool, default=False
-        If True, creates Cloud Optimized GeoTIFF (COG).
-    cog_overviews : list[int], default=[2, 4, 8, 16]
-        Levels of pyramid overviews for COG generation.
-    write_flag : bool, default=True
-        If False, skips writing output to disk.
+    out_dir : str | None, default=None
+        Path to the output folder. If None, uses the input folder.
     max_workers : int | None, default=None
         Number of parallel worker threads.
     block_size : tuple[int, int], default=(512, 512)
         Size of chunks for processing.
-
-    Returns
-    -------
-    None
-        Writes multi-looked polarimetric matrix to disk in the selected format.
-
     """
     
     window_size=None
+    write_flag=True
     
-    input_filepaths =  get_s_input_filepaths(infolder)
-    output_filepaths = get_output_filepaths(infolder, outfolder,matrixType, outType)
+    input_filepaths =  get_s_input_filepaths(in_dir)
+    output_filepaths = get_output_filepaths(in_dir, out_dir,mat, fmt)
     
     if len(input_filepaths) not in [2, 4]:
         raise Exception("Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files")
-    if len(input_filepaths) == 2 and matrixType not in {'C2', 'T2'}:
-        raise Exception(f"Invalid matrix type '{matrixType}' for dual-pol input - please choose one of 'C2', 'T2'")
-    if len(input_filepaths) == 4 and matrixType not in {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV'}:
-        raise Exception(f"Invalid matrix type '{matrixType}' for full-pol input - please choose one of 'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV',")
+    if len(input_filepaths) == 2 and mat not in {'C2', 'T2'}:
+        raise Exception(f"Invalid matrix type '{mat}' for dual-pol input - please choose one of 'C2', 'T2'")
+    if len(input_filepaths) == 4 and mat not in {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV'}:
+        raise Exception(f"Invalid matrix type '{mat}' for full-pol input - please choose one of 'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV',")
     
     # VALID_MATRICES = {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV', 'C2', 'T2'}
     # if matrix not in VALID_MATRICES:
@@ -220,12 +220,13 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1,
                              window_size,
                             write_flag,
                             process_chunk_sxyct,
-                            *[cf, matrixType, azlks, rglks],
+                            *[cf, mat, azlks, rglks],
                             block_size=block_size, 
                             max_workers=max_workers,  
                             num_outputs=len(output_filepaths),
-                            cog_flag=cog_flag,
-                            cog_overviews=cog_overviews,
+                            cog=cog,
+                            ovr=ovr,
+                            comp=comp,
                             out_x_size=out_x_size,
                             out_y_size=out_y_size,
                             out_geotransform=out_geotransform,
@@ -240,12 +241,13 @@ def convert_S(infolder, matrixType='T3', azlks=4,rglks=2,  cf = 1,
                                 window_size,
                                 write_flag,
                                 process_chunk_s2ct,
-                                *[cf, matrixType, azlks, rglks],
+                                *[cf, mat, recip, azlks, rglks],
                                 block_size=block_size, 
                                 max_workers=max_workers,  
                                 num_outputs=len(output_filepaths),
-                                cog_flag=cog_flag,
-                                cog_overviews=cog_overviews,
+                                cog=cog,
+                                ovr=ovr,
+                                comp=comp,
                                 out_x_size=out_x_size,
                                 out_y_size=out_y_size,
                                 out_geotransform=out_geotransform,
@@ -289,15 +291,22 @@ def process_chunk_sxyct(chunks, *args, **kwargs):
 
 def process_chunk_s2ct(chunks, *args, **kwargs):
     # print(args[-1],args[-2],args[-3])
-    abs_cf = args[-4]
-    matrix=args[-3]
+    abs_cf = args[-5]
+    matrix =args[-4]
+    recip=args[-3]
     azlks=args[-2]
     rglks=args[-1]
+
     
     s11 = np.array(chunks[0])*abs_cf
     s12 = np.array(chunks[1])*abs_cf
     s21 = np.array(chunks[2])*abs_cf
     s22 = np.array(chunks[3])*abs_cf
+    
+    if recip:
+        # print("Applying reciprocal symmetry, i.e, S_HV = S_VH")
+        s12 = (s12 + s21) / 2
+        s21 = s12.copy()
     
     if matrix == 'C4':
         Kl = np.array([s11, s12, s21, s22])

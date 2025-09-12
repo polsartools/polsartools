@@ -16,8 +16,9 @@ def process_chunks_parallel(
     block_size=(512, 512),
     max_workers=None,
     num_outputs=1,
-    cog_flag=False,
-    cog_overviews=[2, 4, 8, 16],
+    cog=False,
+    ovr=[2, 4, 8, 16],
+    comp=False,
     post_proc=None,
     out_x_size=None, out_y_size=None,
     out_geotransform=None,
@@ -115,7 +116,7 @@ def process_chunks_parallel(
         merge_temp_files(
             output_filepaths, temp_files, output_width, output_height,
             output_geotransform, output_projection, num_outputs,
-            cog_flag, cog_overviews, azlks=azlks, rglks=rglks
+            cog, ovr, comp,azlks=azlks, rglks=rglks
         )
         for temp_path_set, _, _ in temp_files:
             for temp_path in temp_path_set:
@@ -306,8 +307,8 @@ def write_chunk_to_temp_file(processed_chunks, x_start, y_start, block_width, bl
 
 def merge_temp_files(output_filepaths, temp_files, output_width, output_height, 
                      output_geotransform, output_projection, 
-                     num_outputs,cog_flag,cog_overviews,azlks=1, rglks=1):
-    compress = False
+                     num_outputs,cog,ovr,comp,azlks=1, rglks=1):
+
     for i in range(num_outputs):
         # Infer dtype from first block
         first_temp_path = temp_files[0][0][i]
@@ -325,9 +326,9 @@ def merge_temp_files(output_filepaths, temp_files, output_width, output_height,
             driver = gdal.GetDriverByName('GTiff')
             options = ['BIGTIFF=IF_SAFER']
             # options = ['COMPRESS=LZW', 'BIGTIFF=YES', 'TILED=YES']
-            if compress:
+            if comp:
                 options += ['COMPRESS=LZW']
-            if cog_flag:
+            if cog:
                 # options.extend(['COG=YES', 'TFW=YES']) 
                 options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
 
@@ -374,11 +375,11 @@ def merge_temp_files(output_filepaths, temp_files, output_width, output_height,
         output_dataset.FlushCache()
         output_dataset = None
         
-        if '.tif' in output_filepaths[i] and cog_flag:
+        if '.tif' in output_filepaths[i] and cog:
             # add_overviews(output_filepaths[i])
-            gdal.SetConfigOption('COMPRESS_OVERVIEW', 'LZW')
+            # gdal.SetConfigOption('COMPRESS_OVERVIEW', 'LZW')
             dataset = gdal.Open(output_filepaths[i], gdal.GA_Update)
-            dataset.BuildOverviews("AVERAGE", cog_overviews)
+            dataset.BuildOverviews("AVERAGE", ovr)
             dataset = None
         
         print(f"Saved file {output_filepaths[i]}")

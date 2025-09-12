@@ -1,5 +1,5 @@
-Yamaguchi 4-Component decomposition (``yam4cfp``)
-=================================================
+Yamaguchi 4-Component decomposition (``yam4c_fp``)
+===================================================
 
-.. autofunction:: polsartools.yam4cfp
+.. autofunction:: polsartools.yam4c_fp
    :noindex:

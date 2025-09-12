@@ -363,37 +363,37 @@
 <p>The <cite>rs2_fp</cite> function extracts matrix elements (S2, C3 or T3) from the given RADARSAT-2 folder and saves them into respective directories (S2, C3 or T3).</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rs2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matrixType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/rs2_fp.html#rs2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rs2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/rs2_fp.html#rs2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.</p>
-<p>This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (<cite>inFolder</cite>)
+<p>This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (<cite>in_dir</cite>)
 and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory
 (<cite>S2</cite>, <cite>T3</cite>, or <cite>C3</cite>). The function uses lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>) for scaling
-the data based on the chosen <cite>type</cite> (sigma0, gamma0, or beta0). The processed data is written into binary files
+the data based on the chosen backscatter coefficient <cite>bsc</cite> (sigma0, gamma0, or beta0). The processed data is written into binary files
 in the output folder.</p>
 <section id="example-usage">
 <h3>Example Usage:<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h3>
 <p>To process imagery and generate a T3 matrix:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;sigma0&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">,</span> <span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;sigma0&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To process imagery and generate a C3 matrix:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">matrix</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;beta0&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;beta0&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
 <dl class="simple">
-<dt>inFolder<span class="classifier">str</span></dt><dd><p>Path to the folder containing the radar imagery files and the lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>).</p>
+<dt>in_dir<span class="classifier">str</span></dt><dd><p>Path to the folder containing the radar imagery files and the lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>).</p>
 </dd>
-<dt>matrixType<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to generate. Can be:</p>
+<dt>mat<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to generate. Can be:</p>
 <ul class="simple">
 <li><p>‘S2’ : Generates S2 matrix from the input imagery (S12 = S21 assumption).</p></li>
 <li><p>‘T3’ : Generates T3 matrix from the input imagery, based on Pauli decomposition.</p></li>
 <li><p>‘C3’ : Generates C3 matrix from the input imagery, based on Lexicographic decomposition.</p></li>
 </ul>
 </dd>
-<dt>type<span class="classifier">str, optional (default=’sigma0’)</span></dt><dd><p>The type of radar cross-section to use for scaling. Available options:</p>
+<dt>bsc<span class="classifier">str, optional (default=’sigma0’)</span></dt><dd><p>The type of radar cross-section to use for scaling. Available options:</p>
 <ul class="simple">
 <li><p>‘sigma0’ : Uses <cite>lutSigma.xml</cite> for scaling.</p></li>
 <li><p>‘gamma0’ : Uses <cite>lutGamma.xml</cite> for scaling.</p></li>
@@ -405,23 +405,6 @@ in the output folder.</p>
 <dt>rglks<span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of range looks to apply during the C3/T3processing.</p>
 </dd>
 </dl>
-</section>
-<section id="raises">
-<h3>Raises:<a class="headerlink" href="#raises" title="Link to this heading">#</a></h3>
-<dl class="simple">
-<dt>ValueError</dt><dd><p>If an invalid <cite>matrix</cite> or <cite>type</cite> is provided, a <cite>ValueError</cite> will be raised with a descriptive message.</p>
-</dd>
-<dt>FileNotFoundError</dt><dd><p>If any of the required input files (such as the .tif imagery or the lookup tables) cannot be found in the <cite>inFolder</cite>.</p>
-</dd>
-</dl>
-</section>
-<section id="notes">
-<h3>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>The function assumes that the input imagery is stored as “imagery_HH.tif”, “imagery_HV.tif”, “imagery_VH.tif”, and “imagery_VV.tif” in the <cite>inFolder</cite>.</p></li>
-<li><p>The function uses the <cite>read_rs2_tif</cite> and <cite>write_*</cite> helper functions to read and write image data and binary files.</p></li>
-<li><p>The generated matrices (S2, T3, or C3) are saved in subdirectories within <cite>inFolder</cite> named accordingly.</p></li>
-</ul>
 </section>
 </dd></dl>
 

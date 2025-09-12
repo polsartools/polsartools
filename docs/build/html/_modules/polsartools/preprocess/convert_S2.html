@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.preprocess.convert_S2 &#8212; PolSARtools 0.8 documentation</title>
+    <title>polsartools.preprocess.convert_S2 &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/convert_S2';</script>
@@ -343,14 +343,14 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
 
-<span class="c1"># def get_s2_input_filepaths(infolder):</span>
+<span class="c1"># def get_s2_input_filepaths(in_dir):</span>
 <span class="c1">#     &quot;&quot;&quot;</span>
 <span class="c1">#     Searches for s11/s12/s21/s22 files in .bin or .tif format.</span>
 <span class="c1">#     Returns input file paths or raises an exception if files are missing.</span>
 <span class="c1">#     &quot;&quot;&quot;</span>
 <span class="c1">#     def find_file(base):</span>
 <span class="c1">#         for ext in [&quot;.bin&quot;, &quot;.tif&quot;]:</span>
-<span class="c1">#             path = os.path.join(infolder, f&quot;{base}{ext}&quot;)</span>
+<span class="c1">#             path = os.path.join(in_dir, f&quot;{base}{ext}&quot;)</span>
 <span class="c1">#             if os.path.isfile(path):</span>
 <span class="c1">#                 return path</span>
 <span class="c1">#         return None</span>
@@ -363,16 +363,16 @@
     
 <span class="c1">#     return input_filepaths</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">find_file</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">infolder</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_file</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">in_dir</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;.tif&quot;</span><span class="p">]:</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">path</span>
     <span class="k">return</span> <span class="kc">None</span>
 
-<span class="c1"># def get_s_input_filepaths(infolder):</span>
+<span class="c1"># def get_s_input_filepaths(in_dir):</span>
 <span class="c1">#     keys = [&quot;s11&quot;, &quot;s12&quot;, &quot;s21&quot;, &quot;s22&quot;]</span>
-<span class="c1">#     found_files = {k: find_file(k, infolder) for k in keys}</span>
+<span class="c1">#     found_files = {k: find_file(k, in_dir) for k in keys}</span>
 <span class="c1">#     available = {k: v for k, v in found_files.items() if v is not None}</span>
 
 <span class="c1">#     if len(available) in [2, 4]:</span>
@@ -383,9 +383,9 @@
 <span class="c1">#     else:</span>
 <span class="c1">#         raise FileNotFoundError</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_s_input_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_s_input_filepaths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">):</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;s11&quot;</span><span class="p">,</span> <span class="s2">&quot;s12&quot;</span><span class="p">,</span> <span class="s2">&quot;s21&quot;</span><span class="p">,</span> <span class="s2">&quot;s22&quot;</span><span class="p">]</span>
-    <span class="n">found_files</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">find_file</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">infolder</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
+    <span class="n">found_files</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">find_file</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">in_dir</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
     <span class="n">available</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">found_files</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
         <span class="c1"># print(f&quot;Found valid S-matrix set with {len(available)} files:&quot;)</span>
@@ -396,7 +396,7 @@
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Only found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span><span class="si">}</span><span class="s2"> S-matrix files; need exactly 2 or 4.&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_output_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">outfolder</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">outType</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_output_filepaths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns output filepaths for the specified matrix and output type (bin or tif).</span>
 <span class="sd">    Also ensures the target directory exists.</span>
@@ -423,20 +423,21 @@
     <span class="k">if</span> <span class="n">matrix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matrix_keys</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">matrix</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-    <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.bin&quot;</span> <span class="k">if</span> <span class="n">outType</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span> <span class="k">else</span> <span class="s2">&quot;.tif&quot;</span>
-    <span class="k">if</span> <span class="n">outfolder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">outfolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outfolder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.bin&quot;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span> <span class="k">else</span> <span class="s2">&quot;.tif&quot;</span>
+    <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outfolder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">matrix_keys</span><span class="p">[</span><span class="n">matrix</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">matrix_keys</span><span class="p">[</span><span class="n">matrix</span><span class="p">]]</span>
 
 <div class="viewcode-block" id="convert_S">
-<a class="viewcode-back" href="../../../files/functions/others.html#polsartools.convert_S">[docs]</a>
+<a class="viewcode-back" href="../../../files/functions/preprocess/convert_S.html#polsartools.convert_S">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">convert_S</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">matrixType</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="n">cf</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
-                  <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">outfolder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                  <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
-                  <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_S</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  
+                  <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">recip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">cf</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                   <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
                   <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -447,16 +448,16 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; # Convert to C3 matrix with 10x5 multi-looking</span>
-<span class="sd">    &gt;&gt;&gt; convert_S(&quot;/path/to/S_data&quot;, matrix=&quot;C3&quot;, azlks=10, rglks=5)</span>
+<span class="sd">    &gt;&gt;&gt; convert_S(&quot;/path/to/S_data&quot;, mat=&quot;C3&quot;, azlks=10, rglks=5)</span>
 
 <span class="sd">    &gt;&gt;&gt; # Output as tiled GeoTIFF with Cloud Optimized overviews</span>
-<span class="sd">    &gt;&gt;&gt; convert_S(&quot;/data/S_data&quot;, matrix=&quot;C2&quot;, cog_flag=True)</span>
+<span class="sd">    &gt;&gt;&gt; convert_S(&quot;/data/S_data&quot;, mat=&quot;C2&quot;, cog=True)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    infolder : str</span>
+<span class="sd">    in_dir : str</span>
 <span class="sd">        Path to the input folder containing S11, S12, S21, S22 scattering components.</span>
-<span class="sd">    matrixType : str, default=&#39;T3&#39;</span>
+<span class="sd">    mat : str, default=&#39;T3&#39;</span>
 <span class="sd">        Output matrix format. Supported values:</span>
 <span class="sd">        - &#39;T4&#39;, &#39;T3&#39;, &#39;T2HV&#39; (Coherency)</span>
 <span class="sd">        - &#39;C4&#39;, &#39;C3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39; (Covariance)</span>
@@ -464,39 +465,38 @@
 <span class="sd">        Number of looks in azimuth direction.</span>
 <span class="sd">    rglks : int, default=2</span>
 <span class="sd">        Number of looks in range direction.</span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">        Output format type.</span>
+<span class="sd">    cog : bool, default=False</span>
+<span class="sd">        If True, creates Cloud Optimized GeoTIFF (COG).</span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">        Levels of pyramid overviews for COG generation.</span>
+<span class="sd">    comp : bool, default=False</span>
+<span class="sd">        If True, applies LZW compression to output GeoTIFF files.</span>
+<span class="sd">    recip : bool, default=True</span>
+<span class="sd">        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</span>
 <span class="sd">    cf : float, default=1</span>
 <span class="sd">        Calibration factor (linear) to adjust the amplitude of S2 data.</span>
-<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
-<span class="sd">        Output format type.</span>
-<span class="sd">    cog_flag : bool, default=False</span>
-<span class="sd">        If True, creates Cloud Optimized GeoTIFF (COG).</span>
-<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
-<span class="sd">        Levels of pyramid overviews for COG generation.</span>
-<span class="sd">    write_flag : bool, default=True</span>
-<span class="sd">        If False, skips writing output to disk.</span>
+<span class="sd">    out_dir : str | None, default=None</span>
+<span class="sd">        Path to the output folder. If None, uses the input folder.</span>
 <span class="sd">    max_workers : int | None, default=None</span>
 <span class="sd">        Number of parallel worker threads.</span>
 <span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
 <span class="sd">        Size of chunks for processing.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
-<span class="sd">        Writes multi-looked polarimetric matrix to disk in the selected format.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">window_size</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
     
-    <span class="n">input_filepaths</span> <span class="o">=</span>  <span class="n">get_s_input_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>
-    <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_output_filepaths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="n">outfolder</span><span class="p">,</span><span class="n">matrixType</span><span class="p">,</span> <span class="n">outType</span><span class="p">)</span>
+    <span class="n">input_filepaths</span> <span class="o">=</span>  <span class="n">get_s_input_filepaths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
+    <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_output_filepaths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span><span class="n">mat</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">matrixType</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">}:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">matrixType</span><span class="si">}</span><span class="s2">&#39; for dual-pol input - please choose one of &#39;C2&#39;, &#39;T2&#39;&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">matrixType</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">}:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">matrixType</span><span class="si">}</span><span class="s2">&#39; for full-pol input - please choose one of &#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;,&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2">&#39; for dual-pol input - please choose one of &#39;C2&#39;, &#39;T2&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2">&#39; for full-pol input - please choose one of &#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;,&quot;</span><span class="p">)</span>
     
     <span class="c1"># VALID_MATRICES = {&#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;, &#39;C2&#39;, &#39;T2&#39;}</span>
     <span class="c1"># if matrix not in VALID_MATRICES:</span>
@@ -557,12 +557,13 @@
                              <span class="n">window_size</span><span class="p">,</span>
                             <span class="n">write_flag</span><span class="p">,</span>
                             <span class="n">process_chunk_sxyct</span><span class="p">,</span>
-                            <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">matrixType</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
+                            <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
                             <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
                             <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  
                             <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                            <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                            <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                            <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span>
+                            <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span>
+                            <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">out_x_size</span><span class="o">=</span><span class="n">out_x_size</span><span class="p">,</span>
                             <span class="n">out_y_size</span><span class="o">=</span><span class="n">out_y_size</span><span class="p">,</span>
                             <span class="n">out_geotransform</span><span class="o">=</span><span class="n">out_geotransform</span><span class="p">,</span>
@@ -577,12 +578,13 @@
                                 <span class="n">window_size</span><span class="p">,</span>
                                 <span class="n">write_flag</span><span class="p">,</span>
                                 <span class="n">process_chunk_s2ct</span><span class="p">,</span>
-                                <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">matrixType</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
+                                <span class="o">*</span><span class="p">[</span><span class="n">cf</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">],</span>
                                 <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
                                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  
                                 <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                                <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                                <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                                <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span>
+                                <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span>
+                                <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                                 <span class="n">out_x_size</span><span class="o">=</span><span class="n">out_x_size</span><span class="p">,</span>
                                 <span class="n">out_y_size</span><span class="o">=</span><span class="n">out_y_size</span><span class="p">,</span>
                                 <span class="n">out_geotransform</span><span class="o">=</span><span class="n">out_geotransform</span><span class="p">,</span>
@@ -627,15 +629,22 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_s2ct</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># print(args[-1],args[-2],args[-3])</span>
-    <span class="n">abs_cf</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
-    <span class="n">matrix</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">abs_cf</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">matrix</span> <span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">recip</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">azlks</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">rglks</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
     
     <span class="n">s11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">abs_cf</span>
     <span class="n">s12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">abs_cf</span>
     <span class="n">s21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">*</span><span class="n">abs_cf</span>
     <span class="n">s22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span><span class="o">*</span><span class="n">abs_cf</span>
+    
+    <span class="k">if</span> <span class="n">recip</span><span class="p">:</span>
+        <span class="c1"># print(&quot;Applying reciprocal symmetry, i.e, S_HV = S_VH&quot;)</span>
+        <span class="n">s12</span> <span class="o">=</span> <span class="p">(</span><span class="n">s12</span> <span class="o">+</span> <span class="n">s21</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">s21</span> <span class="o">=</span> <span class="n">s12</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     
     <span class="k">if</span> <span class="n">matrix</span> <span class="o">==</span> <span class="s1">&#39;C4&#39;</span><span class="p">:</span>
         <span class="n">Kl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s11</span><span class="p">,</span> <span class="n">s12</span><span class="p">,</span> <span class="n">s21</span><span class="p">,</span> <span class="n">s22</span><span class="p">])</span>

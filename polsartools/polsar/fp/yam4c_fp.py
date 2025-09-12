@@ -5,9 +5,8 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat, C3_T3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-
-def yam4cfp(infolder,  model="", window_size=1, outType="tif", cog_flag=False, 
-                    cog_overviews = [2, 4, 8, 16], write_flag=True, 
+def yam4c_fp(in_dir,  model="", win=1, fmt="tif", cog=False, 
+                    ovr = [2, 4, 8, 16], comp=False, 
                     max_workers=None,block_size=(512, 512),
                     progress_callback=None,  # for QGIS plugin
                         ):
@@ -25,45 +24,45 @@ def yam4cfp(infolder,  model="", window_size=1, outType="tif", cog_flag=False,
     >>> yam4cfp("/path/to/fullpol_data")
     
     >>> # Rotation-corrected decomposition
-    >>> yam4cfp(
-    ...     infolder="/path/to/fullpol_data",
+    >>> yam4c_fp(
+    ...     in_dir="/path/to/fullpol_data",
     ...     model="y4cr",
-    ...     window_size=5,
-    ...     outType="tif",
-    ...     cog_flag=True
+    ...     win=5,
+    ...     fmt="tif",
+    ...     cog=True
     ... )
     
     >>> # Extended volume model decomposition
-    >>> yam4cfp(
-    ...     infolder="/path/to/fullpol_data",
+    >>> yam4c_fp(
+    ...     in_dir="/path/to/fullpol_data",
     ...     model="y4cs",
-    ...     window_size=5
+    ...     win=5
     ... )
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Path to the input folder containing full-pol T3 or C3 matrix files.
     model : {'', 'y4cr', 'y4cs'}, default=''
         Decomposition model to use:
         - '': Original Yamaguchi 4-component (Y4O)
         - 'y4cr': Rotation-corrected Yamaguchi (Y4R)
         - 'y4cs': Extended volume scattering model (Y4S)
-    window_size : int, default=1
+    win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format:
         - 'tif': GeoTIFF format with georeferencing information
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
         and overviews for efficient web access.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG creation. Each number represents the
         decimation factor for that overview level.
-    write_flag : bool, default=True
-        If True, writes results to disk. If False, only processes data in memory.
+    comp : bool, default=False
+        If True, uses LZW compression for GeoTIFF outputs.
     max_workers : int | None, default=None
         Maximum number of parallel processing workers. If None, uses
         CPU count - 1 workers.
@@ -83,56 +82,56 @@ def yam4cfp(infolder,  model="", window_size=1, outType="tif", cog_flag=False,
 
 
     """
-    input_filepaths = fp_c3t3files(infolder)
+    write_flag=True
+    input_filepaths = fp_c3t3files(in_dir)
 
     output_filepaths = []
-    if outType == "bin":
+    if fmt == "bin":
         if not model or model=="y4co":
-            output_filepaths.append(os.path.join(infolder, "Yam4co_odd.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4co_vol.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4co_hlx.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_odd.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_dbl.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_vol.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_hlx.bin"))
         elif model=="y4cr":
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_odd.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_dbl.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_vol.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_hlx.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_odd.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_dbl.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_vol.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_hlx.bin"))
         elif model=="y4cs":
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_odd.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_dbl.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_vol.bin"))
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_hlx.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_odd.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_dbl.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_vol.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_hlx.bin"))
         else:
-            raise(f"Invalid model!! \n model type argument must be either y4co for default or y4cr or y4cs")
+            raise(f"Invalid model!! \n model type argument must be either '' for default (y4co) or Y4R or S4R")
     
     else:
         if not model or model=="y4co":
-            output_filepaths.append(os.path.join(infolder, "Yam4co_odd.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4co_dbl.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4co_vol.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4co_hlx.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_odd.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_dbl.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_vol.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4co_hlx.tif"))
         elif model=="y4cr":
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_odd.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_dbl.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_vol.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4cr_hlx.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_odd.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_dbl.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_vol.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4cr_hlx.tif"))
         elif model=="y4cs":
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_odd.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_dbl.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_vol.tif"))
-            output_filepaths.append(os.path.join(infolder, "Yam4csr_hlx.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_odd.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_dbl.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_vol.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Yam4csr_hlx.tif"))
         else:
-            raise(f"Invalid model!! \n model type argument must be either '' for default or Y4R or S4R")
+            raise(f"Invalid model!! \n model type argument must be either '' for default (y4co) or Y4R or S4R")
             
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                    window_size, write_flag,
+                    win, write_flag,
                     process_chunk_yam4cfp,
                     *[model],
                     block_size=block_size, 
                     max_workers=max_workers,  num_outputs=len(output_filepaths),
-                    cog_flag=cog_flag,
-                    cog_overviews=cog_overviews,
+                    cog=cog, ovr=ovr, comp=comp,
                     progress_callback=progress_callback
                     )
 

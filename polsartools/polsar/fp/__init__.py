@@ -1,15 +1,15 @@
 # polsartools/polsar/fp/__init__.py
 
-from .rvifp import rvifp
+from .rvi_fp import rvi_fp
 from .mf3cf import mf3cf
 from .mf4cf import mf4cf
-from .dopfp import dopfp
-from .prvifp import prvifp
+from .dop_fp import dop_fp
+from .prvi_fp import prvi_fp
 from .grvi import grvi
-from .neufp import neufp
-from .nnedfp import nnedfp
-from .halphafp import halphafp
-from .yam4cfp import yam4cfp
+from .neu_fp import neu_fp
+from .nned_fp import nned_fp
+from .halpha_fp import halpha_fp
+from .yam4c_fp import yam4c_fp
 from .shannon_h_fp import shannon_h_fp
 from .freeman_3c import freeman_3c
 from .freeman_2c import freeman_2c

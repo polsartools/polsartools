@@ -447,7 +447,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> 
                <span class="n">azlks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -498,7 +498,10 @@
 <span class="sd">    out_dir : str or None, optional (default=None)</span>
 <span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
 <span class="sd">        in the same location as the input file.</span>
-
+<span class="sd">        </span>
+<span class="sd">    recip : bool, optional (default=False)</span>
+<span class="sd">        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</span>
+<span class="sd">        </span>
 <span class="sd">    max_workers : int or None, optional (default=None)</span>
 <span class="sd">        Number of parallel workers for processing. If None, uses all available cores minus one.</span>
 
@@ -667,6 +670,7 @@
                 <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
                 <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;S2&#39;</span><span class="p">,</span>
                 <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">recip</span><span class="o">=</span><span class="n">recip</span><span class="p">,</span>
                 <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
@@ -700,6 +704,7 @@
                 <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
                 <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span>
                 <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">recip</span><span class="o">=</span><span class="n">recip</span><span class="p">,</span>
                 <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
@@ -765,6 +770,7 @@
                 <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
                 <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C4&#39;</span><span class="p">,</span>
                 <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">recip</span><span class="o">=</span><span class="n">recip</span><span class="p">,</span>
                 <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
@@ -905,7 +911,7 @@
 <span class="nd">@time_it</span>  
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts PolSAR matrix elements from a NISAR RSLC HDF5 file and saves them as slant range raster files.</span>
@@ -933,7 +939,7 @@
 <span class="sd">        - Dual-pol: &#39;C2&#39; (or leave empty to auto-detect)</span>
 
 <span class="sd">    azlks : int, optional (default=22)</span>
-<span class="sd">        Number of azimuth looks for multi-looking. Higher values reduce speckle but lower resolution.</span>
+<span class="sd">        Number of azimuth looks for multi-looking. </span>
 
 <span class="sd">    rglks : int, optional (default=10)</span>
 <span class="sd">        Number of range looks for multi-looking.</span>
@@ -956,6 +962,9 @@
 <span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
 <span class="sd">        in the same location as the input file.</span>
 
+<span class="sd">    recip : bool, optional (default=False)</span>
+<span class="sd">        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</span>
+<span class="sd">        </span>
 <span class="sd">    max_workers : int or None, optional (default=None)</span>
 <span class="sd">        Number of parallel workers for processing. If None, uses all available cores minus one.</span>
 <span class="sd"> </span>
@@ -1107,6 +1116,7 @@
                 <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
                 <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;S2&#39;</span><span class="p">,</span>
                 <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">recip</span><span class="o">=</span><span class="n">recip</span><span class="p">,</span>
                 <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
@@ -1140,6 +1150,7 @@
                 <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
                 <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span>
                 <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">recip</span><span class="o">=</span><span class="n">recip</span><span class="p">,</span>
                 <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
@@ -1205,6 +1216,7 @@
                 <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
                 <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C4&#39;</span><span class="p">,</span>
                 <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">recip</span><span class="o">=</span><span class="n">recip</span><span class="p">,</span>
                 <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
                 <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>

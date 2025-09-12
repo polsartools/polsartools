@@ -1,5 +1,5 @@
-Non-negative Eigen Value decomposition (``nnedfp``)
-===================================================
+Non-negative Eigen Value decomposition (``nned_fp``)
+=====================================================
 
-.. autofunction:: polsartools.nnedfp
+.. autofunction:: polsartools.nned_fp
    :noindex:

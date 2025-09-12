@@ -61,7 +61,7 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
+def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None):
     
     """
     Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data 
@@ -69,16 +69,16 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
 
     Example:
     --------
-    >>> chyaan2_fp("path_to_folder", matrix='T3', azlks=5, rglks=3)
+    >>> chyaan2_fp("path_to_folder", mat='T3', azlks=5, rglks=3)
     This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data 
     in the specified folder and save them in the 'T3' directory.
     
     Parameters:
     -----------
-    inFolder : str
+    in_dir : str
         The path to the folder containing the Chandrayaan-II DFSAR Full-Pol data files.
 
-    matrixType : str, optional (default='T3')
+    mat : str, optional (default='T3')
         The type of matrix to extract. Can either be 'S2', 'T3', or 'C3'.
 
         - 'S2' will extract the S2 matrix elements.
@@ -92,42 +92,9 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
     rglks : int, optional (default=None)
         The number of range looks for multi-looking. If not specified, the value is set to 1.
 
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder named `S2`, `T3`, or `C3` 
-        (depending on the chosen matrix) and saves the corresponding binary files.
-
-        - For 'S2':
-          - `s11.bin`: Contains the S11 matrix elements.
-          - `s12.bin`: Contains the S12 matrix elements.
-          - `s21.bin`: Contains the S21 matrix elements.
-          - `s22.bin`: Contains the S22 matrix elements.
-          - `config.txt`: Contains metadata including multilook parameters.
-          - `multilook_info.txt`: Contains detailed information about the multilook parameters.
-
-        - For 'T3':
-          - `t11.bin`, `t12.bin`, `t13.bin`, `t22.bin`, `t23.bin`, `t33.bin`: Contain the T3 matrix elements.
-          - `config.txt`: Contains metadata including multilook parameters.
-          - `multilook_info.txt`: Contains detailed information about the multilook parameters.
-
-        - For 'C3':
-          - `c11.bin`, `c12.bin`, `c13.bin`, `c22.bin`, `c23.bin`, `c33.bin`: Contain the C3 matrix elements.
-          - `config.txt`: Contains metadata including multilook parameters.
-          - `multilook_info.txt`: Contains detailed information about the multilook parameters.
-
-    Raises:
-    -------
-    FileNotFoundError
-        If the required files for the specified matrix type cannot be found in the folder.
-
-    ValueError
-        If an invalid matrix type is provided (valid options are 'S2', 'T3', or 'C3').
-
-
     """
     #%%
-    xmlFile = glob.glob(inFolder+'/data/calibrated/*/*sli*.xml')[0]
+    xmlFile = glob.glob(in_dir+'/data/calibrated/*/*sli*.xml')[0]
     fxml = open(xmlFile, 'r')
     for line in fxml:
         if "output_line_spacing" in line:
@@ -148,7 +115,7 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
     # multi-llok factor 
     mlf = int(np.round(gRange/ols,0))
 
-    ds = gdal.Open(glob.glob(inFolder+'/data/calibrated/*/*sli*_hh_*.tif')[0])
+    ds = gdal.Open(glob.glob(in_dir+'/data/calibrated/*/*sli*_hh_*.tif')[0])
     cols = ds.RasterXSize  
     rows = ds.RasterYSize 
 
@@ -167,14 +134,14 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
 
     calFactor = 1/np.sqrt(10**(cc/10))
 
-    if matrixType == 'S2':
+    if mat == 'S2':
 
-        out_dir = os.path.join(inFolder,"S2")
+        out_dir = os.path.join(in_dir,"S2")
         os.makedirs(out_dir,exist_ok=True)
 
         print("Considering S12 = S21")
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
         data = read_rs2_tif(inFile)
         out_file = os.path.join(out_dir,'s11.bin')
         write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
@@ -182,11 +149,11 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         
         rows, cols, _ = data.shape
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
         data_xy = read_rs2_tif(inFile)
 
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
         data_yx = read_rs2_tif(inFile)
 
         data = (data_xy+data_yx)*0.5
@@ -200,7 +167,7 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
         print("Saved file "+out_file)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
         data = read_rs2_tif(inFile)
         out_file = os.path.join(out_dir,'s22.bin')
         write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
@@ -216,17 +183,17 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         
         
         
-    elif matrixType == 'T3':
+    elif mat == 'T3':
         # print("Considering S12 = S21")
         
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
         data = read_rs2_tif(inFile)
         s11 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
         data_xy = read_rs2_tif(inFile)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
         data_yx = read_rs2_tif(inFile)
         
         # Symmetry assumption
@@ -234,7 +201,7 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         del data_xy,data_yx
         s12 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
         data = read_rs2_tif(inFile)
         s22 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
         
@@ -260,7 +227,7 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)
 
         del Kp
-        T3Folder = os.path.join(inFolder,'T3')
+        T3Folder = os.path.join(in_dir,'T3')
 
         if not os.path.isdir(T3Folder):
             print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
@@ -275,17 +242,17 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
             f.writelines(lines)
         f.close()
         
-    elif matrixType == 'C3':
+    elif mat == 'C3':
         # print("Considering S12 = S21")
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
         data = read_rs2_tif(inFile)
         s11 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
         data_xy = read_rs2_tif(inFile)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
         data_yx = read_rs2_tif(inFile)
         
         # Symmetry assumption
@@ -293,7 +260,7 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         del data_xy,data_yx
         s12 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
 
-        inFile = glob.glob(os.path.join(inFolder, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
         data = read_rs2_tif(inFile)
         s22 = data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor)
 
@@ -318,7 +285,7 @@ def chyaan2_fp(inFolder,matrixType='T3',azlks=None,rglks=None):
         C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
         C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
-        C3Folder = os.path.join(inFolder,'C3')
+        C3Folder = os.path.join(in_dir,'C3')
 
         if not os.path.isdir(C3Folder):
             print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))

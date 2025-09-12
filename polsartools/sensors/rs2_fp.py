@@ -21,15 +21,20 @@ def write_s2_bin(file,wdata):
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache()
 
-def write_rst(file,wdata,dtype):
+def write_rst(file,wdata,dtype,cog=False, ovr=[2, 4, 8, 16], comp=False):
     [cols, rows] = wdata.shape
     if '.bin' in file:
         driver = gdal.GetDriverByName("ENVI")
         outdata = driver.Create(file, rows, cols, 1, dtype)
     else:
         driver = gdal.GetDriverByName("GTiff")
-        outdata = driver.Create(file, rows, cols, 1, dtype,
-                                options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9',])
+        options = ['BIGTIFF=IF_SAFER']
+        if comp:
+        # options += ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9']
+            options += ['COMPRESS=LZW']
+        if cog:
+            options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
+        outdata = driver.Create(file, rows, cols, 1, dtype, options)
     
 
     outdata.SetDescription(file)
@@ -39,16 +44,19 @@ def write_rst(file,wdata,dtype):
 
 
 @time_it
-def rs2_fp(inFolder,matrixType='T3',
-           azlks=8,rglks=2,outType='tif',
-           type='sigma0', out_dir = None):
+def rs2_fp(in_dir,mat='T3',
+           azlks=8,rglks=2,fmt='tif',
+            cog=False,ovr = [2, 4, 8, 16],comp=False,
+           bsc='sigma0', out_dir = None,
+           recip=False,
+           ):
     """
     Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.
 
-    This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (`inFolder`) 
+    This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (`in_dir`) 
     and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory
     (`S2`, `T3`, or `C3`). The function uses lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`) for scaling 
-    the data based on the chosen `type` (sigma0, gamma0, or beta0). The processed data is written into binary files 
+    the data based on the chosen backscatter coefficient `bsc` (sigma0, gamma0, or beta0). The processed data is written into binary files 
     in the output folder.
 
     Example Usage:
@@ -57,27 +65,27 @@ def rs2_fp(inFolder,matrixType='T3',
     
     .. code-block:: python
 
-        rs2_fp("/path/to/data", matrix="T3", type="sigma0")
+        rs2_fp("/path/to/data", mat="T3", bsc="sigma0")
 
     To process imagery and generate a C3 matrix:
 
     .. code-block:: python
 
-        rs2_fp("/path/to/data", matrix="C3", type="beta0", azlks=10, rglks=3)
+        rs2_fp("/path/to/data", mat="C3", bsc="beta0", azlks=10, rglks=3)
         
     Parameters:
     -----------
-    inFolder : str
+    in_dir : str
         Path to the folder containing the radar imagery files and the lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`).
     
-    matrixType : str, optional (default='T3')
+    mat : str, optional (default='T3')
         The type of matrix to generate. Can be:
         
         - 'S2' : Generates S2 matrix from the input imagery (S12 = S21 assumption).
         - 'T3' : Generates T3 matrix from the input imagery, based on Pauli decomposition.
         - 'C3' : Generates C3 matrix from the input imagery, based on Lexicographic decomposition.
 
-    type : str, optional (default='sigma0')
+    bsc : str, optional (default='sigma0')
         The type of radar cross-section to use for scaling. Available options:
         
         - 'sigma0' : Uses `lutSigma.xml` for scaling.
@@ -90,95 +98,98 @@ def rs2_fp(inFolder,matrixType='T3',
     rglks : int, optional (default=2)
         The number of range looks to apply during the C3/T3processing.
 
-    Raises:
-    -------
-    ValueError
-        If an invalid `matrix` or `type` is provided, a `ValueError` will be raised with a descriptive message.
-    
-    FileNotFoundError
-        If any of the required input files (such as the .tif imagery or the lookup tables) cannot be found in the `inFolder`.
 
-    Notes:
-    ------
-    - The function assumes that the input imagery is stored as "imagery_HH.tif", "imagery_HV.tif", "imagery_VH.tif", and "imagery_VV.tif" in the `inFolder`.
-    - The function uses the `read_rs2_tif` and `write_*` helper functions to read and write image data and binary files.
-    - The generated matrices (S2, T3, or C3) are saved in subdirectories within `inFolder` named accordingly.
     """
     
-    if type == 'sigma0':
-        tree = ET.parse(os.path.join(inFolder,"lutSigma.xml"))
+    if bsc == 'sigma0':
+        tree = ET.parse(os.path.join(in_dir,"lutSigma.xml"))
         root = tree.getroot()
         lut = root.find('gains').text.strip()
         lut = np.fromstring(lut, sep=' ')
-    elif type == 'gamma0':
-        tree = ET.parse(os.path.join(inFolder,"lutGamma.xml"))
+    elif bsc == 'gamma0':
+        tree = ET.parse(os.path.join(in_dir,"lutGamma.xml"))
         root = tree.getroot()
         lut = root.find('gains').text.strip()
         lut = np.fromstring(lut, sep=' ')
-    elif type=='beta0':
-        tree = ET.parse(os.path.join(inFolder,"lutBeta.xml"))
+    elif bsc=='beta0':
+        tree = ET.parse(os.path.join(in_dir,"lutBeta.xml"))
         root = tree.getroot()
         lut = root.find('gains').text.strip()
         lut = np.fromstring(lut, sep=' ')
     else:
-        raise ValueError(f'Unknown type {type} \n Available types: sigma0,gamma0,beta0')
+        raise ValueError(f'Unknown type {bsc} \n Available bsc: sigma0,gamma0,beta0')
 
-    if matrixType == 'S2':
+    if mat == 'S2':
         if out_dir is None:
-            out_dir = os.path.join(inFolder,"S2")
+            out_dir = os.path.join(in_dir,"S2")
         else:
             out_dir = os.path.join(out_dir,"S2")
             
         os.makedirs(out_dir,exist_ok=True)
 
         print("Considering S12 = S21")
-        inFile = os.path.join(inFolder,"imagery_HH.tif")
+        inFile = os.path.join(in_dir,"imagery_HH.tif")
         data = read_rs2_tif(inFile)
-        if outType=='bin':
+        if fmt=='bin':
             out_file = os.path.join(out_dir,'s11.bin')
             write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
         else:
             out_file = os.path.join(out_dir,'s11.tif')
-            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)
         print("Saved file "+out_file)
         
         rows,cols,_ = data.shape
         
-        inFile = os.path.join(inFolder,"imagery_HV.tif")
+        inFile = os.path.join(in_dir,"imagery_HV.tif")
         data_xy = read_rs2_tif(inFile)
 
-        inFile = os.path.join(inFolder,"imagery_VH.tif")
+        inFile = os.path.join(in_dir,"imagery_VH.tif")
         data_yx = read_rs2_tif(inFile)
 
-        data = (data_xy+data_yx)*0.5
-        del data_xy,data_yx
+        if recip:
+            data = (data_xy+data_yx)*0.5
+            del data_xy,data_yx
 
-        if outType=='bin':
-            out_file = os.path.join(out_dir,'s12.bin')
-            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
-            print("Saved file "+out_file)
-            out_file = os.path.join(out_dir,'s21.bin')
-            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
-            print("Saved file "+out_file)
+            if fmt=='bin':
+                out_file = os.path.join(out_dir,'s12.bin')
+                write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+                print("Saved file "+out_file)
+                out_file = os.path.join(out_dir,'s21.bin')
+                write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)
+                print("Saved file "+out_file)
+            else:
+                out_file = os.path.join(out_dir,'s12.tif')
+                write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+                print("Saved file "+out_file)
+                out_file = os.path.join(out_dir,'s21.tif')
+                write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)
+                print("Saved file "+out_file)
         else:
-            out_file = os.path.join(out_dir,'s12.tif')
-            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
-            print("Saved file "+out_file)
-            out_file = os.path.join(out_dir,'s21.tif')
-            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
-            print("Saved file "+out_file)
+            if fmt=='bin':
+                out_file = os.path.join(out_dir,'s12.bin')
+                write_rst(out_file,data_xy[:,:,0]/lut+1j*(data_xy[:,:,1]/lut),gdal.GDT_CFloat32)
+                print("Saved file "+out_file)
+                out_file = os.path.join(out_dir,'s21.bin')
+                write_rst(out_file,data_yx[:,:,0]/lut+1j*(data_yx[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)
+                print("Saved file "+out_file)
+            else:
+                out_file = os.path.join(out_dir,'s12.tif')
+                write_rst(out_file,data_xy[:,:,0]/lut+1j*(data_xy[:,:,1]/lut),gdal.GDT_CFloat32)
+                print("Saved file "+out_file)
+                out_file = os.path.join(out_dir,'s21.tif')
+                write_rst(out_file,data_yx[:,:,0]/lut+1j*(data_yx[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)
+                print("Saved file "+out_file)
 
-
-        inFile = os.path.join(inFolder,"imagery_VV.tif")
+        inFile = os.path.join(in_dir,"imagery_VV.tif")
         data = read_rs2_tif(inFile)
         
-        if outType=='bin':
+        if fmt=='bin':
             out_file = os.path.join(out_dir,'s22.bin')
             write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
             print("Saved file "+out_file)
         else:
             out_file = os.path.join(out_dir,'s22.tif')
-            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)
+            write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)
             print("Saved file "+out_file)
         # out_file = os.path.join(out_dir,'s22.bin')
         # write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))
@@ -188,27 +199,27 @@ def rs2_fp(inFolder,matrixType='T3',
         file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
         file.close() 
         
-    elif matrixType == 'T3':
+    elif mat == 'T3':
         # print("Considering S12 = S21")
         # Kp- 3-D Pauli feature vector
         # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[1,0]])
         # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[0,1]])
         
-        inFile = os.path.join(inFolder,"imagery_HH.tif")
+        inFile = os.path.join(in_dir,"imagery_HH.tif")
         data = read_rs2_tif(inFile)
         s11 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
 
-        inFile = os.path.join(inFolder,"imagery_HV.tif")
+        inFile = os.path.join(in_dir,"imagery_HV.tif")
         data_xy = read_rs2_tif(inFile)
 
-        inFile = os.path.join(inFolder,"imagery_VH.tif")
+        inFile = os.path.join(in_dir,"imagery_VH.tif")
         data_yx = read_rs2_tif(inFile)
         # Symmetry assumption
         data = (data_xy+data_yx)*0.5
         del data_xy,data_yx
         s12 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
 
-        inFile = os.path.join(inFolder,"imagery_VV.tif")
+        inFile = os.path.join(in_dir,"imagery_VV.tif")
         data = read_rs2_tif(inFile)
         s22 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
 
@@ -227,11 +238,11 @@ def rs2_fp(inFolder,matrixType='T3',
 
         del Kp
         if out_dir is None:
-            out_dir = os.path.join(inFolder,"T3")
+            out_dir = os.path.join(in_dir,"T3")
         else:
             out_dir = os.path.join(out_dir,"T3")
         os.makedirs(out_dir,exist_ok=True)
-        # T3Folder = os.path.join(inFolder,'T3')
+        # T3Folder = os.path.join(in_dir,'T3')
 
         # if not os.path.isdir(T3Folder):
         #     print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
@@ -243,23 +254,23 @@ def rs2_fp(inFolder,matrixType='T3',
                   np.real(T33)],out_dir)
         
         
-    elif matrixType == 'C3':
+    elif mat == 'C3':
         # print("Considering S12 = S21")
-        inFile = os.path.join(inFolder,"imagery_HH.tif")
+        inFile = os.path.join(in_dir,"imagery_HH.tif")
         data = read_rs2_tif(inFile)
         s11 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
 
-        inFile = os.path.join(inFolder,"imagery_HV.tif")
+        inFile = os.path.join(in_dir,"imagery_HV.tif")
         data_xy = read_rs2_tif(inFile)
 
-        inFile = os.path.join(inFolder,"imagery_VH.tif")
+        inFile = os.path.join(in_dir,"imagery_VH.tif")
         data_yx = read_rs2_tif(inFile)
         # Symmetry assumption
         data = (data_xy+data_yx)*0.5
         del data_xy,data_yx
         s12 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
 
-        inFile = os.path.join(inFolder,"imagery_VV.tif")
+        inFile = os.path.join(in_dir,"imagery_VV.tif")
         data = read_rs2_tif(inFile)
         s22 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)
 
@@ -278,12 +289,12 @@ def rs2_fp(inFolder,matrixType='T3',
         C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
         if out_dir is None:
-            out_dir = os.path.join(inFolder,"C3")
+            out_dir = os.path.join(in_dir,"C3")
         else:
             out_dir = os.path.join(out_dir,"C3")
         os.makedirs(out_dir,exist_ok=True)
         
-        # C3Folder = os.path.join(inFolder,'C3')
+        # C3Folder = os.path.join(in_dir,'C3')
 
         # if not os.path.isdir(C3Folder):
         #     print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))

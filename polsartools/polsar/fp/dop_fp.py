@@ -4,53 +4,53 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
 from .fp_infiles import fp_c3t3files
-
 @time_it
-def rvifp(infolder,  window_size=1, outType="tif", cog_flag=False, 
-          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+def dop_fp(in_dir,  win=1, fmt="tif", cog=False, 
+          ovr = [2, 4, 8, 16], comp=False,
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
-            ):
-    """Calculate Radar Vegetation Index (RVI) from full-pol SAR data.
+          ):
 
-    This function computes the Radar Vegetation Index (RVI) using full-polarimetric
-    SAR data. RVI is one of the earliest and most widely used polarimetric vegetation
-    indices, providing a measure of vegetation density and randomness of scattering.
+    """Calculate Barakat Degree of Polarization from full-pol SAR coherency/covariance matrix.
+
+    This function computes the Barakat Degree of Polarization (DoP) from full-polarimetric
+    SAR data using either the coherency (T3) or covariance (C3) matrix. The Barakat DoP
+    provides a generalized measure of the polarization state for partially polarized waves
+    in full-pol SAR systems.
 
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> rvifp("/path/to/fullpol_data")
+    >>> dop_fp("/path/to/fullpol_data")
     
     >>> # Advanced usage with custom parameters
-    >>> rvifp(
-    ...     infolder="/path/to/fullpol_data",
-    ...     window_size=5,
-    ...     outType="tif",
-    ...     cog_flag=True,
+    >>> dop_fp(
+    ...     in_dir="/path/to/fullpol_data",
+    ...     win=5,
+    ...     fmt="tif",
+    ...     cog=True,
     ...     block_size=(1024, 1024)
     ... )
-
-
+    
     Parameters
     ----------
-    infolder : str
-        Path to the input folder containing full-pol T3 or C3 matrix files.
-    window_size : int, default=1
-        Size of the spatial averaging window. Larger windows reduce speckle noise
-        but decrease spatial resolution.
-    outType : {'tif', 'bin'}, default='tif'
+    in_dir : str
+        Path to the input folder containing full-pol C3 or T3 matrix files.
+    win : int, default=1
+        Size of the spatial averaging window. Larger windows improve DoP estimation
+        accuracy but decrease spatial resolution.
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format:
         - 'tif': GeoTIFF format with georeferencing information
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
         and overviews for efficient web access.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG creation. Each number represents the
         decimation factor for that overview level.
-    write_flag : bool, default=True
-        If True, writes results to disk. If False, only processes data in memory.
+    comp : bool, default=False
+        If True, applies LZW compression to the output GeoTIFF files.
     max_workers : int | None, default=None
         Maximum number of parallel processing workers. If None, uses
         CPU count - 1 workers.
@@ -62,26 +62,29 @@ def rvifp(infolder,  window_size=1, outType="tif", cog_flag=False,
     -------
     None
         Writes one output file to disk:
-        - 'rvifp.tif' or 'rvifp.bin': RVI values
+        - 'dop_fp.tif' or 'dop_fp.bin': Barakat Degree of Polarization image
+    
 
     """
-    input_filepaths = fp_c3t3files(infolder)
+    write_flag=True
+    input_filepaths = fp_c3t3files(in_dir)
     output_filepaths = []
-    if outType == "bin":
-        output_filepaths.append(os.path.join(infolder, "rvifp.bin"))
+    if fmt == "bin":
+        output_filepaths.append(os.path.join(in_dir, "dop_fp.bin"))
     else:
-        output_filepaths.append(os.path.join(infolder, "rvifp.tif"))
+        output_filepaths.append(os.path.join(in_dir, "dop_fp.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                            window_size=window_size, write_flag=write_flag,
-                        processing_func=process_chunk_rvifp,block_size=block_size, 
-                        max_workers=max_workers,  num_outputs=len(output_filepaths),
-                        cog_flag=cog_flag,
-                        cog_overviews=cog_overviews,
+                            window_size=win, write_flag=write_flag,
+                        processing_func=process_chunk_dopfp,block_size=block_size, 
+                        max_workers=max_workers,  num_outputs=1,
+                        cog=cog,
+                        ovr=ovr,
+                        comp=comp,
                         progress_callback=progress_callback
                         )
 
-def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
+def process_chunk_dopfp(chunks, window_size,input_filepaths,*args):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])
@@ -115,6 +118,7 @@ def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
 
         T_T1 = C3_T3_mat(C3)
 
+
     if window_size>1:
         kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
 
@@ -134,35 +138,12 @@ def process_chunk_rvifp(chunks, window_size,input_filepaths,*args):
 
 
     reshaped_arr = T_T1.reshape(3, 3, -1).transpose(2, 0, 1)
-    eigenvalues = np.linalg.eigvals(reshaped_arr)
-    sorted_eigenvalues = np.sort(eigenvalues, axis=1)[:, ::-1]
-    sorted_eigenvalues = sorted_eigenvalues.reshape(T_T1.shape[2], T_T1.shape[3], 3)
+    det_T3 = np.linalg.det(reshaped_arr)
+    # del reshaped_arr
+    det_T3 = det_T3.reshape(T_T1.shape[2], T_T1.shape[3])
+
+    trace_T3 = T_T1[0,0,:,:] + T_T1[1,1,:,:] + T_T1[2,2,:,:]
+    m1 = np.real(np.sqrt(1-(27*(det_T3/(trace_T3**3)))))
     
-    p1 = sorted_eigenvalues[:,:,0]/(sorted_eigenvalues[:,:,0] + sorted_eigenvalues[:,:,1] + sorted_eigenvalues[:,:,2])
-    p2 = sorted_eigenvalues[:,:,1]/(sorted_eigenvalues[:,:,0] + sorted_eigenvalues[:,:,1] + sorted_eigenvalues[:,:,2])
-    p3 = sorted_eigenvalues[:,:,2]/(sorted_eigenvalues[:,:,0] + sorted_eigenvalues[:,:,1] + sorted_eigenvalues[:,:,2])
-    
-    p1[p1<0] = 0
-    p2[p2<0] = 0
-    p3[p3<0] = 0
-        
-    p1[p1>1] = 1
-    p2[p2>1] = 1
-    p3[p3>1] = 1
 
-    
-    rvi = np.real((4*p3)/(p1 + p2 + p3))
-
-    # idx = np.argwhere(rvi>1)
-
-    # rvi[idx] = (3/4)*rvi[idx]
-    # rvi[~idx] = rvi[~idx]
-    # rvi[rvi==0] = np.nan
-
-    # rvi = np.real(rvi)
-    
-    rvi[rvi > 1] *= 0.75
-    rvi[rvi == 0] = np.nan
-    rvi = np.real(rvi)
-
-    return rvi.astype(np.float32)
+    return m1.astype(np.float32)
