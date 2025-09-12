@@ -1,5 +1,5 @@
-Radar Vegetation Index (``rvidp``)
-==================================
+Radar Vegetation Index (``rvi_dp``)
+===================================
 .. This functionality computes the radar vegetation index for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 
 .. .. code-block:: python
@@ -7,7 +7,7 @@ Radar Vegetation Index (``rvidp``)
 ..         input : input_c2_folder, window_size
 ..         output: RVI_dp.bin
 
-.. autofunction:: polsartools.rvidp
+.. autofunction:: polsartools.rvi_dp
    :noindex:
 
 The formulation of RVI is as follows:

@@ -4,9 +4,9 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .dcp_infiles import dcpt2files
 @time_it
-def mf3cd(infolder,  window_size=1, outType="tif", 
-          cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-          write_flag=True, max_workers=None,block_size=(512, 512),
+def mf3cd(in_dir,  win=1, fmt="tif", 
+          cog=False, ovr = [2, 4, 8, 16], comp=False,
+          max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin          
           ):
     """
@@ -16,24 +16,24 @@ def mf3cd(infolder,  window_size=1, outType="tif",
 
     Example:
     --------
-    >>> mf3cd("path_to_T2_folder", window_size=5, outType="tif", cog_flag=True)
+    >>> mf3cd("path_to_T2_folder", win=5, fmt="tif", cog=True)
     This will compute decomposed powers from the dual-co-pol T2 matrix in the specified folder,
     generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.
     
     Parameters:
     -----------
-    infolder : str
+    in_dir : str
         Path to the input folder containing T2 matrix data.
-    window_size : int, optional
+    win : int, optional
         Size of the processing window (default is 1).
-    outType : str, optional
+    fmt : str, optional
         Output format of the files; can be "tif" (GeoTIFF) or "bin" (binary) (default is "tif").
-    cog_flag : bool, optional
+    cog : bool, optional
         If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).
-    cog_overviews : list of int, optional
+    ovr : list of int, optional
         List of overview levels to be used for COGs (default is [2, 4, 8, 16]).
-    write_flag : bool, optional
-        Whether to write the computed output files (default is True).
+    comp : bool, optional
+        If True, applies LZW compression to GeoTIFF outputs (default is False).
     max_workers : int, optional
         Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).
     block_size : tuple of int, optional
@@ -53,27 +53,26 @@ def mf3cd(infolder,  window_size=1, outType="tif",
 
 
     """
-
-    input_filepaths = dcpt2files(infolder)
+    write_flag=True
+    input_filepaths = dcpt2files(in_dir)
     output_filepaths = []
-    if outType == "bin":
-        output_filepaths.append(os.path.join(infolder, "Ps_mf3cd.bin"))
-        output_filepaths.append(os.path.join(infolder, "Pd_mf3cd.bin"))
-        output_filepaths.append(os.path.join(infolder, "Pv_mf3cd.bin"))
-        output_filepaths.append(os.path.join(infolder, "Theta_DP_mf3cd.bin"))
+    if fmt == "bin":
+        output_filepaths.append(os.path.join(in_dir, "Ps_mf3cd.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Pd_mf3cd.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Pv_mf3cd.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Theta_DP_mf3cd.bin"))
     else:
-        output_filepaths.append(os.path.join(infolder, "Ps_mf3cd.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pd_mf3cd.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pv_mf3cd.tif"))
-        output_filepaths.append(os.path.join(infolder, "Theta_DP_mf3cd.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Ps_mf3cd.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Pd_mf3cd.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Pv_mf3cd.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Theta_DP_mf3cd.tif"))
 
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                            window_size=window_size, write_flag=write_flag,
+                            window_size=win, write_flag=write_flag,
                             processing_func=process_chunk_mf3cd,
                             block_size=block_size, max_workers=max_workers,  
                             num_outputs=len(output_filepaths),
-                            cog_flag=cog_flag,
-                            cog_overviews=cog_overviews,
+                            cog=cog, ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
 

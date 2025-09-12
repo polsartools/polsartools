@@ -22,10 +22,10 @@ update rgb
 update nisar with output path
 moved repo into polsartools organization
 update uavsar for tif output, output path
-removed default compression for geotiffs
+added cog, comp, ovr args for all
 --todo before release
 update uniform args for all sensors 
-update uniform args for all 50 functions
+update uniform args for all 50 functions [done,tests passed]
 
 
 

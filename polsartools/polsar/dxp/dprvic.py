@@ -4,9 +4,9 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files
 @time_it
-def dprvic(cpFile,xpFile,  window_size=1, outType="tif", 
-           cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-           write_flag=True, max_workers=None,block_size=(512, 512),
+def dprvic(cpFile,xpFile,  win=1, fmt="tif", 
+           cog=False, ovr = [2, 4, 8, 16], comp=False,
+           max_workers=None,block_size=(512, 512),
            progress_callback=None,  # for QGIS plugin          
            ):
     """Compute dual-pol Radar Vegetation Index (DpRVIc) from Dual-pol GRD data.
@@ -24,9 +24,9 @@ def dprvic(cpFile,xpFile,  window_size=1, outType="tif",
     >>> dprvic(
     ...     cpFile="/path/to/copol_file.tif",
     ...     xpFile="/path/to/crosspol_file.tif",
-    ...     window_size=3,
-    ...     outType="tif",
-    ...     cog_flag=True,
+    ...     win=3,
+    ...     fmt="tif",
+    ...     cog=True,
     ...     block_size=(1024, 1024)
     ... )
     
@@ -36,21 +36,21 @@ def dprvic(cpFile,xpFile,  window_size=1, outType="tif",
         Path to the co-polarized backscatter (linear) SAR raster file.
     xpFile : str
         Path to the cross-polarized backscatter (linear) SAR raster file.
-    window_size : int, default=1
+    win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format:
         - 'tif': GeoTIFF format with georeferencing information
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
         and overviews for efficient web access.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG creation. Each number represents the
         decimation factor for that overview level.
-    write_flag : bool, default=True
-        If True, writes results to disk. If False, only processes data in memory.
+    comp : bool, default=False
+        If True, applies LZW compression to the output GeoTIFF files.
     max_workers : int | None, default=None
         Maximum number of parallel processing workers. If None, uses
         CPU count - 1 workers.
@@ -65,18 +65,18 @@ def dprvic(cpFile,xpFile,  window_size=1, outType="tif",
         in the input folder.
 
     """
+    write_flag=True
     input_filepaths = [cpFile,xpFile]
     output_filepaths = []
 
-    if outType == "bin":
+    if fmt == "bin":
         output_filepaths.append(os.path.join(os.path.dirname(cpFile), "dprvic.bin"))
     else:
         output_filepaths.append(os.path.join(os.path.dirname(cpFile), "dprvic.tif"))
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
                             processing_func=process_chunk_dprvic,block_size=block_size, max_workers=max_workers,  num_outputs=1,
-                            cog_flag=cog_flag,
-                            cog_overviews=cog_overviews,
+                            cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     

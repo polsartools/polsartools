@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.cp.mf3cc &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.polsar.cp.dop_cp &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/cp/mf3cc';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/cp/dop_cp';</script>
     <link rel="icon" href="../../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.cp.mf3cc</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.cp.dop_cp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,118 +332,120 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.polsar.cp.mf3cc</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.polsar.cp.dop_cp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.cp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">cpc2files</span>
-<div class="viewcode-block" id="mf3cc">
-<a class="viewcode-back" href="../../../../files/functions/compact_pol/MF3CC.html#polsartools.mf3cc">[docs]</a>
+<div class="viewcode-block" id="dop_cp">
+<a class="viewcode-back" href="../../../../files/functions/compact_pol/DOP_cp.html#polsartools.dop_cp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">mf3cc</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>   <span class="n">chi</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">dop_cp</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>   <span class="n">chi</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
           <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-          <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># for QGIS plugin</span>
+          <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
           <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Model-Free 3-Component Decomposition for compact-pol SAR data.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Degree of Polarization (DoP) from compact-pol SAR data.</span>
 
-<span class="sd">    This function implements the model-free three-component decomposition for</span>
-<span class="sd">    compact-polarimetric SAR data, decomposing the total backscattered power into</span>
-<span class="sd">    surface (Ps), double-bounce (Pd), and volume (Pv) scattering components, along</span>
-<span class="sd">    with the scattering-type parameter (Theta_CP).</span>
+<span class="sd">        This function calculates the Degree of Polarization (DoP) from compact-polarimetric</span>
+<span class="sd">        SAR data, which quantifies the polarized portion of the scattered wave. DoP is a</span>
+<span class="sd">        useful parameter for characterizing surface properties and scattering mechanisms.</span>
 
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
-<span class="sd">    &gt;&gt;&gt; mf3cc(&quot;/path/to/cp_data&quot;)</span>
-<span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
-<span class="sd">    &gt;&gt;&gt; mf3cc(</span>
-<span class="sd">    ...     in_dir=&quot;/path/to/cp_data&quot;,</span>
-<span class="sd">    ...     chi=-45,</span>
-<span class="sd">    ...     win=5,</span>
-<span class="sd">    ...     fmt=&quot;tif&quot;,</span>
-<span class="sd">    ...     cog=True,</span>
-<span class="sd">    ...     block_size=(1024, 1024)</span>
-<span class="sd">    ... )</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; # Basic usage with default parameters (right circular transmission)</span>
+<span class="sd">        &gt;&gt;&gt; dopcp(&quot;/path/to/cp_data&quot;)</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; # Advanced usage with custom parameters</span>
+<span class="sd">        &gt;&gt;&gt; dopcp(</span>
+<span class="sd">        ...     in_dir=&quot;/path/to/cp_data&quot;,</span>
+<span class="sd">        ...     chi=-45,  # left circular transmission</span>
+<span class="sd">        ...     win=5,</span>
+<span class="sd">        ...     fmt=&quot;tif&quot;,</span>
+<span class="sd">        ...     cog=True,</span>
+<span class="sd">        ...     block_size=(1024, 1024)</span>
+<span class="sd">        ... )</span>
 
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    in_dir : str</span>
-<span class="sd">        Path to the input folder containing compact-pol C2 matrix files.</span>
-<span class="sd">    chi : float, default=45</span>
-<span class="sd">        Ellipticity angle chi of the transmitted wave in degrees.</span>
-<span class="sd">        For circular polarization, chi = 45° (right circular) or -45° (left circular).</span>
-<span class="sd">    psi : float, default=0</span>
-<span class="sd">        Orientation angle psi of the transmitted wave in degrees.</span>
-<span class="sd">        For circular polarization, typically 0°.</span>
-<span class="sd">    win : int, default=1</span>
-<span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
-<span class="sd">        but decrease spatial resolution.</span>
-<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
-<span class="sd">        Output file format:</span>
-<span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
-<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
-<span class="sd">    cog : bool, default=False</span>
-<span class="sd">        If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling</span>
-<span class="sd">        and overviews for efficient web access.</span>
-<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
-<span class="sd">        Overview levels for COG creation. Each number represents the</span>
-<span class="sd">        decimation factor for that overview level.</span>
-<span class="sd">    comp : bool, default=False</span>
-<span class="sd">        If True, applies LZW compression to the output GeoTIFF files.</span>
-<span class="sd">    max_workers : int | None, default=None</span>
-<span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
-<span class="sd">        CPU count - 1 workers.</span>
-<span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
-<span class="sd">        Size of processing blocks (rows, cols) for parallel computation.</span>
-<span class="sd">        Larger blocks use more memory but may be more efficient.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        in_dir : str</span>
+<span class="sd">            Path to the input folder containing compact-pol C2 matrix files.</span>
+<span class="sd">        chi : float, default=45</span>
+<span class="sd">            Ellipticity angle chi of the transmitted wave in degrees.</span>
+<span class="sd">            For circular polarization, chi = 45° (right circular) or -45° (left circular).</span>
+<span class="sd">        psi : float, default=0</span>
+<span class="sd">            Orientation angle psi of the transmitted wave in degrees.</span>
+<span class="sd">            For circular polarization, typically 0°.</span>
+<span class="sd">        win : int, default=1</span>
+<span class="sd">            Size of the spatial averaging window. Larger windows provide better</span>
+<span class="sd">            estimation of DoP but reduce spatial resolution.</span>
+<span class="sd">        fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">            Output file format:</span>
+<span class="sd">            - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
+<span class="sd">            - &#39;bin&#39;: Raw binary format</span>
+<span class="sd">        cog : bool, default=False</span>
+<span class="sd">            If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
+<span class="sd">            and overviews for efficient web access.</span>
+<span class="sd">        ovr : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">            Overview levels for COG creation. Each number represents the</span>
+<span class="sd">            decimation factor for that overview level.</span>
+<span class="sd">        comp : bool, default=False</span>
+<span class="sd">            If True, applies LZW compression to the output GeoTIFF files. </span>
+<span class="sd">        max_workers : int | None, default=None</span>
+<span class="sd">            Maximum number of parallel processing workers. If None, uses</span>
+<span class="sd">            CPU count - 1 workers.</span>
+<span class="sd">        block_size : tuple[int, int], default=(512, 512)</span>
+<span class="sd">            Size of processing blocks (rows, cols) for parallel computation.</span>
+<span class="sd">            Larger blocks use more memory but may be more efficient.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
-<span class="sd">        Writes four output files to disk:</span>
-<span class="sd">        1. Ps_mf3cc: Surface scattering power component</span>
-<span class="sd">        2. Pd_mf3cc: Double-bounce scattering power component</span>
-<span class="sd">        3. Pv_mf3cc: Volume scattering power component</span>
-<span class="sd">        4. Theta_CP_mf3cc: Scattering-type parameter</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Results are written to disk as either &#39;dopcp.tif&#39; or &#39;dopcp.bin&#39;</span>
+<span class="sd">            in the input folder. The output DoP values range from 0 to 1, where:</span>
+<span class="sd">            - 0 indicates completely unpolarized scattered wave</span>
+<span class="sd">            - 1 indicates completely polarized scattered wave</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The Degree of Polarization (DoP) is calculated using the Stokes parameters</span>
+<span class="sd">        derived from the compact-pol coherency matrix. For a partially polarized wave,</span>
+<span class="sd">        DoP is given by:</span>
+
+<span class="sd">        DoP = sqrt(S₁² + S₂² + S₃²) / S₀</span>
+
+<span class="sd">        where S₀, S₁, S₂, S₃ are the Stokes parameters.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
     <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">cpc2files</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
 
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Ps_mf3cc.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Pd_mf3cc.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Pv_mf3cc.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Theta_CP_mf3cc.bin&quot;</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Ps_mf3cc.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Pd_mf3cc.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Pv_mf3cc.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Theta_CP_mf3cc.tif&quot;</span><span class="p">))</span>
-        
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;dopcp.bin&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>   
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;dopcp.tif&quot;</span><span class="p">))</span>
+
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
                             <span class="n">win</span><span class="p">,</span>
                         <span class="n">write_flag</span><span class="p">,</span>
-                        <span class="n">process_chunk_mf3cc</span><span class="p">,</span>
+                        <span class="n">process_chunk_dopcp</span><span class="p">,</span>
                         <span class="o">*</span><span class="p">[</span><span class="n">chi</span><span class="p">,</span> <span class="n">psi</span><span class="p">],</span>
                         <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
                         <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  
                         <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                         <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                         <span class="p">)</span></div>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_mf3cc</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dopcp</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     
     <span class="n">chi</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">psi</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1"># print(chi,psi):</span>
-
+    
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
     <span class="n">c11_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">c12_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
@@ -457,35 +459,16 @@
         <span class="n">c12_T1</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c12_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">c12_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
         <span class="n">c21_T1</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c21_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">c21_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
         <span class="n">c22_T1</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c22_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">c22_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
-    
-    <span class="n">c2_det</span> <span class="o">=</span> <span class="p">(</span><span class="n">c11_T1</span><span class="o">*</span><span class="n">c22_T1</span><span class="o">-</span><span class="n">c12_T1</span><span class="o">*</span><span class="n">c21_T1</span><span class="p">)</span>
-    <span class="n">c2_trace</span> <span class="o">=</span> <span class="n">c11_T1</span><span class="o">+</span><span class="n">c22_T1</span>
-    <span class="c1"># t2_span = t11s*t22s</span>
-    <span class="n">m1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">c2_det</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">,</span><span class="mi">2</span><span class="p">))))</span>
-
+        
     <span class="c1"># Compute Stokes parameters</span>
     <span class="n">s0</span> <span class="o">=</span> <span class="n">c11_T1</span> <span class="o">+</span> <span class="n">c22_T1</span>
     <span class="n">s1</span> <span class="o">=</span> <span class="n">c11_T1</span> <span class="o">-</span> <span class="n">c22_T1</span>
-    <span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c12_T1</span> <span class="o">+</span> <span class="n">c21_T1</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">c12_T1</span> <span class="o">+</span> <span class="n">c21_T1</span>
     <span class="n">s3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">chi</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">c12_T1</span> <span class="o">-</span> <span class="n">c21_T1</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">c12_T1</span> <span class="o">-</span> <span class="n">c21_T1</span><span class="p">))</span>
-    <span class="n">s3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">s3</span><span class="p">)</span>
 
-    <span class="n">SC</span> <span class="o">=</span> <span class="p">((</span><span class="n">s0</span><span class="p">)</span><span class="o">-</span><span class="p">(</span><span class="n">s3</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-    <span class="n">OC</span> <span class="o">=</span> <span class="p">((</span><span class="n">s0</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">s3</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+    <span class="n">dop</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">s0</span><span class="p">);</span>   
 
-    <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">OC</span><span class="o">-</span><span class="n">SC</span><span class="p">)</span>
-    <span class="c1"># span = c11s + c22s</span>
-
-    <span class="n">val</span> <span class="o">=</span> <span class="p">((</span><span class="n">m1</span><span class="o">*</span><span class="n">s0</span><span class="o">*</span><span class="n">h</span><span class="p">))</span><span class="o">/</span><span class="p">((</span><span class="n">SC</span><span class="o">*</span><span class="n">OC</span> <span class="o">+</span> <span class="p">(</span><span class="n">m1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">s0</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
-    <span class="n">thet</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
-    <span class="n">theta_CP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">thet</span><span class="p">)</span>
-
-    <span class="n">Ps_CP</span><span class="o">=</span> <span class="p">(((</span><span class="n">m1</span><span class="o">*</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">thet</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">)))</span>
-    <span class="n">Pd_CP</span><span class="o">=</span> <span class="p">(((</span><span class="n">m1</span><span class="o">*</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">thet</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">)))</span>
-    <span class="n">Pv_CP</span><span class="o">=</span> <span class="p">(</span><span class="n">c2_trace</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">m1</span><span class="p">))</span>
-    
-
-    <span class="k">return</span> <span class="n">Ps_CP</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Pd_CP</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Pv_CP</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">theta_CP</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">dop</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
                 </article>

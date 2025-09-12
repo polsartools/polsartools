@@ -1,5 +1,5 @@
-Degree of Polarization (``dopdp``)
-===================================
+Degree of Polarization (``dop_dp``)
+====================================
 .. This functionality computes the 2D Barakat degree of polarization for dual polarimetric (HH | HV), (VV | VH) SAR data. The required input and the computed output are as follows:
 
 .. .. code-block:: python
@@ -7,7 +7,7 @@ Degree of Polarization (``dopdp``)
 ..     input : input_c2_folder, window_size
 ..     output: dop_dp.bin
 
-.. autofunction:: polsartools.dopdp
+.. autofunction:: polsartools.dop_dp
    :noindex:
 
 

@@ -15,16 +15,16 @@ def preproc_processing(T3_folder, azlks,rglks,window_size):
     pst.mlook(T3_folder,azlks,rglks,sub_dir=False)
     
 def filters_processing(T3_folder, window_size=5):
-    pst.rlee(T3_folder, window_size=window_size,sub_dir=False)
-    pst.boxcar(T3_folder, window_size=window_size,sub_dir=False)
+    pst.rlee(T3_folder, win=window_size,sub_dir=False)
+    pst.boxcar(T3_folder, win=window_size,sub_dir=False)
 
-def cp_processing(compact_c2, chi_in=45, window_size=3):
+def cp_processing(compact_c2, chi=45, window_size=3):
     """ Decompositions """
-    pst.mf3cc(compact_c2, chi_in=chi_in, window_size=window_size)
-    pst.misomega(compact_c2, chi_in=chi_in, psi_in=0, window_size=window_size)
+    pst.mf3cc(compact_c2, chi=chi, win=window_size)
+    pst.misomega(compact_c2, chi=chi, psi=0, win=window_size)
     """ Descriptors """
-    pst.cprvi(compact_c2, chi_in=chi_in, window_size=window_size)
-    pst.dopcp(compact_c2, chi_in=chi_in, window_size=window_size)
+    pst.cprvi(compact_c2, chi=chi, win=window_size)
+    pst.dop_cp(compact_c2, chi=chi, win=window_size)
 
 
 def full_pol_processing(full_T3, window_size=3):
@@ -46,10 +46,12 @@ def full_pol_processing(full_T3, window_size=3):
 
 def dual_cross_pol_processing(dxp_C2, window_size=3):
     """ Descriptors """
-    pst.dprvi(dxp_C2, window_size=window_size)
-    pst.rvidp(dxp_C2, window_size=window_size)
-    pst.prvidp(dxp_C2, window_size=window_size)
-    pst.dopdp(dxp_C2, window_size=window_size)
+    pst.dprvi(dxp_C2, win=window_size)
+    pst.rvi_dp(dxp_C2, win=window_size)
+    pst.prvi_dp(dxp_C2, win=window_size)
+    pst.dop_dp(dxp_C2, win=window_size)
+    pst.halpha_dp(dxp_C2, win=window_size)
+    pst.shannon_h_dp(dxp_C2, win=window_size)
 
 
 
@@ -195,6 +197,16 @@ def test_dual_cross_pol_processing():
         os.path.join(dxp_C2,'rvidp.tif'),
         os.path.join(dxp_C2,'prvidp.tif'),
         os.path.join(dxp_C2,'dopdp.tif'),
+        
+        os.path.join(dxp_C2, "Hdp.tif"),
+        os.path.join(dxp_C2, "alphadp.tif"),
+        os.path.join(dxp_C2, "e1_norm.tif"),
+        os.path.join(dxp_C2, "e2_norm.tif"),
+        
+        os.path.join(dxp_C2, "H_Shannon.tif"),
+        os.path.join(dxp_C2, "HI_Shannon.tif"),
+        os.path.join(dxp_C2, "HP_Shannon.tif"),
+        
 
     ]
 

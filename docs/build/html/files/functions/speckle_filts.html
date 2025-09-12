@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Clip PolSAR data (clip)" href="preprocess/clip.html" />
-    <link rel="prev" title="Full-pol H-A-alpha plot (haalpha_plot_fp)" href="analysis/haalpha_plot_fp.html" />
+    <link rel="prev" title="Compact-pol H-theta plot (htheta_plot_cp)" href="analysis/htheta_plot_cp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -291,17 +291,21 @@
 <li class="toctree-l1"><a class="reference internal" href="dataFP.html">Full-pol data format</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halphafp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4cfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4c_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neufp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nnedfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neu_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvifp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_fp</span></code> )</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvifp</span></code> )</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dopfp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_fp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_fp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="dataCP.html">Compact-pol data format</a></li>
@@ -334,6 +338,9 @@
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
@@ -411,7 +418,7 @@
 <h1>Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)<a class="headerlink" href="#refined-lee-filter-rlee" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rlee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#rlee"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rlee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#rlee"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Apply Refined Lee (RLee) speckle filter to polarimetric SAR data.</p>
 <p>The Refined Lee filter is an adaptive speckle filter that preserves edges and
 structural details while reducing noise. Unlike Boxcar, RLee dynamically adjusts
@@ -423,19 +430,19 @@ segmentation, and biophysical retrieval tasks.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Custom usage with large window and tiled COG output</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rlee</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rlee</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>infolder</strong> (<em>str</em>) – Path to the folder with C4, T4, C3, T3, C2, or T2 matrix files.</p></li>
-<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>default=3</em>) – Size of the adaptive filtering window.</p></li>
-<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Desired output file format.</p></li>
-<li><p><strong>sub_dir</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, creates a subdirectory for the output files based on filter type and window size in the input folder.</p></li>
-<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Create Cloud Optimized GeoTIFF with overviews and internal tiling.</p></li>
-<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview pyramid levels for zoomable image access.</p></li>
-<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Write the output to disk if True.</p></li>
+<li><p><strong>in_dir</strong> (<em>str</em>) – Path to the folder with C4, T4, C3, T3, C2, or T2 matrix files.</p></li>
+<li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=3</em>) – Size of the adaptive filtering window.</p></li>
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Desired output file format.</p></li>
+<li><p><strong>sub_dir</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, creates a subdirectory for the output files based on filter type and window size in the input folder. Else saves to a output folder at same level as input folder.</p></li>
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Create Cloud Optimized GeoTIFF with overviews and internal tiling.</p></li>
+<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview pyramid levels for zoomable image access.</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, applies LZW compression to the output GeoTIFF files.</p></li>
 <li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Number of threads for parallel processing.</p></li>
 <li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Block size used during chunked filtering.</p></li>
 </ul>
@@ -454,7 +461,7 @@ segmentation, and biophysical retrieval tasks.</p>
 <h1>Boxcar filter (<code class="docutils literal notranslate"><span class="pre">boxcar</span></code>)<a class="headerlink" href="#boxcar-filter-boxcar" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">boxcar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#boxcar"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">boxcar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#boxcar"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Apply a Boxcar speckle filter to polarimetric SAR data to reduce speckle noise.</p>
 <p>The Boxcar filter performs a uniform mean filter over a square window, effectively
 smoothing the polarimetric matrix to enhance interpretability. It is a fast,
@@ -466,18 +473,19 @@ visualization.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># With custom window size and output as GeoTIFF</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">boxcar</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">boxcar</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>infolder</strong> (<em>str</em>) – Input folder containing C4, T4, C3, T3, C2, or T2 matrix files (.bin or .tif).</p></li>
-<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>default=3</em>) – Size of the spatial smoothing window (e.g., 3x3).</p></li>
-<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format type.</p></li>
-<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates a Cloud Optimized GeoTIFF.</p></li>
-<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG pyramids.</p></li>
-<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If False, processes data in memory without saving to disk.</p></li>
+<li><p><strong>in_dir</strong> (<em>str</em>) – Input folder containing C4, T4, C3, T3, C2, or T2 matrix files (.bin or .tif).</p></li>
+<li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=3</em>) – Size of the spatial smoothing window (e.g., 3x3).</p></li>
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format type.</p></li>
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates a Cloud Optimized GeoTIFF.</p></li>
+<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG pyramids.</p></li>
+<li><p><strong>sub_dir</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, creates a subdirectory for the output files based on filter type and window size in the input folder. Else saves to a output folder at same level as input folder.</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, applies LZW compression to the output GeoTIFF files.</p></li>
 <li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel workers.</p></li>
 <li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Block size for chunked processing.</p></li>
 </ul>
@@ -504,12 +512,12 @@ visualization.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="analysis/haalpha_plot_fp.html"
+       href="analysis/htheta_plot_cp.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</p>
+        <p class="prev-next-title">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</p>
       </div>
     </a>
     <a class="right-next"

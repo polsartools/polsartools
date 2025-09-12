@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.dprvi &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.polsar.dxp.prvi_dp &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/dprvi';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/prvi_dp';</script>
     <link rel="icon" href="../../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.dxp.dprvi</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.dxp.prvi_dp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,71 +332,58 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.polsar.dxp.dprvi</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.polsar.dxp.prvi_dp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span>
-<div class="viewcode-block" id="dprvi">
-<a class="viewcode-back" href="../../../../files/functions/dual_pol/DpRVI.html#polsartools.dprvi">[docs]</a>
+<div class="viewcode-block" id="prvi_dp">
+<a class="viewcode-back" href="../../../../files/functions/dual_pol/PRVI_dp.html#polsartools.prvi_dp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dprvi</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
-          <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-          <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-          <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
-          <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute dual-pol Radar Vegetation Index (DpRVI) from C2 matrix data.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prvi_dp</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
+           <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+           <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
+           <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        </span>
+<span class="sd">    Computes polarimetric Radar vegetation index from the input dual-polarization (dual-pol) C2 matrix data, and writes</span>
+<span class="sd">    the output in various formats (GeoTIFF or binary). The computation is performed in parallel for efficiency.</span>
 
-<span class="sd">    This function processes dual-polarization SAR data to generate the DpRVI, which is useful</span>
-<span class="sd">    for vegetation monitoring and biomass estimation. The processing is done in parallel</span>
-<span class="sd">    blocks for improved performance.</span>
-
-<span class="sd">    Examples</span>
+<span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
-<span class="sd">    &gt;&gt;&gt; dprvi(&quot;/path/to/c2_data&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; prvi_dp(&quot;path_to_C2_folder&quot;, win=5, fmt=&quot;tif&quot;, cog=True)</span>
+<span class="sd">    This will compute polarimetric Radar vegetation index from the C2 matrix in the specified folder,</span>
+<span class="sd">    generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.</span>
 <span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
-<span class="sd">    &gt;&gt;&gt; dprvi(</span>
-<span class="sd">    ...     in_dir=&quot;/path/to/c2_data&quot;,</span>
-<span class="sd">    ...     win=3,</span>
-<span class="sd">    ...     fmt=&quot;tif&quot;,</span>
-<span class="sd">    ...     cog=True,</span>
-<span class="sd">    ...     block_size=(1024, 1024)</span>
-<span class="sd">    ... )</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
 <span class="sd">    in_dir : str</span>
-<span class="sd">        Path to the input folder containing C2 matrix files.</span>
-<span class="sd">    win : int, default=1</span>
-<span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
-<span class="sd">        but decrease spatial resolution.</span>
-<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
-<span class="sd">        Output file format:</span>
-<span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
-<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
-<span class="sd">    cog : bool, default=False</span>
-<span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
-<span class="sd">        and overviews for efficient web access.</span>
-<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
-<span class="sd">        Overview levels for COG creation. Each number represents the</span>
-<span class="sd">        decimation factor for that overview level.</span>
-<span class="sd">    comp : bool, default=False</span>
-<span class="sd">        If True, applies LZW compression to the output GeoTIFF files.</span>
-<span class="sd">    max_workers : int | None, default=None</span>
-<span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
-<span class="sd">        CPU count - 1 workers.</span>
-<span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
-<span class="sd">        Size of processing blocks (rows, cols) for parallel computation.</span>
-<span class="sd">        Larger blocks use more memory but may be more efficient.</span>
+<span class="sd">        Path to the input folder containing C2 matrix data.</span>
+<span class="sd">    win : int, optional</span>
+<span class="sd">        Size of the processing window (default is 1).</span>
+<span class="sd">    fmt : str, optional</span>
+<span class="sd">        Output format of the files; can be &quot;tif&quot; (GeoTIFF) or &quot;bin&quot; (binary) (default is &quot;tif&quot;).</span>
+<span class="sd">    cog : bool, optional</span>
+<span class="sd">        If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).</span>
+<span class="sd">    ovr : list of int, optional</span>
+<span class="sd">        List of overview levels to be used for COGs (default is [2, 4, 8, 16]).</span>
+<span class="sd">    comp : bool, optional</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF files. (default is False).</span>
+<span class="sd">    max_workers : int, optional</span>
+<span class="sd">        Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).</span>
+<span class="sd">    block_size : tuple of int, optional</span>
+<span class="sd">        Size of each processing block (default is (512, 512)), defining the spatial chunk dimensions used in parallel computation.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
 <span class="sd">    None</span>
-<span class="sd">        Results are written to disk as either &#39;dprvi.tif&#39; or &#39;dprvi.bin&#39;</span>
-<span class="sd">        in the input folder.</span>
+<span class="sd">        The function writes the computed polarimetric Radar vegetation index to the specified output format.</span>
+
+<span class="sd">    Output Files:</span>
+<span class="sd">    -------------</span>
+<span class="sd">    - &quot;prvidp.tif&quot; or &quot;prvidp.bin&quot;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
@@ -404,18 +391,19 @@
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;dprvi.bin&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;prvidp.bin&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;dprvi.tif&quot;</span><span class="p">))</span>
-
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;prvidp.tif&quot;</span><span class="p">))</span>
+       
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
-                            <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_dprvi</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_prvidp</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                             <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 
-    
-<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dprvi</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_prvidp</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
     <span class="n">c11_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">c12_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
@@ -427,29 +415,18 @@
         <span class="n">c12s</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c12_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">c12_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
         <span class="n">c21s</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c21_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">c21_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
         <span class="n">c22s</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c22_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">c22_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
-
+        
         <span class="n">c2_det</span> <span class="o">=</span> <span class="p">(</span><span class="n">c11s</span><span class="o">*</span><span class="n">c22s</span><span class="o">-</span><span class="n">c12s</span><span class="o">*</span><span class="n">c21s</span><span class="p">)</span>
         <span class="n">c2_trace</span> <span class="o">=</span> <span class="n">c11s</span><span class="o">+</span><span class="n">c22s</span>
-        <span class="c1"># t2_span = t11s*t22s</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">c2_det</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">,</span><span class="mi">2</span><span class="p">))))</span>
-        <span class="n">egv1</span><span class="p">,</span><span class="n">egv2</span> <span class="o">=</span> <span class="n">eig22</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">([</span><span class="n">c11s</span><span class="p">,</span><span class="n">c12s</span><span class="p">,</span><span class="n">c21s</span><span class="p">,</span><span class="n">c22s</span><span class="p">]))</span>
-        <span class="n">egf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">egv1</span><span class="p">,</span><span class="n">egv2</span><span class="p">])</span>
-        <span class="n">egfmax</span> <span class="o">=</span> <span class="n">egf</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="c1">#.reshape(np.shape(C2_stack[:,:,0]))</span>
-        <span class="n">beta</span> <span class="o">=</span> <span class="p">(</span><span class="n">egfmax</span><span class="o">/</span><span class="p">(</span><span class="n">egv1</span><span class="o">+</span><span class="n">egv2</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">c11s</span><span class="p">))</span>
-        <span class="n">dprvi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span>
+        <span class="n">dopdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">c2_det</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">,</span><span class="mi">2</span><span class="p">))))</span>
+        <span class="n">prvidp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">dopdp</span><span class="p">)</span><span class="o">*</span><span class="n">c22s</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">c2_det</span> <span class="o">=</span> <span class="p">(</span><span class="n">c11_T1</span><span class="o">*</span><span class="n">c22_T1</span><span class="o">-</span><span class="n">c12_T1</span><span class="o">*</span><span class="n">c21_T1</span><span class="p">)</span>
         <span class="n">c2_trace</span> <span class="o">=</span> <span class="n">c11_T1</span><span class="o">+</span><span class="n">c22_T1</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">c2_det</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">,</span><span class="mi">2</span><span class="p">))))</span>
+        <span class="n">dopdp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="p">(</span><span class="mf">4.0</span><span class="o">*</span><span class="n">c2_det</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">c2_trace</span><span class="p">,</span><span class="mi">2</span><span class="p">))))</span>
+        <span class="n">prvidp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">dopdp</span><span class="p">)</span><span class="o">*</span><span class="n">c22_T1</span><span class="p">)</span>  
 
-        <span class="n">egv1</span><span class="p">,</span><span class="n">egv2</span> <span class="o">=</span> <span class="n">eig22</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">([</span><span class="n">c11_T1</span><span class="p">,</span><span class="n">c12_T1</span><span class="p">,</span><span class="n">c21_T1</span><span class="p">,</span><span class="n">c22_T1</span><span class="p">]))</span>
-        <span class="n">egf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">egv1</span><span class="p">,</span><span class="n">egv2</span><span class="p">])</span>
-        <span class="n">egfmax</span> <span class="o">=</span> <span class="n">egf</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="c1">#.reshape(np.shape(C2_stack[:,:,0]))</span>
-        <span class="n">beta</span> <span class="o">=</span> <span class="p">(</span><span class="n">egfmax</span><span class="o">/</span><span class="p">(</span><span class="n">egv1</span><span class="o">+</span><span class="n">egv2</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">c11_T1</span><span class="p">))</span>
-        <span class="n">dprvi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span>
-
-
-    <span class="k">return</span> <span class="n">dprvi</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prvidp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
                 </article>

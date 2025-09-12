@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.preprocess.filters &#8212; PolSARtools 0.8 documentation</title>
+    <title>polsartools.preprocess.filters &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/filters';</script>
@@ -344,9 +344,9 @@
 <div class="viewcode-block" id="boxcar">
 <a class="viewcode-back" href="../../../files/functions/speckle_filts.html#polsartools.boxcar">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">boxcar</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-           <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
-           <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">boxcar</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+           <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
            <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
            <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -363,22 +363,24 @@
 <span class="sd">    &gt;&gt;&gt; boxcar(&quot;/path/to/polSAR_data&quot;)</span>
 
 <span class="sd">    &gt;&gt;&gt; # With custom window size and output as GeoTIFF</span>
-<span class="sd">    &gt;&gt;&gt; boxcar(&quot;/path/to/polSAR_data&quot;, window_size=5, cog_flag=True)</span>
+<span class="sd">    &gt;&gt;&gt; boxcar(&quot;/path/to/polSAR_data&quot;, win=5, cog=True)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    infolder : str</span>
+<span class="sd">    in_dir : str</span>
 <span class="sd">        Input folder containing C4, T4, C3, T3, C2, or T2 matrix files (.bin or .tif).</span>
-<span class="sd">    window_size : int, default=3</span>
+<span class="sd">    win : int, default=3</span>
 <span class="sd">        Size of the spatial smoothing window (e.g., 3x3).</span>
-<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
 <span class="sd">        Output file format type.</span>
-<span class="sd">    cog_flag : bool, default=False</span>
+<span class="sd">    cog : bool, default=False</span>
 <span class="sd">        If True, generates a Cloud Optimized GeoTIFF.</span>
-<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
 <span class="sd">        Overview levels for COG pyramids.</span>
-<span class="sd">    write_flag : bool, default=True</span>
-<span class="sd">        If False, processes data in memory without saving to disk.</span>
+<span class="sd">    sub_dir : bool, default=True</span>
+<span class="sd">        If True, creates a subdirectory for the output files based on filter type and window size in the input folder. Else saves to a output folder at same level as input folder.</span>
+<span class="sd">    comp : bool, default=False</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF files.</span>
 <span class="sd">    max_workers : int | None, default=None</span>
 <span class="sd">        Maximum number of parallel workers.</span>
 <span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
@@ -389,19 +391,21 @@
 <span class="sd">    None</span>
 <span class="sd">        Writes filtered output matrix files to disk.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_filter_io_paths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> 
-                                                            <span class="p">[</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_size</span><span class="p">],</span> 
-                                                            <span class="n">outType</span><span class="o">=</span><span class="n">outType</span><span class="p">,</span> 
+    
+    <span class="n">write_flag</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Always write output files</span>
+    <span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_filter_io_paths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> 
+                                                            <span class="p">[</span><span class="n">win</span><span class="p">,</span> <span class="n">win</span><span class="p">],</span> 
+                                                            <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> 
                                                             <span class="n">filter_type</span><span class="o">=</span><span class="s2">&quot;boxcar&quot;</span><span class="p">,</span> 
                                                             <span class="n">sub_dir</span><span class="o">=</span><span class="n">sub_dir</span><span class="p">)</span>
 
     <span class="c1"># Process chunks in parallel</span>
     <span class="n">num_outputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">)</span>
 
-    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
+    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
                             <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_boxcar</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="n">num_outputs</span><span class="p">,</span>
-                            <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                            <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                            <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span>
+                            <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 
@@ -419,9 +423,9 @@
 <div class="viewcode-block" id="rlee">
 <a class="viewcode-back" href="../../../files/functions/speckle_filts.html#polsartools.rlee">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rlee</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span><span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-         <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
-         <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rlee</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span><span class="n">sub_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+         <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+         <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
          <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
          <span class="p">):</span>
 
@@ -439,24 +443,24 @@
 <span class="sd">    &gt;&gt;&gt; rlee(&quot;/path/to/polSAR_data&quot;)</span>
 
 <span class="sd">    &gt;&gt;&gt; # Custom usage with large window and tiled COG output</span>
-<span class="sd">    &gt;&gt;&gt; rlee(&quot;/path/to/polSAR_data&quot;, window_size=7, cog_flag=True)</span>
+<span class="sd">    &gt;&gt;&gt; rlee(&quot;/path/to/polSAR_data&quot;, win=7, cog=True)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    infolder : str</span>
+<span class="sd">    in_dir : str</span>
 <span class="sd">        Path to the folder with C4, T4, C3, T3, C2, or T2 matrix files.</span>
-<span class="sd">    window_size : int, default=3</span>
+<span class="sd">    win : int, default=3</span>
 <span class="sd">        Size of the adaptive filtering window.</span>
-<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
 <span class="sd">        Desired output file format.</span>
 <span class="sd">    sub_dir : bool, default=True</span>
-<span class="sd">        If True, creates a subdirectory for the output files based on filter type and window size in the input folder. </span>
-<span class="sd">    cog_flag : bool, default=False</span>
+<span class="sd">        If True, creates a subdirectory for the output files based on filter type and window size in the input folder. Else saves to a output folder at same level as input folder.</span>
+<span class="sd">    cog : bool, default=False</span>
 <span class="sd">        Create Cloud Optimized GeoTIFF with overviews and internal tiling.</span>
-<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
 <span class="sd">        Overview pyramid levels for zoomable image access.</span>
-<span class="sd">    write_flag : bool, default=True</span>
-<span class="sd">        Write the output to disk if True.</span>
+<span class="sd">    comp : bool, default=False</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF files.</span>
 <span class="sd">    max_workers : int | None, default=None</span>
 <span class="sd">        Number of threads for parallel processing.</span>
 <span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
@@ -467,25 +471,25 @@
 <span class="sd">    None</span>
 <span class="sd">        Output files are written to disk with the applied RLee filter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_filter_io_paths</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> 
-                                                            <span class="p">[</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_size</span><span class="p">],</span> 
-                                                            <span class="n">outType</span><span class="o">=</span><span class="n">outType</span><span class="p">,</span> 
+    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_filter_io_paths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> 
+                                                            <span class="p">[</span><span class="n">win</span><span class="p">,</span> <span class="n">win</span><span class="p">],</span> 
+                                                            <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> 
                                                             <span class="n">filter_type</span><span class="o">=</span><span class="s2">&quot;rlee&quot;</span><span class="p">,</span>
                                                             <span class="n">sub_dir</span><span class="o">=</span><span class="n">sub_dir</span><span class="p">)</span>
     <span class="n">num_outputs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">)</span>
     
     <span class="c1">### Python implementation</span>
-    <span class="c1"># process_chunks_parallel(input_filepaths, output_filepaths, window_size=window_size, write_flag=write_flag,</span>
+    <span class="c1"># process_chunks_parallel(input_filepaths, output_filepaths, win=win, write_flag=write_flag,</span>
     <span class="c1">#                         processing_func=process_chunk_refined_lee, block_size=(512, 512), max_workers=max_workers,</span>
     <span class="c1">#                         num_outputs=num_outputs)</span>
     
     <span class="c1">#### Uncomment below to use C++ implementation </span>
 
-    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
+    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
                             <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_rfl</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="n">num_outputs</span><span class="p">,</span>
-                            <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                            <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                            <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span>
+                            <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 

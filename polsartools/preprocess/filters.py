@@ -7,9 +7,9 @@ from polsartools.preprocess.pre_utils import get_filter_io_paths
 from polsartools.preprocess.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
-def boxcar(infolder,  window_size=3, outType="tif", sub_dir=True,
-           cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-           write_flag=True, max_workers=None,block_size=(512, 512),
+def boxcar(in_dir,  win=3, fmt="tif", sub_dir=True,
+           cog=False, ovr = [2, 4, 8, 16], comp=False,
+           max_workers=None,block_size=(512, 512),
            progress_callback=None,  # for QGIS plugin
            ):
     """
@@ -26,22 +26,24 @@ def boxcar(infolder,  window_size=3, outType="tif", sub_dir=True,
     >>> boxcar("/path/to/polSAR_data")
 
     >>> # With custom window size and output as GeoTIFF
-    >>> boxcar("/path/to/polSAR_data", window_size=5, cog_flag=True)
+    >>> boxcar("/path/to/polSAR_data", win=5, cog=True)
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Input folder containing C4, T4, C3, T3, C2, or T2 matrix files (.bin or .tif).
-    window_size : int, default=3
+    win : int, default=3
         Size of the spatial smoothing window (e.g., 3x3).
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format type.
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, generates a Cloud Optimized GeoTIFF.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG pyramids.
-    write_flag : bool, default=True
-        If False, processes data in memory without saving to disk.
+    sub_dir : bool, default=True
+        If True, creates a subdirectory for the output files based on filter type and window size in the input folder. Else saves to a output folder at same level as input folder.
+    comp : bool, default=False
+        If True, applies LZW compression to the output GeoTIFF files.
     max_workers : int | None, default=None
         Maximum number of parallel workers.
     block_size : tuple[int, int], default=(512, 512)
@@ -52,19 +54,21 @@ def boxcar(infolder,  window_size=3, outType="tif", sub_dir=True,
     None
         Writes filtered output matrix files to disk.
     """
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, 
-                                                            [window_size, window_size], 
-                                                            outType=outType, 
+    
+    write_flag = True  # Always write output files
+    input_filepaths, output_filepaths = get_filter_io_paths(in_dir, 
+                                                            [win, win], 
+                                                            fmt=fmt, 
                                                             filter_type="boxcar", 
                                                             sub_dir=sub_dir)
 
     # Process chunks in parallel
     num_outputs = len(output_filepaths)
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
                             processing_func=process_chunk_boxcar,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
-                            cog_flag=cog_flag,
-                            cog_overviews=cog_overviews,
+                            cog=cog,
+                            ovr=ovr,comp=comp,
                             progress_callback=progress_callback
                             )
 
@@ -79,9 +83,9 @@ def process_chunk_boxcar(chunks, window_size, *args):
 
 
 @time_it
-def rlee(infolder,  window_size=3, outType="tif",sub_dir=True, 
-         cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-         write_flag=True, max_workers=None,block_size=(512, 512),
+def rlee(in_dir,  win=3, fmt="tif",sub_dir=True, 
+         cog=False, ovr = [2, 4, 8, 16], comp=False,
+         max_workers=None,block_size=(512, 512),
          progress_callback=None,  # for QGIS plugin
          ):
 
@@ -99,24 +103,24 @@ def rlee(infolder,  window_size=3, outType="tif",sub_dir=True,
     >>> rlee("/path/to/polSAR_data")
 
     >>> # Custom usage with large window and tiled COG output
-    >>> rlee("/path/to/polSAR_data", window_size=7, cog_flag=True)
+    >>> rlee("/path/to/polSAR_data", win=7, cog=True)
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Path to the folder with C4, T4, C3, T3, C2, or T2 matrix files.
-    window_size : int, default=3
+    win : int, default=3
         Size of the adaptive filtering window.
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Desired output file format.
     sub_dir : bool, default=True
-        If True, creates a subdirectory for the output files based on filter type and window size in the input folder. 
-    cog_flag : bool, default=False
+        If True, creates a subdirectory for the output files based on filter type and window size in the input folder. Else saves to a output folder at same level as input folder.
+    cog : bool, default=False
         Create Cloud Optimized GeoTIFF with overviews and internal tiling.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview pyramid levels for zoomable image access.
-    write_flag : bool, default=True
-        Write the output to disk if True.
+    comp : bool, default=False
+        If True, applies LZW compression to the output GeoTIFF files.
     max_workers : int | None, default=None
         Number of threads for parallel processing.
     block_size : tuple[int, int], default=(512, 512)
@@ -127,25 +131,25 @@ def rlee(infolder,  window_size=3, outType="tif",sub_dir=True,
     None
         Output files are written to disk with the applied RLee filter.
     """
-    
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, 
-                                                            [window_size, window_size], 
-                                                            outType=outType, 
+    write_flag=True
+    input_filepaths, output_filepaths = get_filter_io_paths(in_dir, 
+                                                            [win, win], 
+                                                            fmt=fmt, 
                                                             filter_type="rlee",
                                                             sub_dir=sub_dir)
     num_outputs = len(output_filepaths)
     
     ### Python implementation
-    # process_chunks_parallel(input_filepaths, output_filepaths, window_size=window_size, write_flag=write_flag,
+    # process_chunks_parallel(input_filepaths, output_filepaths, win=win, write_flag=write_flag,
     #                         processing_func=process_chunk_refined_lee, block_size=(512, 512), max_workers=max_workers,
     #                         num_outputs=num_outputs)
     
     #### Uncomment below to use C++ implementation 
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=window_size, write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
                             processing_func=process_chunk_rfl,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
-                            cog_flag=cog_flag,
-                            cog_overviews=cog_overviews,
+                            cog=cog,
+                            ovr=ovr,
                             progress_callback=progress_callback
                             )
 

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.cp.cprvi &#8212; PolSARtools 0.8 documentation</title>
+    <title>polsartools.polsar.cp.cprvi &#8212; PolSARtools 0.9 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../../_static/documentation_options.js?v=049aceee"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/cp/cprvi';</script>
@@ -342,8 +342,8 @@
 <div class="viewcode-block" id="cprvi">
 <a class="viewcode-back" href="../../../../files/functions/compact_pol/cprvi.html#polsartools.cprvi">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cprvi</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>   <span class="n">chi_in</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">psi_in</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
-          <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">cprvi</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>   <span class="n">chi</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+          <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
           <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
           <span class="p">):</span>
@@ -361,39 +361,39 @@
 <span class="sd">    </span>
 <span class="sd">    &gt;&gt;&gt; # Custom parameters for left circular transmission</span>
 <span class="sd">    &gt;&gt;&gt; cprvi(</span>
-<span class="sd">    ...     infolder=&quot;/path/to/cp_data&quot;,</span>
-<span class="sd">    ...     chi_in=-45,</span>
-<span class="sd">    ...     psi_in=0,</span>
-<span class="sd">    ...     window_size=3,</span>
-<span class="sd">    ...     outType=&quot;tif&quot;,</span>
-<span class="sd">    ...     cog_flag=True</span>
+<span class="sd">    ...     in_dir=&quot;/path/to/cp_data&quot;,</span>
+<span class="sd">    ...     chi=-45,</span>
+<span class="sd">    ...     psi=0,</span>
+<span class="sd">    ...     win=3,</span>
+<span class="sd">    ...     fmt=&quot;tif&quot;,</span>
+<span class="sd">    ...     cog=True</span>
 <span class="sd">    ... )</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    infolder : str</span>
+<span class="sd">    in_dir : str</span>
 <span class="sd">        Path to the input folder containing compact-pol C2 matrix files.</span>
-<span class="sd">    chi_in : float, default=45</span>
+<span class="sd">    chi : float, default=45</span>
 <span class="sd">        Ellipticity angle chi of the transmitted wave in degrees.</span>
 <span class="sd">        For circular polarization, chi = 45° (right circular) or -45° (left circular).</span>
-<span class="sd">    psi_in : float, default=0</span>
+<span class="sd">    psi : float, default=0</span>
 <span class="sd">        Orientation angle psi of the transmitted wave in degrees.</span>
 <span class="sd">        For circular polarization, typically 0°.</span>
-<span class="sd">    window_size : int, default=1</span>
+<span class="sd">    win : int, default=1</span>
 <span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
 <span class="sd">        but decrease spatial resolution.</span>
-<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
 <span class="sd">        Output file format:</span>
 <span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
 <span class="sd">        - &#39;bin&#39;: Raw binary format</span>
-<span class="sd">    cog_flag : bool, default=False</span>
+<span class="sd">    cog : bool, default=False</span>
 <span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
 <span class="sd">        and overviews for efficient web access.</span>
-<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
 <span class="sd">        Overview levels for COG creation. Each number represents the</span>
 <span class="sd">        decimation factor for that overview level.</span>
-<span class="sd">    write_flag : bool, default=True</span>
-<span class="sd">        If True, writes results to disk. If False, only processes data in memory.</span>
+<span class="sd">    comp : bool, default=False</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF.</span>
 <span class="sd">    max_workers : int | None, default=None</span>
 <span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
 <span class="sd">        CPU count - 1 workers.</span>
@@ -408,36 +408,36 @@
 <span class="sd">        in the input folder.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">cpc2files</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>
+    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">cpc2files</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">outType</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;cprvi.bin&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;cprvi.bin&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;cprvi.tif&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;cprvi.tif&quot;</span><span class="p">))</span>
 
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
-                            <span class="n">window_size</span><span class="p">,</span>
+                            <span class="n">win</span><span class="p">,</span>
                         <span class="n">write_flag</span><span class="p">,</span>
                         <span class="n">process_chunk_cprvi</span><span class="p">,</span>
-                        <span class="o">*</span><span class="p">[</span><span class="n">chi_in</span><span class="p">,</span> <span class="n">psi_in</span><span class="p">],</span>
+                        <span class="o">*</span><span class="p">[</span><span class="n">chi</span><span class="p">,</span> <span class="n">psi</span><span class="p">],</span>
                         <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
                         <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  
                         <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                        <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                        <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span>
                         <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
 
                         <span class="p">)</span></div>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_cprvi</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     
-    <span class="n">chi_in</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">psi_in</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1"># print(chi_in,psi_in)</span>
+    <span class="n">chi</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">psi</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># print(chi,psi)</span>
     
     <span class="n">chunk_arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">]</span>  
     <span class="c1"># CPP function</span>
-    <span class="n">vi_c_raw</span> <span class="o">=</span> <span class="n">process_chunk_cprvicpp</span><span class="p">(</span> <span class="n">chunk_arrays</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">chi_in</span><span class="p">,</span> <span class="n">psi_in</span> <span class="p">)</span>
+    <span class="n">vi_c_raw</span> <span class="o">=</span> <span class="n">process_chunk_cprvicpp</span><span class="p">(</span> <span class="n">chunk_arrays</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">chi</span><span class="p">,</span> <span class="n">psi</span> <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vi_c_raw</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> 
     

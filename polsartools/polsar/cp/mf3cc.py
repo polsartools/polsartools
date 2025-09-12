@@ -4,8 +4,8 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .cp_infiles import cpc2files
 @time_it
-def mf3cc(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_flag=False, 
-          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+def mf3cc(in_dir,   chi=45, psi=0, win=1, fmt="tif", cog=False, 
+          ovr = [2, 4, 8, 16], comp=False, 
           max_workers=None,block_size=(512, 512),
           progress_callback=None  # for QGIS plugin
           ):
@@ -23,40 +23,40 @@ def mf3cc(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_fla
     
     >>> # Advanced usage with custom parameters
     >>> mf3cc(
-    ...     infolder="/path/to/cp_data",
-    ...     chi_in=-45,
-    ...     window_size=5,
-    ...     outType="tif",
-    ...     cog_flag=True,
+    ...     in_dir="/path/to/cp_data",
+    ...     chi=-45,
+    ...     win=5,
+    ...     fmt="tif",
+    ...     cog=True,
     ...     block_size=(1024, 1024)
     ... )
 
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Path to the input folder containing compact-pol C2 matrix files.
-    chi_in : float, default=45
+    chi : float, default=45
         Ellipticity angle chi of the transmitted wave in degrees.
         For circular polarization, chi = 45° (right circular) or -45° (left circular).
-    psi_in : float, default=0
+    psi : float, default=0
         Orientation angle psi of the transmitted wave in degrees.
         For circular polarization, typically 0°.
-    window_size : int, default=1
+    win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format:
         - 'tif': GeoTIFF format with georeferencing information
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
         and overviews for efficient web access.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG creation. Each number represents the
         decimation factor for that overview level.
-    write_flag : bool, default=True
-        If True, writes results to disk. If False, only processes data in memory.
+    comp : bool, default=False
+        If True, applies LZW compression to the output GeoTIFF files.
     max_workers : int | None, default=None
         Maximum number of parallel processing workers. If None, uses
         CPU count - 1 workers.
@@ -74,38 +74,37 @@ def mf3cc(infolder,   chi_in=45, psi_in=0, window_size=1, outType="tif", cog_fla
         4. Theta_CP_mf3cc: Scattering-type parameter
 
     """
-    
-    input_filepaths = cpc2files(infolder)
+    write_flag=True
+    input_filepaths = cpc2files(in_dir)
 
     output_filepaths = []
-    if outType == "bin":
-        output_filepaths.append(os.path.join(infolder, "Ps_mf3cc.bin"))
-        output_filepaths.append(os.path.join(infolder, "Pd_mf3cc.bin"))
-        output_filepaths.append(os.path.join(infolder, "Pv_mf3cc.bin"))
-        output_filepaths.append(os.path.join(infolder, "Theta_CP_mf3cc.bin"))
+    if fmt == "bin":
+        output_filepaths.append(os.path.join(in_dir, "Ps_mf3cc.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Pd_mf3cc.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Pv_mf3cc.bin"))
+        output_filepaths.append(os.path.join(in_dir, "Theta_CP_mf3cc.bin"))
     else:
-        output_filepaths.append(os.path.join(infolder, "Ps_mf3cc.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pd_mf3cc.tif"))
-        output_filepaths.append(os.path.join(infolder, "Pv_mf3cc.tif"))
-        output_filepaths.append(os.path.join(infolder, "Theta_CP_mf3cc.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Ps_mf3cc.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Pd_mf3cc.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Pv_mf3cc.tif"))
+        output_filepaths.append(os.path.join(in_dir, "Theta_CP_mf3cc.tif"))
         
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                            window_size,
+                            win,
                         write_flag,
                         process_chunk_mf3cc,
-                        *[chi_in, psi_in],
+                        *[chi, psi],
                         block_size=block_size, 
                         max_workers=max_workers,  
                         num_outputs=len(output_filepaths),
-                        cog_flag=cog_flag,
-                        cog_overviews=cog_overviews,
+                        cog=cog, ovr=ovr, comp=comp,
                         progress_callback=progress_callback
                         )
 def process_chunk_mf3cc(chunks, window_size, *args, **kwargs):
     
-    chi_in=args[-2]
-    psi_in=args[-1]
-    # print(chi_in,psi_in):
+    chi=args[-2]
+    psi=args[-1]
+    # print(chi,psi):
 
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])
@@ -130,7 +129,7 @@ def process_chunk_mf3cc(chunks, window_size, *args, **kwargs):
     s0 = c11_T1 + c22_T1
     s1 = c11_T1 - c22_T1
     s2 = np.real(c12_T1 + c21_T1)
-    s3 = np.where(chi_in >= 0, 1j * (c12_T1 - c21_T1), -1j * (c12_T1 - c21_T1))
+    s3 = np.where(chi >= 0, 1j * (c12_T1 - c21_T1), -1j * (c12_T1 - c21_T1))
     s3 = np.real(s3)
 
     SC = ((s0)-(s3))/2;

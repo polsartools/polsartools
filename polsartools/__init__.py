@@ -25,8 +25,8 @@ from .preprocess import prepare_dem, mlook
 
 """ Importing polsar modules """
 from .polsar.fp import grvi, halpha_fp, neu_fp, nned_fp, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yam4c_fp,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
-from .polsar.cp import cprvi, dopcp, misomega, mf3cc
-from .polsar.dxp import dprvi, dopdp, prvidp, rvidp, halphadp, shannon_h_dp,dprvic, dp_desc
+from .polsar.cp import cprvi, dop_cp, misomega, mf3cc
+from .polsar.dxp import dprvi, dop_dp, prvi_dp, rvi_dp, halpha_dp, shannon_h_dp,dprvic, dp_desc
 from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
@@ -57,9 +57,9 @@ __all__ = [
     'nned_fp', 'freeman_3c','freeman_2c',
     'halpha_fp', 'shannon_h_fp','yam4c_fp',  'praks_parm_fp','tsvm',
     # COMPACT-POL
-    'cprvi', 'dopcp', 'misomega', 'mf3cc',                 
+    'cprvi', 'dop_cp', 'misomega', 'mf3cc',                 
     # DUAL-CROSS-POL
-    'dprvi', 'dopdp', 'prvidp', 'rvidp', 'halphadp', 
+    'dprvi', 'dop_dp', 'prvi_dp', 'rvi_dp', 'halpha_dp', 
     'shannon_h_dp',     
     'dprvic','dp_desc',
     # DUAL-CO-POL

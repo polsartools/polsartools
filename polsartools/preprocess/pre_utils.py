@@ -19,7 +19,7 @@ def collect_input_files(infolder, basenames):
 
 
 
-def get_filter_io_paths(infolder, window_size, outType="tif", filter_type=None,sub_dir=True):
+def get_filter_io_paths(infolder, window_size, fmt="tif", filter_type=None,sub_dir=True):
     input_filepaths = []
     matrix_type = None
 
@@ -62,7 +62,7 @@ def get_filter_io_paths(infolder, window_size, outType="tif", filter_type=None,s
     input_filepaths = collect_input_files(infolder, base_names)
 
     matrix_prefix = matrix_type[0]  # e.g., 'C', 'T', 'S'
-    ext = '.bin' if outType == 'bin' else '.tif'
+    ext = '.bin' if fmt == 'bin' else '.tif'
     if filter_type and sub_dir:
         outFolder = os.path.join(
             os.path.dirname(infolder), f"{filter_type}_{window_size[0]}x{window_size[1]}",

@@ -1,8 +1,8 @@
 from .dprvi import dprvi
-from .dopdp import dopdp
-from .prvidp import prvidp
-from .rvidp import rvidp
-from .halphadp import halphadp
+from .dop_dp import dop_dp
+from .prvi_dp import prvi_dp
+from .rvi_dp import rvi_dp
+from .halpha_dp import halpha_dp
 from .shannon_h_dp import shannon_h_dp
 # from .halpha_plot_dp import halpha_plot_dp
 from .dprvic import dprvic

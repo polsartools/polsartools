@@ -7,9 +7,9 @@ from osgeo import gdal
 gdal.UseExceptions()
 
 @time_it
-def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True, 
-          cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-          write_flag=True, max_workers=None,block_size=(512, 512),
+def mlook(in_dir,  azlks=2, rglks=2, fmt="tif",sub_dir=True, 
+          cog=False, ovr = [2, 4, 8, 16], comp=False,
+          max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
         ):
     
@@ -25,26 +25,26 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True,
     >>> mlook("/path/to/polSAR_data")
 
     >>> # With 3 azimuth and 2 range looks, and COG GeoTIFF output
-    >>> mlook("/path/to/polSAR_data", azlks=3, rglks=2, outType="tif", cog_flag=True)
+    >>> mlook("/path/to/polSAR_data", azlks=3, rglks=2, fmt="tif", cog=True)
 
     Parameters
     ----------
-    infolder : str
+    in_dir : str
         Path to the input folder containing a supported polarimetric matrix.
     azlks : int, default=2
         Number of looks in azimuth (vertical) direction.
     rglks : int, default=2
         Number of looks in range (horizontal) direction.
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output format:
         - 'tif': Cloud-optimized GeoTIFF (if cog_flag is True)
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         Enable Cloud Optimized GeoTIFF output with internal overviews and tiling.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for pyramid generation (used with COGs).
-    write_flag : bool, default=True
-        Whether to write the multilooked data to disk or return only in-memory.
+    comp : bool, default=False
+        If True, uses LZW compression for GeoTIFF outputs.
     max_workers : int | None, default=None
         Maximum number of parallel worker threads (defaults to all available CPUs).
     block_size : tuple[int, int], default=(512, 512)
@@ -63,12 +63,12 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True,
     - Handles real and complex-valued data appropriately (e.g., multilooks real and imag separately)
     - Output pixel spacing is updated in geotransform metadata based on look factors
     """
-    
+    write_flag=True
     if azlks <= 0 or rglks <= 0:
         raise ValueError("azlks and rglks must be positive integers")
   
-    input_filepaths, output_filepaths = get_filter_io_paths(infolder, [azlks, rglks],
-                                                            outType=outType, 
+    input_filepaths, output_filepaths = get_filter_io_paths(in_dir, [azlks, rglks],
+                                                            fmt=fmt, 
                                                             filter_type="ml",sub_dir=sub_dir)
 
     window_size=None
@@ -126,8 +126,7 @@ def mlook(infolder,  azlks=2, rglks=2, outType="tif",sub_dir=True,
                             block_size=block_size, 
                             max_workers=max_workers,  
                             num_outputs=len(output_filepaths),
-                            cog_flag=cog_flag,
-                            cog_overviews=cog_overviews,
+                            cog=cog, ovr=ovr, comp=comp,
                             out_x_size=out_x_size,
                             out_y_size=out_y_size,
                             out_geotransform=out_geotransform,
