@@ -11,6 +11,7 @@
 /polsartools/sensors/__pycache__/*.pyc
 /polsartools/utils/__pycache__/*.pyc
 /tests/__pycache__/*.pyc
+/polsartools/tests/__pycache__/*.pyc
 
 /polsartools.egg-info/
 /build/

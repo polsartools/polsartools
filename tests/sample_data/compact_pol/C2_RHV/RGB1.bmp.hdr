@@ -1,8 +1,0 @@
-ENVI
-description = {
-PolSARpro File Imported to ENVI }
-samples = 101
-lines   = 201
-max val = 0.000000
-min val = 0.000000
-color   = 24 bytes

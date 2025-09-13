@@ -23,7 +23,7 @@ def praks_parm_fp(in_dir,  win=1, fmt="tif", cog=False,
     ...     in_dir="/path/to/fullpol_data",
     ...     win=5,
     ...     fmt="tif",
-    ...     cog_flag=True,
+    ...     cog=True,
     ...     block_size=(1024, 1024)
     ... )
 

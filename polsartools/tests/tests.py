@@ -35,6 +35,13 @@ def full_pol_processing(full_T3, window_size=3):
     pst.nned_fp(full_T3, win=window_size)    
     pst.mf3cf(full_T3, win=window_size)
     pst.mf4cf(full_T3, win=window_size)
+    pst.freeman_2c(full_T3, win=window_size)
+    pst.freeman_3c(full_T3, win=window_size)
+    pst.yam4c_fp(full_T3, win=window_size)
+    pst.yam4c_fp(full_T3, model='y4cr', win=window_size)
+    pst.yam4c_fp(full_T3, model='y4cs', win=window_size)
+    
+    
     
     """ Descriptors """   
     pst.dop_fp(full_T3, win=window_size)
@@ -42,6 +49,9 @@ def full_pol_processing(full_T3, window_size=3):
     pst.rvi_fp(full_T3, win=window_size)
     pst.prvi_fp(full_T3, win=window_size)
     pst.shannon_h_fp(full_T3, win=window_size)
+    pst.tsvm(full_T3, win=window_size)
+    pst.praks_parm_fp(full_T3, win=window_size)
+    
     
 
 def dual_cross_pol_processing(dxp_C2, window_size=3):
@@ -53,15 +63,6 @@ def dual_cross_pol_processing(dxp_C2, window_size=3):
     pst.halpha_dp(dxp_C2, win=window_size)
     pst.shannon_h_dp(dxp_C2, win=window_size)
 
-
-
-# current_dir = os.getcwd()
-# print(current_dir)
-
-# T3_folder = os.path.join(current_dir,'sample_data/full_pol/T3')
-# compact_c2 = os.path.join(current_dir,'sample_data/compact_pol/C2_RHV')
-# full_T3 = os.path.join(current_dir,'sample_data/full_pol/T3')
-# dxp_C2 = os.path.join(current_dir,'sample_data/dual_pol/C2_VVVH')
 
 
 T3_folder = './tests/sample_data/full_pol/T3'
@@ -235,6 +236,22 @@ def test_full_pol_processing():
             os.path.join(full_T3,'Ps_mf4cf.tif'),os.path.join(full_T3,'Pd_mf4cf.tif'),os.path.join(full_T3,'Pv_mf4cf.tif'),os.path.join(full_T3,'Pc_mf4cf.tif'),os.path.join(full_T3,'Theta_FP_mf4cf.tif'),os.path.join(full_T3,'Tau_FP_mf4cf.tif'),
             
             os.path.join(full_T3,'H_Shannon.tif'), os.path.join(full_T3,'HI_Shannon.tif'), os.path.join(full_T3,'HP_Shannon.tif'),
+            
+            os.path.join(full_T3,'Freeman_2c_grd.tif'), os.path.join(full_T3,'Freeman_2c_vol.tif'),
+            
+            os.path.join(full_T3,'Freeman_3c_odd.tif'), os.path.join(full_T3,'Freeman_3c_dbl.tif'), os.path.join(full_T3,'Freeman_3c_vol.tif'),
+            
+            os.path.join(full_T3, "Yam4co_odd.tif"), os.path.join(full_T3, "Yam4co_dbl.tif"), os.path.join(full_T3, "Yam4co_vol.tif"), os.path.join(full_T3, "Yam4co_hlx.tif"), 
+            os.path.join(full_T3, "Yam4cr_odd.tif"), os.path.join(full_T3, "Yam4cr_dbl.tif"), os.path.join(full_T3, "Yam4cr_vol.tif"), os.path.join(full_T3, "Yam4cr_hlx.tif"), 
+            os.path.join(full_T3, "Yam4csr_odd.tif"), os.path.join(full_T3, "Yam4csr_dbl.tif"), os.path.join(full_T3, "Yam4csr_vol.tif"), os.path.join(full_T3, "Yam4csr_hlx.tif"), 
+            
+            os.path.join(full_T3, "TSVM_alpha1.tif"), os.path.join(full_T3, "TSVM_alpha2.tif"), os.path.join(full_T3, "TSVM_alpha3.tif"), os.path.join(full_T3, "TSVM_alphas.tif"),
+            os.path.join(full_T3, "TSVM_phi1.tif"), os.path.join(full_T3, "TSVM_phi2.tif"), os.path.join(full_T3, "TSVM_phi3.tif"), os.path.join(full_T3, "TSVM_phis.tif"),
+            os.path.join(full_T3, "TSVM_tau1.tif"), os.path.join(full_T3, "TSVM_tau2.tif"), os.path.join(full_T3, "TSVM_tau3.tif"), os.path.join(full_T3, "TSVM_taus.tif"),
+            os.path.join(full_T3, "TSVM_psi1.tif"), os.path.join(full_T3, "TSVM_psi2.tif"), os.path.join(full_T3, "TSVM_psi3.tif"), os.path.join(full_T3, "TSVM_psis.tif"),
+            
+            os.path.join(full_T3, "FrobeniusNorm.tif"),os.path.join(full_T3, "ScattPredominance.tif"),os.path.join(full_T3, "ScatteringDiversity.tif"),os.path.join(full_T3, "DegreePurity.tif"),
+            os.path.join(full_T3, "DepolarizationIndex.tif"),os.path.join(full_T3, "Praks_Alpha.tif"),os.path.join(full_T3, "Praks_Entropy.tif"),
             
             os.path.join(full_T3,'dop_fp.tif'),
             os.path.join(full_T3,'grvi.tif'),
