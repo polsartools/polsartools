@@ -105,7 +105,7 @@ def write_s2_bin_ref(file, wdata_ref, chunk_size=1000):
 
  
 
-def write_C3(C3_list,folder):
+def write_C3(C3_list,folder,fmt='bin'):
     
     out_file = folder +'/C11.bin'
     write_bin(out_file,C3_list[0])
@@ -218,7 +218,7 @@ def write_C4(C4_list,folder):
     file.close()
 
 
-def write_T3(t3_list, folder, outType="tif", reference_path=None):
+def write_T3(t3_list, folder, fmt="tif", reference_path=None):
 
     os.makedirs(folder, exist_ok=True)
 
@@ -228,8 +228,8 @@ def write_T3(t3_list, folder, outType="tif", reference_path=None):
         "T33"
     ]
     
-    ext = ".bin" if outType == "bin" else ".tif"
-    driver_name = "ENVI" if outType == "bin" else "GTiff"
+    ext = ".bin" if fmt == "bin" else ".tif"
+    driver_name = "ENVI" if fmt == "bin" else "GTiff"
     
     for name, array in zip(keys, t3_list):
         out_path = os.path.join(folder, f"{name}{ext}")
@@ -246,7 +246,7 @@ def write_T3(t3_list, folder, outType="tif", reference_path=None):
             f"PolarType\nfull"
         )
 
-def write_T4(t4_list, folder, outType="tif", reference_path=None):
+def write_T4(t4_list, folder, fmt="tif", reference_path=None):
     """
     Saves T4 matrix to the specified folder in .bin or .tif format.
     Also writes a config.txt file with metadata.
@@ -259,8 +259,8 @@ def write_T4(t4_list, folder, outType="tif", reference_path=None):
         "T33", "T34_real", "T34_imag", "T44"
     ]
     
-    ext = ".bin" if outType == "bin" else ".tif"
-    driver_name = "ENVI" if outType == "bin" else "GTiff"
+    ext = ".bin" if fmt == "bin" else ".tif"
+    driver_name = "ENVI" if fmt == "bin" else "GTiff"
     
     for name, array in zip(keys, t4_list):
         out_path = os.path.join(folder, f"{name}{ext}")

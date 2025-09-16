@@ -61,7 +61,10 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None):
+def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
+               fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
+             out_dir=None,
+             recip=False):
     
     """
     Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data 

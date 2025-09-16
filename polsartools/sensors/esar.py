@@ -1,6 +1,7 @@
 
 
 import os,glob,time
+import tempfile,shutil
 import numpy as np
 from osgeo import gdal, osr
 gdal.UseExceptions()
@@ -242,7 +243,25 @@ def esar_gtc(in_dir,mat='S2',
     rglks : int, optional (default=3)
         The number of range looks for multi-looking. 
     
-    recip : bool, default=False
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF with georeferencing
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
+        
+    recip : bool, optional (default=False)
         If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
     
     Returns:
@@ -251,326 +270,110 @@ def esar_gtc(in_dir,mat='S2',
         The function does not return any value. Instead, it creates a folder 
         named `S2/C3/T3/C2/T2` (if not already present) and saves the geotiff/binary files:
 
-
-
     """    
     
     
+    valid_full_pol = ['S2', 'C4', 'C3', 'T4', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV']
+    valid_dual_pol = ['Sxy', 'C2', 'T2']
+    valid_matrices = valid_full_pol+valid_dual_pol
 
+    if mat not in valid_matrices:
+        raise ValueError(f"Invalid matrix type '{mat}'. \n Supported types are:\n"
+                        f"  Full-pol: {sorted(valid_full_pol)}\n"
+                        f"  Dual-pol: {sorted(valid_dual_pol)}")
+    
+    
     metadata, files, radar_freq = get_meta(in_dir)
     
     print(f"Detected {radar_freq}-band {list(files.keys())}")
     
     
+    temp_dir = None
+    ext = 'bin' if fmt == 'bin' else 'tif'
+    driver = 'ENVI' if fmt == 'bin' else None
+
+    # Final output directory
+    if out_dir is None:
+        final_out_dir = os.path.join(in_dir, mat)
+    else:
+        final_out_dir = os.path.join(out_dir, mat)
+    os.makedirs(final_out_dir, exist_ok=True)
+
+    # Intermediate output directory
+    if mat in ['S2', 'Sxy']:
+        base_out_dir = final_out_dir
+    else:
+        temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
+        base_out_dir = temp_dir
+
+    # Read incidence map
+    inc_file = glob.glob(os.path.join(in_dir, "incmap*.dat"))[0]
+    inc = get_incmap(inc_file, metadata['slc records'], metadata['slc words'] // 2)
+    inc[inc < 0] = np.nan
+    inc = np.flipud(inc)
+
     if len(files) == 4:
-
-        s11File = glob.glob(os.path.join(in_dir, files['HH']))[0]
-        s12File = glob.glob(os.path.join(in_dir, files['HV']))[0]
-        s21File = glob.glob(os.path.join(in_dir, files['VH']))[0]
-        s22File = glob.glob(os.path.join(in_dir, files['VV']))[0]
-        
-
-        
-        s11  = read_data(s11File,metadata['slc records'],metadata['slc words'])
-        s12  = read_data(s12File,metadata['slc records'],metadata['slc words'])
-        s21  = read_data(s21File,metadata['slc records'],metadata['slc words'])
-        
+        # Quad-pol case
+        s11 = read_data(glob.glob(os.path.join(in_dir, files['HH']))[0], metadata['slc records'], metadata['slc words'])
+        s12 = read_data(glob.glob(os.path.join(in_dir, files['HV']))[0], metadata['slc records'], metadata['slc words'])
+        s21 = read_data(glob.glob(os.path.join(in_dir, files['VH']))[0], metadata['slc records'], metadata['slc words'])
         if recip:
             s12 = (s12 + s21) / 2
             s21 = s12.copy()
-        
-        s22  = read_data(s22File,metadata['slc records'],metadata['slc words'])
+        s22 = read_data(glob.glob(os.path.join(in_dir, files['VV']))[0], metadata['slc records'], metadata['slc words'])
 
-        
-        inc_file = glob.glob(os.path.join(in_dir, "incmap*.dat"))[0]
-        inc = get_incmap(inc_file, metadata['slc records'],metadata['slc words']//2)
-        inc[inc<0]=np.nan
-        inc = np.flipud(inc)
-        
-   
-        out_dir = os.path.join(in_dir, 'S2')
-        # else:
-        #     out_dir = os.path.join(in_dir, 'temp_S2')
-        os.makedirs(out_dir, exist_ok=True)
-                
-        if fmt == 'bin':
-            write_data(s11, metadata, os.path.join(out_dir,'s11.bin'),driver='ENVI',mat=mat)
-            write_data(s12, metadata, os.path.join(out_dir,'s12.bin'),driver='ENVI',mat=mat)
-            write_data(s21, metadata, os.path.join(out_dir,'s21.bin'),driver='ENVI',mat=mat)
-            write_data(s22, metadata, os.path.join(out_dir,'s22.bin'),driver='ENVI',mat=mat)
-        else:
-            write_data(s11, metadata, os.path.join(out_dir,'s11.tif'),mat=mat,cog=cog, ovr=ovr, comp=comp)
-            write_data(s12, metadata, os.path.join(out_dir,'s12.tif'),mat=mat,cog=cog, ovr=ovr, comp=comp)
-            write_data(s21, metadata, os.path.join(out_dir,'s21.tif'),mat=mat,cog=cog, ovr=ovr, comp=comp)
-            write_data(s22, metadata, os.path.join(out_dir,'s22.tif'),mat=mat,cog=cog, ovr=ovr, comp=comp)
-
-        write_data(inc, metadata,  os.path.join(out_dir,'inc.tif'), out_dtype=gdal.GDT_Float32,mat=mat,cog=cog, ovr=ovr, comp=comp)
-
-        if mat == 'S2': 
-            pass
-
-        elif mat == 'T3':
-            T3_dir = os.path.join(in_dir, 'T3')
-            # convert_S()
-            convert_S(out_dir, mat='T3', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=T3_dir,
-                  cog=cog, ovr=ovr, comp=comp
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(T3_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-            
-            # remove temp directory
-            # if os.path.exists(os.path.join(in_dir, 'temp_S2')):
-                
-            #     gc.collect()
-            #     time.sleep(1)
-            #     os.remove(os.path.join(in_dir, 'temp_S2'))
-            
-            
-        elif mat == 'C3':
-            C3_dir = os.path.join(in_dir, 'C3')
-            # convert_S()
-            convert_S(out_dir, mat='C3', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=C3_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(C3_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-
-        elif mat == 'C4':
-            C4_dir = os.path.join(in_dir, 'C4')
-            # convert_S()
-            convert_S(out_dir, mat='C4', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=C4_dir,cog=cog, ovr=ovr, comp=comp
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(C4_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-
-        elif mat == 'T4':
-            T4_dir = os.path.join(in_dir, 'T4')
-            # convert_S()
-            convert_S(out_dir, mat='T4', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=T4_dir,cog=cog, ovr=ovr, comp=comp
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(T4_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-
-
-        elif mat == 'C2HX':
-            c2_dir = os.path.join(in_dir, 'C2HX')
-            # convert_S()
-            convert_S(out_dir, mat='C2HX', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=c2_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(c2_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-
-        elif mat == 'C2VX':
-            c2_dir = os.path.join(in_dir, 'C2VX')
-            # convert_S()
-            convert_S(out_dir, mat='C2VX', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=c2_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(c2_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-
-        elif mat == 'C2HV':
-            c2_dir = os.path.join(in_dir, 'C2HV')
-            # convert_S()
-            convert_S(out_dir, mat='C2HV', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=c2_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(c2_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-
-
-        elif mat == 'T2HV':
-            t2_dir = os.path.join(in_dir, 'T2HV')
-            # convert_S()
-            convert_S(out_dir, mat='T2HV', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=t2_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(t2_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-
-        else:
-            raise ValueError(f"Unsupported matrix type: {mat}. \n\
-                Supported types are: S2, T3, C3, C4, T4, C2HX, C2VX, C2HV, T2HV.")
-
-
+        write_data(s11, metadata, os.path.join(base_out_dir, f's11.{ext}'), driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+        write_data(s12, metadata, os.path.join(base_out_dir, f's12.{ext}'), driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+        write_data(s21, metadata, os.path.join(base_out_dir, f's21.{ext}'), driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+        write_data(s22, metadata, os.path.join(base_out_dir, f's22.{ext}'), driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
 
     elif len(files) == 2:
-        
-        if 'HH' in list(files.keys()) and 'HV' in list(files.keys()):
+        # Dual-pol case
+        if {'HH', 'HV'}.issubset(files):
             s11File = glob.glob(os.path.join(in_dir, files['HH']))[0]
             s12File = glob.glob(os.path.join(in_dir, files['HV']))[0]
-        elif 'VH' in list(files.keys()) and 'VV' in list(files.keys()):
+        elif {'VH', 'VV'}.issubset(files):
             s11File = glob.glob(os.path.join(in_dir, files['VV']))[0]
             s12File = glob.glob(os.path.join(in_dir, files['VH']))[0]
-        elif 'HH' in list(files.keys()) and 'VV' in list(files.keys()):
+        elif {'HH', 'VV'}.issubset(files):
             s11File = glob.glob(os.path.join(in_dir, files['HH']))[0]
             s12File = glob.glob(os.path.join(in_dir, files['VV']))[0]
-        
-        # s11File = glob.glob(os.path.join(in_dir, "*_ch1_t01_int_slc_geo.dat"))[0]
-        # s12File = glob.glob(os.path.join(in_dir, "*_ch2_t01_int_slc_geo.dat"))[0]
-        
-        out_dir = os.path.join(in_dir, 'Sxy')
-        os.makedirs(out_dir, exist_ok=True)
-        
-        s11  = read_data(s11File,metadata['slc records'],metadata['slc words'])
-        s12  = read_data(s12File,metadata['slc records'],metadata['slc words'])
-        
-        if fmt == 'bin':
-            write_data(s11, metadata, os.path.join(out_dir,'s11.bin'),driver='ENVI',mat=mat)
-            write_data(s12, metadata, os.path.join(out_dir,'s12.bin'),driver='ENVI',mat=mat)
         else:
-            write_data(s11, metadata, os.path.join(out_dir,'s11.tif'),mat=mat,cog=cog, ovr=ovr, comp=comp)
-            write_data(s12, metadata, os.path.join(out_dir,'s12.tif'),mat=mat,cog=cog, ovr=ovr, comp=comp)
-    
-        inc_file = glob.glob(os.path.join(in_dir, "incmap*.dat"))[0]
-        inc = get_incmap(inc_file, metadata['slc records'],metadata['slc words']//2)
-        inc[inc<0]=np.nan
-        inc = np.flipud(inc)
-        write_data(inc, metadata,  os.path.join(out_dir,'inc.tif'), out_dtype=gdal.GDT_Float32,mat=mat,cog=cog, ovr=ovr, comp=comp)
-        
-        
-        
-        if mat == 'Sxy': 
-            pass
-        
-        elif mat == 'C2':
-            c2_dir = os.path.join(in_dir, 'C2')
-            # convert_S()
-            convert_S(out_dir, mat='C2', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=c2_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(c2_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)
-        
-        
-        elif mat == 'T2':
-            t2_dir = os.path.join(in_dir, 'T2')
-            # convert_S()
-            convert_S(out_dir, mat='T2', azlks=azlks,rglks=rglks, cf = 1, 
-                  fmt=fmt,out_dir=t2_dir,cog=cog, ovr=ovr, comp=comp
-                #   cog_flag=False, cog_overviews = [2, 4, 8, 16], 
-                #   write_flag=True, max_workers=None,block_size=(512, 512)
-                  )
-            
-            in_rows, in_cols = inc.shape
-            out_x_size = in_cols // rglks
-            out_y_size = in_rows // azlks
-            
-            metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]']* in_cols) / out_x_size
-            metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]']* in_rows) / out_y_size
-            
-            inc = mlook_arr(inc,azlks,rglks).astype(np.float32)
-            write_data(inc, metadata,  os.path.join(t2_dir,'inc.tif'),  
-                       out_dtype=gdal.GDT_Float32,cog=cog, ovr=ovr, comp=comp)        
-        else:
-            raise ValueError(f"Unsupported matrix type: {mat}. \n\
-                        Expected 'Sxy' or 'C2' or 'T2'.")
-        
-        
+            raise ValueError("Unsupported polarization combination for dual-pol input.")
+
+        s11 = read_data(s11File, metadata['slc records'], metadata['slc words'])
+        s12 = read_data(s12File, metadata['slc records'], metadata['slc words'])
+
+        write_data(s11, metadata, os.path.join(base_out_dir, f's11.{ext}'), driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+        write_data(s12, metadata, os.path.join(base_out_dir, f's12.{ext}'), driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+
     else:
         raise ValueError("Unsupported number of channels detected. Expected 2 or 4 files for SLC data.")
-    
+
+    # Write incidence map to intermediate location
+    write_data(inc, metadata, os.path.join(base_out_dir, 'inc.tif'), out_dtype=gdal.GDT_Float32, mat=mat, cog=cog, ovr=ovr, comp=comp)
+
+    # Matrix conversion if needed
+    if mat not in ['S2', 'Sxy']:
+        convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
+                  fmt=fmt, out_dir=final_out_dir, cog=cog, ovr=ovr, comp=comp)
+
+        # Resample incidence map
+        in_rows, in_cols = inc.shape
+        out_x_size = in_cols // rglks
+        out_y_size = in_rows // azlks
+
+        metadata['pixel_spacing_east__slc_[m]'] = (metadata['pixel_spacing_east__slc_[m]'] * in_cols) / out_x_size
+        metadata['pixel_spacing_north_slc_[m]'] = (metadata['pixel_spacing_north_slc_[m]'] * in_rows) / out_y_size
+
+        inc = mlook_arr(inc, azlks, rglks).astype(np.float32)
+        write_data(inc, metadata, os.path.join(final_out_dir, 'inc.tif'),
+                   out_dtype=gdal.GDT_Float32, cog=cog, ovr=ovr, comp=comp)
+
+        # Clean up temp directory
+        if temp_dir:
+            try:
+                shutil.rmtree(temp_dir)
+            except Exception as e:
+                print(f"Warning: Could not delete temporary directory {temp_dir}: {e}")
+ 

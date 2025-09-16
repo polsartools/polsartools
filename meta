@@ -23,9 +23,23 @@ update nisar with output path
 moved repo into polsartools organization
 update uavsar for tif output, output path
 added cog, comp, ovr args for all
+added tests
+updated esar_gtc with standard mat conversion for sensors
 --todo before release
 update uniform args for all sensors 
 update uniform args for all 50 functions [done,tests passed]
+
+
+# tests
+
+from polsartools.tests.test_all import test_all
+test_all()
+
+from polsartools.tests.test_utils import test_utils_processing
+test_utils_processing()
+
+from polsartools.tests.test_filters import test_filters_processing 
+test_filters_processing()
 
 
 

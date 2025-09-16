@@ -39,36 +39,68 @@ def read_a2(file):
     
     return slc
 
-def write_a2_bin(file,wdata):
-    
-    # ds = gdal.Open(refData)
-    [cols, rows] = wdata.shape
+def write_a2_rst(file,data,
+                driver='GTiff', out_dtype=gdal.GDT_Float32,
+               cog=False, ovr=[2, 4, 8, 16], comp=False
+                 ):
 
-    driver = gdal.GetDriverByName("ENVI")
-    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_Float32)
-    # outdata.SetGeoTransform(ds.GetGeoTransform())##sets same geotransform as input
-    # outdata.SetProjection(ds.GetProjection())##sets same projection as input
+    if driver =='ENVI':
+        # Create GDAL dataset
+        driver = gdal.GetDriverByName(driver)
+        dataset = driver.Create(
+            file,
+            data.shape[1],      
+            data.shape[0],      
+            1,                   
+            out_dtype    
+        )
+
+
+    else:
+        driver = gdal.GetDriverByName("GTiff")
+        options = ['BIGTIFF=IF_SAFER']
+        if comp:
+            # options += ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9']
+            options += ['COMPRESS=LZW']
+        if cog:
+            options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
+        
+        dataset = driver.Create(
+            file,
+            data.shape[1],      
+            data.shape[0],      
+            1,                   
+            out_dtype,
+            options    
+        )
     
-    outdata.SetDescription(file)
-    outdata.GetRasterBand(1).WriteArray(wdata)
+    if cog:
+        dataset.BuildOverviews("NEAREST", ovr)
+        
+    dataset.GetRasterBand(1).WriteArray(data)
     # outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent
-    outdata.FlushCache() ##saves to disk!!
+    dataset.FlushCache() ##saves to disk!!
+    dataset = None
+
 
 @time_it    
-def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
+def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
+                 fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
+                 out_dir=None,
+                  cf_dB=-83):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Fine Beam Dual-Pol (FBD) CEOS data 
     and saves them into respective binary files.
 
     Example:
     --------
-    >>> alos2_fbd_l11("path_to_folder", azlks=5, rglks=3, calfac_dB=-80)
+    >>> alos2_fbd_l11("path_to_folder", azlks=5, rglks=3)
     This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data 
     in the specified folder and save them in the 'C2' directory.
     
     Parameters:
     -----------
-    inFolder : str
+    in_dir : str
         The path to the folder containing the ALOS-2 Fine Beam Dual-Pol CEOS data files.
 
     azlks : int, optional (default=3)
@@ -76,8 +108,26 @@ def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
 
     rglks : int, optional (default=2)
         The number of range looks for multi-looking.
-        
-    calfac_dB : float, optional (default=-83)
+    
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF with georeferencing
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
+                
+    cf_dB : float, optional (default=-83)
         The calibration factor in dB used to scale the raw radar data. It is applied to 
         the HH and HV polarization data before matrix computation.
 
@@ -105,60 +155,95 @@ def alos2_fbd_l11(inFolder,azlks=3,rglks=2,calfac_dB=-83):
     """
     
     
-    hh_file = list(glob.glob(os.path.join(inFolder,'IMG-HH-*-FBDR1.1__A')) + \
-        glob.glob(os.path.join(inFolder, 'IMG-HH-*-FBDR1.1__D')))[0]
+    hh_file = list(glob.glob(os.path.join(in_dir,'IMG-HH-*-FBDR1.1__A')) + \
+        glob.glob(os.path.join(in_dir, 'IMG-HH-*-FBDR1.1__D')))[0]
 
-    hv_file = list(glob.glob(os.path.join(inFolder,'IMG-HV-*-FBDR1.1__A')) + \
-        glob.glob(os.path.join(inFolder, 'IMG-HV-*-FBDR1.1__D')))[0]
+    hv_file = list(glob.glob(os.path.join(in_dir,'IMG-HV-*-FBDR1.1__A')) + \
+        glob.glob(os.path.join(in_dir, 'IMG-HV-*-FBDR1.1__D')))[0]
 
-    calfac_linear = np.sqrt(10 ** ((calfac_dB - 32) / 10))
-    
+    calfac_linear = np.sqrt(10 ** ((cf_dB - 32) / 10))
+
     S11 = read_a2(hh_file).astype(np.complex64)*calfac_linear 
     S12 = read_a2(hv_file).astype(np.complex64)*calfac_linear 
-    
-    
-    C11 = mlook_arr(np.abs(S11)**2,azlks,rglks).astype(np.float32)
-    C22 = mlook_arr(np.abs(S12)**2,azlks,rglks).astype(np.float32)
-    
-    C12 = mlook_arr(S11*np.conjugate(S12),azlks,rglks).astype(np.complex64)
-    rows,cols = C11.shape
-    
-    inFolder = os.path.dirname(hh_file)   
-    C2Folder = os.path.join(inFolder,os.path.basename(hh_file).split('-HH-')[1].split('1.1')[0],'C2')
 
-    del S11,S12
-    
-    os.makedirs(C2Folder,exist_ok=True)
-    
-    write_a2_bin( os.path.join(C2Folder,'C11.bin'), C11)
-    print(f"Saved file {C2Folder}/C11.bin")
-    del C11  
-    write_a2_bin( os.path.join(C2Folder,'C22.bin'), C22)
-    print(f"Saved file {C2Folder}/C22.bin")
-    del C22
-     
-    write_a2_bin( os.path.join(C2Folder,'C12_real.bin'), np.real(C12))
-    print(f"Saved file {C2Folder}/C12_real.bin")
-    write_a2_bin( os.path.join(C2Folder,'C12_imag.bin'), np.imag(C12))
-    print(f"Saved file {C2Folder}/C12_imag.bin")
-    del C12
-    
-    
-    file = open(C2Folder +'/config.txt',"w+")
-    file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
-    file.close()  
+    if mat=='Sxy':
+        if out_dir is None:
+            SxyFolder = os.path.join(in_dir,os.path.basename(hh_file).split('-HH-')[1].split('1.1')[0],'Sxy')
+        else:
+            SxyFolder = out_dir
+        
+        os.makedirs(SxyFolder,exist_ok=True)
+        if fmt=='bin':
+            write_a2_rst( os.path.join(SxyFolder,'s11.bin'), S11,out_dtype=gdal.GDT_CFloat32, driver='ENVI')
+            print(f"Saved file {SxyFolder}/s11.bin")
+            write_a2_rst( os.path.join(SxyFolder,'s12.bin'), S12,out_dtype=gdal.GDT_CFloat32, driver='ENVI')
+            print(f"Saved file {SxyFolder}/s12.bin")
+        else:
+            out_file = os.path.join(SxyFolder,'s11.tif')
+            write_a2_rst(out_file, S11,cog=cog, ovr=ovr, comp=comp, out_dtype=gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+            out_file = os.path.join(SxyFolder,'s12.tif')
+            write_a2_rst(out_file, S12,cog=cog, ovr=ovr, comp=comp, out_dtype=gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+        
+        
+    else:
+        C11 = mlook_arr(np.abs(S11)**2,azlks,rglks).astype(np.float32)
+        C22 = mlook_arr(np.abs(S12)**2,azlks,rglks).astype(np.float32)
+        
+        C12 = mlook_arr(S11*np.conjugate(S12),azlks,rglks).astype(np.complex64)
+        rows,cols = C11.shape
+        
+        if out_dir is None:
+            in_dir = os.path.dirname(hh_file)   
+            C2Folder = os.path.join(in_dir,os.path.basename(hh_file).split('-HH-')[1].split('1.1')[0],'C2')
+        else:
+            C2Folder = out_dir
+        del S11,S12
+        
+        os.makedirs(C2Folder,exist_ok=True)
+        
+        if fmt=='bin':
+        
+            write_a2_rst( os.path.join(C2Folder,'C11.bin'), C11, driver='ENVI')
+            print(f"Saved file {C2Folder}/C11.bin")
+            del C11  
+            write_a2_rst( os.path.join(C2Folder,'C22.bin'), C22,driver='ENVI')
+            print(f"Saved file {C2Folder}/C22.bin")
+            del C22
+            write_a2_rst( os.path.join(C2Folder,'C12_real.bin'), np.real(C12), driver='ENVI')
+            print(f"Saved file {C2Folder}/C12_real.bin")
+            write_a2_rst( os.path.join(C2Folder,'C12_imag.bin'), np.imag(C12), driver='ENVI')
+            print(f"Saved file {C2Folder}/C12_imag.bin")
+            del C12
+
+        elif fmt=='tif':
+            out_file = os.path.join(C2Folder,'C11.tif')
+            write_a2_rst(out_file, C11,cog=cog, ovr=ovr, comp=comp)
+            print("Saved file "+out_file)
+            del C11  
+            out_file = os.path.join(C2Folder,'C22.tif')
+            write_a2_rst(out_file, C22,cog=cog, ovr=ovr, comp=comp)
+            print("Saved file "+out_file)
+            del C22
+            out_file = os.path.join(C2Folder,'C12_real.tif')
+            write_a2_rst(out_file, np.real(C12),cog=cog, ovr=ovr, comp=comp)
+            print("Saved file "+out_file)
+            out_file = os.path.join(C2Folder,'C12_imag.tif')
+            write_a2_rst(out_file, np.imag(C12),cog=cog, ovr=ovr, comp=comp)
+            print("Saved file "+out_file)
+            del C12        
+
+        file = open(C2Folder +'/config.txt',"w+")
+        file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\npp1'%(rows,cols))
+        file.close()  
 #################################################################################################
 
-def write_s2_bin(file,wdata):
-    [cols, rows] = wdata.shape
-    driver = gdal.GetDriverByName("ENVI")
-    outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)
-    outdata.SetDescription(file)
-    outdata.GetRasterBand(1).WriteArray(wdata)
-    outdata.FlushCache()
-    
 @time_it    
-def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
+def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
+                  fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
+                  out_dir=None,
+                  recip=False,cf_dB=-83):
 
     """
     Extracts single look S2 or Multi-look T3/C3 matrix elements from ALOS-2 Quad-Pol (HBQ) CEOS data 
@@ -166,16 +251,16 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
 
     Example:
     --------
-    >>> alos2_hbq_l11("path_to_folder", azlks=5, rglks=3, calfac_dB=-80)
+    >>> alos2_hbq_l11("path_to_folder", azlks=5, rglks=3)
     This will extract the T3 matrix elements from the ALOS-2 Fine Beam Dual-Pol data 
     in the specified folder and save them in the 'C2' directory.
     
     Parameters:
     -----------
-    inFolder : str
+    in_dir : str
         The path to the folder containing the ALOS-2 Quad-Pol (HBQ) CEOS data folder.
     
-    matrix : str, optional (default='T3')
+    mat : str, optional (default='T3')
         The matrix type to extract. Can be 'S2','T3' or 'C3'.
         
     azlks : int, optional (default=8)
@@ -183,8 +268,28 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
 
     rglks : int, optional (default=4)
         The number of range looks for multi-looking.
+
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF with georeferencing
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
         
-    calfac_dB : float, optional (default=-83)
+    recip : bool, optional (default=False)
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.        
+    cf_dB : float, optional (default=-83)
         The calibration factor in dB used to scale the raw radar data. It is applied to 
         the HH and HV polarization data before matrix computation.
 
@@ -196,64 +301,88 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
 
     """
     
-    hh_file = list(glob.glob(os.path.join(inFolder,'IMG-HH-*-HBQR1.1__A')) + \
-        glob.glob(os.path.join(inFolder, 'IMG-HH-*-HBQR1.1__D')))[0]
+    hh_file = list(glob.glob(os.path.join(in_dir,'IMG-HH-*-HBQR1.1__A')) + \
+        glob.glob(os.path.join(in_dir, 'IMG-HH-*-HBQR1.1__D')))[0]
 
-    hv_file = list(glob.glob(os.path.join(inFolder,'IMG-HV-*-HBQR1.1__A')) + \
-        glob.glob(os.path.join(inFolder, 'IMG-HV-*-HBQR1.1__D')))[0]
-
-
-    vh_file = list(glob.glob(os.path.join(inFolder,'IMG-VH-*-HBQR1.1__A')) + \
-        glob.glob(os.path.join(inFolder, 'IMG-VH-*-HBQR1.1__D')))[0]
-
-    vv_file = list(glob.glob(os.path.join(inFolder,'IMG-VV-*-HBQR1.1__A')) + \
-        glob.glob(os.path.join(inFolder, 'IMG-VV-*-HBQR1.1__D')))[0]
+    hv_file = list(glob.glob(os.path.join(in_dir,'IMG-HV-*-HBQR1.1__A')) + \
+        glob.glob(os.path.join(in_dir, 'IMG-HV-*-HBQR1.1__D')))[0]
 
 
+    vh_file = list(glob.glob(os.path.join(in_dir,'IMG-VH-*-HBQR1.1__A')) + \
+        glob.glob(os.path.join(in_dir, 'IMG-VH-*-HBQR1.1__D')))[0]
 
-    calfac_linear = np.sqrt(10 ** ((calfac_dB - 32) / 10))
+    vv_file = list(glob.glob(os.path.join(in_dir,'IMG-VV-*-HBQR1.1__A')) + \
+        glob.glob(os.path.join(in_dir, 'IMG-VV-*-HBQR1.1__D')))[0]
+
+
+
+    calfac_linear = np.sqrt(10 ** ((cf_dB - 32) / 10))
     
     S11 = read_a2(hh_file).astype(np.complex64)*calfac_linear 
     S21 = read_a2(hv_file).astype(np.complex64)*calfac_linear 
     S12 = read_a2(vh_file).astype(np.complex64)*calfac_linear 
     S22 = read_a2(vv_file).astype(np.complex64)*calfac_linear 
     
-    if matrix=='S2':
-        rows,cols = S11.shape
+    if recip:
+        S12 = (S12 + S21)/2
+        S21 = S12
     
-        out_dir = os.path.join(inFolder,'S2')
-        os.makedirs(out_dir,exist_ok=True)
-        
-        
-        out_file = os.path.join(out_dir,'s11.bin')
-        write_s2_bin(out_file,S11)
-        print("Saved file "+out_file)
-        
-        if sym:
-            out_file = os.path.join(out_dir,'s12.bin')
-            write_s2_bin(out_file,(S12+S21)/2)
-            print("Saved file "+out_file)
-            
-            out_file = os.path.join(out_dir,'s21.bin')
-            write_s2_bin(out_file,(S12+S21)/2)
-            print("Saved file "+out_file)
+    
+    
+    if mat=='S2':
+        rows,cols = S11.shape
+
+        if out_dir is None:
+            out_dir = os.path.join(in_dir,'S2')
+            os.makedirs(out_dir,exist_ok=True)
         else:
+            os.makedirs(out_dir,exist_ok=True)
+
+        if fmt=='bin':        
+            out_file = os.path.join(out_dir,'s11.bin')
+            write_a2_rst(out_file,S11,out_dtype=gdal.GDT_CFloat32, driver='ENVI')
+            print("Saved file "+out_file)
+
             out_file = os.path.join(out_dir,'s12.bin')
-            write_s2_bin(out_file,S12)
+            write_a2_rst(out_file,S12,out_dtype=gdal.GDT_CFloat32, driver='ENVI')
             print("Saved file "+out_file)
             
             out_file = os.path.join(out_dir,'s21.bin')
-            write_s2_bin(out_file,S21)
+            write_a2_rst(out_file,S21,out_dtype=gdal.GDT_CFloat32, driver='ENVI')
             print("Saved file "+out_file)            
+            
+            out_file = os.path.join(out_dir,'s22.bin')
+            write_a2_rst(out_file,S22,out_dtype=gdal.GDT_CFloat32, driver='ENVI')
+            print("Saved file "+out_file)
+            
+            file = open(out_dir +'/config.txt',"w+")
+            file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
+            file.close() 
+        else:
+            out_file = os.path.join(out_dir,'s11.tif')
+            write_a2_rst(out_file, S11,cog=cog, ovr=ovr, comp=comp, out_dtype=gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+
+            out_file = os.path.join(out_dir,'s12.tif')
+            write_a2_rst(out_file, S12,cog=cog, ovr=ovr, comp=comp, out_dtype=gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+            
+            out_file = os.path.join(out_dir,'s21.tif')
+            write_a2_rst(out_file, S21,cog=cog, ovr=ovr, comp=comp, out_dtype=gdal.GDT_CFloat32)
+            print("Saved file "+out_file)            
+            
+            out_file = os.path.join(out_dir,'s22.tif')
+            write_a2_rst(out_file, S22,cog=cog, ovr=ovr, comp=comp, out_dtype=gdal.GDT_CFloat32)
+            print("Saved file "+out_file)
+            
+            file = open(out_dir +'/config.txt',"w+")
+            file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
+            file.close()
         
-        out_file = os.path.join(out_dir,'s22.bin')
-        write_s2_bin(out_file,S22)
-        print("Saved file "+out_file)
         
-        file = open(out_dir +'/config.txt',"w+")
-        file.write('Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull'%(rows,cols))
-        file.close() 
-    elif matrix=='T3':
+        
+        
+    elif mat=='T3':
         # 3x1 Pauli Coherency Matrix
         Kp = (1/np.sqrt(2))*np.array([S11+S22, S11-S22, S12+S21])
 
@@ -271,18 +400,19 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
         del Kp
         
         
-        T3Folder = os.path.join(inFolder,'T3')
-        os.makedirs(T3Folder,exist_ok=True)
-        
-        if not os.path.isdir(T3Folder):
-            print("T3 folder does not exist. \nCreating folder {}".format(T3Folder))
-            os.mkdir(T3Folder)
+        if out_dir is None:
+            T3Folder = os.path.join(in_dir,'T3')
+            os.makedirs(T3Folder,exist_ok=True)
+        else:
+            T3Folder = out_dir
+            os.makedirs(T3Folder,exist_ok=True)
+            
             
         # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)
         write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),
                   np.real(T22),np.real(T23),np.imag(T23),
-                  np.real(T33)],T3Folder)
-    elif matrix=='C3':
+                  np.real(T33)],T3Folder,fmt)
+    elif mat=='C3':
         # Kl- 3-D Lexicographic feature vector
         Kl = np.array([S11, np.sqrt(2)*0.5*(S12+S21), S22])
         del S11, S12, S21, S22
@@ -297,19 +427,18 @@ def alos2_hbq_l11(inFolder,matrix='T3', azlks=8,rglks=4,sym=True,calfac_dB=-83):
         C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
         C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)
 
-
-        C3Folder = os.path.join(inFolder,'C3')
-        os.makedirs(C3Folder,exist_ok=True)
+        if out_dir is None:
+            C3Folder = os.path.join(in_dir,'C3')
+            os.makedirs(C3Folder,exist_ok=True)
+        else:
+            C3Folder = out_dir
+            os.makedirs(out_dir,exist_ok=True)
         
-        
-        if not os.path.isdir(C3Folder):
-            print("C3 folder does not exist. \nCreating folder {}".format(C3Folder))
-            os.mkdir(C3Folder)
         
         # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)
         write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),
                   np.real(C22),np.real(C23),np.imag(C23),
-                  np.real(C33)],C3Folder)
+                  np.real(C33)],C3Folder,fmt)
         
         
     else:
