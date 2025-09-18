@@ -188,16 +188,17 @@ def convert_S(in_dir, mat='T3', azlks=4,rglks=2,
 
     # Calculate new geotransform with updated pixel size
     out_geotransform = list(in_geotransform)
-    
-    if in_geotransform[0]==0.0 and in_geotransform[1]==1.0 and in_geotransform[2]==-0.0 and in_geotransform[3]==0.0 and in_geotransform[4]==-0.0 and in_geotransform[5]==-1.0:
+    normalized = tuple(round(float(x), 6) for x in in_geotransform)
+    if normalized in [
+        (0.0, 1.0, 0.0, 0.0, 0.0, -1.0),
+        (0.0, 1.0, 0.0, 0.0, 0.0,  1.0)
+                    ]:
         out_geotransform[1] *= 1 
         out_geotransform[5] *= 1 
     else:
         out_geotransform[1] = (in_geotransform[1] * in_cols) / out_x_size
         out_geotransform[5] = (in_geotransform[5] * in_rows) / out_y_size
         
-        # out_geotransform[1] *= rglks 
-        # out_geotransform[5] *= azlks
         
     out_geotransform = tuple(out_geotransform)
     dataset = None 
