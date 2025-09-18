@@ -105,7 +105,76 @@ def gslc_meta(inFile):
             return None
 
     return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
+def gslc_mat(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+                   start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
+                   inshape, outshape, out_dir=None):
 
+    MATRIX_CONFIG = {
+        'S2':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': False, 'dtype': np.complex64},
+        'T4':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
+        'T3':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
+        'C4':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
+        'C3':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
+        'C2HV': {'channels': ['HH', 'VV'],             'apply_multilook': True,  'dtype': np.float32},
+        'C2HX': {'channels': ['HH', 'HV'],             'apply_multilook': True,  'dtype': np.float32},
+        'C2VX': {'channels': ['VV', 'VH'],             'apply_multilook': True,  'dtype': np.float32},
+        'T2HV': {'channels': ['HH', 'VV'],             'apply_multilook': True,  'dtype': np.float32},
+    }
+
+
+    if mat not in MATRIX_CONFIG:
+        raise ValueError(f"Unsupported matrix type: {mat}. Choose from {', '.join(MATRIX_CONFIG.keys())}")
+
+    print(f"Extracting {mat} matrix elements...")
+
+    # Directory setup
+    # base_name = os.path.basename(inFile).split('.h5')[0]
+    # if out_dir is None:
+    #     out_dir = os.path.join(inFolder, base_name, mat)
+    #     temp_dir = os.path.join(inFolder, base_name, mat, 'temp')
+    # else:
+    #     os.makedirs(out_dir, exist_ok=True)
+    #     out_dir = os.path.join(out_dir, mat)
+    #     temp_dir = os.path.join(out_dir, mat, 'temp')
+
+    base_name = os.path.basename(inFile).split('.h5')[0]
+    if out_dir is None:
+        out_dir = os.path.join(inFolder, base_name, mat)
+        os.makedirs(out_dir, exist_ok=True)
+    else:
+        out_dir = os.path.join(out_dir, mat)
+        os.makedirs(out_dir, exist_ok=True)
+
+    # Use tempfile for temp_dir
+    temp_dir = tempfile.mkdtemp(prefix=f"{mat}_", dir=out_dir)
+    os.makedirs(temp_dir, exist_ok=True)
+
+    # Dataset paths
+    channels = MATRIX_CONFIG[mat]['channels']
+    dataset_paths = {ch: f"{base_path}/{ch}" for ch in channels}
+
+    # Call h5_polsar
+    h5_polsar(
+        h5_file=inFile,
+        dataset_paths=dataset_paths,
+        output_dir=out_dir,
+        temp_dir=temp_dir,
+        azlks=azlks,
+        rglks=rglks,
+        matrix_type=mat,
+        apply_multilook=MATRIX_CONFIG[mat]['apply_multilook'],
+        recip=recip,
+        chunk_size_x=get_ml_chunk(rglks, 512),
+        chunk_size_y=get_ml_chunk(azlks, 512),
+        max_workers=max_workers,
+        start_x=start_x, start_y=start_y,
+        xres=xres, yres=yres,
+        epsg=int(projection),
+        fmt=fmt, cog=cog, ovr=ovr, comp=comp,
+        dtype=MATRIX_CONFIG[mat]['dtype'],
+        inshape=inshape,
+        outshape=outshape
+    )
 @time_it 
 def nisar_gslc(inFile, mat='C3', 
                azlks=2, rglks=2, 
@@ -217,7 +286,7 @@ def nisar_gslc(inFile, mat='C3',
             else:
                 os.makedirs(out_dir, exist_ok=True)
                 out_dir = os.path.join(out_dir,'C2HX')
-                temp_dir = os.path.join(out_dir,'temp')
+                temp_dir = os.path.join(out_dir,'C2HX','temp')
             
             h5_polsar(
                         h5_file=inFile,
@@ -235,7 +304,7 @@ def nisar_gslc(inFile, mat='C3',
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                        fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         inshape=inshape,
                         outshape=outshape
@@ -266,7 +335,7 @@ def nisar_gslc(inFile, mat='C3',
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                        fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         inshape=inshape,
                         outshape=outshape
@@ -296,7 +365,7 @@ def nisar_gslc(inFile, mat='C3',
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                        fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         inshape=inshape,
                         outshape=outshape
@@ -308,6 +377,9 @@ def nisar_gslc(inFile, mat='C3',
             return
                 
     elif nchannels==4:
+        # gslc_mat(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+        #         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
+        #         inshape, outshape, out_dir)
         if mat=='S2':
             print("Extracting S2 matrix elements...")
             if out_dir is None:
@@ -338,7 +410,7 @@ def nisar_gslc(inFile, mat='C3',
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.complex64,
                 inshape=inshape,
                 outshape=outshape
@@ -372,7 +444,7 @@ def nisar_gslc(inFile, mat='C3',
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 inshape=inshape,
                 outshape=outshape
@@ -405,7 +477,7 @@ def nisar_gslc(inFile, mat='C3',
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 inshape=inshape,
                 outshape=outshape
@@ -438,7 +510,7 @@ def nisar_gslc(inFile, mat='C3',
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 inshape=inshape,
                 outshape=outshape            
@@ -470,7 +542,7 @@ def nisar_gslc(inFile, mat='C3',
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,            
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,            
                 dtype = np.float32,
                 inshape=inshape,
                 outshape=outshape            
@@ -495,7 +567,7 @@ def nisar_gslc(inFile, mat='C3',
                 azlks=azlks, rglks=rglks, matrix_type = 'C2HV', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
             )
 
         elif mat=='C2HX':
@@ -517,7 +589,7 @@ def nisar_gslc(inFile, mat='C3',
                 azlks=azlks, rglks=rglks, matrix_type = 'C2HX', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
             )
 
         elif mat=='C2VX':
@@ -539,7 +611,7 @@ def nisar_gslc(inFile, mat='C3',
                 azlks=azlks, rglks=rglks, matrix_type = 'C2VX', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
             )
 
         elif mat=='T2HV':
@@ -561,7 +633,7 @@ def nisar_gslc(inFile, mat='C3',
                 azlks=azlks, rglks=rglks, matrix_type = 'T2HV', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
             )
             
         else:
@@ -675,7 +747,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                        fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         # inshape=inshape,
                         # outshape=outshape
@@ -708,7 +780,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                        fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         # inshape=inshape,
                         # outshape=outshape
@@ -740,7 +812,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                         chunk_size_y=get_ml_chunk(azlks, 512),
                         max_workers=max_workers,
                         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                        outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                        fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                         dtype = np.float32,
                         # inshape=inshape,
                         # outshape=outshape
@@ -781,7 +853,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.complex64,
                 # inshape=inshape,
                 # outshape=outshape
@@ -815,7 +887,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape
@@ -848,7 +920,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape
@@ -881,7 +953,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape            
@@ -913,7 +985,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 chunk_size_y=get_ml_chunk(azlks, 512),
                 max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp,            
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp,            
                 dtype = np.float32,
                 # inshape=inshape,
                 # outshape=outshape            
@@ -938,7 +1010,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'C2HV', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape            
             )
 
@@ -961,7 +1033,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'C2HX', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape            
             )
 
@@ -984,7 +1056,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'C2VX', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape            
             )
 
@@ -1007,7 +1079,7 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
                 azlks=azlks, rglks=rglks, matrix_type = 'T2HV', apply_multilook=True,
                 chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-                outType=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
+                fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, 
                 # inshape=inshape,outshape=outshape            
             )
             

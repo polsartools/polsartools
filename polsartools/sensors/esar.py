@@ -197,12 +197,9 @@ def write_data(array, metadata, out_file,
     dataset.SetGeoTransform(geotransform)
     dataset.SetProjection(srs.ExportToWkt())
     dataset.GetRasterBand(1).WriteArray(array)
-    
+    dataset.FlushCache()
     if cog:
         dataset.BuildOverviews("NEAREST", ovr)
-
-    # Cleanup
-    dataset.FlushCache()
     dataset = None
     del dataset
     

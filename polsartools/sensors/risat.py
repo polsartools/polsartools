@@ -91,6 +91,8 @@ def write_rst(file,wdata,dtype,cog=False,ovr=[2,4,8,16],comp=False):
     outdata.SetDescription(file)
     outdata.GetRasterBand(1).WriteArray(wdata)
     outdata.FlushCache() 
+    if cog:
+        outdata.BuildOverviews("NEAREST", ovr)
     outdata = None
 
 

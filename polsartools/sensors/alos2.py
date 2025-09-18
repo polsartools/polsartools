@@ -76,13 +76,14 @@ def write_a2_rst(out_file,data,
             out_dtype,
             options    
         )
-    
-    if cog:
-        dataset.BuildOverviews("NEAREST", ovr)
+
         
     dataset.GetRasterBand(1).WriteArray(data)
     # outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent
     dataset.FlushCache() ##saves to disk!!
+    
+    if cog:
+        dataset.BuildOverviews("NEAREST", ovr)
     dataset = None
     if mat == 'S2' or mat == 'Sxy':
         print(f"Saved file: {out_file}")
