@@ -16,8 +16,8 @@ import multiprocessing
 
 
 import warnings
-# warnings.filterwarnings("ignore", category=tables.exceptions.DataTypeWarning)
-# warnings.filterwarnings(action='ignore', message='Mean of empty slice')
+warnings.filterwarnings("ignore", category=tables.exceptions.DataTypeWarning)
+warnings.filterwarnings(action='ignore', message='Mean of empty slice')
 
 
 def get_ml_chunk(multiplier, default_size):
@@ -49,15 +49,15 @@ def mlook_arr(data, az, rg):
 
 def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,calibration_constant=1):
     if matrix_type == "S2":
-        return compute_s2(chunks,recip,calibration_constant)     
+        return compute_s2(chunks,calibration_constant,recip)     
     elif matrix_type == "C4":
-        return compute_c4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant)    
+        return compute_c4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip)    
     elif matrix_type == "C3":
         return compute_c3(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "T3":
         return compute_t3(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "T4":
-        return compute_t4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant) 
+        return compute_t4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip) 
     elif matrix_type == "T2HV":
         return compute_t2hv(chunks, azlks, rglks, apply_multilook,calibration_constant)   
     elif matrix_type == "C2HV":
@@ -66,7 +66,8 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,ca
         return compute_c2hx(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "C2VX":
         return compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant)
-
+    elif matrix_type == "Sxy":
+        return compute_sxy(chunks, calibration_constant)
 
     else:
         raise ValueError(f"Unsupported matrix type: {matrix_type}")
@@ -91,29 +92,57 @@ def compute_c3(chunks, azlks, rglks, apply_multilook,calibration_constant):
         "C33": opt_mlook(np.real(np.abs(Kl[2])**2))
     }
 
-def compute_s2(chunks,recip,calibration_constant):
+def compute_s2(chunks,calibration_constant,recip=False):
     if recip:
-        chunks["HV"] = (chunks["HV"] + chunks["VH"])/2
-        chunks["VH"] = chunks["HV"]
-    return {
-        "s11": chunks["HH"]/calibration_constant,
-        "s12": chunks["HV"]/calibration_constant,
-        "s21": chunks["VH"]/calibration_constant,
-        "s22": chunks["VV"]/calibration_constant,
-    }
+        return {
+            "s11": chunks["VV"]/calibration_constant,
+            "s12": (chunks["HV"]/calibration_constant + chunks["VH"]/calibration_constant)*0.5,
+            "s21": (chunks["HV"]/calibration_constant + chunks["VH"]/calibration_constant)*0.5,
+            "s22": chunks["HH"]/calibration_constant,
+        }
+    else:
+        return {
+            "s11": chunks["HH"]/calibration_constant,
+            "s12": chunks["HV"]/calibration_constant,
+            "s21": chunks["VH"]/calibration_constant,
+            "s22": chunks["VV"]/calibration_constant,
+        }
 
-def compute_c4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant):
-    
-    if recip:
-        chunks["HV"] = (chunks["HV"] + chunks["VH"])/2
-        chunks["VH"] = chunks["HV"].copy()
+
+def compute_sxy(chunks, calibration_constant):
+    # Identify available channels
+    available_channels = set(chunks.keys())
+
+    # Define co-pol and cross-pol combinations
+    copol_priority = ['HH', 'VV']
+    crosspol_priority = ['HV', 'VH']
+
+    # Select co-pol channel
+    copol = next((ch for ch in copol_priority if ch in available_channels), None)
+    crosspol = next((ch for ch in crosspol_priority if ch in available_channels), None)
+
+    if copol and crosspol:
+        return {
+            "s11": chunks[copol] / calibration_constant,
+            "s12": chunks[crosspol] / calibration_constant
+        }
+    else:
+        raise ValueError(f"Insufficient dual-pol channels. Found: {available_channels}")
+
+
+
+def compute_c4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip=False):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
+    
+    if recip:
+        chunks["HV"] = (chunks["HV"]+chunks["VH"])*0.5
+        chunks["VH"] = chunks["HV"]
 
     Kl = np.array([chunks["HH"]/calibration_constant, 
-                   chunks["HV"]/calibration_constant, 
-                   chunks["VH"]/calibration_constant, 
-                   chunks["VV"]/calibration_constant])
+                chunks["HV"]/calibration_constant, 
+                chunks["VH"]/calibration_constant, 
+                chunks["VV"]/calibration_constant])
 
     return {
         "C11": opt_mlook(np.real(np.abs(Kl[0])**2)),
@@ -220,12 +249,13 @@ def compute_t3(chunks, azlks, rglks, apply_multilook,calibration_constant):
         "T33": opt_mlook(np.real(np.abs(Kp[2])**2))
     }
 
-def compute_t4(chunks, azlks, rglks, apply_multilook,recip,calibration_constant):
-    if recip:
-        chunks["HV"] = (chunks["HV"] + chunks["VH"])/2
-        chunks["VH"] = chunks["HV"].copy()
+def compute_t4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip=False):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    if recip:
+        chunks["HV"] = (chunks["HV"]+chunks["VH"])*0.5
+        chunks["VH"] = chunks["HV"]
 
     # Extended Pauli basis vector for T4
     Kp = (1 / np.sqrt(2)) * np.array([
@@ -273,8 +303,8 @@ def get_chunk_jobs(h5_file, dataset_path, chunk_size_x, chunk_size_y):
 
 
 
-def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_type,apply_multilook, temp_dir,
-                           start_x, start_y, xres, yres, epsg, recip,
+def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_type,apply_multilook,recip, temp_dir,
+                           start_x, start_y, xres, yres, epsg,
                            calibration_constant=1):
     os.makedirs(temp_dir, exist_ok=True)
     x0, x1, y0, y1 = job["x_start"], job["x_end"], job["y_start"], job["y_end"]
@@ -284,7 +314,8 @@ def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_ty
         for name, path in dataset_paths.items():
             chunks[name] = h5.get_node(path)[y0:y1, x0:x1]
 
-    results = compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,calibration_constant)
+    # results = compute_c3_elements(chunks, azlks, rglks, apply_multilook)
+    results = compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook, recip,calibration_constant)
 
     for name, data in results.items():
         save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
@@ -301,8 +332,13 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
 
     if not apply_multilook:
         azlks = rglks = 1
-    res_x = xres * rglks
-    res_y = yres * azlks
+        
+    if x0==0 and y0==0:
+        res_x = xres * 1
+        res_y = yres * 1
+    else:        
+        res_x = xres * rglks
+        res_y = yres * azlks
 
     gt_x = start_x + (x0 // rglks) * res_x
     gt_y = start_y - (y0 // azlks) * res_y
@@ -312,7 +348,6 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
     dst.SetProjection(srs.ExportToWkt())
     dst.GetRasterBand(1).WriteArray(data)
     dst.GetRasterBand(1).SetNoDataValue(0)
-    dst.FlushCache()
     # dst.SetMetadata({
     #     'AzimuthLooks': str(azlks),
     #     'RangeLooks': str(rglks),
@@ -324,8 +359,7 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
 def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y, 
                   azlks, rglks, apply_multilook,
                   start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326,
-                  fmt='tif', 
-                  cog=False,ovr = [2, 4, 8, 16],comp=False,
+                  fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
                   dtype=np.float32,
                   inshape=None,outshape=None
                   
@@ -340,9 +374,27 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
 
     if not apply_multilook:
         azlks = rglks = 1
+    
+    dataset = gdal.Open(chunk_files[0], gdal.GA_ReadOnly)
+    in_geotransform = dataset.GetGeoTransform()
+    
+    out_geotransform = list(in_geotransform)
+    normalized = tuple(round(float(x), 6) for x in in_geotransform)
+    if normalized in [
+        (0.0, 1.0, 0.0, 0.0, 0.0, -1.0),
+        (0.0, 1.0, 0.0, 0.0, 0.0,  1.0)
+                    ]:
+        # out_geotransform[1] *= 1 
+        # out_geotransform[5] *= 1 
         
-    res_x = xres * rglks
-    res_y = yres * azlks
+        res_x = xres * 1
+        res_y = yres * 1
+    else:
+        # out_geotransform[1] = (in_geotransform[1] * in_cols) / out_x_size
+        # out_geotransform[5] = (in_geotransform[5] * in_rows) / out_y_size
+
+        res_x = xres * rglks
+        res_y = yres * azlks
     
     # print(res_x,res_y)
     
@@ -374,21 +426,20 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
         tile = None
 
     driver = gdal.GetDriverByName('ENVI') if fmt == 'bin' else gdal.GetDriverByName('GTiff')
-    options = []
-    if fmt == 'tif':
-        options = ['BIGTIFF=IF_SAFER']
-        if cog:
-            options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
-        if comp:
-            options+= ['COMPRESS=LZW'] 
+
+    options = ['BIGTIFF=IF_SAFER']
+    if comp:
+        # options += ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9']
+        options += ['COMPRESS=LZW']
+    if cog:
+        options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
+    
+    options = options if fmt == 'tif' else []
+    
     
     out_path = os.path.join(output_dir, f"{element_name}.{fmt}")
-    # dst = driver.Create(out_path, max_x, max_y, 1, dtype, options=options)
-    if fmt == 'tif':
-        dst = driver.Create(out_path, max_x, max_y, 1, dtype, options=options)
-    else:
-        dst = driver.Create(out_path, max_x, max_y, 1, dtype)
-        
+    dst = driver.Create(out_path, max_x, max_y, 1, dtype, options=options)
+
     dst.SetGeoTransform([start_x, res_x, 0, start_y, 0, -abs(res_y)])
    
     # print(start_x, start_y, res_x, -abs(res_y))
@@ -407,13 +458,11 @@ def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y
             'AzimuthLooks': str(azlks),
             'RangeLooks': str(rglks),
         })
-    # dst.SetDescription(f'{element_name}')
-    
+
     dst.SetMetadataItem('Generated by','polsartools')
     dst.FlushCache()
     if cog:
         dst.BuildOverviews("NEAREST", ovr)
-    
     # dst.SetMetadataItem('TIFFTAG_DOCUMENTNAME', element_name)
     # dst.SetMetadataItem('DESCRIPTION', element_name)
     # dst.SetDescription(element_name)
@@ -429,7 +478,7 @@ def cleanup_temp_files(temp_dir):
 
 
 def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
-                            azlks, rglks,matrix_type, apply_multilook,recip=False, 
+                            azlks, rglks,matrix_type, apply_multilook,recip=False,
                             chunk_size_x=512, chunk_size_y=512,
                             max_workers=None,
                             start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
@@ -447,10 +496,10 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
 
     with ProcessPoolExecutor(max_workers=max_workers) as pool:
         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,
-                               azlks, rglks, matrix_type, apply_multilook,recip, temp_dir, 
+                               azlks, rglks, matrix_type, apply_multilook, recip,temp_dir, 
                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
                                calibration_constant=calibration_constant) for job in jobs]
-        with tqdm(total=len(futures), desc="Progress") as pbar:
+        with tqdm(total=len(futures), desc="Processing chunks") as pbar:
             for _ in as_completed(futures):
                 pbar.update(1)
 
@@ -464,8 +513,6 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
         mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
                       azlks, rglks, apply_multilook, 
                       start_x, start_y, xres, yres, epsg, 
-                      fmt, cog, ovr, comp,
-                      dtype,inshape,outshape)
+                      fmt,cog,ovr,comp, dtype,inshape,outshape)
 
-    # cleanup_temp_files(temp_dir)
-
+    cleanup_temp_files(temp_dir)
