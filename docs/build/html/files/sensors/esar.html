@@ -385,7 +385,20 @@
 </dd>
 <dt>rglks<span class="classifier">int, optional (default=3)</span></dt><dd><p>The number of range looks for multi-looking.</p>
 </dd>
-<dt>recip<span class="classifier">bool, default=False</span></dt><dd><p>If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p>
+<dt>fmt<span class="classifier">{‘tif’, ‘bin’}, optional (default=’tif’)</span></dt><dd><p>Output format:
+- ‘tif’: GeoTIFF with georeferencing
+- ‘bin’: Raw binary format</p>
+</dd>
+<dt>cog<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</p>
+</dd>
+<dt>ovr<span class="classifier">list of int, optional (default=[2, 4, 8, 16])</span></dt><dd><p>Overview levels for COG generation. Ignored if cog=False.</p>
+</dd>
+<dt>comp<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, applies LZW compression to GeoTIFF outputs.</p>
+</dd>
+<dt>out_dir<span class="classifier">str or None, optional (default=None)</span></dt><dd><p>Directory to save output files. If None, a folder named after the matrix type will be created
+in the same location as the input file.</p>
+</dd>
+<dt>recip<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p>
 </dd>
 </dl>
 </section>

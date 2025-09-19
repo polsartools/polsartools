@@ -426,6 +426,8 @@
     <span class="n">outdata</span><span class="o">.</span><span class="n">SetDescription</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">wdata</span><span class="p">)</span>
     <span class="n">outdata</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span> 
+    <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+        <span class="n">outdata</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">ovr</span><span class="p">)</span>
     <span class="n">outdata</span> <span class="o">=</span> <span class="kc">None</span>
 
 

@@ -384,14 +384,24 @@ in the output folder.</p>
 <section id="parameters">
 <h3>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
 <dl class="simple">
-<dt>in_dir<span class="classifier">str</span></dt><dd><p>Path to the folder containing the radar imagery files and the lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>).</p>
+<dt>in_dir<span class="classifier">str</span></dt><dd><p>Path to the folder containing the Radarsat-2 files and the lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>).</p>
 </dd>
-<dt>mat<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>The type of matrix to generate. Can be:</p>
-<ul class="simple">
-<li><p>‘S2’ : Generates S2 matrix from the input imagery (S12 = S21 assumption).</p></li>
-<li><p>‘T3’ : Generates T3 matrix from the input imagery, based on Pauli decomposition.</p></li>
-<li><p>‘C3’ : Generates C3 matrix from the input imagery, based on Lexicographic decomposition.</p></li>
-</ul>
+<dt>mat<span class="classifier">str, optional (default=’T3’)</span></dt><dd><p>Type of matrix to extract. Valid options: ‘S2’,  ‘C4, ‘C3’, ‘T4’,
+‘T3’, ‘C2HX’, ‘C2VX’, ‘C2HV’,’T2HV’</p>
+</dd>
+<dt>azlks<span class="classifier">int, optional (default=8)</span></dt><dd><p>The number of azimuth looks to apply during the C/T processing.</p>
+</dd>
+<dt>rglks<span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of range looks to apply during the C/Tprocessing.</p>
+</dd>
+<dt>fmt<span class="classifier">{‘tif’, ‘bin’}, optional (default=’tif’)</span></dt><dd><p>Output format:
+- ‘tif’: GeoTIFF
+- ‘bin’: Raw binary format</p>
+</dd>
+<dt>cog<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</p>
+</dd>
+<dt>ovr<span class="classifier">list of int, optional (default=[2, 4, 8, 16])</span></dt><dd><p>Overview levels for COG generation. Ignored if cog=False.</p>
+</dd>
+<dt>comp<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, applies LZW compression to GeoTIFF outputs.</p>
 </dd>
 <dt>bsc<span class="classifier">str, optional (default=’sigma0’)</span></dt><dd><p>The type of radar cross-section to use for scaling. Available options:</p>
 <ul class="simple">
@@ -400,9 +410,10 @@ in the output folder.</p>
 <li><p>‘beta0’ : Uses <cite>lutBeta.xml</cite> for scaling.</p></li>
 </ul>
 </dd>
-<dt>azlks<span class="classifier">int, optional (default=8)</span></dt><dd><p>The number of azimuth looks to apply during the C3/T3 processing.</p>
+<dt>out_dir<span class="classifier">str or None, optional (default=None)</span></dt><dd><p>Directory to save output files. If None, a folder named after the matrix type will be created
+in the same location as the input file.</p>
 </dd>
-<dt>rglks<span class="classifier">int, optional (default=2)</span></dt><dd><p>The number of range looks to apply during the C3/T3processing.</p>
+<dt>recip<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p>
 </dd>
 </dl>
 </section>

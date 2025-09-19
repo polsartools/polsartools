@@ -304,28 +304,36 @@ def nisar_gslc(inFile, mat='C3', azlks=2, rglks=2, fmt='tif',
     inFile : str
         The path to the NISAR GSLC HDF5 file containing the radar data.
 
-    azlks : int, optional (default=20)
+    mat : str, optional (default = 'S2' or 'Sxy)
+            Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
+            'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
+
+    azlks : int, optional (default=3)
         The number of azimuth looks for multi-looking. 
 
-    rglks : int, optional (default=10)
+    rglks : int, optional (default=3)
         The number of range looks for multi-looking. 
+    
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF with georeferencing
+        - 'bin': Raw binary format
 
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `C2` (if not already present) and saves the following binary files:
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
         
-        - `C11.bin`: Contains the C11 matrix elements.
-        - `C22.bin`: Contains the C22 matrix elements.
-        - `C12_real.bin`: Contains the real part of the C12 matrix.
-        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
-        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
-
-    Raises:
-    -------
-    Exception
-        If the GSLC HDF5 file is invalid or cannot be read.
+    recip : bool, optional (default=False)
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
 
 
     """
@@ -677,27 +685,36 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
     inFile : str
         The path to the NISAR RSLC HDF5 file containing the radar data.
 
-    azlks : int, optional (default=22)
+    mat : str, optional (default = 'S2' or 'Sxy)
+            Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
+            'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
+
+    azlks : int, optional (default=3)
         The number of azimuth looks for multi-looking. 
 
-    rglks : int, optional (default=10)
+    rglks : int, optional (default=3)
         The number of range looks for multi-looking. 
+    
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF 
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
         
-    mat : str, optional (default = C2 for dual-pol, C3 for full-pol)
-        Type of matrix to extract. Valid options are 'C2', 'S2', 'C3', and 'T3'.
-         
-
-    Returns:
-    --------
-    None
-        The function does not return any value. Instead, it creates a folder 
-        named `C2/S2/C3/T3` (if not already present) and saves the following binary files:
-
-
-    Raises:
-    -------
-    Exception
-        If the RSLC HDF5 file is invalid or cannot be read.
+    recip : bool, optional (default=False)
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
 
 
     """
