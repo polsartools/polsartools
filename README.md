@@ -45,7 +45,7 @@
 </table>
 
 ## 💠General Information
-This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from various SAR sensors or input polarimetric matrix (S2, C3, T3, Sxy, C2, T2). 
+This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from various SAR sensors or input polarimetric matrix (S2, C4, C3, T4, T3, Sxy, C2, T2). 
 
 ## 💠Installation
 1. **Install `gdal` Package**
