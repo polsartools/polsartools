@@ -4,16 +4,12 @@ from osgeo import gdal,osr
 gdal.UseExceptions()
 import os,tempfile
 import tables
-from skimage.util.shape import view_as_blocks
-from polsartools.utils.utils import time_it, mlook_arr
-from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
+# from skimage.util.shape import view_as_blocks
+from polsartools.utils.utils import time_it
+# from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
 from polsartools.utils.h5_utils import h5_polsar, get_ml_chunk
 from netCDF4 import Dataset
 #%%
-
-# def get_ml_chunk(multiplier, default_size):
-#     # Rounds up to the next multiple of `multiplier`
-#     return ((default_size + multiplier - 1) // multiplier) * multiplier
 
 def rslc_meta(inFile):
     band_table = [
@@ -108,64 +104,14 @@ def gslc_meta(inFile):
 
     return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
 
-def gslc_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir=None):
+                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
 
     # Determine matrix type based on available polarizations
-    if matrix_type in ['C2','C2HV','C2HX','C2VX']:
-        if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
-            matrix_type = 'C2HX'
-            channels = ['HH', 'HV']
-        elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
-            matrix_type = 'C2VX'
-            channels = ['VV', 'VH']
-        elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
-            matrix_type = 'C2HV'
-            channels = ['HH', 'VV']
-        else:
-            print("No valid dual-channel polarization combination found.")
-            return
-
-        print(f"Extracting {matrix_type} matrix elements...")
-
-        # Directory setup
-        base_name = os.path.basename(inFile).split('.h5')[0]
-        if out_dir is None:
-            out_dir = os.path.join(inFolder, base_name, matrix_type)
-        else:
-            out_dir = os.path.join(out_dir, matrix_type)
-        os.makedirs(out_dir, exist_ok=True)
-
-        temp_dir = tempfile.mkdtemp(prefix=f"{matrix_type}_", dir=out_dir)
-        os.makedirs(temp_dir, exist_ok=True)
-
-        # Dataset paths
-        dataset_paths = {ch: f"{base_path}/{ch}" for ch in channels}
-
-        # Call h5_polsar
-        h5_polsar(
-            h5_file=inFile,
-            dataset_paths=dataset_paths,
-            output_dir=out_dir,
-            temp_dir=temp_dir,
-            azlks=azlks,
-            rglks=rglks,
-            matrix_type=matrix_type,
-            apply_multilook=True,
-            recip=recip,
-            chunk_size_x=get_ml_chunk(rglks, 512),
-            chunk_size_y=get_ml_chunk(azlks, 512),
-            max_workers=max_workers,
-            start_x=start_x, start_y=start_y,
-            xres=xres, yres=yres,
-            epsg=int(projection),
-            fmt=fmt, cog=cog, ovr=ovr, comp=comp,
-            dtype=np.float32,
-            inshape=inshape,
-            outshape=outshape
-        )
-    elif matrix_type=='Sxy':
+    # if matrix_type in ['C2','C2HV','C2HX','C2VX']:
+        
+    if matrix_type=='Sxy':
         print(f"Extracting {matrix_type} matrix elements...")
 
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
@@ -217,14 +163,67 @@ def gslc_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_w
             fmt=fmt, cog=cog, ovr=ovr, comp=comp,
             dtype=np.complex64,
             inshape=inshape,
-            outshape=outshape
+            outshape=outshape,
+            calibration_constant=cc
         )        
+    else:
+        if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+            matrix_type = 'C2HX'
+            channels = ['HH', 'HV']
+        elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+            matrix_type = 'C2VX'
+            channels = ['VV', 'VH']
+        elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+            matrix_type = 'C2HV'
+            channels = ['HH', 'VV']
+        else:
+            print("No valid dual-channel polarization combination found.")
+            return
+
+        print(f"Extracting {matrix_type} matrix elements...")
+
+        # Directory setup
+        base_name = os.path.basename(inFile).split('.h5')[0]
+        if out_dir is None:
+            out_dir = os.path.join(inFolder, base_name, matrix_type)
+        else:
+            out_dir = os.path.join(out_dir, matrix_type)
+        os.makedirs(out_dir, exist_ok=True)
+
+        temp_dir = tempfile.mkdtemp(prefix=f"{matrix_type}_", dir=out_dir)
+        os.makedirs(temp_dir, exist_ok=True)
+
+        # Dataset paths
+        dataset_paths = {ch: f"{base_path}/{ch}" for ch in channels}
+
+        # Call h5_polsar
+        h5_polsar(
+            h5_file=inFile,
+            dataset_paths=dataset_paths,
+            output_dir=out_dir,
+            temp_dir=temp_dir,
+            azlks=azlks,
+            rglks=rglks,
+            matrix_type=matrix_type,
+            apply_multilook=True,
+            recip=recip,
+            chunk_size_x=get_ml_chunk(rglks, 512),
+            chunk_size_y=get_ml_chunk(azlks, 512),
+            max_workers=max_workers,
+            start_x=start_x, start_y=start_y,
+            xres=xres, yres=yres,
+            epsg=int(projection),
+            fmt=fmt, cog=cog, ovr=ovr, comp=comp,
+            dtype=np.float32,
+            inshape=inshape,
+            outshape=outshape,
+            calibration_constant=cc
+        )
 
 
-
-def gslc_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                    start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                   inshape, outshape, out_dir=None):
+                   inshape, outshape, out_dir=None,cc=1):
 
     MATRIX_CONFIG = {
         'S2':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': False, 'dtype': np.complex64},
@@ -281,10 +280,11 @@ def gslc_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         fmt=fmt, cog=cog, ovr=ovr, comp=comp,
         dtype=MATRIX_CONFIG[mat]['dtype'],
         inshape=inshape,
-        outshape=outshape
+        outshape=outshape,
+        calibration_constant=cc
     )
 @time_it 
-def nisar_gslc(inFile, mat='C3', azlks=2, rglks=2, fmt='tif',
+def nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False,
@@ -296,17 +296,17 @@ def nisar_gslc(inFile, mat='C3', azlks=2, rglks=2, fmt='tif',
     Example:
     --------
     >>> nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
-    This will extract the C2 matrix elements from the specified NISAR GSLC file 
-    and save them in the 'C2' folder.
+    This will extract the C2 matrix elements from the dual-pol NISAR GSLC file 
+    and save them in the 'C2' folder. or for full-pol 'T3'
     
     Parameters:
     -----------
     inFile : str
         The path to the NISAR GSLC HDF5 file containing the radar data.
 
-    mat : str, optional (default = 'S2' or 'Sxy)
-            Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
-            'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
+    mat : str, optional (default = 'C2' for Dual-pol, 'T3' for Full-pol)
+        Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
+        'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
 
     azlks : int, optional (default=3)
         The number of azimuth looks for multi-looking. 
@@ -369,303 +369,19 @@ def nisar_gslc(inFile, mat='C3', azlks=2, rglks=2, fmt='tif',
     
     if nchannels==2:
         # print("Dual-Pol data detected.",mat)
-        gslc_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+        nisar_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
                  inshape, outshape, listOfPolarizations, out_dir)
-        # out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2')
-        # temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2','temp')
-        # print("Extracting C2 matrix elements...")
-        # if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
-        #     h5_polsar(
-        #                 h5_file=inFile,
-        #                 dataset_paths={
-        #                     "HH": f"{base_path}/HH",
-        #                     "HV": f"{base_path}/HV",
-        #                 },
-        #                 output_dir=out_dir,
-        #                 temp_dir=temp_dir,
-        #                 azlks=azlks,
-        #                 rglks=rglks,
-        #                 matrix_type = 'C2HX',
-        #                 apply_multilook=True,
-        #                 chunk_size_x=get_ml_chunk(rglks, 512),
-        #                 chunk_size_y=get_ml_chunk(azlks, 512),
-        #                 max_workers=max_workers,
-        #                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #                 dtype = np.float32,
-        #                 inshape=inshape,
-        #                 outshape=outshape
-        #             )
-    
-
-        # elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
-        #     h5_polsar(
-        #                 h5_file=inFile,
-        #                 dataset_paths={
-        #                     "VV": f"{base_path}/VV",
-        #                     "VH": f"{base_path}/VH",
-        #                 },
-        #                 output_dir=out_dir,
-        #                 temp_dir=temp_dir,
-        #                 azlks=azlks,
-        #                 rglks=rglks,
-        #                 matrix_type = 'C2VX',
-        #                 apply_multilook=True,
-        #                 chunk_size_x=get_ml_chunk(rglks, 512),
-        #                 chunk_size_y=get_ml_chunk(azlks, 512),
-        #                 max_workers=max_workers,
-        #                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #                 dtype = np.float32,
-        #                 inshape=inshape,
-        #                 outshape=outshape
-        #             )
-
-        # elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
-        #     h5_polsar(
-        #                 h5_file=inFile,
-        #                 dataset_paths={
-        #                     "HH": f"{base_path}/HH",
-        #                     "VV": f"{base_path}/VV",
-        #                 },
-        #                 output_dir=out_dir,
-        #                 temp_dir=temp_dir,
-        #                 azlks=azlks,
-        #                 rglks=rglks,
-        #                 matrix_type = 'C2HV',
-        #                 apply_multilook=True,
-        #                 chunk_size_x=get_ml_chunk(rglks, 512),
-        #                 chunk_size_y=get_ml_chunk(azlks, 512),
-        #                 max_workers=max_workers,
-        #                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #                 dtype = np.float32,
-        #                 inshape=inshape,
-        #                 outshape=outshape
-        #             )
-
-        # else:
-        #     print("No HH, HV, VV, or VH polarizations found in the file.")
-
-        #     return
+        
                 
     elif nchannels==4:
-        gslc_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+        nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
         inshape, outshape, out_dir)
-        # if mat=='S2':
-        #     print("Extracting S2 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'S2',
-        #         apply_multilook=False,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.complex64,
-        #         inshape=inshape,
-        #         outshape=outshape
-        #     )
-            
-        # elif mat=='T4':
-        #     print("Extracting T4 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'T4',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.float32,
-        #         inshape=inshape,
-        #         outshape=outshape
-        #     )
-
-        # elif mat=='T3':
-        #     print("Extracting T3 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'T3',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.float32,
-        #         inshape=inshape,
-        #         outshape=outshape
-        #     )
-        # elif mat=='C4':
-        #     print("Extracting C4 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'C4',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.float32,
-        #         inshape=inshape,
-        #         outshape=outshape            
-        #     )   
-        # elif mat=='C3':
-        #     print("Extracting C3 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'C3',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),
-        #         fmt=fmt,      cog=cog,ovr =ovr,comp=comp,      
-        #         dtype = np.float32,
-        #         inshape=inshape,
-        #         outshape=outshape            
-        #     )
         
-        # elif mat=='C2HV':
-        #     print("Extracting C2HV matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'C2HV', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, inshape=inshape,outshape=outshape            
-        #     )
-
-        # elif mat=='C2HX':
-        #     print("Extracting C2HX matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'C2HX', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, inshape=inshape,outshape=outshape            
-        #     )
-
-        # elif mat=='C2VX':
-        #     print("Extracting C2VX matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "VV": f"{base_path}/VV",
-        #             "VH": f"{base_path}/VH",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'C2VX', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            
-        #     )
-
-        # elif mat=='T2HV':
-        #     print("Extracting T2HV matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'T2HV', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, inshape=inshape,outshape=outshape            
-        #     )
-            
-        # else:
-        #     raise ValueError(f"Unsupported matrix type: {mat} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX")
-
 
 @time_it  
-def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10, 
+def nisar_rslc(inFile, mat='T3', azlks=22,rglks=10, 
                fmt='tif', cog=False, ovr = [2, 4, 8, 16], comp=False,
               out_dir=None,
               recip=False,
@@ -685,9 +401,9 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
     inFile : str
         The path to the NISAR RSLC HDF5 file containing the radar data.
 
-    mat : str, optional (default = 'S2' or 'Sxy)
-            Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
-            'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
+    mat : str, optional (default = 'T3' or 'C2)
+        Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
+        'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
 
     azlks : int, optional (default=3)
         The number of azimuth looks for multi-looking. 
@@ -737,308 +453,13 @@ def nisar_rslc(inFile, mat='C3', azlks=22,rglks=10,
     yres = 1
     projection = 4326
     if nchannels==2:    
-        gslc_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+        nisar_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
             start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
             None, None, listOfPolarizations, out_dir)   
-        # if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
-        #     print("Extracting C2HX matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
-            
-        #     h5_polsar(
-        #                 h5_file=inFile,
-        #                 dataset_paths={
-        #                     "HH": f"{base_path}/HH",
-        #                     "HV": f"{base_path}/HV",
-        #                 },
-        #                 output_dir=out_dir,
-        #                 temp_dir=temp_dir,
-        #                 azlks=azlks,
-        #                 rglks=rglks,
-        #                 matrix_type = 'C2HX',
-        #                 apply_multilook=True,
-        #                 chunk_size_x=get_ml_chunk(rglks, 512),
-        #                 chunk_size_y=get_ml_chunk(azlks, 512),
-        #                 max_workers=max_workers,
-        #                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #                 dtype = np.float32,
-        #                 # inshape=inshape,
-        #                 # outshape=outshape
-        #             )
-    
-
-        # elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
-        #     print("Extracting C2VX matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
-        #     h5_polsar(
-        #                 h5_file=inFile,
-        #                 dataset_paths={
-        #                     "VV": f"{base_path}/VV",
-        #                     "VH": f"{base_path}/VH",
-        #                 },
-        #                 output_dir=out_dir,
-        #                 temp_dir=temp_dir,
-        #                 azlks=azlks,
-        #                 rglks=rglks,
-        #                 matrix_type = 'C2VX',
-        #                 apply_multilook=True,
-        #                 chunk_size_x=get_ml_chunk(rglks, 512),
-        #                 chunk_size_y=get_ml_chunk(azlks, 512),
-        #                 max_workers=max_workers,
-        #                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #                 dtype = np.float32,
-        #                 # inshape=inshape,
-        #                 # outshape=outshape
-        #             )
-
-        # elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
-        #     print("Extracting C2HV matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
-        #     h5_polsar(
-        #                 h5_file=inFile,
-        #                 dataset_paths={
-        #                     "HH": f"{base_path}/HH",
-        #                     "VV": f"{base_path}/VV",
-        #                 },
-        #                 output_dir=out_dir,
-        #                 temp_dir=temp_dir,
-        #                 azlks=azlks,
-        #                 rglks=rglks,
-        #                 matrix_type = 'C2HV',
-        #                 apply_multilook=True,
-        #                 chunk_size_x=get_ml_chunk(rglks, 512),
-        #                 chunk_size_y=get_ml_chunk(azlks, 512),
-        #                 max_workers=max_workers,
-        #                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #                 dtype = np.float32,
-        #                 # inshape=inshape,
-        #                 # outshape=outshape
-        #             )
-
-        # else:
-        #     print("No HH, HV, VV, or VH polarizations found in the file.")
-
-        #     return
         
 
     elif nchannels==4:
-        gslc_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+        nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
         None, None, out_dir)
-        # if mat=='S2':
-        #     print("Extracting S2 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'S2','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'S2',
-        #         apply_multilook=False,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.complex64,
-        #         # inshape=inshape,
-        #         # outshape=outshape
-        #     )
-            
-        # elif mat=='T4':
-        #     print("Extracting T4 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T4','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'T4',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.float32,
-        #         # inshape=inshape,
-        #         # outshape=outshape
-        #     )
-
-        # elif mat=='T3':
-        #     print("Extracting T3 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T3','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'T3',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.float32,
-        #         # inshape=inshape,
-        #         # outshape=outshape
-        #     )
-        # elif mat=='C4':
-        #     print("Extracting C4 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C4','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'C4',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp,
-        #         dtype = np.float32,
-        #         # inshape=inshape,
-        #         # outshape=outshape            
-        #     )   
-        # elif mat=='C3':
-        #     print("Extracting C3 matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C3','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #             "VH": f"{base_path}/VH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir,
-        #         temp_dir=temp_dir,
-        #         azlks=azlks,
-        #         rglks=rglks,
-        #         matrix_type = 'C3',
-        #         apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512),
-        #         chunk_size_y=get_ml_chunk(azlks, 512),
-        #         max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,   cog=cog,ovr =ovr,comp=comp,         
-        #         dtype = np.float32,
-        #         # inshape=inshape,
-        #         # outshape=outshape            
-        #     )
         
-        # elif mat=='C2HV':
-        #     print("Extracting C2HV matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HV','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'C2HV', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, 
-        #         # inshape=inshape,outshape=outshape            
-        #     )
-
-        # elif mat=='C2HX':
-        #     print("Extracting C2HX matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2HX','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "HV": f"{base_path}/HV",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'C2HX', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, 
-        #         # inshape=inshape,outshape=outshape            
-        #     )
-
-        # elif mat=='C2VX':
-        #     print("Extracting C2VX matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'C2VX','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "VV": f"{base_path}/VV",
-        #             "VH": f"{base_path}/VH",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'C2VX', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, 
-        #         # inshape=inshape,outshape=outshape            
-        #     )
-
-        # elif mat=='T2HV':
-        #     print("Extracting T2HV matrix elements...")
-        #     out_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV')
-        #     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split('.h5')[0],'T2HV','temp')
-        #     h5_polsar(
-        #         h5_file=inFile,
-        #         dataset_paths={
-        #             "HH": f"{base_path}/HH",
-        #             "VV": f"{base_path}/VV",
-        #         },
-        #         output_dir=out_dir, temp_dir=temp_dir,
-        #         azlks=azlks, rglks=rglks, matrix_type = 'T2HV', apply_multilook=True,
-        #         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,
-        #         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,
-        #         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, 
-        #         # inshape=inshape,outshape=outshape            
-        #     )
-            
-        # else:
-        #     raise ValueError(f"Unsupported matrix type: {mat} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX")

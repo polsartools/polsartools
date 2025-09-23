@@ -19,15 +19,13 @@ tsvm - #TOUZI decomposition
 clip - 
 prepare_dem - 
 update rgb
-update nisar with output path
+update all sensors with standard mat conversion, output path, cog
 moved repo into polsartools organization
-update uavsar for tif output, output path
 added cog, comp, ovr args for all
 added tests
-updated esar_gtc with standard mat conversion for sensors
 --todo before release
-update uniform args for all sensors 
-update uniform args for all 50 functions [done,tests passed]
+update uniform args for all sensors [done]
+update uniform args for all 50+ functions [done,tests passed]
 
 
 # tests

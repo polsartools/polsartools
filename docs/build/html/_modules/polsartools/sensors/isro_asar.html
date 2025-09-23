@@ -346,7 +346,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.h5_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">h5_polsar</span><span class="p">,</span> <span class="n">get_ml_chunk</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.sensors.nisar</span><span class="w"> </span><span class="kn">import</span> <span class="n">nisar_fp</span><span class="p">,</span><span class="n">nisar_dp</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">load_asar_meta</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="n">data_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -613,12 +613,12 @@
 <div class="viewcode-block" id="isro_asar">
 <a class="viewcode-back" href="../../../files/sensors/isro_asar.html#polsartools.isro_asar">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">isro_asar</span><span class="p">(</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">isro_asar</span><span class="p">(</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
                <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-               <span class="n">geocode_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">calibration_constant</span> <span class="o">=</span> <span class="mi">42</span>
+                <span class="n">calibration_constant</span> <span class="o">=</span> <span class="mi">42</span>
               <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts PolSAR matrix elements from a ISRO ASAR RSLC HDF5 file and saves them as slant range raster files.</span>
@@ -630,7 +630,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; isro_asar(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
-<span class="sd">    Extracts matrix elements with 30x15 multi-looking and saves them in the default output folder.</span>
+<span class="sd">    Extracts matrix elements with 5x5 multi-looking and saves them in the default output folder.</span>
 
 <span class="sd">    &gt;&gt;&gt; isro_asar(&quot;path_to_file.h5&quot;, mat=&#39;T3&#39;, fmt=&#39;tif&#39;, cog=True, comp=True)</span>
 <span class="sd">    Extracts T3 matrix elements and saves them as compressed Cloud Optimized GeoTIFFs.</span>
@@ -640,10 +640,9 @@
 <span class="sd">    inFile : str</span>
 <span class="sd">        Path to the NISAR RSLC HDF5 file containing dual-pol or full-pol SAR data.</span>
 
-<span class="sd">    mat : str, optional (default=&#39;C3&#39;)</span>
-<span class="sd">        Matrix type to extract. Valid options include:</span>
-<span class="sd">        - Full-pol: &#39;S2&#39;, &#39;C4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;T4&#39;, &#39;C2HV&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;T2HV&#39;</span>
-<span class="sd">        - Dual-pol: &#39;C2&#39; (or leave empty to auto-detect)</span>
+<span class="sd">    mat : str, optional (default=&#39;T3&#39;)</span>
+<span class="sd">        Type of matrix to extract. Valid options for Full-pol: &#39;S2&#39;,  &#39;C4, &#39;C3&#39;, &#39;T4&#39;, </span>
+<span class="sd">        &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;,&#39;T2HV&#39;and Dual-pol: &#39;Sxy&#39;,&#39;C2&#39;.</span>
 
 <span class="sd">    azlks : int, optional (default=5)</span>
 <span class="sd">        Number of azimuth looks for multi-looking.</span>
@@ -669,12 +668,12 @@
 <span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
 <span class="sd">        in the same location as the input file.</span>
 
-<span class="sd">    max_workers : int or None, optional (default=None)</span>
-<span class="sd">        Number of parallel workers for processing. If None, uses all available cores minus one.</span>
+<span class="sd">    recip : bool, optional (default=False)</span>
+<span class="sd">        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</span>
 <span class="sd"> </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-
+    <span class="n">geocode_flag</span><span class="o">=</span><span class="kc">False</span>
     <span class="n">cc_linear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">calibration_constant</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
     
     
@@ -696,318 +695,324 @@
     <span class="n">yres</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">projection</span> <span class="o">=</span> <span class="mi">4326</span>    
     <span class="k">if</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>       
-        <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2HX matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HX&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HX&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+        <span class="n">nisar_dp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
+        <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span>   
+        <span class="c1"># if &#39;HH&#39; in listOfPolarizations and &#39;HV&#39; in listOfPolarizations:</span>
+        <span class="c1">#     print(&quot;Extracting C2HX matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;,&#39;temp&#39;)</span>
             
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                        <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                        <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                            <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                        <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                        <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                        <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                        <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span>
-                        <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                        <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                        <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                        <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                        <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                        <span class="c1"># inshape=inshape,</span>
-                        <span class="c1"># outshape=outshape,</span>
-                        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>
-                    <span class="p">)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#                 h5_file=inFile,</span>
+        <span class="c1">#                 dataset_paths={</span>
+        <span class="c1">#                     &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#                     &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#                 },</span>
+        <span class="c1">#                 output_dir=out_dir,</span>
+        <span class="c1">#                 temp_dir=temp_dir,</span>
+        <span class="c1">#                 azlks=azlks,</span>
+        <span class="c1">#                 rglks=rglks,</span>
+        <span class="c1">#                 matrix_type = &#39;C2HX&#39;,</span>
+        <span class="c1">#                 apply_multilook=True,</span>
+        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#                 max_workers=max_workers,</span>
+        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#                 fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#                 dtype = np.float32,</span>
+        <span class="c1">#                 # inshape=inshape,</span>
+        <span class="c1">#                 # outshape=outshape,</span>
+        <span class="c1">#                 calibration_constant=cc_linear</span>
+        <span class="c1">#             )</span>
     
 
-        <span class="k">elif</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2VX matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2VX&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2VX&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                        <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                        <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                            <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                        <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                        <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                        <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                        <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span>
-                        <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                        <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                        <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                        <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                        <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                        <span class="c1"># inshape=inshape,</span>
-                        <span class="c1"># outshape=outshape,</span>
-                        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>
-                    <span class="p">)</span>
+        <span class="c1"># elif &#39;VV&#39; in listOfPolarizations and &#39;VH&#39; in listOfPolarizations:</span>
+        <span class="c1">#     print(&quot;Extracting C2VX matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#                 h5_file=inFile,</span>
+        <span class="c1">#                 dataset_paths={</span>
+        <span class="c1">#                     &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#                     &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#                 },</span>
+        <span class="c1">#                 output_dir=out_dir,</span>
+        <span class="c1">#                 temp_dir=temp_dir,</span>
+        <span class="c1">#                 azlks=azlks,</span>
+        <span class="c1">#                 rglks=rglks,</span>
+        <span class="c1">#                 matrix_type = &#39;C2VX&#39;,</span>
+        <span class="c1">#                 apply_multilook=True,</span>
+        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#                 max_workers=max_workers,</span>
+        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#                 fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#                 dtype = np.float32,</span>
+        <span class="c1">#                 # inshape=inshape,</span>
+        <span class="c1">#                 # outshape=outshape,</span>
+        <span class="c1">#                 calibration_constant=cc_linear</span>
+        <span class="c1">#             )</span>
 
-        <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2HV matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HV&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HV&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                        <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                        <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                            <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                            <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                        <span class="p">},</span>
-                        <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                        <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                        <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                        <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                        <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span>
-                        <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                        <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                        <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                        <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                        <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                        <span class="c1"># inshape=inshape,</span>
-                        <span class="c1"># outshape=outshape,</span>
-                        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>
-                    <span class="p">)</span>
+        <span class="c1"># elif &#39;HH&#39; in listOfPolarizations and &#39;VV&#39; in listOfPolarizations:</span>
+        <span class="c1">#     print(&quot;Extracting C2HV matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#                 h5_file=inFile,</span>
+        <span class="c1">#                 dataset_paths={</span>
+        <span class="c1">#                     &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#                     &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#                 },</span>
+        <span class="c1">#                 output_dir=out_dir,</span>
+        <span class="c1">#                 temp_dir=temp_dir,</span>
+        <span class="c1">#                 azlks=azlks,</span>
+        <span class="c1">#                 rglks=rglks,</span>
+        <span class="c1">#                 matrix_type = &#39;C2HV&#39;,</span>
+        <span class="c1">#                 apply_multilook=True,</span>
+        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#                 max_workers=max_workers,</span>
+        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#                 fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#                 dtype = np.float32,</span>
+        <span class="c1">#                 # inshape=inshape,</span>
+        <span class="c1">#                 # outshape=outshape,</span>
+        <span class="c1">#                 calibration_constant=cc_linear</span>
+        <span class="c1">#             )</span>
 
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;</span><span class="p">)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     print(&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;)</span>
 
-            <span class="k">return</span>
+        <span class="c1">#     return</span>
         
 
     <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;S2&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting S2 matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;S2&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;S2&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;S2&#39;</span><span class="p">,</span>
-                <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
-                <span class="c1"># inshape=inshape,</span>
-                <span class="c1"># outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>
-            <span class="p">)</span>
-            
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T4&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting T4 matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T4&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T4&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span>
-                <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                <span class="c1"># inshape=inshape,</span>
-                <span class="c1"># outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>
-            <span class="p">)</span>
+        <span class="n">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
+        <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
 
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T3&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting T3 matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T3&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span>
-                <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                <span class="c1"># inshape=inshape,</span>
-                <span class="c1"># outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>
-            <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;C4&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C4 matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C4&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C4&#39;</span><span class="p">,</span>
-                <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                <span class="c1"># inshape=inshape,</span>
-                <span class="c1"># outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>            
-            <span class="p">)</span>   
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;C3&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C3 matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span>
-                <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span>
-                <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span>
-                <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span>
-                <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>            
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-                <span class="c1"># inshape=inshape,</span>
-                <span class="c1"># outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>            
-            <span class="p">)</span>
+        <span class="c1"># if mat==&#39;S2&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting S2 matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;S2&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;S2&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir,</span>
+        <span class="c1">#         temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks,</span>
+        <span class="c1">#         rglks=rglks,</span>
+        <span class="c1">#         matrix_type = &#39;S2&#39;,</span>
+        <span class="c1">#         apply_multilook=False,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#         max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#         dtype = np.complex64,</span>
+        <span class="c1">#         # inshape=inshape,</span>
+        <span class="c1">#         # outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear</span>
+        <span class="c1">#     )</span>
+            
+        <span class="c1"># elif mat==&#39;T4&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting T4 matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T4&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T4&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir,</span>
+        <span class="c1">#         temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks,</span>
+        <span class="c1">#         rglks=rglks,</span>
+        <span class="c1">#         matrix_type = &#39;T4&#39;,</span>
+        <span class="c1">#         apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#         max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#         dtype = np.float32,</span>
+        <span class="c1">#         # inshape=inshape,</span>
+        <span class="c1">#         # outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear</span>
+        <span class="c1">#     )</span>
+
+        <span class="c1"># elif mat==&#39;T3&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting T3 matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T3&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T3&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir,</span>
+        <span class="c1">#         temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks,</span>
+        <span class="c1">#         rglks=rglks,</span>
+        <span class="c1">#         matrix_type = &#39;T3&#39;,</span>
+        <span class="c1">#         apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#         max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#         dtype = np.float32,</span>
+        <span class="c1">#         # inshape=inshape,</span>
+        <span class="c1">#         # outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear</span>
+        <span class="c1">#     )</span>
+        <span class="c1"># elif mat==&#39;C4&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting C4 matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C4&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C4&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir,</span>
+        <span class="c1">#         temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks,</span>
+        <span class="c1">#         rglks=rglks,</span>
+        <span class="c1">#         matrix_type = &#39;C4&#39;,</span>
+        <span class="c1">#         apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#         max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp,</span>
+        <span class="c1">#         dtype = np.float32,</span>
+        <span class="c1">#         # inshape=inshape,</span>
+        <span class="c1">#         # outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear            </span>
+        <span class="c1">#     )   </span>
+        <span class="c1"># elif mat==&#39;C3&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting C3 matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C3&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C3&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir,</span>
+        <span class="c1">#         temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks,</span>
+        <span class="c1">#         rglks=rglks,</span>
+        <span class="c1">#         matrix_type = &#39;C3&#39;,</span>
+        <span class="c1">#         apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
+        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
+        <span class="c1">#         max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp,            </span>
+        <span class="c1">#         dtype = np.float32,</span>
+        <span class="c1">#         # inshape=inshape,</span>
+        <span class="c1">#         # outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear            </span>
+        <span class="c1">#     )</span>
         
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;C2HV&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2HV matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HV&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HV&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span> <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
-                <span class="c1"># inshape=inshape,outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>            
-            <span class="p">)</span>
+        <span class="c1"># elif mat==&#39;C2HV&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting C2HV matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2HV&#39;, apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, </span>
+        <span class="c1">#         # inshape=inshape,outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear            </span>
+        <span class="c1">#     )</span>
 
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;C2HX&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2HX matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HX&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2HX&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;HV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span> <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
-                <span class="c1"># inshape=inshape,outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>            
-            <span class="p">)</span>
+        <span class="c1"># elif mat==&#39;C2HX&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting C2HX matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2HX&#39;, apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, </span>
+        <span class="c1">#         # inshape=inshape,outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear            </span>
+        <span class="c1">#     )</span>
 
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;C2VX&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting C2VX matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2VX&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;C2VX&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VH&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span> <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
-                <span class="c1"># inshape=inshape,outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>            
-            <span class="p">)</span>
+        <span class="c1"># elif mat==&#39;C2VX&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting C2VX matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2VX&#39;, apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, </span>
+        <span class="c1">#         # inshape=inshape,outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear            </span>
+        <span class="c1">#     )</span>
 
-        <span class="k">elif</span> <span class="n">mat</span><span class="o">==</span><span class="s1">&#39;T2HV&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting T2HV matrix elements...&quot;</span><span class="p">)</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T2HV&#39;</span><span class="p">)</span>
-            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inFolder</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;T2HV&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-            <span class="n">h5_polsar</span><span class="p">(</span>
-                <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
-                <span class="n">dataset_paths</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;HH&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/HH&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;VV&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/VV&quot;</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="n">output_dir</span><span class="o">=</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">temp_dir</span><span class="o">=</span><span class="n">temp_dir</span><span class="p">,</span>
-                <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span> <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">,</span> <span class="n">apply_multilook</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">chunk_size_x</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">rglks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">chunk_size_y</span><span class="o">=</span><span class="n">get_ml_chunk</span><span class="p">(</span><span class="n">azlks</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="n">start_x</span><span class="o">=</span><span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="o">=</span><span class="n">xres</span><span class="o">/</span><span class="n">rglks</span><span class="p">,</span> <span class="n">yres</span><span class="o">=</span><span class="n">yres</span><span class="o">/</span><span class="n">azlks</span><span class="p">,</span> <span class="n">epsg</span><span class="o">=</span><span class="n">projection</span><span class="p">,</span>
-                <span class="n">outType</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
-                <span class="c1"># inshape=inshape,outshape=outshape,</span>
-                <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc_linear</span>            
-            <span class="p">)</span>
+        <span class="c1"># elif mat==&#39;T2HV&#39;:</span>
+        <span class="c1">#     print(&quot;Extracting T2HV matrix elements...&quot;)</span>
+        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T2HV&#39;)</span>
+        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T2HV&#39;,&#39;temp&#39;)</span>
+        <span class="c1">#     h5_polsar(</span>
+        <span class="c1">#         h5_file=inFile,</span>
+        <span class="c1">#         dataset_paths={</span>
+        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
+        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
+        <span class="c1">#         },</span>
+        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
+        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;T2HV&#39;, apply_multilook=True,</span>
+        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
+        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
+        <span class="c1">#         fmt=fmt,cog=cog,ovr=ovr,comp=comp, dtype = np.float32, </span>
+        <span class="c1">#         # inshape=inshape,outshape=outshape,</span>
+        <span class="c1">#         calibration_constant=cc_linear            </span>
+        <span class="c1">#     )</span>
             
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported matrix type: </span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2"> please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX&quot;</span><span class="p">)</span></div>
-
+        <span class="c1"># else:</span>
+        <span class="c1">#     raise ValueError(f&quot;Unsupported matrix type: {mat} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX&quot;)</span>
 
  
 </pre></div>
