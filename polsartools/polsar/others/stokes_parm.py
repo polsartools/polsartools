@@ -5,8 +5,8 @@ from polsartools.utils.utils import conv2d,time_it
 
 
 @time_it
-def stokes_parm(SxxFile,SxyFile,  window_size=3, outType="tif", cog_flag=False, 
-          cog_overviews = [2, 4, 8, 16], write_flag=True, 
+def stokes_parm(SxxFile,SxyFile,  win=3, fmt="tif", cog=False, 
+          ovr = [2, 4, 8, 16], comp=False,
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
           ):
@@ -24,9 +24,9 @@ def stokes_parm(SxxFile,SxyFile,  window_size=3, outType="tif", cog_flag=False,
     >>> stokes_parm(
     ...     "/path/to/s11.bin",
     ...     "/path/to/s21.bin",
-    ...     window_size=5,
-    ...     outType="tif",
-    ...     cog_flag=True,
+    ...     win=5,
+    ...     fmt="tif",
+    ...     cog=True,
     ...     block_size=(1024, 1024)
     ... )
     
@@ -36,20 +36,20 @@ def stokes_parm(SxxFile,SxyFile,  window_size=3, outType="tif", cog_flag=False,
         Path to the Sxx file.
     SxyFile : str
         Path to the Sxy file.
-    window_size : int, default=3
+    win : int, default=3
         Size of the spatial averaging window. 
-    outType : {'tif', 'bin'}, default='tif'
+    fmt : {'tif', 'bin'}, default='tif'
         Output file format:
-        - 'tif': GeoTIFF format with georeferencing information
+        - 'tif': GeoTIFF format 
         - 'bin': Raw binary format
-    cog_flag : bool, default=False
+    cog : bool, default=False
         If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
         and overviews for efficient web access.
-    cog_overviews : list[int], default=[2, 4, 8, 16]
+    ovr : list[int], default=[2, 4, 8, 16]
         Overview levels for COG creation. Each number represents the
         decimation factor for that overview level.
-    write_flag : bool, default=True
-        If True, writes results to disk. If False, only processes data in memory.
+    comp : bool, default=False
+        If True, applies LZW compression to the output GeoTIFF files.
     max_workers : int | None, default=None
         Maximum number of parallel processing workers. If None, uses
         CPU count - 1 workers.
@@ -84,12 +84,12 @@ def stokes_parm(SxxFile,SxyFile,  window_size=3, outType="tif", cog_flag=False,
         - stokes_CPR (.bin or .tif)
 
     """
-
+    write_flag=True
     input_filepaths = [SxxFile,SxyFile]
     infolder = os.path.dirname(SxxFile)
     
     output_filepaths = []
-    if outType == "bin":
+    if fmt == "bin":
         output_filepaths.append(os.path.join(infolder, "stokes_g0.bin"))
         output_filepaths.append(os.path.join(infolder, "stokes_g1.bin"))
         output_filepaths.append(os.path.join(infolder, "stokes_g2.bin"))
@@ -143,11 +143,10 @@ def stokes_parm(SxxFile,SxyFile,  window_size=3, outType="tif", cog_flag=False,
         
         
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                            window_size=window_size, write_flag=write_flag,
+                            window_size=win, write_flag=write_flag,
                         processing_func=process_chunk_stokes,block_size=block_size, 
                         max_workers=max_workers,  num_outputs=len(output_filepaths),
-                        cog_flag=cog_flag,
-                        cog_overviews=cog_overviews,
+                        cog=cog,                         ovr=ovr,                         comp=comp,
                         progress_callback=progress_callback
                         )
 

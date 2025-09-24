@@ -361,8 +361,6 @@ def isro_asar( inFile, mat='T3', azlks=5,rglks=5,
         nisar_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
         None, None, listOfPolarizations, out_dir,cc_linear)   
-        
-        
 
     elif nchannels==4:
         nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,

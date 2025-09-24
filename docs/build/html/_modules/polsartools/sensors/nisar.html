@@ -339,16 +339,12 @@
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tables</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.util.shape</span><span class="w"> </span><span class="kn">import</span> <span class="n">view_as_blocks</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.io_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_s2_bin_ref</span><span class="p">,</span> <span class="n">write_s2_ct_ref</span>
+<span class="c1"># from skimage.util.shape import view_as_blocks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
+<span class="c1"># from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.h5_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">h5_polsar</span><span class="p">,</span> <span class="n">get_ml_chunk</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
 <span class="c1">#%%</span>
-
-<span class="c1"># def get_ml_chunk(multiplier, default_size):</span>
-<span class="c1">#     # Rounds up to the next multiple of `multiplier`</span>
-<span class="c1">#     return ((default_size + multiplier - 1) // multiplier) * multiplier</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">rslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
     <span class="n">band_table</span> <span class="o">=</span> <span class="p">[</span>
@@ -445,7 +441,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_dp</span><span class="p">(</span><span class="n">matrix_type</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
     <span class="c1"># Determine matrix type based on available polarizations</span>
     <span class="c1"># if matrix_type in [&#39;C2&#39;,&#39;C2HV&#39;,&#39;C2HX&#39;,&#39;C2VX&#39;]:</span>
@@ -502,7 +498,8 @@
             <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
             <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
             <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
-            <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span>
+            <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
+            <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
         <span class="p">)</span>        
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
@@ -554,13 +551,14 @@
             <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
             <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
             <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
-            <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span>
+            <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
+            <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
         <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                    <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                   <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                   <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
     <span class="n">MATRIX_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;S2&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">},</span>
@@ -617,7 +615,8 @@
         <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
         <span class="n">dtype</span><span class="o">=</span><span class="n">MATRIX_CONFIG</span><span class="p">[</span><span class="n">mat</span><span class="p">][</span><span class="s1">&#39;dtype&#39;</span><span class="p">],</span>
         <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
-        <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span>
+        <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
+        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
     <span class="p">)</span>
 <div class="viewcode-block" id="nisar_gslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_gslc">[docs]</a>
@@ -710,298 +709,14 @@
         <span class="n">nisar_dp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
                  <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span>
-        <span class="c1"># out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2&#39;)</span>
-        <span class="c1"># temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2&#39;,&#39;temp&#39;)</span>
-        <span class="c1"># print(&quot;Extracting C2 matrix elements...&quot;)</span>
-        <span class="c1"># if &#39;HH&#39; in listOfPolarizations and &#39;HV&#39; in listOfPolarizations:</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#                 h5_file=inFile,</span>
-        <span class="c1">#                 dataset_paths={</span>
-        <span class="c1">#                     &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#                     &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#                 },</span>
-        <span class="c1">#                 output_dir=out_dir,</span>
-        <span class="c1">#                 temp_dir=temp_dir,</span>
-        <span class="c1">#                 azlks=azlks,</span>
-        <span class="c1">#                 rglks=rglks,</span>
-        <span class="c1">#                 matrix_type = &#39;C2HX&#39;,</span>
-        <span class="c1">#                 apply_multilook=True,</span>
-        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#                 max_workers=max_workers,</span>
-        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#                 dtype = np.float32,</span>
-        <span class="c1">#                 inshape=inshape,</span>
-        <span class="c1">#                 outshape=outshape</span>
-        <span class="c1">#             )</span>
-    
-
-        <span class="c1"># elif &#39;VV&#39; in listOfPolarizations and &#39;VH&#39; in listOfPolarizations:</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#                 h5_file=inFile,</span>
-        <span class="c1">#                 dataset_paths={</span>
-        <span class="c1">#                     &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#                     &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#                 },</span>
-        <span class="c1">#                 output_dir=out_dir,</span>
-        <span class="c1">#                 temp_dir=temp_dir,</span>
-        <span class="c1">#                 azlks=azlks,</span>
-        <span class="c1">#                 rglks=rglks,</span>
-        <span class="c1">#                 matrix_type = &#39;C2VX&#39;,</span>
-        <span class="c1">#                 apply_multilook=True,</span>
-        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#                 max_workers=max_workers,</span>
-        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#                 dtype = np.float32,</span>
-        <span class="c1">#                 inshape=inshape,</span>
-        <span class="c1">#                 outshape=outshape</span>
-        <span class="c1">#             )</span>
-
-        <span class="c1"># elif &#39;HH&#39; in listOfPolarizations and &#39;VV&#39; in listOfPolarizations:</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#                 h5_file=inFile,</span>
-        <span class="c1">#                 dataset_paths={</span>
-        <span class="c1">#                     &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#                     &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#                 },</span>
-        <span class="c1">#                 output_dir=out_dir,</span>
-        <span class="c1">#                 temp_dir=temp_dir,</span>
-        <span class="c1">#                 azlks=azlks,</span>
-        <span class="c1">#                 rglks=rglks,</span>
-        <span class="c1">#                 matrix_type = &#39;C2HV&#39;,</span>
-        <span class="c1">#                 apply_multilook=True,</span>
-        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#                 max_workers=max_workers,</span>
-        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#                 dtype = np.float32,</span>
-        <span class="c1">#                 inshape=inshape,</span>
-        <span class="c1">#                 outshape=outshape</span>
-        <span class="c1">#             )</span>
-
-        <span class="c1"># else:</span>
-        <span class="c1">#     print(&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;)</span>
-
-        <span class="c1">#     return</span>
+        
                 
     <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
         <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
         <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
 
-        <span class="c1"># if mat==&#39;S2&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting S2 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;S2&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;S2&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;S2&#39;,</span>
-        <span class="c1">#         apply_multilook=False,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.complex64,</span>
-        <span class="c1">#         inshape=inshape,</span>
-        <span class="c1">#         outshape=outshape</span>
-        <span class="c1">#     )</span>
-            
-        <span class="c1"># elif mat==&#39;T4&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting T4 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T4&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T4&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;T4&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         inshape=inshape,</span>
-        <span class="c1">#         outshape=outshape</span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;T3&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting T3 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T3&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T3&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;T3&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         inshape=inshape,</span>
-        <span class="c1">#         outshape=outshape</span>
-        <span class="c1">#     )</span>
-        <span class="c1"># elif mat==&#39;C4&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C4 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C4&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C4&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;C4&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         inshape=inshape,</span>
-        <span class="c1">#         outshape=outshape            </span>
-        <span class="c1">#     )   </span>
-        <span class="c1"># elif mat==&#39;C3&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C3 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C3&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C3&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;C3&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=int(projection),</span>
-        <span class="c1">#         fmt=fmt,      cog=cog,ovr =ovr,comp=comp,      </span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         inshape=inshape,</span>
-        <span class="c1">#         outshape=outshape            </span>
-        <span class="c1">#     )</span>
         
-        <span class="c1"># elif mat==&#39;C2HV&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C2HV matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2HV&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;C2HX&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C2HX matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2HX&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;C2VX&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C2VX matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2VX&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;T2HV&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting T2HV matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T2HV&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T2HV&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;T2HV&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-            
-        <span class="c1"># else:</span>
-        <span class="c1">#     raise ValueError(f&quot;Unsupported matrix type: {mat} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX&quot;)</span>
-
 
 <div class="viewcode-block" id="nisar_rslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_rslc">[docs]</a>
@@ -1081,90 +796,6 @@
         <span class="n">nisar_dp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
             <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
             <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span>   
-        <span class="c1"># if &#39;HH&#39; in listOfPolarizations and &#39;HV&#39; in listOfPolarizations:</span>
-        <span class="c1">#     print(&quot;Extracting C2HX matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;,&#39;temp&#39;)</span>
-            
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#                 h5_file=inFile,</span>
-        <span class="c1">#                 dataset_paths={</span>
-        <span class="c1">#                     &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#                     &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#                 },</span>
-        <span class="c1">#                 output_dir=out_dir,</span>
-        <span class="c1">#                 temp_dir=temp_dir,</span>
-        <span class="c1">#                 azlks=azlks,</span>
-        <span class="c1">#                 rglks=rglks,</span>
-        <span class="c1">#                 matrix_type = &#39;C2HX&#39;,</span>
-        <span class="c1">#                 apply_multilook=True,</span>
-        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#                 max_workers=max_workers,</span>
-        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#                 dtype = np.float32,</span>
-        <span class="c1">#                 # inshape=inshape,</span>
-        <span class="c1">#                 # outshape=outshape</span>
-        <span class="c1">#             )</span>
-    
-
-        <span class="c1"># elif &#39;VV&#39; in listOfPolarizations and &#39;VH&#39; in listOfPolarizations:</span>
-        <span class="c1">#     print(&quot;Extracting C2VX matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#                 h5_file=inFile,</span>
-        <span class="c1">#                 dataset_paths={</span>
-        <span class="c1">#                     &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#                     &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#                 },</span>
-        <span class="c1">#                 output_dir=out_dir,</span>
-        <span class="c1">#                 temp_dir=temp_dir,</span>
-        <span class="c1">#                 azlks=azlks,</span>
-        <span class="c1">#                 rglks=rglks,</span>
-        <span class="c1">#                 matrix_type = &#39;C2VX&#39;,</span>
-        <span class="c1">#                 apply_multilook=True,</span>
-        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#                 max_workers=max_workers,</span>
-        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#                 dtype = np.float32,</span>
-        <span class="c1">#                 # inshape=inshape,</span>
-        <span class="c1">#                 # outshape=outshape</span>
-        <span class="c1">#             )</span>
-
-        <span class="c1"># elif &#39;HH&#39; in listOfPolarizations and &#39;VV&#39; in listOfPolarizations:</span>
-        <span class="c1">#     print(&quot;Extracting C2HV matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#                 h5_file=inFile,</span>
-        <span class="c1">#                 dataset_paths={</span>
-        <span class="c1">#                     &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#                     &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#                 },</span>
-        <span class="c1">#                 output_dir=out_dir,</span>
-        <span class="c1">#                 temp_dir=temp_dir,</span>
-        <span class="c1">#                 azlks=azlks,</span>
-        <span class="c1">#                 rglks=rglks,</span>
-        <span class="c1">#                 matrix_type = &#39;C2HV&#39;,</span>
-        <span class="c1">#                 apply_multilook=True,</span>
-        <span class="c1">#                 chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#                 chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#                 max_workers=max_workers,</span>
-        <span class="c1">#                 start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#                 fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#                 dtype = np.float32,</span>
-        <span class="c1">#                 # inshape=inshape,</span>
-        <span class="c1">#                 # outshape=outshape</span>
-        <span class="c1">#             )</span>
-
-        <span class="c1"># else:</span>
-        <span class="c1">#     print(&quot;No HH, HV, VV, or VH polarizations found in the file.&quot;)</span>
-
-        <span class="c1">#     return</span>
         
 
     <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
@@ -1172,218 +803,7 @@
         <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
         <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
 
-        <span class="c1"># if mat==&#39;S2&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting S2 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;S2&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;S2&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;S2&#39;,</span>
-        <span class="c1">#         apply_multilook=False,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.complex64,</span>
-        <span class="c1">#         # inshape=inshape,</span>
-        <span class="c1">#         # outshape=outshape</span>
-        <span class="c1">#     )</span>
-            
-        <span class="c1"># elif mat==&#39;T4&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting T4 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T4&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T4&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;T4&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         # inshape=inshape,</span>
-        <span class="c1">#         # outshape=outshape</span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;T3&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting T3 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T3&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T3&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;T3&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         # inshape=inshape,</span>
-        <span class="c1">#         # outshape=outshape</span>
-        <span class="c1">#     )</span>
-        <span class="c1"># elif mat==&#39;C4&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C4 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C4&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C4&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;C4&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp,</span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         # inshape=inshape,</span>
-        <span class="c1">#         # outshape=outshape            </span>
-        <span class="c1">#     )   </span>
-        <span class="c1"># elif mat==&#39;C3&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C3 matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C3&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C3&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir,</span>
-        <span class="c1">#         temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks,</span>
-        <span class="c1">#         rglks=rglks,</span>
-        <span class="c1">#         matrix_type = &#39;C3&#39;,</span>
-        <span class="c1">#         apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512),</span>
-        <span class="c1">#         chunk_size_y=get_ml_chunk(azlks, 512),</span>
-        <span class="c1">#         max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,   cog=cog,ovr =ovr,comp=comp,         </span>
-        <span class="c1">#         dtype = np.float32,</span>
-        <span class="c1">#         # inshape=inshape,</span>
-        <span class="c1">#         # outshape=outshape            </span>
-        <span class="c1">#     )</span>
         
-        <span class="c1"># elif mat==&#39;C2HV&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C2HV matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HV&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2HV&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, </span>
-        <span class="c1">#         # inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;C2HX&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C2HX matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2HX&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;HV&quot;: f&quot;{base_path}/HV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2HX&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, </span>
-        <span class="c1">#         # inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;C2VX&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting C2VX matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;C2VX&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#             &quot;VH&quot;: f&quot;{base_path}/VH&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;C2VX&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt,cog=cog,ovr =ovr,comp=comp, dtype = np.float32, </span>
-        <span class="c1">#         # inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-
-        <span class="c1"># elif mat==&#39;T2HV&#39;:</span>
-        <span class="c1">#     print(&quot;Extracting T2HV matrix elements...&quot;)</span>
-        <span class="c1">#     out_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T2HV&#39;)</span>
-        <span class="c1">#     temp_dir = os.path.join(inFolder,os.path.basename(inFile).split(&#39;.h5&#39;)[0],&#39;T2HV&#39;,&#39;temp&#39;)</span>
-        <span class="c1">#     h5_polsar(</span>
-        <span class="c1">#         h5_file=inFile,</span>
-        <span class="c1">#         dataset_paths={</span>
-        <span class="c1">#             &quot;HH&quot;: f&quot;{base_path}/HH&quot;,</span>
-        <span class="c1">#             &quot;VV&quot;: f&quot;{base_path}/VV&quot;,</span>
-        <span class="c1">#         },</span>
-        <span class="c1">#         output_dir=out_dir, temp_dir=temp_dir,</span>
-        <span class="c1">#         azlks=azlks, rglks=rglks, matrix_type = &#39;T2HV&#39;, apply_multilook=True,</span>
-        <span class="c1">#         chunk_size_x=get_ml_chunk(rglks, 512), chunk_size_y=get_ml_chunk(azlks, 512), max_workers=max_workers,</span>
-        <span class="c1">#         start_x=start_x, start_y=start_y, xres=xres/rglks, yres=yres/azlks, epsg=projection,</span>
-        <span class="c1">#         fmt=fmt, cog=cog,ovr =ovr,comp=comp,dtype = np.float32, </span>
-        <span class="c1">#         # inshape=inshape,outshape=outshape            </span>
-        <span class="c1">#     )</span>
-            
-        <span class="c1"># else:</span>
-        <span class="c1">#     raise ValueError(f&quot;Unsupported matrix type: {mat} please choose from S2, C4, C3, T3, T4, T2HV, C2HV, C2HX, C2VX&quot;)</span>
 </pre></div>
 
                 </article>

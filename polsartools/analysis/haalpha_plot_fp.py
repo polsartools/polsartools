@@ -787,10 +787,15 @@ def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet',
         A = read_bin(A)
     
     # --- Drop NaNs and zeros---
+    # valid_mask = ~(
+    # ((H == 0) & (A == 0) & (alpha == 0)) |           # all three are zero
+    # (np.isnan(H) & np.isnan(A) & np.isnan(alpha))    # all three are NaN
+    # )
     valid_mask = ~(
-    ((H == 0) & (A == 0) & (alpha == 0)) |           # all three are zero
-    (np.isnan(H) & np.isnan(A) & np.isnan(alpha))    # all three are NaN
+        ((H == 0) & (A == 0) & (alpha == 0)) |           # all three are zero
+        (np.isnan(H) | np.isnan(A) | np.isnan(alpha))    # any one is NaN
     )
+    
     h_vals = H[valid_mask].flatten()
     a_vals = A[valid_mask].flatten()
     alpha_vals = alpha[valid_mask].flatten()    
