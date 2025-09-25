@@ -7,26 +7,26 @@
 # docs/source/conf.py
 
 0.9
-fp_sign for T3
-haalpha_plot_fp -
-halpha_cluster_fp - 
-htheta_plot_fp - 
-htheta_plot_cp - 
-freeman_3c - 
-freeman_2c - 
-praks_parm_fp - 
-tsvm - #TOUZI decomposition
-clip - 
-prepare_dem - 
-update rgb
-update all sensors with standard mat conversion, output path, cog
-moved repo into polsartools organization
-added cog, comp, ovr args for all
-added tests
---todo before release
-update uniform args for all sensors [done]
-update uniform args for all 50+ functions [done,tests passed]
+1. Whats' new:
+    - `haalpha_plot_fp` 
+    - `halpha_cluster_fp` 
+    - `htheta_plot_fp` 
+    - `htheta_plot_cp`
+    - `freeman_3c`
+    - `freeman_2c` 
+    - `praks_parm_fp` 
+    - `tsvm` 
+    - `clip` 
+    - `prepare_dem`
+    - standard COG args for all functions
+    - tests
 
+2. Updates/Fixes:
+    - `fp_sign` for T3
+    - `rgb`
+    - all sensors with standard mat conversion, output_path, COG
+
+3. Other bug fixes and improvements
 
 # tests
 
