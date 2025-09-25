@@ -8,7 +8,7 @@ Welcome to PolSARtools' Documentation!
 - 🌿 **Vegetation indices**
 - 🧩 **Polarimetric decomposition parameters**
 
-It supports input from various SAR sensors or directly from **polarimetric matrices** such as: ``S2``, ``C3``, ``T3``, ``C2``, ``T2``.
+It supports input from various SAR sensors or directly from **polarimetric matrices** such as: ``S2``, ``C4``, ``C3``, ``T4``, ``T3``, ``C2``, ``T2``.
 
 📘 Tutorial Notebooks
 ----------------------
