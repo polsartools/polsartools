@@ -190,8 +190,7 @@ jobs:
         refreshenv  # Refresh environment variables (needed on Windows)
         conda activate pst-env  # Activate the Conda environment
         conda info --envs
-        cd tests
-        python -m pytest -v ../tests/tests.py
+        pytest -v ./polsartools/tests/test_all.py
 
 
     - name: Install polsartools pip package (Linux)
@@ -253,7 +252,7 @@ jobs:
           source ~/.bash_profile  # Fallback to .bash_profile
         fi
         conda activate pst-env  # Activate the environment
-        python -m pytest -v ./tests/tests.py
+        pytest -v ./polsartools/tests/test_all.py
 
 ##########################################################################
 # Build wheels with cibuildwheel

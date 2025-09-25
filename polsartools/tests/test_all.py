@@ -1,4 +1,4 @@
-# tests/test_all.py
+# polsartools/tests/test_all.py
 from polsartools.tests.test_utils import test_utils_processing
 from polsartools.tests.test_filters import test_filters_processing
 from tqdm import tqdm
