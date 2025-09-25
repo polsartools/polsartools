@@ -399,20 +399,20 @@ def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
     calfac_linear = np.sqrt(10 ** ((cf_dB - 32) / 10))
     
     S11 = read_a2(hh_file).astype(np.complex64)*calfac_linear 
+    write_a2_rst(os.path.join(base_out_dir, f's11.{ext}'),S11,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    del S11
     S21 = read_a2(hv_file).astype(np.complex64)*calfac_linear 
     S12 = read_a2(vh_file).astype(np.complex64)*calfac_linear 
-    S22 = read_a2(vv_file).astype(np.complex64)*calfac_linear 
     
     if recip:
         S12 = (S12 + S21)/2
         S21 = S12
-    
-    
-    write_a2_rst(os.path.join(base_out_dir, f's11.{ext}'),S11,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     write_a2_rst(os.path.join(base_out_dir, f's12.{ext}'),S12,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     write_a2_rst(os.path.join(base_out_dir, f's21.{ext}'),S21,  driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    del S12, S21    
+    S22 = read_a2(vv_file).astype(np.complex64)*calfac_linear 
     write_a2_rst(os.path.join(base_out_dir, f's22.{ext}'),S22,  driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-
+    del S22
     # Matrix conversion if needed
     if mat not in ['S2', 'Sxy']:
         convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
