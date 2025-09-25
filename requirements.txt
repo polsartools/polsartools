@@ -5,7 +5,6 @@ tqdm
 requests
 shutil
 gzip
-zipfile
 matplotlib
 pybind11
 tables
