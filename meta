@@ -6,28 +6,18 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
-0.9
-1. Whats' new:
-    - `haalpha_plot_fp` 
-    - `halpha_cluster_fp` 
-    - `htheta_plot_fp` 
-    - `htheta_plot_cp`
-    - `freeman_3c`
-    - `freeman_2c` 
-    - `praks_parm_fp` 
-    - `tsvm` 
-    - `clip` 
-    - `prepare_dem`
-    - standard COG args for all functions
-    - tests
+v0.10 [to do]
 
-2. Updates/Fixes:
-    - `fp_sign` for T3
-    - `rgb`
-    - all sensors with standard mat conversion, output_path, COG
-
-3. Other bug fixes and improvements
-
+full-pol <-> compact pol 
+convert_C and convert_T
+mrslab dual-pol functions
+rectangular window
+NISAR GCOV
+NISAR-ISCE3?
+NISAR incidence angle
+EOS-04
+Sentinel-1 GRD
+Fix ALOS-1 reader
 # tests
 
 from polsartools.tests.test_all import test_all

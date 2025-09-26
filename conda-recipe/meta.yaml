@@ -29,6 +29,7 @@ requirements:
     - scikit-image
     - gdal <=3.11.0
     - pytest
+    - requests
 
 test:
   commands:
@@ -36,7 +37,11 @@ test:
     - python -c "import polsartools"
 
 about:
-  home: https://github.com/Narayana-Rao/polsartools
+  home: https://github.com/polsartools/polsartools
   license: GPL-3.0
+  license_file: LICENSE
   summary: "A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data."
 
+extra:
+  recipe-maintainers:
+    - Narayana-Rao
