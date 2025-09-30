@@ -13,7 +13,7 @@
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/version.svg)](https://anaconda.org/bnarayanarao/polsartools)
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/downloads.svg)](https://anaconda.org/bnarayanarao/polsartools/files)
 
-[![GitHub commits](https://img.shields.io/github/commits-since/polsartools/polsartools/0.8.svg)](https://GitHub.com/polsartools/polsartools/commit/)
+[![GitHub commits](https://img.shields.io/github/commits-since/polsartools/polsartools/0.9.svg)](https://GitHub.com/polsartools/polsartools/commit/)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
 
