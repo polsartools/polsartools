@@ -79,6 +79,8 @@ def process_chunk_boxcar(chunks, window_size, *args):
         img = np.array(chunks[i])
         kernel = np.ones((window_size, window_size), np.float32) / (window_size * window_size)
         filtered_chunks.append(conv2d(img, kernel))
+        
+    filtered_chunks = np.array(filtered_chunks).astype(np.float32)
     return filtered_chunks
 
 
@@ -246,6 +248,8 @@ def process_chunk_rfl(chunks, window_size, *args):
         filtered_chunks.append(np.real(out_chunks[1]))
         filtered_chunks.append(np.imag(out_chunks[1]))
         filtered_chunks.append(np.real(out_chunks[3]))
-   
+
+    filtered_chunks = np.array(filtered_chunks).astype(np.float32)
+
     return filtered_chunks
     
