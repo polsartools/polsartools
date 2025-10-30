@@ -50,6 +50,13 @@ ext_modules = [
         language='c++',
         extra_compile_args=['/std:c++17' if os.name == 'nt' else '-std=c++17'],
     ),
+    Extension(
+        'polsartools.yam4cpp',
+        ['polsartools/cpp/src/yam4cpp.cpp'],
+        include_dirs=[pybind11.get_include(), pybind11.get_include(user=True)],
+        language='c++',
+        extra_compile_args=['/std:c++17' if os.name == 'nt' else '-std=c++17'],
+    ),
 ]
 
 # class CMakeBuild(build_ext):
