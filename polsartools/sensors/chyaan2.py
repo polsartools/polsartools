@@ -230,7 +230,7 @@ def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
             ]
 
     calFactor = 1/np.sqrt(10**(cc/10))
-    
+    # print(lines)
     inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
     S11 = read_rs2_tif(inFile)
     write_rst(os.path.join(base_out_dir, f's11.{ext}'),
@@ -269,7 +269,7 @@ def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
               driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     del S22    
     
-    with open(base_out_dir+'/multilook_info.txt', 'w+') as f:
+    with open(os.path.join(final_out_dir, 'multilook_info.txt'), 'w') as f:
         f.writelines(lines)
     f.close()
 

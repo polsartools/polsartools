@@ -84,7 +84,43 @@ This package generates derived SAR parameters (viz. polarimetric descriptors, ve
 
 ## 💠Example Usage
 
-Sample use cases and notebooks are provided at [polsartools-notebooks](https://github.com/polsartools/polsartools-tutorials) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
+The following code example demonstrates a typical processing pipeline using ```polsartools``` on NASA-ISRO SAR (NISAR) Geocoded Single-look Complex (GSLC) data. It includes polarimetric covariance matrix (C3) extraction, Pauli RGB visualization, speckle filtering,  $H/A$/$\overline{\alpha}$ decomposition, and plotting in the $H$/$\overline{\alpha}$ and $H/A$/$\overline{\alpha}$ feature spaces.  
+
+```python
+import polsartools as pst
+
+def main():
+  # Generate C3 from NISAR GSLC full-pol data
+  pst.nisar_gslc('path/to/nisar_gslc.h5')
+
+  # Visualize Pauli-decomposition RGB
+  c3path = 'path/to/nisar_gslc/C3'
+  pst.pauliRGB(c3path)
+
+  # Apply refined-Lee speckle filter
+  pst.rlee(c3path)
+
+  # Perform H-A-Alpha decomposition
+  c3_rlee = 'path/to/nisar_gslc/rlee_3x3/C3'
+  pst.halpha_fp(c3_rlee)
+
+  # Generate H-Alpha 2d plot
+  entropy_path = c3_rlee+'/H_fp.tif'
+  alpha_path = c3_rlee+'/alpha_fp.tif'
+  pst.halpha_plot_fp(entropy_path, alpha_path)
+
+  # Generate H-A-Alpha 3d plot
+  ani_path = c3_rlee + '/anisotropy_fp.tif'
+  pst.haalpha_plot_fp(entropy_path, ani_path,alpha_path)
+
+if __name__ == "__main__":
+    main()
+
+```
+
+
+More example use cases and notebooks are provided at [polsartools-notebooks](https://github.com/polsartools/polsartools-tutorials) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
+
 
 ## 💠Available functionalities:
 Full list of available functions is provided here : [Functions](https://polsartools.readthedocs.io/en/latest/files/02functions.html)
