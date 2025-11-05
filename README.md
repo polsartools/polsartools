@@ -84,7 +84,7 @@ This package generates derived SAR parameters (viz. polarimetric descriptors, ve
 
 ## 💠Example Usage
 
-The following code example demonstrates a typical processing pipeline using ```polsartools``` on NASA-ISRO SAR (NISAR) Geocoded Single-look Complex (GSLC) data. It includes polarimetric covariance matrix (C3) extraction, Pauli RGB visualization, speckle filtering,  $H/A$/$\overline{\alpha}$ decomposition, and plotting in the $H$/$\overline{\alpha}$ and $H/A$/$\overline{\alpha}$ feature spaces.  
+The following code example demonstrates a typical processing pipeline using ```polsartools``` on NASA-ISRO SAR (NISAR) Geocoded Single-look Complex (GSLC) data. It includes polarimetric covariance matrix (C3) extraction, Pauli RGB visualization, speckle filtering,  H/A/α decomposition, and plotting in the H/α and H/A/α feature spaces.  
 
 ```python
 import polsartools as pst

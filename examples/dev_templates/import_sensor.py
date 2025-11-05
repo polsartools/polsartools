@@ -4,9 +4,10 @@ from osgeo import gdal
 import os, glob
 import tempfile,shutil
 from polsartools.utils.utils import time_it, mlook_arr
-# from polsartools.utils.io_utils import write_T3, write_C3
 from polsartools.preprocess.convert_S2 import convert_S
 gdal.UseExceptions()
+
+
 def read_bin(file):
     ds = gdal.Open(file)
     band = ds.GetRasterBand(1)
@@ -89,24 +90,24 @@ def write_a2_rst(out_file,data,
         print(f"Saved file: {out_file}")
 
 @time_it    
-def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
+def sensor_dual_pol(in_dir,mat='C2', azlks=3,rglks=2,
                  fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
                  out_dir=None,
                   cf_dB=-83):
     """
-    Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Fine Beam Dual-Pol (FBD) CEOS data 
+    Extracts the C2 matrix elements (C11, C22, and C12) from SENSOR_NAME Dual-Pol data 
     and saves them into respective binary files.
 
     Example:
     --------
-    >>> alos2_fbd_l11("path_to_folder", azlks=5, rglks=3)
-    This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data 
+    >>> sensor_dual_pol("path_to_folder", azlks=5, rglks=3)
+    This will extract the C2 matrix elements from the SENSOR_NAME Dual-Pol data 
     in the specified folder and save them in the 'C2' directory.
     
     Parameters:
     -----------
     in_dir : str
-        The path to the folder containing the ALOS-2 Fine Beam Dual-Pol CEOS data files.
+        The path to the folder containing the SENSOR_NAME Dual-Pol data files.
     mat : str, optional (default = 'S2' or 'Sxy)
         Type of matrix to extract. Valid options: 'Sxy','C2', 'T2'.
     azlks : int, optional (default=3)
@@ -152,7 +153,7 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
     Raises:
     -------
     FileNotFoundError
-        If the required ALOS-2 data files (e.g., `IMG-HH` and `IMG-HV`) cannot be found in the specified folder.
+        If the required SENSOR_NAME files (e.g., `IMG-HH` and `IMG-HV`) cannot be found in the specified folder.
 
     ValueError
         If the calibration factor is invalid or if the files are not in the expected format.
@@ -173,6 +174,7 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
     ext = 'bin' if fmt == 'bin' else 'tif'
     driver = 'ENVI' if fmt == 'bin' else None
 
+
     # Final output directory
     if out_dir is None:
         final_out_dir = os.path.join(in_dir, mat)
@@ -187,15 +189,20 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
         temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
         base_out_dir = temp_dir
         
-    
+
+    # Get file paths    
+
     hh_file = list(glob.glob(os.path.join(in_dir,'IMG-HH-*-FBDR1.1__A')) + \
         glob.glob(os.path.join(in_dir, 'IMG-HH-*-FBDR1.1__D')))[0]
 
     hv_file = list(glob.glob(os.path.join(in_dir,'IMG-HV-*-FBDR1.1__A')) + \
         glob.glob(os.path.join(in_dir, 'IMG-HV-*-FBDR1.1__D')))[0]
 
+    # Get Absolute calibration constant if required
     calfac_linear = np.sqrt(10 ** ((cf_dB - 32) / 10))
 
+    # Read the dual-channel data into numpy arrays
+    # Write the single look data; 
     S11 = read_a2(hh_file).astype(np.complex64)*calfac_linear 
     write_a2_rst(os.path.join(base_out_dir, f's11.{ext}'),S11,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     del S11
@@ -204,7 +211,7 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
     del S12
     
     
-    # Matrix conversion if needed
+    # if required convert SLC into a multilooked matrices using convert_S function
     if mat in ['C2', 'T2']:
         convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
                   fmt=fmt, out_dir=final_out_dir, cog=cog, ovr=ovr, comp=comp)
@@ -219,25 +226,25 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
 #################################################################################################
 
 @time_it    
-def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
+def sensor_full_pol(in_dir,mat='T3', azlks=8,rglks=4,
                   fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
                   out_dir=None,
                   recip=False,cf_dB=-83):
 
     """
-    Extracts single look S2 or Multi-look T3/C3 matrix elements from ALOS-2 Quad-Pol (HBQ) CEOS data 
+    Extracts single look S2 or Multi-look T3/C3 matrix elements from SENSOR_NAME Full-pol data 
     and saves them into respective binary files.
 
     Example:
     --------
     >>> alos2_hbq_l11("path_to_folder", azlks=5, rglks=3)
-    This will extract the T3 matrix elements from the ALOS-2 Full-pol data 
-    in the specified folder and save them in the selected matrix directory.
+    This will extract the T3 matrix elements from the SENSOR_NAME Full-pol data 
+    in the specified folder and save them in the 'C2' directory.
     
     Parameters:
     -----------
     in_dir : str
-        The path to the folder containing the ALOS-2 Quad-Pol (HBQ) CEOS data folder.
+        The path to the folder containing the SENSOR_NAME data folder.
     
     mat : str, optional (default='T3')
         Type of matrix to extract. Valid options: 'S2',  'C4, 'C3', 'T4', 
@@ -281,6 +288,8 @@ def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
 
     """
     
+    # Get file paths  
+
     hh_file = list(glob.glob(os.path.join(in_dir,'IMG-HH-*-HBQR1.1__A')) + \
         glob.glob(os.path.join(in_dir, 'IMG-HH-*-HBQR1.1__D')))[0]
 
@@ -322,9 +331,12 @@ def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
         base_out_dir = temp_dir
 
 
-
+    # Get Absolute calibration constant if required
     calfac_linear = np.sqrt(10 ** ((cf_dB - 32) / 10))
     
+    # Read the Four-channel data into numpy arrays
+    # Write the single look data; 
+
     S11 = read_a2(hh_file).astype(np.complex64)*calfac_linear 
     write_a2_rst(os.path.join(base_out_dir, f's11.{ext}'),S11,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     del S11
@@ -339,8 +351,8 @@ def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
     del S12, S21    
     S22 = read_a2(vv_file).astype(np.complex64)*calfac_linear 
     write_a2_rst(os.path.join(base_out_dir, f's22.{ext}'),S22,  driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S22
-    # Matrix conversion if needed
+    del S22 
+    # if required convert SLC into a multilooked matrices using convert_S function
     if mat not in ['S2', 'Sxy']:
         convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
                   fmt=fmt, out_dir=final_out_dir, cog=cog, ovr=ovr, comp=comp)
