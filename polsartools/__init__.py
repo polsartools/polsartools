@@ -13,7 +13,7 @@ from .sensors.uavsar import uavsar_grd,uavsar_mlc
 from .sensors.nisar import nisar_gslc,nisar_rslc
 from .sensors.alos2 import alos2_fbd_l11,alos2_hbq_l11
 from .sensors.alos1 import alos1_l11
-from .sensors.chyaan2 import chyaan2_fp
+from .sensors.chyaan2 import chyaan2_fp,chyaan2_cp
 from .sensors.rs2_fp import rs2_fp
 from .sensors.isro_asar import isro_asar
 from .sensors.risat import risat_l11
@@ -42,7 +42,8 @@ __all__ = [
     # SENSORS
     'uavsar_grd', 'uavsar_mlc','isro_asar',  'esar_gtc',
     'nisar_gslc', 'nisar_rslc',
-    'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','rs2_fp',  
+    'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','chyaan2_cp',
+    'rs2_fp',  
     'risat_l11','alos1_l11',
     #
     'fp_sign','pauliRGB','dxpRGB','halpha_plot_fp','haalpha_plot_fp','halpha_cluster_fp',

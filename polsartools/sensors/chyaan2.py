@@ -109,7 +109,7 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
+def chyaan2_fp(in_dir,mat='C2',azlks=None,rglks=None,
                fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False):
@@ -279,6 +279,164 @@ def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
 
     # Matrix conversion if needed
     if mat not in ['S2', 'Sxy']:
+        convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
+                  fmt=fmt, out_dir=final_out_dir, cog=cog, ovr=ovr, comp=comp)
+
+        # Clean up temp directory
+        if temp_dir:
+            try:
+                shutil.rmtree(temp_dir)
+            except Exception as e:
+                print(f"Warning: Could not delete temporary directory {temp_dir}: {e}")
+
+@time_it
+def chyaan2_cp(in_dir,mat='T3',azlks=None,rglks=None,
+               fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
+             out_dir=None
+             ):
+    
+    """
+    Extracts specified matrix elements (Sxy, C2) from Chandrayaan-II DFSAR Compact-Pol data 
+    and saves them into respective directories.
+
+    Example:
+    --------
+    >>> chyaan2_cp("path_to_folder", mat='C2', azlks=50, rglks=2)
+    This will extract the C2 matrix elements from the Chandrayaan-II DFSAR Compact-Pol data 
+    in the specified folder and save them in the 'C2' directory.
+    
+    Parameters:
+    -----------
+    in_dir : str
+        The path to the folder containing the Chandrayaan-II DFSAR Compact-Pol data files.
+
+    mat : str, optional (default='T3')
+        Type of matrix to extract. Valid options: 'Sxy', 'C2'
+
+    azlks : int, optional (default=None)
+        The number of azimuth looks for multi-looking. If not specified, the value is derived from 
+        the ground range and output line spacing.
+
+    rglks : int, optional (default=None)
+        The number of range looks for multi-looking. If not specified, the value is set to 1.
+
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+        
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
+        
+        
+    """
+    #%%
+    # valid_full_pol = ['S2', 'C4', 'C3', 'T4', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV']
+    valid_dual_pol = ['Sxy', 'C2', 'T2']
+    valid_matrices = valid_dual_pol
+
+    if mat not in valid_matrices:
+        raise ValueError(f"Invalid matrix type '{mat}'. \n Supported types are:\n"
+                        f"  Full-pol: {sorted(valid_dual_pol)}\n")
+
+
+    temp_dir = None
+    ext = 'bin' if fmt == 'bin' else 'tif'
+    driver = 'ENVI' if fmt == 'bin' else None
+
+    # Final output directory
+    if out_dir is None:
+        final_out_dir = os.path.join(in_dir, mat)
+    else:
+        final_out_dir = os.path.join(out_dir, mat)
+    os.makedirs(final_out_dir, exist_ok=True)
+
+    # Intermediate output directory
+    if mat in ['Sxy']:
+        base_out_dir = final_out_dir
+    else:
+        temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
+        base_out_dir = temp_dir
+        
+    
+    xmlFile = glob.glob(in_dir+'/data/calibrated/*/*sli*.xml')[0]
+    fxml = open(xmlFile, 'r')
+    for line in fxml:
+        if "output_line_spacing" in line:
+            # print("output_line_spacing: ", line.split('>')[1].split('<')[0])
+            ols = float(line.split('>')[1].split('<')[0])
+        if "output_pixel_spacing" in line:
+            # print("output_pixel_spacing: ", line.split('>')[1].split('<')[0])
+            ops = float(line.split('>')[1].split('<')[0])
+        if "isda:incidence_angle" in line:
+            # print("incidence_angle: ", line.split('>')[1].split('<')[0])
+            inc= float( line.split('>')[1].split('<')[0])
+        if "isda:calibration_constant" in line:
+            cc = float( line.split('>')[1].split('<')[0])
+        if "isda:pulse_bandwidth" in line:
+            bw = float( line.split('>')[1].split('<')[0])/1000000
+    fxml.close() 
+    gRange = ops/np.sin(inc*np.pi/180)
+    # multi-llok factor 
+    mlf = int(np.round(gRange/ols,0))
+
+    ds = gdal.Open(glob.glob(in_dir+'/data/calibrated/*/*sli*_lh_*.tif')[0])
+    cols = ds.RasterXSize  
+    rows = ds.RasterYSize 
+
+
+    lines = ['output_line_spacing '+ str(ols)+'\n',
+            'output_pixel_spacing '+ str(ops)+'\n',
+            'ground_range '+ str(gRange)+'\n',
+            'mlook_factor '+ str(mlf)+'\n',
+            'incidence_angle '+ str(inc)+'\n',
+            'calibration_constant '+str(cc)+'\n',
+            'pulse_bandwidth '+str(bw)+'\n',
+            'lines '+ str(rows)+'\n',
+            'samples '+str(cols)+'\n'
+            
+            ]
+
+    calFactor = 1/np.sqrt(10**(cc/10))
+    # print(lines)
+    try:
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_lh_*.tif'))[0]
+    except:
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_rh_*.tif'))[0]
+    S11 = read_rs2_tif(inFile)
+    write_rst(os.path.join(base_out_dir, f's11.{ext}'),
+              S11[:,:,0]*calFactor+1j*(S11[:,:,1]*calFactor),   
+              driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    del S11
+
+    try:
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_lv_*.tif'))[0]
+    except:
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_rv_*.tif'))[0]
+    # data_xy = read_rs2_tif(inFile)
+    S12 = read_rs2_tif(inFile)
+    del S12
+    
+    with open(os.path.join(final_out_dir, 'multilook_info.txt'), 'w') as f:
+        f.writelines(lines)
+    f.close()
+
+    if azlks == None and rglks == None:
+        azlks = mlf
+        rglks = 1
+
+    # Matrix conversion if needed
+    if mat not in ['Sxy']:
         convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
                   fmt=fmt, out_dir=final_out_dir, cog=cog, ovr=ovr, comp=comp)
 
