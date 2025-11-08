@@ -90,15 +90,18 @@ The following code example demonstrates a typical processing pipeline using ```p
 import polsartools as pst
 
 def main():
-  # Generate C3 from NISAR GSLC full-pol data
-  pst.nisar_gslc('path/to/nisar_gslc.h5')
+  # Generate C3 from NISAR GSLC full-pol data with 5x5 multilooking
+  pst.nisar_gslc('path/to/nisar_gslc.h5',mat='C3',
+                    azlks=5, rglks=5,
+                    fmt='tif', cog=False, 
+                    )
 
   # Visualize Pauli-decomposition RGB
   c3path = 'path/to/nisar_gslc/C3'
   pst.pauliRGB(c3path)
 
-  # Apply refined-Lee speckle filter
-  pst.rlee(c3path)
+  # Apply 3x3 refined-Lee speckle filter
+  pst.rlee(c3path,win=3)
 
   # Perform H-A-Alpha decomposition
   c3_rlee = 'path/to/nisar_gslc/rlee_3x3/C3'
@@ -107,11 +110,13 @@ def main():
   # Generate H-Alpha 2d plot
   entropy_path = c3_rlee+'/H_fp.tif'
   alpha_path = c3_rlee+'/alpha_fp.tif'
-  pst.halpha_plot_fp(entropy_path, alpha_path)
+  pst.halpha_plot_fp(entropy_path, alpha_path,
+                      pname='./halpha_2D.png')
 
   # Generate H-A-Alpha 3d plot
   ani_path = c3_rlee + '/anisotropy_fp.tif'
-  pst.haalpha_plot_fp(entropy_path, ani_path,alpha_path)
+  pst.haalpha_plot_fp(entropy_path, ani_path,alpha_path,
+                      pname='./haalpha_3D.png')
 
 if __name__ == "__main__":
     main()

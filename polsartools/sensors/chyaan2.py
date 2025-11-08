@@ -109,7 +109,7 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(in_dir,mat='C2',azlks=None,rglks=None,
+def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
                fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False):
@@ -290,7 +290,7 @@ def chyaan2_fp(in_dir,mat='C2',azlks=None,rglks=None,
                 print(f"Warning: Could not delete temporary directory {temp_dir}: {e}")
 
 @time_it
-def chyaan2_cp(in_dir,mat='T3',azlks=None,rglks=None,
+def chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
                fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None
              ):
@@ -310,7 +310,7 @@ def chyaan2_cp(in_dir,mat='T3',azlks=None,rglks=None,
     in_dir : str
         The path to the folder containing the Chandrayaan-II DFSAR Compact-Pol data files.
 
-    mat : str, optional (default='T3')
+    mat : str, optional (default='C2')
         Type of matrix to extract. Valid options: 'Sxy', 'C2'
 
     azlks : int, optional (default=None)
@@ -425,6 +425,9 @@ def chyaan2_cp(in_dir,mat='T3',azlks=None,rglks=None,
         inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_rv_*.tif'))[0]
     # data_xy = read_rs2_tif(inFile)
     S12 = read_rs2_tif(inFile)
+    write_rst(os.path.join(base_out_dir, f's12.{ext}'),
+            S12[:,:,0]*calFactor+1j*(S12[:,:,1]*calFactor),   
+            driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     del S12
     
     with open(os.path.join(final_out_dir, 'multilook_info.txt'), 'w') as f:

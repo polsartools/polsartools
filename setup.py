@@ -86,7 +86,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='Narayanarao Bhogapurapu',
-    author_email='bnarayanarao@iitb.ac.in',
+    author_email='bnarayanarao@nitw.ac.in',
     url='https://github.com/polsartools/polsartools',
     packages=find_packages(),
     package_dir={'polsartools': 'polsartools'},
