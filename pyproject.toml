@@ -2,6 +2,5 @@
 requires = ["setuptools>=42","setuptools_scm", "wheel", "pybind11", "cibuildwheel"]
 build-backend = "setuptools.build_meta"
 [tool.cibuildwheel]
-skip = "cp27-*"
-build = "cp36-* cp37-* cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
+build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
 archs = "auto"

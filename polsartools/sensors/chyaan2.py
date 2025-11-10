@@ -289,6 +289,7 @@ def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
             except Exception as e:
                 print(f"Warning: Could not delete temporary directory {temp_dir}: {e}")
 
+#############################################################
 @time_it
 def chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
                fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
@@ -404,7 +405,6 @@ def chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
             'pulse_bandwidth '+str(bw)+'\n',
             'lines '+ str(rows)+'\n',
             'samples '+str(cols)+'\n'
-            
             ]
 
     calFactor = 1/np.sqrt(10**(cc/10))
