@@ -1,4 +1,5 @@
 from osgeo import gdal, osr
+gdal.PushErrorHandler('CPLQuietErrorHandler')
 gdal.UseExceptions()
 import os
 import numpy as np
@@ -379,7 +380,10 @@ def s1_grd(in_dir, bsc="sigma0", out_dir=None,pols=None, dB=False,
                 # resampleAlg='average',
                 # dstSRS='EPSG:4326'
                 # )
+                
                 os.remove(out_file)
+                out_file = out_file_geo
                 pbar.update(1)
+            print(f"Saved file: {out_file}")
 
     
