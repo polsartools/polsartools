@@ -284,9 +284,9 @@ process_chunk_yam4cpp(std::vector<py::array_t<cplx>> chunks,
                 }
 
                 // Ensure all components are within the specified range [SpanMin, SpanMax]
-                M_odd_ptr(ii, jj) = std::clamp(Ps, SpanMin, SpanMax);
-                M_dbl_ptr(ii, jj) = std::clamp(Pd, SpanMin, SpanMax);
-                M_vol_ptr(ii, jj) = std::clamp(Pv, SpanMin, SpanMax);
+                M_odd_ptr(ii, jj) = std::clamp(Ps, 0.0, SpanMax);
+                M_dbl_ptr(ii, jj) = std::clamp(Pd, 0.0, SpanMax);
+                M_vol_ptr(ii, jj) = std::clamp(Pv, 0.0, SpanMax);
                 M_hlx_ptr(ii, jj) = std::clamp(Pc, 0.0, SpanMax);
                 // M_hlx_ptr(ii, jj) = Pc;
             }
