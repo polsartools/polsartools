@@ -2,13 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import os 
-from matplotlib.cm import ScalarMappable
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from pathlib import Path
-from polsartools.utils.utils import read_bin, time_it
 
-# from .halpha_plot_dp import get_feas_bounds
-
+from polsartools.utils.utils import read_bin
 def get_feas_bounds():
     c1l = np.array([[           0, 0.00000000e+00],
            [5.68070458e-02, 8.91089109e-01],
@@ -722,31 +718,27 @@ def get_feas_bounds():
     return c1l,c22l,c21l
 
 
-@time_it
-def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet', 
-                        cbar = True, norm='', vmin=None,vmax=None, 
-                        grey_region=True,zone_lines=True,
-                        zone_line_color = 'k', gridsize=200
-                              ):
-    
+                      
+def plot_h_alpha_fp(h, alpha, ppath=None, cmap='viridis', 
+                   cbar=True, norm='', vmin=None,vmax=None, 
+                    grey_region=True, zone_lines=True,
+                    zone_line_color='k',zone_ids=True,gridsize=300): 
     """
     Generates and saves a  density plot of entropy (H) versus alpha (degrees) for full-pol data,
     including optional zone lines, zone IDs, and grey regions.
     
     Example:
     --------
-    >>> haalpha_plot_fp(h, A, alpha, path="HAAlpha_plot.png", cmap='jet', colorbar=True, norm='log')
-    This will generates a H/A/Alpha plot  from the input arrays and save it as HAAlpha_plot.png, using the 'jet' colormap and logarithmic normalization
+    >>> plot_h_alpha_fp(h, alpha, ppath="HA_plot.png", cmap='jet', colorbar=True, norm='log')
+    This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:
     -----------
     h : path or array-like
         path to the Entropy file or Array representing entropy values.
-    A : array-like
-        path to the Anisotropy file or Array representing Anisotropy values.
     alpha : array-like
         path to the Alpha file or Array representing alpha values in degrees.
-    pname : str, optional
+    ppath : str, optional
         Path to save the generated plot. If a folder is given, the plot is saved as 'halpha_plot_fp.png' inside that folder.
         If the file already exists, it will be overwritten.
     cmap : str, optional
@@ -779,192 +771,95 @@ def haalpha_plot_fp(H, A, alpha, pname = None, cmap='jet',
     
     
     
-    if isinstance(H, (str, os.PathLike, Path)):
-        H = read_bin(H)
+
+    if isinstance(h, (str, os.PathLike, Path)):
+        H = read_bin(h)
     if isinstance(alpha, (str, os.PathLike, Path)):
         alpha = read_bin(alpha)
-    if isinstance(A, (str, os.PathLike, Path)):
-        A = read_bin(A)
     
     # --- Drop NaNs and zeros---
-    # valid_mask = ~(
-    # ((H == 0) & (A == 0) & (alpha == 0)) |           # all three are zero
-    # (np.isnan(H) & np.isnan(A) & np.isnan(alpha))    # all three are NaN
-    # )
     valid_mask = ~(
-        ((H == 0) & (A == 0) & (alpha == 0)) |           # all three are zero
-        (np.isnan(H) | np.isnan(A) | np.isnan(alpha))    # any one is NaN
+    ((H == 0) & (alpha == 0)) |           # all three are zero
+    (np.isnan(H) & np.isnan(alpha))    # all three are NaN
     )
-    
-    h_vals = H[valid_mask].flatten()
-    a_vals = A[valid_mask].flatten()
-    alpha_vals = alpha[valid_mask].flatten()    
-    
-    
-    fs = 15
-    if cbar:
-        fig = plt.figure(figsize=(7.5, 7))
-        fig.subplots_adjust(left=0.18)
-    else:
-        fig = plt.figure(figsize=(7, 7))
-        fig.subplots_adjust(left=0.15)
-        
-    ax = fig.add_subplot(111, projection='3d')
-
-    get_cmap = plt.get_cmap(cmap)
-
-    # --- Histogram surfaces ---
-    hist_top, xH, yA = np.histogram2d(h_vals, a_vals, bins=gridsize)
-    hist_front, _, yAlpha = np.histogram2d(h_vals, alpha_vals, bins=[gridsize, 90])
-    hist_side, _, _ = np.histogram2d(a_vals, alpha_vals, bins=[gridsize, 90])
-
-    # --- Combine all for global normalization ---
-    all_counts = np.concatenate([
-        hist_top.T.flatten(),
-        hist_front.T.flatten(),
-        hist_side.T.flatten()
-    ])
-    all_counts = all_counts[all_counts > 0]  # Drop zeros for log norm
-    
-    if vmin  is not None:
-        vmin = np.min(all_counts)
-    if vmax  is not None:
-        vmax = np.max(all_counts)
-    if vmin==0:
-        vmin=1
-
-    norm_option = mcolors.LogNorm(vmin=vmin, vmax=vmax) if norm == 'log' else mcolors.Normalize(vmin=vmin, vmax=vmax)
-
-    # --- Top Surface (H vs A @ α = 90°) ---
-    xHc = (xH[:-1] + xH[1:]) / 2
-    yAc = (yA[:-1] + yA[1:]) / 2
-    X, Y = np.meshgrid(xHc, yAc)
-    face_top = norm_option(hist_top.T)
-    rgba_top = get_cmap(face_top)
-    rgba_top[..., -1] = np.where(hist_top.T == 0, 0.0, 1.0)
-    ax.plot_surface(X, Y, np.ones_like(X) * 90, facecolors=rgba_top, rstride=1, cstride=1, shade=False,zorder=0)
-
-    # --- Front Surface (H vs α @ A = 0) ---
-    xHc = (xH[:-1] + xH[1:]) / 2
-    yAlphc = (yAlpha[:-1] + yAlpha[1:]) / 2
-    X, Y = np.meshgrid(xHc, yAlphc)
-    face_front = norm_option(hist_front.T)
-    rgba_front = get_cmap(face_front)
-    rgba_front[..., -1] = np.where(hist_front.T == 0, 0.0, 1.0)
-    ax.plot_surface(X, np.zeros_like(X), Y, facecolors=rgba_front, rstride=1, cstride=1, shade=False,zorder=0)
-
-    # --- Side Surface (A vs α @ H = 0) ---
-    xAc = (xH[:-1] + xH[1:]) / 2  # Reusing xH for bin centers of A for simplicity
-    yAlphc = (yAlpha[:-1] + yAlpha[1:]) / 2
-    X, Y = np.meshgrid(xAc, yAlphc)
-    face_side = norm_option(hist_side.T)
-    rgba_side = get_cmap(face_side)
-    rgba_side[..., -1] = np.where(hist_side.T == 0, 0.0, 1.0)
-    ax.plot_surface(np.zeros_like(X), X, Y, facecolors=rgba_side, rstride=1, cstride=1, shade=False,zorder=0)
-
-    # --- Wireframes ---
-    lw = 1
-    zv = np.arange(0, 91, 10)
-    ax.plot(np.zeros_like(zv), np.zeros_like(zv), zv, 'k-', linewidth=lw,zorder=10)
-    ax.plot(np.ones_like(zv), np.zeros_like(zv), zv, 'k-', linewidth=lw,zorder=10)
-    xv = np.linspace(0, 1, 11)
-    ax.plot(np.zeros_like(xv), xv, np.ones_like(xv) * 90, 'k-', linewidth=lw,zorder=10)
-    ax.plot(xv, np.zeros_like(xv), np.ones_like(xv) * 90, 'k-', linewidth=lw,zorder=10)
-    ax.plot(xv, np.zeros_like(xv), np.ones_like(xv) * 0, 'k-', linewidth=lw,zorder=10)
-    ax.plot(xv, np.ones_like(xv), np.ones_like(xv) * 90, 'k-', linewidth=lw,zorder=10)
-    ax.plot(np.ones_like(xv), xv, np.ones_like(xv) * 90, 'k-', linewidth=lw,zorder=10)
-
-    # --- Axes and view ---
-    ax.set_xlim(1, 0)
-    ax.set_ylim(1, 0)
-    ax.set_zlim(0, 90)
-    ax.view_init(elev=25, azim=45)
-    ax.set_xlabel("Entropy, H", labelpad=10, fontsize=fs)
-    ax.set_ylabel("Anisotropy, A", labelpad=10, fontsize=fs)
-    ax.set_zlabel("Alpha (°)", labelpad=2, fontsize=fs)
-    ax.tick_params(axis='both', which='major', 
-                   # length=20, width=1,
-                   labelsize=fs)
-    
-    # Tick length and width
-    ax.xaxis._axinfo['tick']['inward_factor'] = 0.2  
-    ax.xaxis._axinfo['tick']['outward_factor'] = 0.25
-    ax.xaxis._axinfo['tick']['size'] = 20 
-    
-    ax.yaxis._axinfo['tick']['inward_factor'] = 0.2
-    ax.yaxis._axinfo['tick']['outward_factor'] = 0.25
-    ax.yaxis._axinfo['tick']['size'] = 20
-    
-    ax.zaxis._axinfo['tick']['inward_factor'] = 0.2
-    ax.zaxis._axinfo['tick']['outward_factor'] = 0.25
-    ax.zaxis._axinfo['tick']['size'] = 20
-    ax.grid(False)
+    H = H[valid_mask].flatten()
+    alpha = alpha[valid_mask].flatten()    
 
     
-    if zone_lines: 
-        ax.plot(np.zeros_like(zv)+0.5, np.zeros_like(zv), zv, color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-        ax.plot(np.zeros_like(zv)+0.9, np.zeros_like(zv), zv, color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-        
-        zone_xv = np.linspace(0, 0.5, 11)
-        ax.plot(zone_xv, np.zeros_like(zone_xv), np.ones_like(zone_xv) * 42.5,color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-        ax.plot(zone_xv, np.zeros_like(zone_xv), np.ones_like(zone_xv) * 47.5,color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-        
-        zone_xv = np.linspace(0.5, 1, 11)
-        ax.plot(zone_xv, np.zeros_like(zone_xv), np.ones_like(zone_xv) * 40, color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-        
-        zone_xv = np.linspace(0.5, 0.9, 11)
-        ax.plot(zone_xv, np.zeros_like(zone_xv), np.ones_like(zone_xv) * 50, color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-        zone_xv = np.linspace(0.9, 1.0, 11)
-        ax.plot(zone_xv, np.zeros_like(zone_xv), np.ones_like(zone_xv) * 60, color=zone_line_color, ls='-', linewidth=lw-0.5,zorder=10)
-
-
-
     c1l,c22l,c21l = get_feas_bounds()
-
+    fs = 12
+    
+    fig_size = (3.6, 3) if cbar else (3.2, 3)
+    fig, ax = plt.subplots(figsize=fig_size, dpi=300)
+    
+    norm_option = mcolors.LogNorm() if norm == 'log' else None
+    if vmin is not None and vmax is not None:
+        norm_option = mcolors.Normalize(vmin=vmin, vmax=vmax) if norm == '' else norm_option
+    if vmin is not None and vmax is None:
+        norm_option = mcolors.Normalize(vmin=vmin) if norm == '' else norm_option
+    if vmin is None and vmax is not None:
+        norm_option = mcolors.Normalize(vmax=vmax) if norm == '' else norm_option
+    
+    plt.hexbin(H.flatten(), alpha.flatten(), gridsize=gridsize, cmap=cmap,mincnt=1,norm=norm_option)
+    
+    if zone_lines:
+        plt.axvline(x=0.5,color=zone_line_color,linestyle="--",linewidth=0.5,zorder=1)
+        plt.axvline(x=0.9,color=zone_line_color,linestyle="--",linewidth=0.5,zorder=1)
+        ax.hlines(y=42.5, xmin=0, xmax=0.5, linewidth=0.5, color=zone_line_color,linestyle="--",zorder=1)
+        ax.hlines(y=47.5, xmin=0, xmax=0.5, linewidth=0.5, color=zone_line_color,linestyle="--",zorder=1)
+        ax.hlines(y=40, xmin=0.5, xmax=1, linewidth=0.5, color=zone_line_color,linestyle="--",zorder=1)
+        ax.hlines(y=50, xmin=0.5, xmax=0.9, linewidth=0.5, color=zone_line_color,linestyle="--",zorder=1)
+        ax.hlines(y=60, xmin=0.9, xmax=1, linewidth=0.5, color=zone_line_color,linestyle="--",zorder=1)
+    
+    plt.plot(c1l[:,0],c1l[:,1],'k-',linewidth=0.3)
+    # plt.plot(c21l[:,0],c21l[:,1],'k-',linewidth=0.3)
+    plt.plot(c22l[:,0],c22l[:,1],'k-',linewidth=0.3)
+    clr = 'r'
+    fss = 4
+    if zone_ids:
+        ax.text(0.95, 0.70, '1', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.95, 0.58, '2', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.95, 0.28, '3', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.70, 0.70, '4', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.70, 0.48, '5', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.70, 0.30, '6', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.20, 0.70, '7', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.20, 0.48, '8', transform=ax.transAxes, fontsize = fs-fss, color=clr)
+        ax.text(0.20, 0.30, '9', transform=ax.transAxes, fontsize = fs-fss, color=clr)
     
     if grey_region:
-        Y_front = 0  # y-coordinate of the front XZ plane
+        xs,ys = c1l[:,0],c1l[:,1]
+        ax.fill_between(xs, ys, interpolate=True, color='#dbdbdb',zorder=0)
+        xs,ys = c22l[:,0],c22l[:,1]
+        ax.fill_between(xs, ys, 90, interpolate=True, color='#dbdbdb',zorder=0)
+     
     
-        # --- poly1: fill below curve toward z = 0 ---
-        xs = c1l[:, 0]
-        zs = c1l[:, 1]
-        ys = np.ones_like(xs) * Y_front
+    plt.xlabel('Entropy, H')
+    plt.ylabel("Alpha (°)")
+    plt.xlim([0,1])
+    plt.ylim([0,90])
+    plt.yticks(np.arange(0,100,10),np.arange(0,100,10))
     
-        # Create polygon from curve down to z=0
-        verts1 = list(zip(xs, ys, zs)) + list(zip(xs[::-1], ys[::-1], np.zeros_like(zs)))
-        poly1 = Poly3DCollection([verts1], color='#dbdbdb', alpha=1.0, zorder=0)
-        ax.add_collection3d(poly1)
-    
-        # --- poly2: fill above curve toward z = 90 ---
-        xs = c22l[:, 0]
-        zs = c22l[:, 1]
-        ys = np.ones_like(xs) * Y_front
-    
-        # Create polygon from curve up to z=90
-        verts2 = list(zip(xs, ys, zs)) + list(zip(xs[::-1], ys[::-1], np.ones_like(zs) * 90))
-        poly2 = Poly3DCollection([verts2], color='#dbdbdb', alpha=1.0, zorder=0)
-        ax.add_collection3d(poly2)
-        
-    ax.plot(c1l[:,0],np.zeros_like(c1l[:,0]), c1l[:,1],'k-',linewidth=0.5,zorder=10)
-    # plt.plot(c21l[:,0],c21l[:,1],'k-',linewidth=0.3)
-    ax.plot(c22l[:,0],np.zeros_like(c22l[:,0]), c22l[:,1],'k-',linewidth=0.5,zorder=10)
-        
+    ax.tick_params(axis='both', which='both', direction='in',
+                top=True, bottom=True, left=True, right=True)
 
-    # --- Unified Colorbar ---
+    ax.minorticks_on()
+    ax.tick_params(axis='both', which='both', direction='in',
+                   top=True, bottom=True, left=True, right=True,
+                   length=4, width=0.5)
+    ax.tick_params(axis='both', which='minor', length=2, width=0.2)
+    for spine in ax.spines.values():
+        spine.set_linewidth(0.5)
     if cbar:
-        sm = ScalarMappable(cmap=cmap, norm=norm_option)
-        sm.set_array(all_counts)
-        # fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04, label='# samples')
-        cb = fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04)
-        cb.set_label('# samples', fontsize=fs)         # Label font size
-        cb.ax.tick_params(labelsize=fs)  
+        c_bar = plt.colorbar()
+        c_bar.ax.tick_params(labelsize=fs-fss)
+        c_bar.set_label(label='#samples',fontsize=fs-fss)
     
     plt.tight_layout()
     
-    if pname is not None:
-        if os.path.isdir(pname):
-            pname = os.path.join(pname, 'haalpha_plot_fp.png')  
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'halpha_plot_fp.png')  
             
-        plt.savefig(pname,dpi=300,bbox_inches='tight',pad_inches=0.3)
-        
-    # plt.show()
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')
+

@@ -1,7 +1,7 @@
 from polsartools.tests.synthetic_data import gen_S2, gen_T3
 import os
 import logging, shutil
-from polsartools.analysis.pauliRGB import pauliRGB
+from polsartools.analysis.pauli_rgb import pauli_rgb
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,9 +21,9 @@ def test_utils_processing(verbose=False, silent=False):
     if silent:
         from contextlib import redirect_stdout, redirect_stderr
         with open(os.devnull, 'w') as f, redirect_stdout(f), redirect_stderr(f):
-            pauliRGB(T3_folder)
+            pauli_rgb(T3_folder)
     else:
-        pauliRGB(T3_folder)
+        pauli_rgb(T3_folder)
 
     output_files = [
         os.path.join(T3_folder, 'PauliRGB.png'),

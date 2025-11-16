@@ -175,7 +175,7 @@ def create_pgw(reference_file, output_png_path):
 
     
 @time_it
-def pauliRGB(infolder,save_tif=False, window_size=None):
+def pauli_rgb(infolder,save_tif=False, window_size=None):
     """
     Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).
 
@@ -184,10 +184,10 @@ def pauliRGB(infolder,save_tif=False, window_size=None):
     Examples
     --------
     >>> # Generate Pauli RGB from a polarimetric folder
-    >>> pauliRGB("/path/to/polSAR_data")
+    >>> pauli_rgb("/path/to/polSAR_data")
 
     >>> # Output both PNG and GeoTIFF versions
-    >>> pauliRGB("/path/to/polSAR_data", tif_flag=True)
+    >>> pauli_rgb("/path/to/polSAR_data", tif_flag=True)
 
     Parameters
     ----------

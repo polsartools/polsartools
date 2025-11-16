@@ -177,13 +177,13 @@ def get_feas_bounds():
     
     return data
     
-def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', grey_region=True, gridsize=300):
+def plot_h_alpha_dp(h, alpha, ppath=None, cmap='viridis', colorbar=True, norm='', grey_region=True, gridsize=300):
     """
     Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for dual-pol data.
 
     Example:
     --------
-    >>> halpha_plot_dp(h, alpha, path="HA_plot.png", cmap='jet', colorbar=True, norm='log')
+    >>> plot_h_alpha_dp(h, alpha, ppath="HA_plot.png", cmap='jet', colorbar=True, norm='log')
     This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:
@@ -192,7 +192,7 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
         Array representing entropy values.
     alpha : array-like
         Array representing alpha values in degrees.
-    path : str, optional
+    ppath : str, optional
         Path to save the generated plot. If a folder is given, the plot is saved as 'halpha_plot_dp.png' inside that folder.
         If the file already exists, it will be overwritten.
     cmap : str, optional
@@ -266,8 +266,8 @@ def halpha_plot_dp(h, alpha, path=None, cmap='viridis', colorbar=True, norm='', 
         ax.fill_between(xs, ys, 90, interpolate=True, color='#dbdbdb',zorder=0)
     
     plt.tight_layout()
-    if path is not None:
-        if os.path.isdir(path):
-            path = os.path.join(path, 'halpha_plot_dp.png')  
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'halpha_plot_dp.png')  
             
-        plt.savefig(path,dpi=300,bbox_inches='tight')
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')

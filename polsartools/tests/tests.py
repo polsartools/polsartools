@@ -9,7 +9,7 @@ pytest -v tests/tests.py
 """
 
 def utils_processing(T3_folder, window_size=5):
-    pst.pauliRGB(T3_folder)
+    pst.pauli_rgb(T3_folder)
 
 def preproc_processing(T3_folder, azlks,rglks,window_size):
     pst.mlook(T3_folder,azlks,rglks,sub_dir=False)

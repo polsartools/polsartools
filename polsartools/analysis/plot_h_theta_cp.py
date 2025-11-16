@@ -131,7 +131,7 @@ def get_bounds():
     return c1l,c2l
     
 #%%
-def htheta_plot_cp(h,theta, pname=None, cmap='jet', 
+def plot_h_theta_cp(h,theta, pname=None, cmap='jet', 
                    cbar=True, norm='', vmin=None,vmax=None, 
                     grey_region=True, zone_lines=True,
                     zone_line_color='k',zone_ids=True,gridsize=200):
@@ -145,7 +145,7 @@ def htheta_plot_cp(h,theta, pname=None, cmap='jet',
     
     Example:
     --------
-    >>> htheta_plot_cp(h, theta, path="HT_plot.png", cmap='jet', cbar=True, norm='log')
+    >>> plot_h_theta_cp(h, theta, path="HT_plot.png", cmap='jet', cbar=True, norm='log')
     This will generates a H/Theta plot  from the input arrays and save it as HT_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:

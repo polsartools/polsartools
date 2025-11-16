@@ -32,8 +32,8 @@ from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import fp_sign, halpha_plot_dp, haalpha_plot_fp, pauliRGB, dxpRGB, halpha_plot_fp, \
-                        rgb, halpha_cluster_fp, htheta_plot_fp,htheta_plot_cp
+from .analysis import signature_fp, halpha_plot_dp, plot_h_a_alpha_fp, pauli_rgb, rgb_dp, plot_h_alpha_fp, \
+                        rgb, cluster_h_alpha_fp, plot_h_theta_fp,plot_h_theta_cp
 
 """ Importing utils """
 from .utils import time_it, read_rst
@@ -46,14 +46,14 @@ __all__ = [
     'rs2_fp',  
     'risat_l11','alos1_l11', 's1_grd',
     #
-    'fp_sign','pauliRGB','dxpRGB','halpha_plot_fp','haalpha_plot_fp','halpha_cluster_fp',
-    'halpha_plot_dp','rgb', 'htheta_plot_fp','htheta_plot_cp',
+    'signature_fp','pauli_rgb','rgb_dp','plot_h_alpha_fp','plot_h_a_alpha_fp','cluster_h_alpha_fp',
+    'halpha_plot_dp','rgb', 'plot_h_theta_fp','plot_h_theta_cp',
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS
     'mlook', 'clip','stokes_parm',
     'read_rst', 'time_it',
-    'convert_T3_C3', 'convert_C3_T3', 'pauliRGB', 'convert_S', 
+    'convert_T3_C3', 'convert_C3_T3', 'convert_S', 
     # FULL-POL
     'grvi', 'rvi_fp', 'mf3cf', 'mf4cf', 'dop_fp', 'prvi_fp', 'neu_fp', 
     'nned_fp', 'freeman_3c','freeman_2c',

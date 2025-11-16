@@ -1,10 +1,12 @@
-from .pauliRGB import pauliRGB, read_bin
-from .dxpRGB import dxpRGB
-from .fp_sign import fp_sign
-from .halpha_plot_fp import halpha_plot_fp
-from .halpha_plot_dp import halpha_plot_dp
+from .pauli_rgb import pauli_rgb
+from .rgb_dp import rgb_dp
 from .rgb import rgb
-from .haalpha_plot_fp import haalpha_plot_fp
-from .halpha_cluster_fp import halpha_cluster_fp
-from .htheta_plot_fp import htheta_plot_fp
-from .htheta_plot_cp import htheta_plot_cp
+from .signature_fp import signature_fp
+
+from .plot_h_alpha_fp import plot_h_alpha_fp
+from .plot_h_alpha_dp import plot_h_alpha_dp
+from .plot_h_a_alpha_fp import plot_h_a_alpha_fp
+from .plot_h_theta_fp import plot_h_theta_fp
+from .plot_h_theta_cp import plot_h_theta_cp
+
+from .cluster_h_alpha_fp import cluster_h_alpha_fp

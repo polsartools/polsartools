@@ -120,7 +120,7 @@ def prepare_dataT3(T3):
     return cp_sign, xp_sign
 
 
-def fp_sign(mat=None, title='',pname='',cmap='jet',plotType = 1,
+def signature_fp(mat=None, title='',pname='',cmap='jet',plotType = 1,
     fig=None, axes=None, start_index=0):
     """
     Generates and visualizes polarimetric signatures from a 2x2 scattering matrix (S2) or a 3x3 coherency matrix (T3).
@@ -128,7 +128,7 @@ def fp_sign(mat=None, title='',pname='',cmap='jet',plotType = 1,
     Examples
     --------
     >>> mat = np.array([[1, 0], [0, 1]]) # Trihedral
-    >>> fp_sign(mat, title='Trihedral', plotType=1)
+    >>> signature_fp(mat, title='Trihedral', plotType=1)
 
     Parameters
     ----------
@@ -153,19 +153,6 @@ def fp_sign(mat=None, title='',pname='',cmap='jet',plotType = 1,
         - 3: Poincaré sphere mapping via `poincare_plot`.
         - 4: Render empty or canonical Poincaré sphere via `poincare_sphere` (S2 not required).
     """
-    # if S2 is not None:
-    #     cp_sign, xp_sign = prepare_data(S2)
-    # if plotType==4:
-    #     poincare_sphere(pname=pname)
-    # elif S2 is not None and plotType==3:
-    #     poincare_plot(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)
-    # elif S2 is not None and plotType==2:
-    #     pol_sign2d(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)
-    # else:
-    #     figout, axesout = pol_sign(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap,
-    #         fig=fig, axes=axes, start_index=start_index)
-
-    #     return figout, axesout
 
     if mat is not None:
         if mat.shape == (2, 2):

@@ -5,11 +5,11 @@ from osgeo import gdal
 gdal.UseExceptions()
 import matplotlib.pyplot as plt
 
-from .pauliRGB import generate_rgb_png, create_pgw, generate_rgb_tif, norm_data, read_bin #create_prj
+from .pauli_rgb import generate_rgb_png, create_pgw, generate_rgb_tif, norm_data, read_bin #create_prj
 
 
 @time_it
-def dxpRGB(infolder, type=1, save_tif=False, window_size=None):
+def rgb_dp(infolder, type=1, save_tif=False, window_size=None):
     
     """
     Generate false-color RGB visualization from dual-polarimetric Sxy, C2 SAR data.
@@ -19,10 +19,10 @@ def dxpRGB(infolder, type=1, save_tif=False, window_size=None):
     Examples
     --------
     >>> # Generate type-1 false-color RGB from C2 folder
-    >>> dxpRGB("/path/to/data")
+    >>> rgb_dp("/path/to/data")
 
     >>> # Output both PNG and GeoTIFF versions
-    >>> dxpRGB("/path/to/data", type=3, tif_flag=True)
+    >>> rgb_dp("/path/to/data", type=3, tif_flag=True)
 
     Parameters
     ----------

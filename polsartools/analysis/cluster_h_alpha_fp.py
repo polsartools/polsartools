@@ -4,7 +4,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,read_rst
 
 @time_it
-def halpha_cluster_fp(hFile,alphaFile , window_size=1, outType="tif", cog_flag=False, 
+def cluster_h_alpha_fp(hFile,alphaFile , window_size=1, outType="tif", cog_flag=False, 
           cog_overviews = [2, 4, 8, 16], write_flag=True, 
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
@@ -15,7 +15,7 @@ def halpha_cluster_fp(hFile,alphaFile , window_size=1, outType="tif", cog_flag=F
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> halpha_cluster_fp("h_fp.tif", "alpha_fp.tif")
+    >>> cluster_h_alpha_fp("h_fp.tif", "alpha_fp.tif")
     
     >>> # Advanced usage with custom parameters
     >>> halpha_cluster_fp(
