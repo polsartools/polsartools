@@ -109,7 +109,7 @@ def write_bin(file,wdata):
     outdata.FlushCache() ##saves to disk!! 
 
 @time_it
-def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
+def import_chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
                fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False):
@@ -120,7 +120,7 @@ def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
 
     Example:
     --------
-    >>> chyaan2_fp("path_to_folder", mat='T3', azlks=50, rglks=2)
+    >>> import_chyaan2_fp("path_to_folder", mat='T3', azlks=50, rglks=2)
     This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data 
     in the specified folder and save them in the 'T3' directory.
     
@@ -291,7 +291,7 @@ def chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
 
 #############################################################
 @time_it
-def chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
+def import_chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
                fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None
              ):
@@ -302,7 +302,7 @@ def chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
 
     Example:
     --------
-    >>> chyaan2_cp("path_to_folder", mat='C2', azlks=50, rglks=2)
+    >>> import_chyaan2_cp("path_to_folder", mat='C2', azlks=50, rglks=2)
     This will extract the C2 matrix elements from the Chandrayaan-II DFSAR Compact-Pol data 
     in the specified folder and save them in the 'C2' directory.
     

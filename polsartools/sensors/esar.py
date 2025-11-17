@@ -209,7 +209,7 @@ def write_data(array, metadata, out_file,
 
 
 @time_it
-def esar_gtc(in_dir,mat='S2',
+def import_esar_gtc(in_dir,mat='S2',
              azlks=3,rglks=3,
              fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
@@ -221,7 +221,7 @@ def esar_gtc(in_dir,mat='S2',
     
     Example:
     --------
-    >>> esar_gtc("path_to_folder", mat='C3', azlks=3, rglks=3)
+    >>> import_esar_gtc("path_to_folder", mat='C3', azlks=3, rglks=3)
     This will extract the C3 from full-pol ESAR GTC SLC data and save them as geotiff files.
     Additionally, it will also extract the incidence angle map and save it as a geotiff file.
     

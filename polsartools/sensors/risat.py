@@ -146,7 +146,7 @@ def get_inc(file_path):
     return inc_array.astype(np.float32)
 
 @time_it
-def risat_l11(in_dir,mat='C2',
+def import_risat_l11(in_dir,mat='C2',
               azlks=10,rglks=7,
               fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
               out_dir = None):
@@ -163,7 +163,7 @@ def risat_l11(in_dir,mat='C2',
     
     Examples
     --------
-    >>> risat_l11("path_to_folder", mat='C2', azlks=10, rglks=7, fmt='tif')
+    >>> import_risat_l11("path_to_folder", mat='C2', azlks=10, rglks=7, fmt='tif')
     Extracts C2 matrix elements and the incidence angle map from RISAT-1A SLC data and saves them as GeoTIFFs.
 
     

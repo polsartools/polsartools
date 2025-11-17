@@ -167,7 +167,7 @@ def mlcList(annFile):
 
 
 @time_it    
-def uavsar_grd(ann,mat='C3',fmt='tif',
+def import_uavsar_grd(ann,mat='C3',fmt='tif',
             cog=False,ovr = [2, 4, 8, 16],comp=False,
             out_dir = None):
     """
@@ -176,10 +176,10 @@ def uavsar_grd(ann,mat='C3',fmt='tif',
 
     Example:
     --------
-    >>> uavsar_grd("path_to_file.ann", mat='C3')
+    >>> uavsaimport_uavsar_grdr_grd("path_to_file.ann", mat='C3')
     Extracts C3 matrix elements and saves them as GeoTIFFs in the 'C3' directory.
 
-    >>> uavsar_grd("path_to_file.ann", mat='T3', fmt='tif', cog=True, comp=True)
+    >>> import_uavsar_grd("path_to_file.ann", mat='T3', fmt='tif', cog=True, comp=True)
     Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.
 
     Parameters:
@@ -336,7 +336,7 @@ def uavsar_grd(ann,mat='C3',fmt='tif',
 
     
 @time_it  
-def uavsar_mlc(ann,mat='C3',fmt='tif',
+def import_uavsar_mlc(ann,mat='C3',fmt='tif',
             cog=False,ovr = [2, 4, 8, 16],comp=False,
             out_dir = None):
     """
@@ -345,10 +345,10 @@ def uavsar_mlc(ann,mat='C3',fmt='tif',
 
     Example:
     --------
-    >>> uavsar_mlc("path_to_file.ann", mat='C3')
+    >>> uavsimport_uavsar_mlcar_mlc("path_to_file.ann", mat='C3')
     Extracts C3 matrix elements and saves them as GeoTIFFs in the 'C3' directory.
 
-    >>> uavsar_mlc("path_to_file.ann", mat='T3', fmt='tif', cog=True, comp=True)
+    >>> import_uavsar_mlc("path_to_file.ann", mat='T3', fmt='tif', cog=True, comp=True)
     Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.
 
     Parameters:

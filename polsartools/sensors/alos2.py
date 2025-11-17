@@ -89,7 +89,7 @@ def write_a2_rst(out_file,data,
         print(f"Saved file: {out_file}")
 
 @time_it    
-def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
+def import_alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
                  fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
                  out_dir=None,
                   cf_dB=-83):
@@ -99,7 +99,7 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
 
     Example:
     --------
-    >>> alos2_fbd_l11("path_to_folder", azlks=5, rglks=3)
+    >>> import_alos2_fbd_l11("path_to_folder", azlks=5, rglks=3)
     This will extract the C2 matrix elements from the ALOS-2 Fine Beam Dual-Pol data 
     in the specified folder and save them in the 'C2' directory.
     
@@ -219,7 +219,7 @@ def alos2_fbd_l11(in_dir,mat='C2', azlks=3,rglks=2,
 #################################################################################################
 
 @time_it    
-def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
+def import_alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
                   fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
                   out_dir=None,
                   recip=False,cf_dB=-83):
@@ -230,7 +230,7 @@ def alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
 
     Example:
     --------
-    >>> alos2_hbq_l11("path_to_folder", azlks=5, rglks=3)
+    >>> import_alos2_hbq_l11("path_to_folder", azlks=5, rglks=3)
     This will extract the T3 matrix elements from the ALOS-2 Full-pol data 
     in the specified folder and save them in the selected matrix directory.
     

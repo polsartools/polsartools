@@ -158,7 +158,7 @@ def radio_cal(incalXml,rows,cols,parm='sigmaNought'):
 
 
 
-def s1_grd(in_dir, bsc="sigma0", out_dir=None,pols=None, dB=False, 
+def import_s1_grd(in_dir, bsc="sigma0", out_dir=None,pols=None, dB=False, 
            geocode=True,
            xRes = 0.001, yRes=0.001, 
            fmt='tif', cog=False, ovr=[2, 4, 8, 16], comp=False,
@@ -173,6 +173,13 @@ def s1_grd(in_dir, bsc="sigma0", out_dir=None,pols=None, dB=False,
     - Attaching Ground Control Points (GCPs) from annotation XML files.
     - Optionally geocoding to a regular grid with specified resolution using GCPs (Note: may not be accurate for areas with rough terrain).
     - Exporting results in GeoTIFF format with optional Cloud Optimized GeoTIFF (COG) structure.
+    
+    Example:
+    --------
+    >>> import_s1_grd("path_to_folder", bsc='sigma0',pols=['vv','vh'])
+    This will extract the radiometrically calibrated backscatter intesity files from Sentinel-1 GRD data and save them as geotiff files.
+
+    
 
     Parameters
     ----------

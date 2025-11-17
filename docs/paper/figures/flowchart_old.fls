@@ -3,8 +3,8 @@ INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/narayanarao/git/polsartools/docs/paper/figures/flowchart.tex
-OUTPUT flowchart.log
+INPUT /home/narayanarao/git/polsartools/docs/paper/figures/flowchart_old.tex
+OUTPUT flowchart_old.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/standalone/standalone.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/tools/shellesc.sty
@@ -157,10 +157,10 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries
 INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-INPUT ./flowchart.aux
-INPUT ./flowchart.aux
-INPUT flowchart.aux
-OUTPUT flowchart.aux
+INPUT ./flowchart_old.aux
+INPUT ./flowchart_old.aux
+INPUT flowchart_old.aux
+OUTPUT flowchart_old.aux
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -171,8 +171,8 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT /usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
-OUTPUT flowchart.pdf
+OUTPUT flowchart_old.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
-INPUT flowchart.aux
+INPUT flowchart_old.aux
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb

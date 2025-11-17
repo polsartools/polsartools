@@ -14,14 +14,6 @@ def read_rs2_tif(file):
     ds=None
     return np.dstack((band1,band2))
 
-# def write_s2_bin(file,wdata):
-#     [cols, rows] = wdata.shape
-#     driver = gdal.GetDriverByName("ENVI")
-#     outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)
-#     outdata.SetDescription(file)
-#     outdata.GetRasterBand(1).WriteArray(wdata)
-#     outdata.FlushCache()
-
 def write_rst(out_file,data,
                 driver='GTiff', out_dtype=gdal.GDT_CFloat32,
                 mat=None,
@@ -69,41 +61,19 @@ def write_rst(out_file,data,
     if mat == 'S2' or mat == 'Sxy':
         print(f"Saved file: {out_file}")
 
-# def write_rst(file,wdata,dtype,cog=False, ovr=[2, 4, 8, 16], comp=False):
-#     [cols, rows] = wdata.shape
-#     if '.bin' in file:
-#         driver = gdal.GetDriverByName("ENVI")
-#         outdata = driver.Create(file, rows, cols, 1, dtype)
-#     else:
-#         driver = gdal.GetDriverByName("GTiff")
-#         options = ['BIGTIFF=IF_SAFER']
-#         if comp:
-#         # options += ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9']
-#             options += ['COMPRESS=LZW']
-#         if cog:
-#             options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
-#         outdata = driver.Create(file, rows, cols, 1, dtype, options)
-    
-
-#     outdata.SetDescription(file)
-#     outdata.GetRasterBand(1).WriteArray(wdata)
-#     outdata.FlushCache() 
-#     outdata=None
-
 
 @time_it
-def rs2_fp(in_dir,mat='T3',
+def import_rs2_fp(in_dir,mat='T3',
            azlks=8,rglks=2,fmt='tif',
             cog=False,ovr = [2, 4, 8, 16],comp=False,
            bsc='sigma0', out_dir = None,
            recip=False,
            ):
     """
-    Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.
+    Process radarsat-2 image data and generate the specified matrix ('S2', 'C4', 'C3', 'T4', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV') from the input imagery files.
 
     This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (`in_dir`) 
-    and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory
-    (`S2`, `T3`, or `C3`). The function uses lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`) for scaling 
+    and calculates either the 'S2', 'C4', 'C3', 'T4', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV' matrix. The resulting matrix is then saved in a corresponding directory. The function uses lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`) for scaling 
     the data based on the chosen backscatter coefficient `bsc` (sigma0, gamma0, or beta0). The processed data is written into binary files 
     in the output folder.
 
@@ -113,13 +83,13 @@ def rs2_fp(in_dir,mat='T3',
     
     .. code-block:: python
 
-        rs2_fp("/path/to/data", mat="T3", bsc="sigma0")
+        import_rs2_fp("/path/to/data", mat="T3", bsc="sigma0")
 
     To process imagery and generate a C3 matrix:
 
     .. code-block:: python
 
-        rs2_fp("/path/to/data", mat="C3", bsc="beta0", azlks=10, rglks=3)
+        import_rs2_fp("/path/to/data", mat="C3", bsc="beta0", azlks=10, rglks=3)
         
     Parameters:
     -----------

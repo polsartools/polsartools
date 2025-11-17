@@ -2,4 +2,4 @@
 
 # This file makes the directory a Python package
 
-from .chyaan2 import chyaan2_fp, chyaan2_cp
+from .chyaan2 import import_chyaan2_fp, import_chyaan2_cp

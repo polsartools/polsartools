@@ -276,7 +276,7 @@ def rslc_meta(inFile):
     return freq_band,listOfPolarizations
 
 @time_it
-def isro_asar( inFile, mat='T3', azlks=5,rglks=5, 
+def import_isro_asar( inFile, mat='T3', azlks=5,rglks=5, 
                fmt='tif',
                cog=False,ovr = [2, 4, 8, 16],comp=False,
                out_dir=None,recip=False,
@@ -292,10 +292,10 @@ def isro_asar( inFile, mat='T3', azlks=5,rglks=5,
 
     Examples
     --------
-    >>> isro_asar("path_to_file.h5", azlks=30, rglks=15)
+    >>> import_isro_asar("path_to_file.h5", azlks=30, rglks=15)
     Extracts matrix elements with 5x5 multi-looking and saves them in the default output folder.
 
-    >>> isro_asar("path_to_file.h5", mat='T3', fmt='tif', cog=True, comp=True)
+    >>> import_isro_asar("path_to_file.h5", mat='T3', fmt='tif', cog=True, comp=True)
     Extracts T3 matrix elements and saves them as compressed Cloud Optimized GeoTIFFs.
 
     Parameters

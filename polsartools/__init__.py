@@ -9,16 +9,16 @@ __version__ = "0.9.1"
 # Importing functions from the submodules for direct access
 
 """ Importing sensors """
-from .sensors.uavsar import uavsar_grd,uavsar_mlc
-from .sensors.nisar import nisar_gslc,nisar_rslc
-from .sensors.alos2 import alos2_fbd_l11,alos2_hbq_l11
-from .sensors.alos1 import alos1_l11
-from .sensors.chyaan2 import chyaan2_fp,chyaan2_cp
-from .sensors.rs2_fp import rs2_fp
-from .sensors.isro_asar import isro_asar
-from .sensors.risat import risat_l11
-from .sensors.esar import esar_gtc
-from .sensors.sentinel1 import s1_grd
+from .sensors.uavsar import import_uavsar_grd,import_uavsar_mlc
+from .sensors.nisar import import_nisar_gslc,import_nisar_rslc
+from .sensors.alos2 import import_alos2_fbd_l11,import_alos2_hbq_l11
+from .sensors.alos1 import import_alos1_l11
+from .sensors.chyaan2 import import_chyaan2_fp,import_chyaan2_cp
+from .sensors.rs2_fp import import_rs2_fp
+from .sensors.isro_asar import import_isro_asar
+from .sensors.risat import import_risat_l11
+from .sensors.esar import import_esar_gtc
+from .sensors.sentinel1 import import_s1_grd
 """ Importing preprocessing modules """
 from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip
 from .preprocess.filters import boxcar, rlee
@@ -32,7 +32,7 @@ from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
-from .analysis import signature_fp, halpha_plot_dp, plot_h_a_alpha_fp, pauli_rgb, rgb_dp, plot_h_alpha_fp, \
+from .analysis import signature_fp, plot_h_alpha_dp, plot_h_a_alpha_fp, pauli_rgb, rgb_dp, plot_h_alpha_fp, \
                         rgb, cluster_h_alpha_fp, plot_h_theta_fp,plot_h_theta_cp
 
 """ Importing utils """
@@ -40,14 +40,14 @@ from .utils import time_it, read_rst
 
 __all__ = [
     # SENSORS
-    'uavsar_grd', 'uavsar_mlc','isro_asar',  'esar_gtc',
-    'nisar_gslc', 'nisar_rslc',
-    'alos2_fbd_l11','alos2_hbq_l11', 'chyaan2_fp','chyaan2_cp',
-    'rs2_fp',  
-    'risat_l11','alos1_l11', 's1_grd',
+    'import_uavsar_grd', 'import_uavsar_mlc','import_isro_asar',  'import_esar_gtc',
+    'import_nisar_gslc', 'import_nisar_rslc',
+    'import_alos2_fbd_l11','import_alos2_hbq_l11', 'import_chyaan2_fp','import_chyaan2_cp',
+    'import_rs2_fp',  
+    'import_risat_l11','import_alos1_l11', 'import_s1_grd',
     #
     'signature_fp','pauli_rgb','rgb_dp','plot_h_alpha_fp','plot_h_a_alpha_fp','cluster_h_alpha_fp',
-    'halpha_plot_dp','rgb', 'plot_h_theta_fp','plot_h_theta_cp',
+    'plot_h_alpha_dp','rgb', 'plot_h_theta_fp','plot_h_theta_cp',
     # SPECKEL FILTERS
     'rlee', 'boxcar',
     # UTILS

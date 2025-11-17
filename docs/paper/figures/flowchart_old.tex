@@ -1,3 +1,4 @@
+% \documentclass{article}
 \documentclass[tikz,border=0.1cm]{standalone}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta}
@@ -19,66 +20,62 @@
 }
 
 
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=2.7cm, minimum height=1cm,
-                         text centered, draw=black, fill=gray!20, line width=1pt ]
-\tikzstyle{cat}       = [rectangle, rounded corners, minimum width=2.7cm, minimum height=1cm,
-                         text centered, draw=black, fill=white!10, line width=1pt ]
-\tikzstyle{arrow}     = [thick,->,>=stealth]
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=4cm, minimum height=1cm, text centered, draw=black, fill=gray!20, line width=1pt ]
 \tikzstyle{process} = [rectangle, rounded corners,minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=blue!10, line width=1pt ]
+\tikzstyle{cat} = [rectangle, rounded corners,minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=white!10, line width=1pt ]
+% \tikzstyle{parallel} = [rectangle, minimum width=4.3cm, minimum height=1cm, text centered, draw=black, fill=green!10]
+
+\tikzstyle{decision} = [diamond, aspect=2.2, text centered, draw=black, fill=orange!20, line width=1pt ]
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 \begin{document}
+
+
 \begin{tikzpicture}
 
-% Top node
-\node (start) at (0,0) [startstop] {Input Data};
+% Nodes
+\node (start) at (3,0) [startstop] {Input PolSAR Data};
+\node (decide) at (3,-2) [decision] {Function Type?};
 
-% Three submodules
-\node (processing)   at (-5,-3) [cat] {Processing};
-\node (analysis)      at (0,-3)  [cat] {Analysis};
-\node (vis) at (5.5,-3)  [cat] {Visualization};
-
-% Central vertical arrow
-\draw [arrow] (start.south) -- (analysis.north);
-
-% L-shaped arrows branching left and right
-\draw [arrow, rounded corners] (start.south) -- ++(0,-1) -- (-5,-1.5) -- (processing.north);
-\draw [arrow, rounded corners] (start.south) -- ++(0,-1) -- ( 5.5,-1.5) -- (vis.north);
+\node (analysis) at (-0.5,-4) [cat] {Analysis};
+\node (readplot) at (-0.5,-6) [process] {Read Data};
+\node (genplot) at (-0.5,-8) [process,text width=4.3cm, align=center] {Generate Quick-looks\\or Plots (.png)};
+\node (saveplot) at (-0.5,-10) [startstop,text width=4.3cm, align=center]{Save output (.png)};
 
 
-%% ANALYSIS
-\stackednode{chunk}{0,-5}{4.3cm}{1cm}{Read Data\\ in Chunks}
-\draw[->] (analysis) -- (chunk);
-\stackednode{parallelproc}{0,-7}{4.3cm}{1cm}{Parallel Processing\\ of Chunks}
+\node (processing) at (6.5,-4) [cat] {Processing};
+\stackednode{chunk}{6.5,-6}{4.3cm}{1cm}{Read Data\\ in Chunks}
+\draw[->] (processing) -- (chunk);
+\stackednode{parallelproc}{6.5,-8}{4.3cm}{1cm}{Parallel Processing\\ of Chunks}
 \draw[->] (chunk) -- (parallelproc);
-\stackednode{tempgeotiff}{0,-9}{4.3cm}{1cm}{Write to\\Temp GeoTIFFs}
+\stackednode{tempgeotiff}{6.5,-10}{4.3cm}{1cm}{Write to\\Temp GeoTIFFs}
 \draw[->] (parallelproc) -- (tempgeotiff);
-\node (mosaic) at (0,-11) [process] {Mosaic All output Chunks};
-\node (save)at (0,-13)  [startstop,text width=4.3cm, align=center] {Save Final Raster Output(s)\\(.bin, .tif)};
+\node (mosaic) at (6.5,-12) [process] {Mosaic All output Chunks};
+\node (save)at (6.5,-14)  [startstop,text width=4.3cm, align=center] {Save Final Raster Output(s)\\(.bin, .tif)};
+
+
+% Arrows
+\draw [arrow] (start) -- (decide);
+% \draw [arrow] (decide.west)  -| (analysis.north);
+% \draw [arrow] (decide.east)-|  (processing.north);
+\draw [arrow, rounded corners] (decide.west)  -| (analysis.north);
+\draw [arrow, rounded corners] (decide.east) -| (processing.north);
+
+\draw [arrow] (analysis) -- (readplot);
+\draw [arrow] (analysis) -- (readplot);
+\draw [arrow] (readplot) -- (genplot);
+\draw [arrow] (genplot) -- (saveplot);
+
+
+\draw [arrow] (processing) -- (chunk);
+\draw [arrow] (chunk) -- (parallelproc);
 \draw [arrow] (parallelproc) -- (tempgeotiff);
 \draw [arrow] (tempgeotiff) -- (mosaic);
 \draw [arrow] (mosaic) -- (save);
 
-%% VISUALIZATION
-\node (readplot) at (5.5,-5) [process] {Read Data};
-\node (genplot) at (5.5,-7) [process,text width=4.3cm, align=center] {Generate Quick-looks\\or Plots (.png)};
-\node (saveplot) at (5.5,-9) [startstop,text width=4.3cm, align=center]{Save output (.png)};
-\draw [arrow] (vis) -- (readplot);
-\draw [arrow] (readplot) -- (genplot);
-\draw [arrow] (genplot) -- (saveplot);
-
-
-
-%% Processing
-\node (readplot) at (-5,-5) [process] {Import Data};
-\node (genplot) at (-5,-7) [process,text width=4.3cm, align=center] {Generate standard \ PolSAR matrices};
-\node (saveplot) at (-5,-9) [startstop,text width=4.3cm, align=center]{Save output (.tif/.bin)};
-\draw [arrow] (processing) -- (readplot);
-\draw [arrow] (readplot) -- (genplot);
-\draw [arrow] (genplot) -- (saveplot);
-
 
 % Legend
-\node[draw=white, align=left, fill=white, anchor=north east] at (-3,-10.5) {
+\node[draw=white, align=left, fill=white, anchor=north east] at (1.5,-11.5) {
   \textbf{Legend:} \\
 
     \tikz[baseline]{
@@ -124,7 +121,6 @@
     \node[anchor=west] at (legenditem.east) {~Decision};
     } 
 };
-
 
 
 

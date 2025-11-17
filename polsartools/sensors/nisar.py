@@ -284,7 +284,7 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         calibration_constant=cc
     )
 @time_it 
-def nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
+def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False,
@@ -295,7 +295,7 @@ def nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
 
     Example:
     --------
-    >>> nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
+    >>> import_nisar_gslc("path_to_file.h5", azlks=30, rglks=15)
     This will extract the C2 matrix elements from the dual-pol NISAR GSLC file 
     and save them in the 'C2' folder. or for full-pol 'T3'
     
@@ -381,7 +381,7 @@ def nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
         
 
 @time_it  
-def nisar_rslc(inFile, mat='T3', azlks=22,rglks=10, 
+def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10, 
                fmt='tif', cog=False, ovr = [2, 4, 8, 16], comp=False,
               out_dir=None,
               recip=False,
@@ -392,7 +392,7 @@ def nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
     
     Example:
     --------
-    >>> nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
+    >>> import_nisar_rslc("path_to_file.h5", azlks=30, rglks=15)
     This will extract the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from the specified NISAR RSLC file 
     and save them in the respective folders.
     

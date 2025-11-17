@@ -25,7 +25,7 @@ def get_band_by_pol(pol_name,pol_map,dataset):
     return band.ReadAsArray()
 
 @time_it    
-def alos1_l11(in_dir,mat='T3', azlks=8,rglks=4,
+def import_alos1_l11(in_dir,mat='T3', azlks=8,rglks=4,
                   fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
                   out_dir=None,
                   recip=False,cf_dB=-83):
@@ -36,7 +36,7 @@ def alos1_l11(in_dir,mat='T3', azlks=8,rglks=4,
 
     Example:
     --------
-    >>> alos1_l11("path_to_folder", azlks=5, rglks=3)
+    >>> import_alos1_l11("path_to_folder", azlks=5, rglks=3)
     This will extract the T3 matrix elements from the ALOS-1 Level 1.1 data 
     in the specified folder and save them in the 'C2' directory.
     
