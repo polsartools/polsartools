@@ -6,10 +6,10 @@ from .mf4cf import mf4cf
 from .dop_fp import dop_fp
 from .prvi_fp import prvi_fp
 from .grvi import grvi
-from .neu_fp import neu_fp
+from .neumann_parm import neumann_parm
 from .nned_fp import nned_fp
-from .halpha_fp import halpha_fp
-from .yam4c_fp import yam4c_fp
+from .h_a_alpha_fp import h_a_alpha_fp
+from .yamaguchi_4c import yamaguchi_4c
 from .shannon_h_fp import shannon_h_fp
 from .freeman_3c import freeman_3c
 from .freeman_2c import freeman_2c

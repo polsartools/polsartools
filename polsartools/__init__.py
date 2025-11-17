@@ -25,7 +25,7 @@ from .preprocess.filters import boxcar, rlee
 from .preprocess import prepare_dem, mlook
 
 """ Importing polsar modules """
-from .polsar.fp import grvi, halpha_fp, neu_fp, nned_fp, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yam4c_fp,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
+from .polsar.fp import grvi, h_a_alpha_fp, neumann_parm, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yamaguchi_4c,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
 from .polsar.cp import cprvi, dop_cp, misomega, mf3cc
 from .polsar.dxp import dprvi, dop_dp, prvi_dp, rvi_dp, halpha_dp, shannon_h_dp,dprvic, dp_desc
 from .polsar.dcp import mf3cd
@@ -55,9 +55,9 @@ __all__ = [
     'read_rst', 'time_it',
     'convert_T3_C3', 'convert_C3_T3', 'convert_S', 
     # FULL-POL
-    'grvi', 'rvi_fp', 'mf3cf', 'mf4cf', 'dop_fp', 'prvi_fp', 'neu_fp', 
+    'grvi', 'rvi_fp', 'mf3cf', 'mf4cf', 'dop_fp', 'prvi_fp', 'neumann_parm', 
     'nned_fp', 'freeman_3c','freeman_2c',
-    'halpha_fp', 'shannon_h_fp','yam4c_fp',  'praks_parm_fp','tsvm',
+    'h_a_alpha_fp', 'shannon_h_fp','yamaguchi_4c',  'praks_parm_fp','tsvm',
     # COMPACT-POL
     'cprvi', 'dop_cp', 'misomega', 'mf3cc',                 
     # DUAL-CROSS-POL

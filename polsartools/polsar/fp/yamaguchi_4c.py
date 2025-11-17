@@ -8,7 +8,7 @@ from polsartools.yam4cpp import process_chunk_yam4cpp
 
 
 @time_it
-def yam4c_fp(in_dir,  model="", win=1, fmt="tif", cog=False, 
+def yamaguchi_4c(in_dir,  model="", win=1, fmt="tif", cog=False, 
                     ovr = [2, 4, 8, 16], comp=False, 
                     max_workers=None,block_size=(512, 512),
                     progress_callback=None,  # for QGIS plugin
@@ -24,10 +24,10 @@ def yam4c_fp(in_dir,  model="", win=1, fmt="tif", cog=False,
     Examples
     --------
     >>> # Original Yamaguchi decomposition
-    >>> yam4cfp("/path/to/fullpol_data")
+    >>> yamaguchi_4c("/path/to/fullpol_data")
     
     >>> # Rotation-corrected decomposition
-    >>> yam4c_fp(
+    >>> yamaguchi_4c(
     ...     in_dir="/path/to/fullpol_data",
     ...     model="y4cr",
     ...     win=5,
@@ -36,7 +36,7 @@ def yam4c_fp(in_dir,  model="", win=1, fmt="tif", cog=False,
     ... )
     
     >>> # Extended volume model decomposition
-    >>> yam4c_fp(
+    >>> yamaguchi_4c(
     ...     in_dir="/path/to/fullpol_data",
     ...     model="y4cs",
     ...     win=5

@@ -5,12 +5,12 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import T3_C3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def halpha_fp(in_dir,  win=1, fmt="tif", cog=False, 
+def h_a_alpha_fp(in_dir,  win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp = False,
           max_workers=None,block_size=(512, 512),
             progress_callback=None  # for QGIS plugin
           ):
-    """Perform H/α/A (Entropy/Alpha/Anisotropy) decomposition for full-pol SAR data.
+    """Perform H/A//α (Entropy/Anisotropy/Alpha) decomposition for full-pol SAR data.
 
     This function implements the Cloude-Pottier decomposition, computing entropy (H),
     alpha angle (α), anisotropy (A), and normalized eigenvalues from full-polarimetric
@@ -20,10 +20,10 @@ def halpha_fp(in_dir,  win=1, fmt="tif", cog=False,
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> halpha_fp("/path/to/fullpol_data")
+    >>> h_a_alpha_fp("/path/to/fullpol_data")
     
     >>> # Advanced usage with custom parameters
-    >>> halpha_fp(
+    >>> h_a_alpha_fp(
     ...     in_dir="/path/to/fullpol_data",
     ...     win=5,
     ...     fmt="tif",

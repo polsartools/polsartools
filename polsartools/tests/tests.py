@@ -30,16 +30,16 @@ def cp_processing(compact_c2, chi=45, window_size=3):
 def full_pol_processing(full_T3, window_size=3):
     
     """ Decompositions"""
-    pst.halpha_fp(full_T3, win=window_size)
+    pst.h_a_alpha_fp(full_T3, win=window_size)
     pst.neu_fp(full_T3, win=window_size)
     pst.nned_fp(full_T3, win=window_size)    
     pst.mf3cf(full_T3, win=window_size)
     pst.mf4cf(full_T3, win=window_size)
     pst.freeman_2c(full_T3, win=window_size)
     pst.freeman_3c(full_T3, win=window_size)
-    pst.yam4c_fp(full_T3, win=window_size)
-    pst.yam4c_fp(full_T3, model='y4cr', win=window_size)
-    pst.yam4c_fp(full_T3, model='y4cs', win=window_size)
+    pst.yamaguchi_4c(full_T3, win=window_size)
+    pst.yamaguchi_4c(full_T3, model='y4cr', win=window_size)
+    pst.yamaguchi_4c(full_T3, model='y4cs', win=window_size)
     
     
     
