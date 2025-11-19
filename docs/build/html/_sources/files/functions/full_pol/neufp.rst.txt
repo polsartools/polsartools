@@ -1,5 +1,5 @@
-Neumann decomposition (``neu_fp``)
-==================================
+Neumann decomposition (``neumann_parm``)
+========================================
 
-.. autofunction:: polsartools.neu_fp
+.. autofunction:: polsartools.neumann_parm
    :noindex:

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.rs2_fp &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.sensors.rs2_fp &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/rs2_fp';</script>
@@ -349,14 +349,6 @@
     <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">band1</span><span class="p">,</span><span class="n">band2</span><span class="p">))</span>
 
-<span class="c1"># def write_s2_bin(file,wdata):</span>
-<span class="c1">#     [cols, rows] = wdata.shape</span>
-<span class="c1">#     driver = gdal.GetDriverByName(&quot;ENVI&quot;)</span>
-<span class="c1">#     outdata = driver.Create(file, rows, cols, 1, gdal.GDT_CFloat32)</span>
-<span class="c1">#     outdata.SetDescription(file)</span>
-<span class="c1">#     outdata.GetRasterBand(1).WriteArray(wdata)</span>
-<span class="c1">#     outdata.FlushCache()</span>
-
 <span class="k">def</span><span class="w"> </span><span class="nf">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">,</span>
                 <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
                 <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -404,43 +396,21 @@
     <span class="k">if</span> <span class="n">mat</span> <span class="o">==</span> <span class="s1">&#39;S2&#39;</span> <span class="ow">or</span> <span class="n">mat</span> <span class="o">==</span> <span class="s1">&#39;Sxy&#39;</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">out_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># def write_rst(file,wdata,dtype,cog=False, ovr=[2, 4, 8, 16], comp=False):</span>
-<span class="c1">#     [cols, rows] = wdata.shape</span>
-<span class="c1">#     if &#39;.bin&#39; in file:</span>
-<span class="c1">#         driver = gdal.GetDriverByName(&quot;ENVI&quot;)</span>
-<span class="c1">#         outdata = driver.Create(file, rows, cols, 1, dtype)</span>
-<span class="c1">#     else:</span>
-<span class="c1">#         driver = gdal.GetDriverByName(&quot;GTiff&quot;)</span>
-<span class="c1">#         options = [&#39;BIGTIFF=IF_SAFER&#39;]</span>
-<span class="c1">#         if comp:</span>
-<span class="c1">#         # options += [&#39;COMPRESS=DEFLATE&#39;, &#39;PREDICTOR=2&#39;, &#39;ZLEVEL=9&#39;]</span>
-<span class="c1">#             options += [&#39;COMPRESS=LZW&#39;]</span>
-<span class="c1">#         if cog:</span>
-<span class="c1">#             options += [&#39;TILED=YES&#39;, &#39;BLOCKXSIZE=512&#39;, &#39;BLOCKYSIZE=512&#39;]</span>
-<span class="c1">#         outdata = driver.Create(file, rows, cols, 1, dtype, options)</span>
-    
 
-<span class="c1">#     outdata.SetDescription(file)</span>
-<span class="c1">#     outdata.GetRasterBand(1).WriteArray(wdata)</span>
-<span class="c1">#     outdata.FlushCache() </span>
-<span class="c1">#     outdata=None</span>
-
-
-<div class="viewcode-block" id="rs2_fp">
-<a class="viewcode-back" href="../../../files/sensors/radarsat2.html#polsartools.rs2_fp">[docs]</a>
+<div class="viewcode-block" id="import_rs2_fp">
+<a class="viewcode-back" href="../../../files/sensors/radarsat2.html#polsartools.import_rs2_fp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">rs2_fp</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_rs2_fp</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span>
            <span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
             <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
            <span class="n">bsc</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span> <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
            <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
            <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.</span>
+<span class="sd">    Process radarsat-2 image data and generate the specified matrix (&#39;S2&#39;, &#39;C4&#39;, &#39;C3&#39;, &#39;T4&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;) from the input imagery files.</span>
 
 <span class="sd">    This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (`in_dir`) </span>
-<span class="sd">    and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory</span>
-<span class="sd">    (`S2`, `T3`, or `C3`). The function uses lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`) for scaling </span>
+<span class="sd">    and calculates either the &#39;S2&#39;, &#39;C4&#39;, &#39;C3&#39;, &#39;T4&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39; matrix. The resulting matrix is then saved in a corresponding directory. The function uses lookup tables (`lutSigma.xml`, `lutGamma.xml`, `lutBeta.xml`) for scaling </span>
 <span class="sd">    the data based on the chosen backscatter coefficient `bsc` (sigma0, gamma0, or beta0). The processed data is written into binary files </span>
 <span class="sd">    in the output folder.</span>
 
@@ -450,13 +420,13 @@
 <span class="sd">    </span>
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        rs2_fp(&quot;/path/to/data&quot;, mat=&quot;T3&quot;, bsc=&quot;sigma0&quot;)</span>
+<span class="sd">        import_rs2_fp(&quot;/path/to/data&quot;, mat=&quot;T3&quot;, bsc=&quot;sigma0&quot;)</span>
 
 <span class="sd">    To process imagery and generate a C3 matrix:</span>
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        rs2_fp(&quot;/path/to/data&quot;, mat=&quot;C3&quot;, bsc=&quot;beta0&quot;, azlks=10, rglks=3)</span>
+<span class="sd">        import_rs2_fp(&quot;/path/to/data&quot;, mat=&quot;C3&quot;, bsc=&quot;beta0&quot;, azlks=10, rglks=3)</span>
 <span class="sd">        </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
@@ -591,200 +561,6 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not delete temporary directory </span><span class="si">{</span><span class="n">temp_dir</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-
-
-
-
-
-    <span class="c1"># if mat == &#39;S2&#39;:</span>
-    <span class="c1">#     if out_dir is None:</span>
-    <span class="c1">#         out_dir = os.path.join(in_dir,&quot;S2&quot;)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         out_dir = os.path.join(out_dir,&quot;S2&quot;)</span>
-            
-    <span class="c1">#     os.makedirs(out_dir,exist_ok=True)</span>
-
-    <span class="c1">#     print(&quot;Considering S12 = S21&quot;)</span>
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_HH.tif&quot;)</span>
-    <span class="c1">#     data = read_rs2_tif(inFile)</span>
-    <span class="c1">#     if fmt==&#39;bin&#39;:</span>
-    <span class="c1">#         out_file = os.path.join(out_dir,&#39;s11.bin&#39;)</span>
-    <span class="c1">#         write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         out_file = os.path.join(out_dir,&#39;s11.tif&#39;)</span>
-    <span class="c1">#         write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)</span>
-    <span class="c1">#     print(&quot;Saved file &quot;+out_file)</span>
-        
-    <span class="c1">#     rows,cols,_ = data.shape</span>
-        
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_HV.tif&quot;)</span>
-    <span class="c1">#     data_xy = read_rs2_tif(inFile)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_VH.tif&quot;)</span>
-    <span class="c1">#     data_yx = read_rs2_tif(inFile)</span>
-
-    <span class="c1">#     if recip:</span>
-    <span class="c1">#         data = (data_xy+data_yx)*0.5</span>
-    <span class="c1">#         del data_xy,data_yx</span>
-
-    <span class="c1">#         if fmt==&#39;bin&#39;:</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s12.bin&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s21.bin&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#         else:</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s12.tif&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s21.tif&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         if fmt==&#39;bin&#39;:</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s12.bin&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data_xy[:,:,0]/lut+1j*(data_xy[:,:,1]/lut),gdal.GDT_CFloat32)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s21.bin&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data_yx[:,:,0]/lut+1j*(data_yx[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#         else:</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s12.tif&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data_xy[:,:,0]/lut+1j*(data_xy[:,:,1]/lut),gdal.GDT_CFloat32)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#             out_file = os.path.join(out_dir,&#39;s21.tif&#39;)</span>
-    <span class="c1">#             write_rst(out_file,data_yx[:,:,0]/lut+1j*(data_yx[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)</span>
-    <span class="c1">#             print(&quot;Saved file &quot;+out_file)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_VV.tif&quot;)</span>
-    <span class="c1">#     data = read_rs2_tif(inFile)</span>
-        
-    <span class="c1">#     if fmt==&#39;bin&#39;:</span>
-    <span class="c1">#         out_file = os.path.join(out_dir,&#39;s22.bin&#39;)</span>
-    <span class="c1">#         write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32)</span>
-    <span class="c1">#         print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         out_file = os.path.join(out_dir,&#39;s22.tif&#39;)</span>
-    <span class="c1">#         write_rst(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut),gdal.GDT_CFloat32,cog= cog, ovr=ovr, comp=comp)</span>
-    <span class="c1">#         print(&quot;Saved file &quot;+out_file)</span>
-    <span class="c1">#     # out_file = os.path.join(out_dir,&#39;s22.bin&#39;)</span>
-    <span class="c1">#     # write_s2_bin(out_file,data[:,:,0]/lut+1j*(data[:,:,1]/lut))</span>
-    <span class="c1">#     # print(&quot;Saved file &quot;+out_file)</span>
-        
-    <span class="c1">#     file = open(out_dir +&#39;/config.txt&#39;,&quot;w+&quot;)</span>
-    <span class="c1">#     file.write(&#39;Nrow\n%d\n---------\nNcol\n%d\n---------\nPolarCase\nmonostatic\n---------\nPolarType\nfull&#39;%(rows,cols))</span>
-    <span class="c1">#     file.close() </span>
-        
-    <span class="c1"># elif mat == &#39;T3&#39;:</span>
-    <span class="c1">#     # print(&quot;Considering S12 = S21&quot;)</span>
-    <span class="c1">#     # Kp- 3-D Pauli feature vector</span>
-    <span class="c1">#     # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[1,0]])</span>
-    <span class="c1">#     # Kp = (1/np.sqrt(2))*np.array([S2[0,0]+S2[1,1], S2[0,0]-S2[1,1], S2[0,1]])</span>
-        
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_HH.tif&quot;)</span>
-    <span class="c1">#     data = read_rs2_tif(inFile)</span>
-    <span class="c1">#     s11 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_HV.tif&quot;)</span>
-    <span class="c1">#     data_xy = read_rs2_tif(inFile)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_VH.tif&quot;)</span>
-    <span class="c1">#     data_yx = read_rs2_tif(inFile)</span>
-    <span class="c1">#     # Symmetry assumption</span>
-    <span class="c1">#     data = (data_xy+data_yx)*0.5</span>
-    <span class="c1">#     del data_xy,data_yx</span>
-    <span class="c1">#     s12 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_VV.tif&quot;)</span>
-    <span class="c1">#     data = read_rs2_tif(inFile)</span>
-    <span class="c1">#     s22 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)</span>
-
-    <span class="c1">#     Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, 2*s12])</span>
-
-    <span class="c1">#     del s11,s12,s22</span>
-
-    <span class="c1">#     # 3x3 Pauli Coherency Matrix elements</span>
-    <span class="c1">#     T11 = mlook_arr(np.abs(Kp[0])**2,azlks,rglks).astype(np.float32)</span>
-    <span class="c1">#     T22 = mlook_arr(np.abs(Kp[1])**2,azlks,rglks).astype(np.float32)</span>
-    <span class="c1">#     T33 = mlook_arr(np.abs(Kp[2])**2,azlks,rglks).astype(np.float32)</span>
-
-    <span class="c1">#     T12 = mlook_arr(Kp[0]*np.conj(Kp[1]),azlks,rglks).astype(np.complex64)</span>
-    <span class="c1">#     T13 = mlook_arr(Kp[0]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)</span>
-    <span class="c1">#     T23 = mlook_arr(Kp[1]*np.conj(Kp[2]),azlks,rglks).astype(np.complex64)</span>
-
-    <span class="c1">#     del Kp</span>
-    <span class="c1">#     if out_dir is None:</span>
-    <span class="c1">#         out_dir = os.path.join(in_dir,&quot;T3&quot;)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         out_dir = os.path.join(out_dir,&quot;T3&quot;)</span>
-    <span class="c1">#     os.makedirs(out_dir,exist_ok=True)</span>
-    <span class="c1">#     # T3Folder = os.path.join(in_dir,&#39;T3&#39;)</span>
-
-    <span class="c1">#     # if not os.path.isdir(T3Folder):</span>
-    <span class="c1">#     #     print(&quot;T3 folder does not exist. \nCreating folder {}&quot;.format(T3Folder))</span>
-    <span class="c1">#     #     os.mkdir(T3Folder)</span>
-            
-    <span class="c1">#     # write_T3(np.dstack([T11,T12,T13,np.conjugate(T12),T22,T23,np.conjugate(T13),np.conjugate(T23),T33]),T3Folder)</span>
-    <span class="c1">#     write_T3([np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13),</span>
-    <span class="c1">#               np.real(T22),np.real(T23),np.imag(T23),</span>
-    <span class="c1">#               np.real(T33)],out_dir)</span>
-        
-        
-    <span class="c1"># elif mat == &#39;C3&#39;:</span>
-    <span class="c1">#     # print(&quot;Considering S12 = S21&quot;)</span>
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_HH.tif&quot;)</span>
-    <span class="c1">#     data = read_rs2_tif(inFile)</span>
-    <span class="c1">#     s11 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_HV.tif&quot;)</span>
-    <span class="c1">#     data_xy = read_rs2_tif(inFile)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_VH.tif&quot;)</span>
-    <span class="c1">#     data_yx = read_rs2_tif(inFile)</span>
-    <span class="c1">#     # Symmetry assumption</span>
-    <span class="c1">#     data = (data_xy+data_yx)*0.5</span>
-    <span class="c1">#     del data_xy,data_yx</span>
-    <span class="c1">#     s12 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)</span>
-
-    <span class="c1">#     inFile = os.path.join(in_dir,&quot;imagery_VV.tif&quot;)</span>
-    <span class="c1">#     data = read_rs2_tif(inFile)</span>
-    <span class="c1">#     s22 = data[:,:,0]/lut+1j*(data[:,:,1]/lut)</span>
-
-    <span class="c1">#     # Kl- 3-D Lexicographic feature vector</span>
-    <span class="c1">#     Kl = np.array([s11, np.sqrt(2)*s12, s22])</span>
-    <span class="c1">#     del s11,s12,s22</span>
-
-    <span class="c1">#     # 3x3 COVARIANCE Matrix elements</span>
-
-    <span class="c1">#     C11 = mlook_arr(np.abs(Kl[0])**2,azlks,rglks).astype(np.float32)</span>
-    <span class="c1">#     C22 = mlook_arr(np.abs(Kl[1])**2,azlks,rglks).astype(np.float32)</span>
-    <span class="c1">#     C33 = mlook_arr(np.abs(Kl[2])**2,azlks,rglks).astype(np.float32)</span>
-
-    <span class="c1">#     C12 = mlook_arr(Kl[0]*np.conj(Kl[1]),azlks,rglks).astype(np.complex64)</span>
-    <span class="c1">#     C13 = mlook_arr(Kl[0]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)</span>
-    <span class="c1">#     C23 = mlook_arr(Kl[1]*np.conj(Kl[2]),azlks,rglks).astype(np.complex64)</span>
-
-    <span class="c1">#     if out_dir is None:</span>
-    <span class="c1">#         out_dir = os.path.join(in_dir,&quot;C3&quot;)</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         out_dir = os.path.join(out_dir,&quot;C3&quot;)</span>
-    <span class="c1">#     os.makedirs(out_dir,exist_ok=True)</span>
-        
-    <span class="c1">#     # C3Folder = os.path.join(in_dir,&#39;C3&#39;)</span>
-
-    <span class="c1">#     # if not os.path.isdir(C3Folder):</span>
-    <span class="c1">#     #     print(&quot;C3 folder does not exist. \nCreating folder {}&quot;.format(C3Folder))</span>
-    <span class="c1">#     #     os.mkdir(C3Folder)</span>
-        
-    <span class="c1">#     # write_C3(np.dstack([C11,C12,C13,np.conjugate(C12),C22,C23,np.conjugate(C13),np.conjugate(C23),C33]),C3Folder)</span>
-    <span class="c1">#     write_C3([np.real(C11),np.real(C12),np.imag(C12),np.real(C13),np.imag(C13),</span>
-    <span class="c1">#               np.real(C22),np.real(C23),np.imag(C23),</span>
-    <span class="c1">#               np.real(C33)],out_dir)</span>
-        
-        
-    <span class="c1"># else:</span>
-    <span class="c1">#     raise ValueError(&#39;Invalid matrix type. Valid types are &quot;S2&quot;, &quot;T3&quot; and &quot;C3&quot;&#39;)</span>
 </pre></div>
 
                 </article>
@@ -826,7 +602,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Refined-Lee filter (rlee) &#8212; PolSARtools 0.9 documentation</title>
+    <title>Refined-Lee filter (filter_refined_lee) &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/speckle_filts';</script>
@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Clip PolSAR data (clip)" href="preprocess/clip.html" />
-    <link rel="prev" title="Compact-pol H-theta plot (htheta_plot_cp)" href="analysis/htheta_plot_cp.html" />
+    <link rel="prev" title="Compact-pol H-theta plot (plot_h_theta_cp)" href="analysis/htheta_plot_cp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -312,7 +312,7 @@
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">s_omega</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</a></li>
 </ul>
@@ -331,19 +331,19 @@
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
 
 </ul>
 <ul class="nav bd-sidenav">
@@ -397,7 +397,7 @@
     
     <li class="breadcrumb-item"><a href="../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -414,23 +414,23 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="refined-lee-filter-rlee">
-<h1>Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)<a class="headerlink" href="#refined-lee-filter-rlee" title="Link to this heading">#</a></h1>
+  <section id="refined-lee-filter-filter-refined-lee">
+<h1>Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)<a class="headerlink" href="#refined-lee-filter-filter-refined-lee" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rlee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#rlee"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Apply Refined Lee (RLee) speckle filter to polarimetric SAR data.</p>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">filter_refined_lee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#filter_refined_lee"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Apply Refined Lee speckle filter to polarimetric SAR data.</p>
 <p>The Refined Lee filter is an adaptive speckle filter that preserves edges and
 structural details while reducing noise. Unlike Boxcar, RLee dynamically adjusts
 based on local statistics, making it more suitable for classification,
 segmentation, and biophysical retrieval tasks.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rlee</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filter_refined_lee</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Custom usage with large window and tiled COG output</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rlee</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filter_refined_lee</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -457,11 +457,11 @@ segmentation, and biophysical retrieval tasks.</p>
 </dd></dl>
 
 </section>
-<section id="boxcar-filter-boxcar">
-<h1>Boxcar filter (<code class="docutils literal notranslate"><span class="pre">boxcar</span></code>)<a class="headerlink" href="#boxcar-filter-boxcar" title="Link to this heading">#</a></h1>
+<section id="boxcar-filter-filter-boxcar">
+<h1>Boxcar filter (<code class="docutils literal notranslate"><span class="pre">filter_boxcar</span></code>)<a class="headerlink" href="#boxcar-filter-filter-boxcar" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">boxcar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#boxcar"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">filter_boxcar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/preprocess/filters.html#filter_boxcar"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Apply a Boxcar speckle filter to polarimetric SAR data to reduce speckle noise.</p>
 <p>The Boxcar filter performs a uniform mean filter over a square window, effectively
 smoothing the polarimetric matrix to enhance interpretability. It is a fast,
@@ -469,11 +469,11 @@ straightforward speckle reduction technique suitable for preprocessing and
 visualization.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">boxcar</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filter_boxcar</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># With custom window size and output as GeoTIFF</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">boxcar</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filter_boxcar</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -517,7 +517,7 @@ visualization.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</p>
+        <p class="prev-next-title">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
@@ -548,8 +548,8 @@ visualization.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#boxcar-filter-boxcar">Boxcar filter (<code class="docutils literal notranslate"><span class="pre">boxcar</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#boxcar-filter-filter-boxcar">Boxcar filter (<code class="docutils literal notranslate"><span class="pre">filter_boxcar</span></code>)</a></li>
 </ul>
 
   </nav></div>

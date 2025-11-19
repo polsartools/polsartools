@@ -2,18 +2,18 @@
 ==========
 
 
-GRD (``uavsar_grd``)
----------------------
+GRD (``import_uavsar_grd``)
+---------------------------
 
-The `uavsar_grd` function extracts matrix elements (C3 or T3) from the given UAVSAR `.ann` file and saves them into respective directories (C3 or T3).
+The `import_uavsar_grd` function extracts matrix elements (C3 or T3) from the given UAVSAR `.ann` file and saves them into respective directories (C3 or T3).
 
-.. autofunction:: polsartools.uavsar_grd
+.. autofunction:: polsartools.import_uavsar_grd
    :noindex:
 
-MLC (``uavsar_mlc``)
----------------------
+MLC (``import_uavsar_mlc``)
+----------------------------
 
-The `uavsar_mlc` function extracts matrix elements (C3 or T3) from the given UAVSAR `.ann` file and saves them into respective directories (C3 or T3).
+The `import_uavsar_mlc` function extracts matrix elements (C3 or T3) from the given UAVSAR `.ann` file and saves them into respective directories (C3 or T3).
 
-.. autofunction:: polsartools.uavsar_mlc
+.. autofunction:: polsartools.import_uavsar_mlc
    :noindex:

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.fp_sign &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.analysis.signature_fp &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,10 +37,10 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/fp_sign';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/signature_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.analysis.fp_sign</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.analysis.signature_fp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,7 +332,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.analysis.fp_sign</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.analysis.signature_fp</h1><div class="highlight"><pre>
 <span></span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.plot_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">pol_sign</span><span class="p">,</span> <span class="n">pol_sign2d</span><span class="p">,</span> <span class="n">poincare_plot</span><span class="p">,</span><span class="n">poincare_sphere</span>
@@ -455,9 +455,9 @@
     <span class="k">return</span> <span class="n">cp_sign</span><span class="p">,</span> <span class="n">xp_sign</span>
 
 
-<div class="viewcode-block" id="fp_sign">
-<a class="viewcode-back" href="../../../files/functions/analysis.html#polsartools.fp_sign">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fp_sign</span><span class="p">(</span><span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">pname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span><span class="n">plotType</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<div class="viewcode-block" id="signature_fp">
+<a class="viewcode-back" href="../../../files/functions/analysis.html#polsartools.signature_fp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">signature_fp</span><span class="p">(</span><span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">pname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span><span class="n">plotType</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_index</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates and visualizes polarimetric signatures from a 2x2 scattering matrix (S2) or a 3x3 coherency matrix (T3).</span>
@@ -465,7 +465,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; mat = np.array([[1, 0], [0, 1]]) # Trihedral</span>
-<span class="sd">    &gt;&gt;&gt; fp_sign(mat, title=&#39;Trihedral&#39;, plotType=1)</span>
+<span class="sd">    &gt;&gt;&gt; signature_fp(mat, title=&#39;Trihedral&#39;, plotType=1)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -490,19 +490,6 @@
 <span class="sd">        - 3: Poincaré sphere mapping via `poincare_plot`.</span>
 <span class="sd">        - 4: Render empty or canonical Poincaré sphere via `poincare_sphere` (S2 not required).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># if S2 is not None:</span>
-    <span class="c1">#     cp_sign, xp_sign = prepare_data(S2)</span>
-    <span class="c1"># if plotType==4:</span>
-    <span class="c1">#     poincare_sphere(pname=pname)</span>
-    <span class="c1"># elif S2 is not None and plotType==3:</span>
-    <span class="c1">#     poincare_plot(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)</span>
-    <span class="c1"># elif S2 is not None and plotType==2:</span>
-    <span class="c1">#     pol_sign2d(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap)</span>
-    <span class="c1"># else:</span>
-    <span class="c1">#     figout, axesout = pol_sign(cp_sign, xp_sign, title=title, pname=pname,cmap=cmap,</span>
-    <span class="c1">#         fig=fig, axes=axes, start_index=start_index)</span>
-
-    <span class="c1">#     return figout, axesout</span>
 
     <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">mat</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
@@ -601,7 +588,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

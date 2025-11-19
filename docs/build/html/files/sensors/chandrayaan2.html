@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>🔸Chandrayaan-II (DFSAR) &#8212; PolSARtools 0.9 documentation</title>
+    <title>🔸Chandrayaan-II (DFSAR) &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/sensors/chandrayaan2';</script>
@@ -358,17 +358,17 @@
                   
   <section id="chandrayaan-ii-dfsar">
 <h1>🔸Chandrayaan-II (DFSAR)<a class="headerlink" href="#chandrayaan-ii-dfsar" title="Link to this heading">#</a></h1>
-<section id="full-pol-chyaan2-fp">
-<h2>Full-pol (<code class="docutils literal notranslate"><span class="pre">chyaan2_fp</span></code>)<a class="headerlink" href="#full-pol-chyaan2-fp" title="Link to this heading">#</a></h2>
-<p>The <cite>chyaan2_fp</cite> function extracts matrix elements (S2, C3 or T3) from the given Chandrayaan-II folder and saves them into respective directories (S2, C3 or T3).</p>
+<section id="full-pol-import-chyaan2-fp">
+<h2>Full-pol (<code class="docutils literal notranslate"><span class="pre">import_chyaan2_fp</span></code>)<a class="headerlink" href="#full-pol-import-chyaan2-fp" title="Link to this heading">#</a></h2>
+<p>The <cite>import_chyaan2_fp</cite> function extracts matrix elements (S2/C4/T4/C3/T3/C2/T2 ) from the given Chandrayaan-II folder and saves them into respective directories (S2, C3 or T3).</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">chyaan2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#chyaan2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_chyaan2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#import_chyaan2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts specified matrix elements (S2, T3, or C3) from Chandrayaan-II DFSAR Full-Pol data
 and saves them into respective directories.</p>
 <section id="example">
 <h3>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chyaan2_fp</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">import_chyaan2_fp</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="go">This will extract the T3 matrix elements from the Chandrayaan-II DFSAR Full-Pol data</span>
 <span class="go">in the specified folder and save them in the &#39;T3&#39; directory.</span>
 </pre></div>
@@ -401,6 +401,52 @@ the ground range and output line spacing.</p>
 in the same location as the input file.</p>
 </dd>
 <dt>recip<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="compact-pol-import-chyaan2-cp">
+<h2>Compact-pol (<code class="docutils literal notranslate"><span class="pre">import_chyaan2_cp</span></code>)<a class="headerlink" href="#compact-pol-import-chyaan2-cp" title="Link to this heading">#</a></h2>
+<p>The <cite>import_chyaan2_cp</cite> function extracts matrix elements (Sxy, or C2) from the given Chandrayaan-II compact-pol folder and saves them into respective directories.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_chyaan2_cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/chyaan2.html#import_chyaan2_cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts specified matrix elements (Sxy, C2) from Chandrayaan-II DFSAR Compact-Pol data
+and saves them into respective directories.</p>
+<section id="id1">
+<h3>Example:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">import_chyaan2_cp</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">This will extract the C2 matrix elements from the Chandrayaan-II DFSAR Compact-Pol data</span>
+<span class="go">in the specified folder and save them in the &#39;C2&#39; directory.</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Parameters:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>in_dir<span class="classifier">str</span></dt><dd><p>The path to the folder containing the Chandrayaan-II DFSAR Compact-Pol data files.</p>
+</dd>
+<dt>mat<span class="classifier">str, optional (default=’C2’)</span></dt><dd><p>Type of matrix to extract. Valid options: ‘Sxy’, ‘C2’</p>
+</dd>
+<dt>azlks<span class="classifier">int, optional (default=None)</span></dt><dd><p>The number of azimuth looks for multi-looking. If not specified, the value is derived from
+the ground range and output line spacing.</p>
+</dd>
+<dt>rglks<span class="classifier">int, optional (default=None)</span></dt><dd><p>The number of range looks for multi-looking. If not specified, the value is set to 1.</p>
+</dd>
+<dt>fmt<span class="classifier">{‘tif’, ‘bin’}, optional (default=’tif’)</span></dt><dd><p>Output format:
+- ‘tif’: GeoTIFF
+- ‘bin’: Raw binary format</p>
+</dd>
+<dt>cog<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</p>
+</dd>
+<dt>ovr<span class="classifier">list of int, optional (default=[2, 4, 8, 16])</span></dt><dd><p>Overview levels for COG generation. Ignored if cog=False.</p>
+</dd>
+<dt>comp<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, applies LZW compression to GeoTIFF outputs.</p>
+</dd>
+<dt>out_dir<span class="classifier">str or None, optional (default=None)</span></dt><dd><p>Directory to save output files. If None, a folder named after the matrix type will be created
+in the same location as the input file.</p>
 </dd>
 </dl>
 </section>
@@ -456,7 +502,8 @@ in the same location as the input file.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-pol-chyaan2-fp">Full-pol (<code class="docutils literal notranslate"><span class="pre">chyaan2_fp</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-pol-import-chyaan2-fp">Full-pol (<code class="docutils literal notranslate"><span class="pre">import_chyaan2_fp</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compact-pol-import-chyaan2-cp">Compact-pol (<code class="docutils literal notranslate"><span class="pre">import_chyaan2_cp</span></code>)</a></li>
 </ul>
   </nav></div>
 

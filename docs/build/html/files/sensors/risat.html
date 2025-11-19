@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>🔸RISAT-1A &#8212; PolSARtools 0.9 documentation</title>
+    <title>🔸RISAT-1A &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/sensors/risat';</script>
@@ -358,18 +358,18 @@
                   
   <section id="risat-1a">
 <h1>🔸RISAT-1A<a class="headerlink" href="#risat-1a" title="Link to this heading">#</a></h1>
-<section id="level-1-1-risat-l11">
-<h2>Level 1.1 (<code class="docutils literal notranslate"><span class="pre">risat_l11</span></code>)<a class="headerlink" href="#level-1-1-risat-l11" title="Link to this heading">#</a></h2>
-<p>The <cite>risat_l11</cite> function extracts Sxy/C2 matrix elements from the given RISAT product folder and saves them into a directory.</p>
+<section id="level-1-1-import-risat-l11">
+<h2>Level 1.1 (<code class="docutils literal notranslate"><span class="pre">import_risat_l11</span></code>)<a class="headerlink" href="#level-1-1-import-risat-l11" title="Link to this heading">#</a></h2>
+<p>The <cite>import_risat_l11</cite> function extracts Sxy/C2 matrix elements from the given RISAT product folder and saves them into a directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">risat_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/risat.html#risat_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_risat_l11</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/risat.html#import_risat_l11"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts Sxy or C2 matrix elements from RISAT-1A compact-pol SLC data and saves them as raster files.</p>
 <p>This function performs multi-looking using specified azimuth and range looks, and outputs matrix elements
 in either GeoTIFF or binary format. It also extracts the incidence angle map and saves it alongside the matrix outputs.
 Optional support for Cloud Optimized GeoTIFFs (COGs), compression, and custom output directories.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">risat_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">import_risat_l11</span><span class="p">(</span><span class="s2">&quot;path_to_folder&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
 <span class="go">Extracts C2 matrix elements and the incidence angle map from RISAT-1A SLC data and saves them as GeoTIFFs.</span>
 </pre></div>
 </div>
@@ -445,7 +445,7 @@ in the same location as the input folder.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#level-1-1-risat-l11">Level 1.1 (<code class="docutils literal notranslate"><span class="pre">risat_l11</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#level-1-1-import-risat-l11">Level 1.1 (<code class="docutils literal notranslate"><span class="pre">import_risat_l11</span></code>)</a></li>
 </ul>
   </nav></div>
 

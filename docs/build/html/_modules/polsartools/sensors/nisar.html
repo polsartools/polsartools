@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/nisar';</script>
@@ -618,10 +618,8 @@
         <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
         <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
     <span class="p">)</span>
-<div class="viewcode-block" id="nisar_gslc">
-<a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_gslc">[docs]</a>
 <span class="nd">@time_it</span> 
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_nisar_gslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
              <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -632,7 +630,7 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; nisar_gslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
+<span class="sd">    &gt;&gt;&gt; import_nisar_gslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
 <span class="sd">    This will extract the C2 matrix elements from the dual-pol NISAR GSLC file </span>
 <span class="sd">    and save them in the &#39;C2&#39; folder. or for full-pol &#39;T3&#39;</span>
 <span class="sd">    </span>
@@ -714,14 +712,13 @@
     <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
         <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-        <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
-
+        <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span>
         
 
-<div class="viewcode-block" id="nisar_rslc">
-<a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_rslc">[docs]</a>
+<div class="viewcode-block" id="import_nisar_rslc">
+<a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.import_nisar_rslc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">import_nisar_rslc</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -732,7 +729,7 @@
 <span class="sd">    </span>
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; nisar_rslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
+<span class="sd">    &gt;&gt;&gt; import_nisar_rslc(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
 <span class="sd">    This will extract the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from the specified NISAR RSLC file </span>
 <span class="sd">    and save them in the respective folders.</span>
 <span class="sd">    </span>
@@ -845,7 +842,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.esar &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.sensors.esar &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/esar';</script>
@@ -543,10 +543,10 @@
 
 
 
-<div class="viewcode-block" id="esar_gtc">
-<a class="viewcode-back" href="../../../files/sensors/esar.html#polsartools.esar_gtc">[docs]</a>
+<div class="viewcode-block" id="import_esar_gtc">
+<a class="viewcode-back" href="../../../files/sensors/esar.html#polsartools.import_esar_gtc">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">esar_gtc</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;S2&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_esar_gtc</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;S2&#39;</span><span class="p">,</span>
              <span class="n">azlks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
              <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -558,7 +558,7 @@
 <span class="sd">    </span>
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; esar_gtc(&quot;path_to_folder&quot;, mat=&#39;C3&#39;, azlks=3, rglks=3)</span>
+<span class="sd">    &gt;&gt;&gt; import_esar_gtc(&quot;path_to_folder&quot;, mat=&#39;C3&#39;, azlks=3, rglks=3)</span>
 <span class="sd">    This will extract the C3 from full-pol ESAR GTC SLC data and save them as geotiff files.</span>
 <span class="sd">    Additionally, it will also extract the incidence angle map and save it as a geotiff file.</span>
 <span class="sd">    </span>
@@ -753,7 +753,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

@@ -1,15 +1,15 @@
 
-Generate pauliRGB for FP data (``pauliRGB``)
---------------------------------------------
+Generate Pauli RGB for FP data (``pauli_rgb``)
+----------------------------------------------
 
-.. autofunction:: polsartools.pauliRGB
+.. autofunction:: polsartools.pauli_rgb
    :noindex:
 
 
-Generate false color RGB for DP/CP data (``dxpRGB``)
-----------------------------------------------------
+Generate false color RGB for DP/CP data (``rgb_dp``)
+-----------------------------------------------------
 
-.. autofunction:: polsartools.dxpRGB
+.. autofunction:: polsartools.rgb_dp
    :noindex:
 
 Generate false color RGB for decomposed powers (``rgb``)
@@ -19,8 +19,8 @@ Generate false color RGB for decomposed powers (``rgb``)
    :noindex:
 
 
-Generate polarimetric signatures for FP data (``fp_sign``)
-----------------------------------------------------------
+Generate polarimetric signatures for FP data (``signature_fp``)
+----------------------------------------------------------------
 
-.. autofunction:: polsartools.fp_sign
+.. autofunction:: polsartools.signature_fp
    :noindex:

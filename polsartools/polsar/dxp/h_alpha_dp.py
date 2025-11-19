@@ -4,7 +4,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .dxp_infiles import dxpc2files
 @time_it
-def halpha_dp(in_dir,  win=1, fmt="tif", 
+def h_alpha_dp(in_dir,  win=1, fmt="tif", 
              cog=False, ovr = [2, 4, 8, 16], comp=False,
              max_workers=None,block_size=(512, 512),
              progress_callback=None,  # for QGIS plugin          
@@ -16,7 +16,7 @@ def halpha_dp(in_dir,  win=1, fmt="tif",
 
     Example:
     --------
-    >>> halpha_dp("path_to_C2_folder", win=5, fmt="tif", cog=True)
+    >>> h_alpha_dp("path_to_C2_folder", win=5, fmt="tif", cog=True)
     This will compute Entropy and alpha parameters from the C2 matrix in the specified folder,
     generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.
     

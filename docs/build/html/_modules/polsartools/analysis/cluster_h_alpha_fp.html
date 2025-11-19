@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.halpha_cluster_fp &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.analysis.cluster_h_alpha_fp &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,10 +37,10 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/halpha_cluster_fp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/cluster_h_alpha_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.analysis.halpha_cluster_fp</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.analysis.cluster_h_alpha_fp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,16 +332,16 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.analysis.halpha_cluster_fp</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.analysis.cluster_h_alpha_fp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">read_rst</span>
 
-<div class="viewcode-block" id="halpha_cluster_fp">
-<a class="viewcode-back" href="../../../files/functions/analysis/halpha_cluster_fp.html#polsartools.halpha_cluster_fp">[docs]</a>
+<div class="viewcode-block" id="cluster_h_alpha_fp">
+<a class="viewcode-back" href="../../../files/functions/analysis/halpha_cluster_fp.html#polsartools.cluster_h_alpha_fp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">halpha_cluster_fp</span><span class="p">(</span><span class="n">hFile</span><span class="p">,</span><span class="n">alphaFile</span> <span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">cluster_h_alpha_fp</span><span class="p">(</span><span class="n">hFile</span><span class="p">,</span><span class="n">alphaFile</span> <span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
           <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
           <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
@@ -352,7 +352,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
-<span class="sd">    &gt;&gt;&gt; halpha_cluster_fp(&quot;h_fp.tif&quot;, &quot;alpha_fp.tif&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; cluster_h_alpha_fp(&quot;h_fp.tif&quot;, &quot;alpha_fp.tif&quot;)</span>
 <span class="sd">    </span>
 <span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
 <span class="sd">    &gt;&gt;&gt; halpha_cluster_fp(</span>
@@ -530,7 +530,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

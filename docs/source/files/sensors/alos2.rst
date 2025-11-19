@@ -2,20 +2,28 @@
 ==================
 
 
-FBD L1.1 (``alos2_fbd_l11``)
-----------------------------
+FBD L1.1 (``import_alos2_fbd_l11``)
+------------------------------------
 
-The `alos2_fbd_l11` function extracts C2 matrix elements from the given ALOS-2 FBD mode folder and saves them into a C2 directory.
+The `import_alos2_fbd_l11` function extracts C2 matrix elements from the given ALOS-2 FBD mode folder and saves them into a C2 directory.
 
-.. autofunction:: polsartools.alos2_fbd_l11
+.. autofunction:: polsartools.import_alos2_fbd_l11
    :noindex:
 
 
-HBQ L1.1 (``alos2_hbq_l11``)
-----------------------------
+HBQ L1.1 (``import_alos2_hbq_l11``)
+------------------------------------
 
-The `alos2_hbq_l11` function extracts S2/T3/C3 matrix elements from the given ALOS-2 HBQ mode folder and saves them into a corresponding directories.
+The `import_alos2_hbq_l11` function extracts S2/T3/T4/C3/C4/C2/T2 matrix elements from the given ALOS-2 HBQ mode folder and saves them into a corresponding directories.
 
-.. autofunction:: polsartools.alos2_hbq_l11
+.. autofunction:: polsartools.import_alos2_hbq_l11
    :noindex:
 
+
+WBD L1.1 (``import_alos2_wbd_l11``)
+------------------------------------
+
+The `import_alos2_wbd_l11` function extracts C2 matrix elements from the given ALOS-2 WBD mode folder (for any given swath) and saves them into a C2 directory.
+
+.. autofunction:: polsartools.import_alos2_wbd_l11
+   :noindex:

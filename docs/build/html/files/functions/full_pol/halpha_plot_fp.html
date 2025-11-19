@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Full-pol H-alpha plot (halpha_plot_fp) &#8212; PolSARtools 0.9 documentation</title>
+    <title>Full-pol H-alpha plot (plot_h_alpha_fp) &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,15 +38,15 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/full_pol/halpha_plot_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Dual-pol H-alpha plot (halpha_plot_dp)" href="../dual_pol/halpha_plot_dp.html" />
-    <link rel="prev" title="Generate pauliRGB for FP data (pauliRGB)" href="../analysis.html" />
+    <link rel="next" title="Dual-pol H-alpha plot (plot_h_alpha_dp)" href="../dual_pol/halpha_plot_dp.html" />
+    <link rel="prev" title="Generate Pauli RGB for FP data (pauli_rgb)" href="../analysis.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -291,14 +291,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../dataFP.html">Full-pol data format</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4c_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neu_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neumann_parm</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
@@ -312,7 +312,7 @@
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">s_omega</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</a></li>
 </ul>
@@ -331,19 +331,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
 
 </ul>
 <ul class="nav bd-sidenav">
@@ -397,7 +397,7 @@
     
     <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -414,16 +414,16 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="full-pol-h-alpha-plot-halpha-plot-fp">
-<h1>Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)<a class="headerlink" href="#full-pol-h-alpha-plot-halpha-plot-fp" title="Link to this heading">#</a></h1>
+  <section id="full-pol-h-alpha-plot-plot-h-alpha-fp">
+<h1>Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)<a class="headerlink" href="#full-pol-h-alpha-plot-plot-h-alpha-fp" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">halpha_plot_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grey_region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_line_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/halpha_plot_fp.html#halpha_plot_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">plot_h_alpha_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grey_region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_line_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/plot_h_alpha_fp.html#plot_h_alpha_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generates and saves a  density plot of entropy (H) versus alpha (degrees) for full-pol data,
 including optional zone lines, zone IDs, and grey regions.</p>
 <section id="example">
 <h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">halpha_plot_fp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;HA_plot.png&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plot_h_alpha_fp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">ppath</span><span class="o">=</span><span class="s2">&quot;HA_plot.png&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 <span class="go">This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
 </pre></div>
 </div>
@@ -435,7 +435,7 @@ including optional zone lines, zone IDs, and grey regions.</p>
 </dd>
 <dt>alpha<span class="classifier">array-like</span></dt><dd><p>path to the Alpha file or Array representing alpha values in degrees.</p>
 </dd>
-<dt>pname<span class="classifier">str, optional</span></dt><dd><p>Path to save the generated plot. If a folder is given, the plot is saved as ‘halpha_plot_fp.png’ inside that folder.
+<dt>ppath<span class="classifier">str, optional</span></dt><dd><p>Path to save the generated plot. If a folder is given, the plot is saved as ‘halpha_plot_fp.png’ inside that folder.
 If the file already exists, it will be overwritten.</p>
 </dd>
 <dt>cmap<span class="classifier">str, optional</span></dt><dd><p>Colormap used for the hexbin plot. Defaults to ‘viridis’.</p>
@@ -490,7 +490,7 @@ If the file already exists, it will be overwritten.</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</p>
+        <p class="prev-next-title">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
@@ -498,7 +498,7 @@ If the file already exists, it will be overwritten.</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</p>
+        <p class="prev-next-title">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

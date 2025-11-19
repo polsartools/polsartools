@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Generate pauliRGB for FP data (pauliRGB) &#8212; PolSARtools 0.9 documentation</title>
+    <title>Generate Pauli RGB for FP data (pauli_rgb) &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/analysis';</script>
@@ -291,14 +291,14 @@
 <li class="toctree-l1"><a class="reference internal" href="dataFP.html">Full-pol data format</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4c_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neu_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neumann_parm</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
@@ -312,7 +312,7 @@
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">s_omega</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</a></li>
 </ul>
@@ -331,19 +331,19 @@
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
 
 </ul>
 <ul class="nav bd-sidenav">
@@ -397,7 +397,7 @@
     
     <li class="breadcrumb-item"><a href="../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -414,20 +414,20 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="generate-paulirgb-for-fp-data-paulirgb">
-<h1>Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)<a class="headerlink" href="#generate-paulirgb-for-fp-data-paulirgb" title="Link to this heading">#</a></h1>
+  <section id="generate-pauli-rgb-for-fp-data-pauli-rgb">
+<h1>Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)<a class="headerlink" href="#generate-pauli-rgb-for-fp-data-pauli-rgb" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">pauliRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/pauliRGB.html#pauliRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">pauli_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/pauli_rgb.html#pauli_rgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate Pauli RGB image from polarimetric SAR data (C4, C3, T4, T3, or S2 matrices).</p>
 <p>This function creates a Pauli decomposition RGB composite image from full polarimetric SAR data.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate Pauli RGB from a polarimetric folder</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pauliRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pauli_rgb</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output both PNG and GeoTIFF versions</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pauliRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pauli_rgb</span><span class="p">(</span><span class="s2">&quot;/path/to/polSAR_data&quot;</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -455,20 +455,20 @@ Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
 </dd></dl>
 
 </section>
-<section id="generate-false-color-rgb-for-dp-cp-data-dxprgb">
-<h1>Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)<a class="headerlink" href="#generate-false-color-rgb-for-dp-cp-data-dxprgb" title="Link to this heading">#</a></h1>
+<section id="generate-false-color-rgb-for-dp-cp-data-rgb-dp">
+<h1>Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">rgb_dp</span></code>)<a class="headerlink" href="#generate-false-color-rgb-for-dp-cp-data-rgb-dp" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">dxpRGB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/dxpRGB.html#dxpRGB"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rgb_dp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">infolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_tif</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/rgb_dp.html#rgb_dp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generate false-color RGB visualization from dual-polarimetric Sxy, C2 SAR data.</p>
 <p>This function creates an RGB image from dual-pol (Sxy, C2)  matrix inputs.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate type-1 false-color RGB from C2 folder</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dxpRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rgb_dp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output both PNG and GeoTIFF versions</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dxpRGB</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rgb_dp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">tif_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -537,15 +537,15 @@ Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
 </dd></dl>
 
 </section>
-<section id="generate-polarimetric-signatures-for-fp-data-fp-sign">
-<h1>Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">fp_sign</span></code>)<a class="headerlink" href="#generate-polarimetric-signatures-for-fp-data-fp-sign" title="Link to this heading">#</a></h1>
+<section id="generate-polarimetric-signatures-for-fp-data-signature-fp">
+<h1>Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">signature_fp</span></code>)<a class="headerlink" href="#generate-polarimetric-signatures-for-fp-data-signature-fp" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">fp_sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/fp_sign.html#fp_sign"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">signature_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/analysis/signature_fp.html#signature_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Generates and visualizes polarimetric signatures from a 2x2 scattering matrix (S2) or a 3x3 coherency matrix (T3).</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span> <span class="c1"># Trihedral</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fp_sign</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Trihedral&#39;</span><span class="p">,</span> <span class="n">plotType</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signature_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Trihedral&#39;</span><span class="p">,</span> <span class="n">plotType</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -618,10 +618,10 @@ If None, only theoretical/canonical plots will be generated.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-dp-cp-data-dxprgb">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-dp-cp-data-rgb-dp">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">rgb_dp</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-false-color-rgb-for-decomposed-powers-rgb">Generate false color RGB for decomposed powers (<code class="docutils literal notranslate"><span class="pre">rgb</span></code>)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-polarimetric-signatures-for-fp-data-fp-sign">Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">fp_sign</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-polarimetric-signatures-for-fp-data-signature-fp">Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">signature_fp</span></code>)</a></li>
 </ul>
 
   </nav></div>

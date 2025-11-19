@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.halpha_plot_fp &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.analysis.plot_h_alpha_fp &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,10 +37,10 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/halpha_plot_fp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/plot_h_alpha_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.analysis.halpha_plot_fp</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.analysis.plot_h_alpha_fp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,7 +332,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.analysis.halpha_plot_fp</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.analysis.plot_h_alpha_fp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mcolors</span>
@@ -1054,9 +1054,9 @@
 
 
                       
-<div class="viewcode-block" id="halpha_plot_fp">
-<a class="viewcode-back" href="../../../files/functions/full_pol/halpha_plot_fp.html#polsartools.halpha_plot_fp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">halpha_plot_fp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> 
+<div class="viewcode-block" id="plot_h_alpha_fp">
+<a class="viewcode-back" href="../../../files/functions/full_pol/halpha_plot_fp.html#polsartools.plot_h_alpha_fp">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_h_alpha_fp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">ppath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> 
                    <span class="n">cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                     <span class="n">grey_region</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zone_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">zone_line_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">zone_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">gridsize</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span> 
@@ -1066,7 +1066,7 @@
 <span class="sd">    </span>
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; halpha_plot_fp(h, alpha, path=&quot;HA_plot.png&quot;, cmap=&#39;jet&#39;, colorbar=True, norm=&#39;log&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plot_h_alpha_fp(h, alpha, ppath=&quot;HA_plot.png&quot;, cmap=&#39;jet&#39;, colorbar=True, norm=&#39;log&#39;)</span>
 <span class="sd">    This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
@@ -1075,7 +1075,7 @@
 <span class="sd">        path to the Entropy file or Array representing entropy values.</span>
 <span class="sd">    alpha : array-like</span>
 <span class="sd">        path to the Alpha file or Array representing alpha values in degrees.</span>
-<span class="sd">    pname : str, optional</span>
+<span class="sd">    ppath : str, optional</span>
 <span class="sd">        Path to save the generated plot. If a folder is given, the plot is saved as &#39;halpha_plot_fp.png&#39; inside that folder.</span>
 <span class="sd">        If the file already exists, it will be overwritten.</span>
 <span class="sd">    cmap : str, optional</span>
@@ -1194,11 +1194,11 @@
     
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     
-    <span class="k">if</span> <span class="n">pname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">pname</span><span class="p">):</span>
-            <span class="n">pname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="s1">&#39;halpha_plot_fp.png&#39;</span><span class="p">)</span>  
+    <span class="k">if</span> <span class="n">ppath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">ppath</span><span class="p">):</span>
+            <span class="n">ppath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ppath</span><span class="p">,</span> <span class="s1">&#39;halpha_plot_fp.png&#39;</span><span class="p">)</span>  
             
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ppath</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
 
 
 </pre></div>
@@ -1242,7 +1242,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

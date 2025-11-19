@@ -1,14 +1,14 @@
 .. Polarimetric speckle filters
 .. =============================
 
-Refined-Lee filter (``rlee``)
-------------------------------
-.. autofunction:: polsartools.rlee
+Refined-Lee filter (``filter_refined_lee``)
+-------------------------------------------
+.. autofunction:: polsartools.filter_refined_lee
    :noindex:
 
 
-Boxcar filter (``boxcar``)
---------------------------
-.. autofunction:: polsartools.boxcar
+Boxcar filter (``filter_boxcar``)
+---------------------------------
+.. autofunction:: polsartools.filter_boxcar
    :noindex:
 

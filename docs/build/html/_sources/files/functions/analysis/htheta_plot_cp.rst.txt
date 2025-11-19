@@ -1,5 +1,5 @@
-Compact-pol H-theta plot (``htheta_plot_cp``)
-=============================================
+Compact-pol H-theta plot (``plot_h_theta_cp``)
+==============================================
 
-.. autofunction:: polsartools.htheta_plot_cp
+.. autofunction:: polsartools.plot_h_theta_cp
    :noindex:

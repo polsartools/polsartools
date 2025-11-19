@@ -2,5 +2,5 @@
 
 from .cprvi import cprvi
 from .dop_cp import dop_cp
-from .misomega import misomega
+from .s_omega import s_omega
 from .mf3cc import mf3cc

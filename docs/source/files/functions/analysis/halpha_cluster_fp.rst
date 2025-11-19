@@ -1,5 +1,5 @@
-Full-pol H-alpha clusters (``halpha_cluster_fp``)
+Full-pol H-alpha clusters (``cluster_h_alpha_fp``)
 ==================================================
 
-.. autofunction:: polsartools.halpha_cluster_fp
+.. autofunction:: polsartools.cluster_h_alpha_fp
    :noindex:

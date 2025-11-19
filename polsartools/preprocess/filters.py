@@ -7,7 +7,7 @@ from polsartools.preprocess.pre_utils import get_filter_io_paths
 from polsartools.preprocess.rflee_filter import process_chunk_refined_lee
 from polsartools.rflee import process_chunk_rfleecpp
 @time_it
-def boxcar(in_dir,  win=3, fmt="tif", sub_dir=True,
+def filter_boxcar(in_dir,  win=3, fmt="tif", sub_dir=True,
            cog=False, ovr = [2, 4, 8, 16], comp=False,
            max_workers=None,block_size=(512, 512),
            progress_callback=None,  # for QGIS plugin
@@ -23,10 +23,10 @@ def boxcar(in_dir,  win=3, fmt="tif", sub_dir=True,
     Examples
     --------
     >>> # Basic usage
-    >>> boxcar("/path/to/polSAR_data")
+    >>> filter_boxcar("/path/to/polSAR_data")
 
     >>> # With custom window size and output as GeoTIFF
-    >>> boxcar("/path/to/polSAR_data", win=5, cog=True)
+    >>> filter_boxcar("/path/to/polSAR_data", win=5, cog=True)
 
     Parameters
     ----------
@@ -85,14 +85,14 @@ def process_chunk_boxcar(chunks, window_size, *args):
 
 
 @time_it
-def rlee(in_dir,  win=3, fmt="tif",sub_dir=True, 
+def filter_refined_lee(in_dir,  win=3, fmt="tif",sub_dir=True, 
          cog=False, ovr = [2, 4, 8, 16], comp=False,
          max_workers=None,block_size=(512, 512),
          progress_callback=None,  # for QGIS plugin
          ):
 
     """
-    Apply Refined Lee (RLee) speckle filter to polarimetric SAR data.
+    Apply Refined Lee speckle filter to polarimetric SAR data.
 
     The Refined Lee filter is an adaptive speckle filter that preserves edges and 
     structural details while reducing noise. Unlike Boxcar, RLee dynamically adjusts 
@@ -102,10 +102,10 @@ def rlee(in_dir,  win=3, fmt="tif",sub_dir=True,
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> rlee("/path/to/polSAR_data")
+    >>> filter_refined_lee("/path/to/polSAR_data")
 
     >>> # Custom usage with large window and tiled COG output
-    >>> rlee("/path/to/polSAR_data", win=7, cog=True)
+    >>> filter_refined_lee("/path/to/polSAR_data", win=7, cog=True)
 
     Parameters
     ----------

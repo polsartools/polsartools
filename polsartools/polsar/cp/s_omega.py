@@ -4,7 +4,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it
 from .cp_infiles import cpc2files
 @time_it
-def misomega(in_dir,   chi=45, psi=0, win=1, fmt="tif", cog=False, 
+def s_omega(in_dir,   chi=45, psi=0, win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp=False, 
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
@@ -20,10 +20,10 @@ def misomega(in_dir,   chi=45, psi=0, win=1, fmt="tif", cog=False,
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> misomega("/path/to/cp_data")
+    >>> s_omega("/path/to/cp_data")
     
     >>> # Advanced usage with custom parameters
-    >>> misomega(
+    >>> s_omega(
     ...     in_dir="/path/to/cp_data",
     ...     chi=-45,
     ...     win=5,

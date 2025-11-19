@@ -1,4 +1,4 @@
-improved S-:math:`\Omega` decomposition (``misomega``)
+improved S-:math:`\Omega` decomposition (``s_omega``)
 ========================================================
 .. This functionality computes the scattering powers for compact polarimetric SAR data. This is an improved decomposition technique based on Stokes vector(S) and the polarized power fraction (:math:`\Omega`). The required input and the computed output are as follows:
 
@@ -7,7 +7,7 @@ improved S-:math:`\Omega` decomposition (``misomega``)
 ..     input : input_C2_folder, window_size, tau, psi, chi
 ..     output: Ps_iSOmega.bin, Pd_iSOmega.bin,Pv_iSOmega.bin
 
-.. autofunction:: polsartools.misomega
+.. autofunction:: polsartools.s_omega
    :noindex:
 
 

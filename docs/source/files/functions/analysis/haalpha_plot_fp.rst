@@ -1,5 +1,5 @@
-Full-pol H-A-alpha plot (``haalpha_plot_fp``)
-==============================================
+Full-pol H-A-alpha plot (``plot_h_a_alpha_fp``)
+===============================================
 
-.. autofunction:: polsartools.haalpha_plot_fp
+.. autofunction:: polsartools.plot_h_a_alpha_fp
    :noindex:

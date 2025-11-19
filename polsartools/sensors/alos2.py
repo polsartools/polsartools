@@ -351,3 +351,134 @@ def import_alos2_hbq_l11(in_dir,mat='T3', azlks=8,rglks=4,
                 shutil.rmtree(temp_dir)
             except Exception as e:
                 print(f"Warning: Could not delete temporary directory {temp_dir}: {e}")
+
+@time_it    
+def import_alos2_wbd_l11(in_dir,mat='C2', azlks=25,rglks=5, swath=1,
+                 fmt='tif', cog=False,ovr = [2, 4, 8, 16],comp=False,
+                 out_dir=None,
+                  cf_dB=-83):
+    """
+    Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Wide Beam Dual-Pol (WBD) CEOS data 
+    and saves them into respective binary files.
+
+    Example:
+    --------
+    >>> import_alos2_wbd_l11("path_to_folder", azlks=25, rglks=5)
+    This will extract the C2 matrix elements from the ALOS-2 Wide Beam Dual-Pol data 
+    in the specified folder and save them in the 'C2' directory.
+    
+    Parameters:
+    -----------
+    in_dir : str
+        The path to the folder containing the ALOS-2 Wide Beam Dual-Pol CEOS data files.
+    mat : str, optional (default = 'S2' or 'Sxy)
+        Type of matrix to extract. Valid options: 'Sxy','C2', 'T2'.
+    azlks : int, optional (default=25)
+        The number of azimuth looks for multi-looking.
+
+    rglks : int, optional (default=5)
+        The number of range looks for multi-looking.
+    
+    swath : int, optional (default=1)
+        The swath number [1,2,3,4,5].
+
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF 
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
+                
+    cf_dB : float, optional (default=-83)
+        The calibration factor in dB used to scale the raw radar data. It is applied to 
+        the HH and HV polarization data before matrix computation.
+
+    Returns:
+    --------
+    None
+        The function does not return any value. Instead, it creates a folder named `C2` 
+        (if not already present) and saves the following binary files:
+
+        - `C11.bin`: Contains the C11 matrix elements.
+        - `C22.bin`: Contains the C22 matrix elements.
+        - `C12_real.bin`: Contains the real part of the C12 matrix.
+        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
+        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
+
+    Raises:
+    -------
+    FileNotFoundError
+        If the required ALOS-2 data files (e.g., `IMG-HH` and `IMG-HV`) cannot be found in the specified folder.
+
+    ValueError
+        If the calibration factor is invalid or if the files are not in the expected format.
+
+
+    """
+    
+    
+    
+    valid_dual_pol = ['Sxy', 'C2', 'T2']
+    valid_matrices = valid_dual_pol
+
+    if mat not in valid_matrices:
+        raise ValueError(f"Invalid matrix type '{mat}'. \n Supported types are:\n"
+                        f"  Dual-pol: {sorted(valid_dual_pol)}")
+    
+    temp_dir = None
+    ext = 'bin' if fmt == 'bin' else 'tif'
+    driver = 'ENVI' if fmt == 'bin' else None
+
+    # Final output directory
+    if out_dir is None:
+        final_out_dir = os.path.join(in_dir, mat)
+    else:
+        final_out_dir = os.path.join(out_dir, mat)
+    os.makedirs(final_out_dir, exist_ok=True)
+
+    # Intermediate output directory
+    if mat in ['Sxy']:
+        base_out_dir = final_out_dir
+    else:
+        temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
+        base_out_dir = temp_dir
+        
+    print(f"Extracting swath {swath} ...")
+    hh_file = list(glob.glob(os.path.join(in_dir,f'IMG-HH-*-WBDR1.1__A-F{swath}')) + \
+        glob.glob(os.path.join(in_dir, f'IMG-HH-*-WBDR1.1__D-F{swath}')))[0]
+
+    hv_file = list(glob.glob(os.path.join(in_dir,f'IMG-HV-*-WBDR1.1__A-F{swath}')) + \
+        glob.glob(os.path.join(in_dir, f'IMG-HV-*-WBDR1.1__D-F{swath}')))[0]
+
+    calfac_linear = np.sqrt(10 ** ((cf_dB) / 10))
+
+    S11 = read_a2(hh_file).astype(np.complex64)*calfac_linear 
+    write_a2_rst(os.path.join(base_out_dir, f's11.{ext}'),S11,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    del S11
+    S12 = read_a2(hv_file).astype(np.complex64)*calfac_linear 
+    write_a2_rst(os.path.join(base_out_dir, f's12.{ext}'),S12,   driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    del S12
+    
+    
+    # Matrix conversion if needed
+    if mat in ['C2', 'T2']:
+        convert_S(base_out_dir, mat=mat, azlks=azlks, rglks=rglks, cf=1,
+                  fmt=fmt, out_dir=final_out_dir, cog=cog, ovr=ovr, comp=comp)
+
+        # Clean up temp directory
+        if temp_dir:
+            try:
+                shutil.rmtree(temp_dir)
+            except Exception as e:
+                print(f"Warning: Could not delete temporary directory {temp_dir}: {e}")

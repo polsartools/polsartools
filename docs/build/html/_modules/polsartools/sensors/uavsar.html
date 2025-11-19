@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.uavsar &#8212; PolSARtools 0.9 documentation</title>
+    <title>polsartools.sensors.uavsar &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/uavsar';</script>
@@ -501,10 +501,10 @@
     <span class="k">return</span> <span class="n">mlckeys</span>     
 
 
-<div class="viewcode-block" id="uavsar_grd">
-<a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.uavsar_grd">[docs]</a>
+<div class="viewcode-block" id="import_uavsar_grd">
+<a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.import_uavsar_grd">[docs]</a>
 <span class="nd">@time_it</span>    
-<span class="k">def</span><span class="w"> </span><span class="nf">uavsar_grd</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_uavsar_grd</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
             <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -513,10 +513,10 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, mat=&#39;C3&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; uavsaimport_uavsar_grdr_grd(&quot;path_to_file.ann&quot;, mat=&#39;C3&#39;)</span>
 <span class="sd">    Extracts C3 matrix elements and saves them as GeoTIFFs in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_grd(&quot;path_to_file.ann&quot;, mat=&#39;T3&#39;, fmt=&#39;tif&#39;, cog=True, comp=True)</span>
+<span class="sd">    &gt;&gt;&gt; import_uavsar_grd(&quot;path_to_file.ann&quot;, mat=&#39;T3&#39;, fmt=&#39;tif&#39;, cog=True, comp=True)</span>
 <span class="sd">    Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.</span>
 
 <span class="sd">    Parameters:</span>
@@ -673,10 +673,10 @@
     
 
     
-<div class="viewcode-block" id="uavsar_mlc">
-<a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.uavsar_mlc">[docs]</a>
+<div class="viewcode-block" id="import_uavsar_mlc">
+<a class="viewcode-back" href="../../../files/sensors/uavsar.html#polsartools.import_uavsar_mlc">[docs]</a>
 <span class="nd">@time_it</span>  
-<span class="k">def</span><span class="w"> </span><span class="nf">uavsar_mlc</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_uavsar_mlc</span><span class="p">(</span><span class="n">ann</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
             <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -685,10 +685,10 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, mat=&#39;C3&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; uavsimport_uavsar_mlcar_mlc(&quot;path_to_file.ann&quot;, mat=&#39;C3&#39;)</span>
 <span class="sd">    Extracts C3 matrix elements and saves them as GeoTIFFs in the &#39;C3&#39; directory.</span>
 
-<span class="sd">    &gt;&gt;&gt; uavsar_mlc(&quot;path_to_file.ann&quot;, mat=&#39;T3&#39;, fmt=&#39;tif&#39;, cog=True, comp=True)</span>
+<span class="sd">    &gt;&gt;&gt; import_uavsar_mlc(&quot;path_to_file.ann&quot;, mat=&#39;T3&#39;, fmt=&#39;tif&#39;, cog=True, comp=True)</span>
 <span class="sd">    Extracts T3 matrix elements and saves them as Cloud Optimized GeoTIFFs with compression.</span>
 
 <span class="sd">    Parameters:</span>
@@ -880,7 +880,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

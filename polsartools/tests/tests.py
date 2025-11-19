@@ -21,7 +21,7 @@ def filters_processing(T3_folder, window_size=5):
 def cp_processing(compact_c2, chi=45, window_size=3):
     """ Decompositions """
     pst.mf3cc(compact_c2, chi=chi, win=window_size)
-    pst.misomega(compact_c2, chi=chi, psi=0, win=window_size)
+    pst.s_omega(compact_c2, chi=chi, psi=0, win=window_size)
     """ Descriptors """
     pst.cprvi(compact_c2, chi=chi, win=window_size)
     pst.dop_cp(compact_c2, chi=chi, win=window_size)

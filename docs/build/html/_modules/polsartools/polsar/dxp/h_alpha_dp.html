@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.halphadp &#8212; PolSARtools 0.8 documentation</title>
+    <title>polsartools.polsar.dxp.h_alpha_dp &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -37,10 +37,10 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=a0e24af7"></script>
+    <script src="../../../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/halphadp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/h_alpha_dp';</script>
     <link rel="icon" href="../../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -315,7 +315,7 @@
     
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.dxp.halphadp</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.dxp.h_alpha_dp</span></li>
   </ul>
 </nav>
 </div>
@@ -332,18 +332,18 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for polsartools.polsar.dxp.halphadp</h1><div class="highlight"><pre>
+  <h1>Source code for polsartools.polsar.dxp.h_alpha_dp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span>
-<div class="viewcode-block" id="halphadp">
-<a class="viewcode-back" href="../../../../files/functions/dual_pol/halphadxp.html#polsartools.halphadp">[docs]</a>
+<div class="viewcode-block" id="h_alpha_dp">
+<a class="viewcode-back" href="../../../../files/functions/dual_pol/halphadxp.html#polsartools.h_alpha_dp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">halphadp</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span>  <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
-             <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
-             <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">h_alpha_dp</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
+             <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
              <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
                 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -353,24 +353,24 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; halphadp(&quot;path_to_C2_folder&quot;, window_size=5, outType=&quot;tif&quot;, cog_flag=True)</span>
+<span class="sd">    &gt;&gt;&gt; h_alpha_dp(&quot;path_to_C2_folder&quot;, win=5, fmt=&quot;tif&quot;, cog=True)</span>
 <span class="sd">    This will compute Entropy and alpha parameters from the C2 matrix in the specified folder,</span>
 <span class="sd">    generating output in Geotiff format with Cloud Optimized GeoTIFF settings enabled.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
-<span class="sd">    infolder : str</span>
+<span class="sd">    in_dir : str</span>
 <span class="sd">        Path to the input folder containing C2 matrix data.</span>
-<span class="sd">    window_size : int, optional</span>
+<span class="sd">    win : int, optional</span>
 <span class="sd">        Size of the processing window (default is 1).</span>
-<span class="sd">    outType : str, optional</span>
+<span class="sd">    fmt : str, optional</span>
 <span class="sd">        Output format of the files; can be &quot;tif&quot; (GeoTIFF) or &quot;bin&quot; (binary) (default is &quot;tif&quot;).</span>
-<span class="sd">    cog_flag : bool, optional</span>
+<span class="sd">    cog : bool, optional</span>
 <span class="sd">        If True, outputs Cloud Optimized GeoTIFF (COG) (default is False).</span>
-<span class="sd">    cog_overviews : list of int, optional</span>
+<span class="sd">    ovr : list of int, optional</span>
 <span class="sd">        List of overview levels to be used for COGs (default is [2, 4, 8, 16]).</span>
-<span class="sd">    write_flag : bool, optional</span>
-<span class="sd">        Whether to write the computed output files (default is True).</span>
+<span class="sd">    comp : bool, optional</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF files. (default is False).</span>
 <span class="sd">    max_workers : int, optional</span>
 <span class="sd">        Number of parallel workers for processing (default is None, which uses one less than the number of available CPU cores).</span>
 <span class="sd">    block_size : tuple of int, optional</span>
@@ -387,25 +387,24 @@
 <span class="sd">    - &quot;alphadp.tif&quot; or &quot;alphadp.bin&quot;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">dxpc2files</span><span class="p">(</span><span class="n">infolder</span><span class="p">)</span>
+    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="n">dxpc2files</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">outType</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;Hdp.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;alphadp.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;e1_norm.bin&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;e2_norm.bin&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Hdp.bin&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;alphadp.bin&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;e1_norm.bin&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;e2_norm.bin&quot;</span><span class="p">))</span>
         
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;Hdp.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;alphadp.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;e1_norm.tif&quot;</span><span class="p">))</span>
-        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;e2_norm.tif&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Hdp.tif&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;alphadp.tif&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;e1_norm.tif&quot;</span><span class="p">))</span>
+        <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;e2_norm.tif&quot;</span><span class="p">))</span>
 
-    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
+    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
                             <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_halphadp</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                            <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                            <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span>
+                            <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 
@@ -511,7 +510,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, Narayanarao Bhogapurapu.
+      © Copyright 2025, PolSARtools team.
       <br/>
     
   </p>

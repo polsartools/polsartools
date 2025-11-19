@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>🔸RADARSAT-2 &#8212; PolSARtools 0.9 documentation</title>
+    <title>🔸RADARSAT-2 &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/sensors/radarsat2';</script>
@@ -358,26 +358,25 @@
                   
   <section id="radarsat-2">
 <h1>🔸RADARSAT-2<a class="headerlink" href="#radarsat-2" title="Link to this heading">#</a></h1>
-<section id="full-pol-rs2-fp">
-<h2>Full-pol (<code class="docutils literal notranslate"><span class="pre">rs2_fp</span></code>)<a class="headerlink" href="#full-pol-rs2-fp" title="Link to this heading">#</a></h2>
-<p>The <cite>rs2_fp</cite> function extracts matrix elements (S2, C3 or T3) from the given RADARSAT-2 folder and saves them into respective directories (S2, C3 or T3).</p>
+<section id="full-pol-import-rs2-fp">
+<h2>Full-pol (<code class="docutils literal notranslate"><span class="pre">import_rs2_fp</span></code>)<a class="headerlink" href="#full-pol-import-rs2-fp" title="Link to this heading">#</a></h2>
+<p>The <cite>import_rs2_fp</cite> function extracts matrix elements (S2/C4/T4/C3/T3/C2/T2) from the given RADARSAT-2 folder and saves them into respective directories.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">rs2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/rs2_fp.html#rs2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Process radarsat-2 image data and generate the specified matrix (S2, T3, or C3) from the input imagery files.</p>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_rs2_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/rs2_fp.html#import_rs2_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Process radarsat-2 image data and generate the specified matrix (‘S2’, ‘C4’, ‘C3’, ‘T4’, ‘T3’, ‘C2HX’, ‘C2VX’, ‘C2HV’, ‘T2HV’) from the input imagery files.</p>
 <p>This function reads radarsat-2 image data in the form of .tif files (HH, HV, VH, VV) from the input folder (<cite>in_dir</cite>)
-and calculates either the S2, T3, or C3 matrix. The resulting matrix is then saved in a corresponding directory
-(<cite>S2</cite>, <cite>T3</cite>, or <cite>C3</cite>). The function uses lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>) for scaling
+and calculates either the ‘S2’, ‘C4’, ‘C3’, ‘T4’, ‘T3’, ‘C2HX’, ‘C2VX’, ‘C2HV’, ‘T2HV’ matrix. The resulting matrix is then saved in a corresponding directory. The function uses lookup tables (<cite>lutSigma.xml</cite>, <cite>lutGamma.xml</cite>, <cite>lutBeta.xml</cite>) for scaling
 the data based on the chosen backscatter coefficient <cite>bsc</cite> (sigma0, gamma0, or beta0). The processed data is written into binary files
 in the output folder.</p>
 <section id="example-usage">
 <h3>Example Usage:<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h3>
 <p>To process imagery and generate a T3 matrix:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">,</span> <span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;sigma0&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">import_rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">,</span> <span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;sigma0&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To process imagery and generate a C3 matrix:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;beta0&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">import_rs2_fp</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span> <span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;beta0&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -469,7 +468,7 @@ in the same location as the input file.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-pol-rs2-fp">Full-pol (<code class="docutils literal notranslate"><span class="pre">rs2_fp</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#full-pol-import-rs2-fp">Full-pol (<code class="docutils literal notranslate"><span class="pre">import_rs2_fp</span></code>)</a></li>
 </ul>
   </nav></div>
 

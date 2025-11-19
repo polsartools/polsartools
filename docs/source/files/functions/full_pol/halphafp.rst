@@ -1,5 +1,5 @@
-H/A/α Decomposition (``halpha_fp``)
-====================================
+H/A/α Decomposition (``h_a_alpha_fp``)
+======================================
 
-.. autofunction:: polsartools.halpha_fp
+.. autofunction:: polsartools.h_a_alpha_fp
    :noindex:

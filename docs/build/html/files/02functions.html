@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Functions &#8212; PolSARtools 0.9 documentation</title>
+    <title>Functions &#8212; PolSARtools 0.9.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=049aceee"></script>
+    <script src="../_static/documentation_options.js?v=9dc39874"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -292,14 +292,14 @@
 <li class="toctree-l1"><a class="reference internal" href="functions/dataFP.html">Full-pol data format</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4c_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neu_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neumann_parm</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
@@ -313,7 +313,7 @@
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">s_omega</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</a></li>
 </ul>
@@ -325,26 +325,26 @@
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">h_alpha_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="functions/speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
 
 </ul>
 <ul class="nav bd-sidenav">
@@ -432,14 +432,14 @@ A typical file structures of S2, T3 and C3 matrices are provded in:</p>
 <p>Following are the avaialble functions for full-pol data:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yam4c_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neu_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neumann_parm</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/full_pol/praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
@@ -463,7 +463,7 @@ A typical file structure of C2 matrix is provded in:</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/cprvi.html">Compact-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">cprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">misomega</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">s_omega</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</a></li>
 </ul>
@@ -489,7 +489,7 @@ A typical file structures of C2/T2 matrix is provded in:</p>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">halpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">h_alpha_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
@@ -501,16 +501,16 @@ A typical file structures of C2/T2 matrix is provded in:</p>
 <h2>Analysis functions<a class="headerlink" href="#analysis-functions" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html">Generate pauliRGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauliRGB</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html#generate-false-color-rgb-for-dp-cp-data-dxprgb">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">dxpRGB</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html#generate-false-color-rgb-for-dp-cp-data-rgb-dp">Generate false color RGB for DP/CP data (<code class="docutils literal notranslate"><span class="pre">rgb_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functions/analysis.html#generate-false-color-rgb-for-decomposed-powers-rgb">Generate false color RGB for decomposed powers (<code class="docutils literal notranslate"><span class="pre">rgb</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html#generate-polarimetric-signatures-for-fp-data-fp-sign">Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">fp_sign</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">halpha_plot_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">haalpha_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">halpha_cluster_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">htheta_plot_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis.html#generate-polarimetric-signatures-for-fp-data-signature-fp">Generate polarimetric signatures for FP data (<code class="docutils literal notranslate"><span class="pre">signature_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 </div>
 </section>
@@ -518,8 +518,8 @@ A typical file structures of C2/T2 matrix is provded in:</p>
 <h2>Polarimetric speckle filters<a class="headerlink" href="#polarimetric-speckle-filters" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="functions/speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">rlee</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="functions/speckle_filts.html#boxcar-filter-boxcar">Boxcar filter (<code class="docutils literal notranslate"><span class="pre">boxcar</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions/speckle_filts.html#boxcar-filter-filter-boxcar">Boxcar filter (<code class="docutils literal notranslate"><span class="pre">filter_boxcar</span></code>)</a></li>
 </ul>
 </div>
 </section>

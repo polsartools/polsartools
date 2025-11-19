@@ -2,19 +2,19 @@
 ========
 
 
-RSLC (``nisar_rslc``)
----------------------
-The `nisar_rslc` function extracts C2 matrix elements from the given NISAR RSLC `.h5` file and saves them into a C2 directory.
+RSLC (``import_nisar_rslc``)
+----------------------------
+The `import_nisar_rslc` function extracts Sxy/C2/T2 (for dual-pol), S2/C4/T4/C3/T3/C2/T2 (for full-pol) matrix elements from the given NISAR RSLC `.h5` file and saves them into a C2 directory.
 
-.. autofunction:: polsartools.nisar_rslc
+.. autofunction:: polsartools.import_nisar_rslc
    :noindex:
 
 
 
-GSLC (``nisar_gslc``)
----------------------
+GSLC (``import_nisar_gslc``)
+----------------------------
 
-The `nisar_gslc` function extracts C2 matrix elements from the given NISAR GSLC `.h5` file and saves them into a C2 directory.
+The `import_nisar_gslc` function extracts Sxy/C2/T2 (for dual-pol), S2/C4/T4/C3/T3/C2/T2 (for full-pol) matrix elements from the given NISAR GSLC `.h5` file and saves them into a C2 directory.
 
-.. autofunction:: polsartools.nisar_gslc
+.. autofunction:: polsartools.import_nisar_gslc
    :noindex:

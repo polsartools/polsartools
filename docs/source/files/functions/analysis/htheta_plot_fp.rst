@@ -1,5 +1,5 @@
-Full-pol H-theta plot (``htheta_plot_fp``)
+Full-pol H-theta plot (``plot_h_theta_fp``)
 ============================================
 
-.. autofunction:: polsartools.htheta_plot_fp
+.. autofunction:: polsartools.plot_h_theta_fp
    :noindex:
