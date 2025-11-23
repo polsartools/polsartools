@@ -131,7 +131,7 @@ def get_bounds():
     return c1l,c2l
     
 #%%
-def plot_h_theta_cp(h,theta, pname=None, cmap='jet', 
+def plot_h_theta_cp(h,theta, ppath=None, cmap='jet', 
                    cbar=True, norm='', vmin=None,vmax=None, 
                     grey_region=True, zone_lines=True,
                     zone_line_color='k',zone_ids=True,gridsize=200):
@@ -145,7 +145,7 @@ def plot_h_theta_cp(h,theta, pname=None, cmap='jet',
     
     Example:
     --------
-    >>> plot_h_theta_cp(h, theta, path="HT_plot.png", cmap='jet', cbar=True, norm='log')
+    >>> plot_h_theta_cp(h, theta, ppath="HT_plot.png", cmap='jet', cbar=True, norm='log')
     This will generates a H/Theta plot  from the input arrays and save it as HT_plot.png, using the 'jet' colormap and logarithmic normalization
     
     Parameters:
@@ -154,7 +154,7 @@ def plot_h_theta_cp(h,theta, pname=None, cmap='jet',
         path to the Entropy file or Array representing entropy values.
     theta : path or array-like
         path to the Theta file or Array representing theta values in degrees.
-    pname : str, optional
+    ppath : str, optional
         Path to save the generated plot. If a folder is given, the plot is saved as 'htheta_plot_cp.png' inside that folder.
         If the file already exists, it will be overwritten.
     cmap : str, optional
@@ -313,9 +313,9 @@ def plot_h_theta_cp(h,theta, pname=None, cmap='jet',
     plt.tight_layout()
     fig.tight_layout()
 
-    if pname is not None:
-        if os.path.isdir(pname):
-            pname = os.path.join(pname, 'htheta_plot_cp.png')  
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'htheta_plot_cp.png')  
             
-        plt.savefig(pname,dpi=300,bbox_inches='tight')
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')
 

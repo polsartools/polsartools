@@ -120,7 +120,7 @@ def prepare_dataT3(T3):
     return cp_sign, xp_sign
 
 
-def signature_fp(mat=None, title='',pname='',cmap='jet',plotType = 1,
+def signature_fp(mat=None, title='',ppath='',cmap='jet',plotType = 1,
     fig=None, axes=None, start_index=0):
     """
     Generates and visualizes polarimetric signatures from a 2x2 scattering matrix (S2) or a 3x3 coherency matrix (T3).
@@ -139,7 +139,7 @@ def signature_fp(mat=None, title='',pname='',cmap='jet',plotType = 1,
     title : str, optional
         Title of the plot. Default is an empty string.
 
-    pname : str, optional
+    ppath : str, optional
         Name of the output file (*.png). Default is an empty string.
 
     cmap : str, optional
@@ -166,13 +166,13 @@ def signature_fp(mat=None, title='',pname='',cmap='jet',plotType = 1,
 
     # Choose visualization method
     if plotType == 4:
-        poincare_sphere(pname=pname)
+        poincare_sphere(ppath=ppath)
     elif mat is not None and plotType == 3:
-        poincare_plot(cp_sign, xp_sign, title=title, pname=pname, cmap=cmap)
+        poincare_plot(cp_sign, xp_sign, title=title, ppath=ppath, cmap=cmap)
     elif mat is not None and plotType == 2:
-        pol_sign2d(cp_sign, xp_sign, title=title, pname=pname, cmap=cmap)
+        pol_sign2d(cp_sign, xp_sign, title=title, ppath=ppath, cmap=cmap)
     else:
-        figout, axesout = pol_sign(cp_sign, xp_sign, title=title, pname=pname,
+        figout, axesout = pol_sign(cp_sign, xp_sign, title=title, ppath=ppath,
                                    cmap=cmap, fig=fig, axes=axes, start_index=start_index)
         return figout, axesout
 

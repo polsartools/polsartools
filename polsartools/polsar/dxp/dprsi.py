@@ -4,24 +4,21 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files
 @time_it
-def dprsic(cpFile,xpFile,  win=1, fmt="tif", 
-           cog=False, ovr = [2, 4, 8, 16], comp=False,
-           max_workers=None,block_size=(512, 512),
-           progress_callback=None,  # for QGIS plugin          
-           ):
-    """
-    This function computes the Dual-pol Radar Surface Index (DpRSI) for GRD (only intensity no phase).
-
+def dprsi(in_dir,  win=1, fmt="tif", cog=False, 
+          ovr = [2, 4, 8, 16], comp=False,
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin          
+          ):
+    """ This codes computes the Dual-pol Radar Surface Index (DpRSI) from C2 matrix
 
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> dprsic("/path/to/copol_file.tif", "/path/to/crosspol_file.tif")
-
+    >>> dprsi("/path/to/c2_data")
+    
     >>> # Advanced usage with custom parameters
-    >>> dprsic(
-    ...     cpFile="/path/to/copol_file.tif",
-    ...     xpFile="/path/to/crosspol_file.tif",
+    >>> dprsi(
+    ...     in_dir="/path/to/c2_data",
     ...     win=3,
     ...     fmt="tif",
     ...     cog=True,
@@ -30,10 +27,8 @@ def dprsic(cpFile,xpFile,  win=1, fmt="tif",
     
     Parameters
     ----------
-    cpFile : str
-        Path to the co-polarized backscatter (linear) SAR raster file.
-    xpFile : str
-        Path to the cross-polarized backscatter (linear) SAR raster file.
+    in_dir : str
+        Path to the input folder containing C2 matrix files.
     win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
@@ -59,31 +54,33 @@ def dprsic(cpFile,xpFile,  win=1, fmt="tif",
     Returns
     -------
     None
-        Results are written to disk as either 'DpRSIc.tif' or 'DpRSIc.bin'
+        Results are written to disk as either 'DpRSI.tif' or 'DpRSI.bin'
         in the input folder.
 
     """
     write_flag=True
-    input_filepaths = [cpFile,xpFile]
+    input_filepaths = dxpc2files(in_dir)
     output_filepaths = []
 
     if fmt == "bin":
-        output_filepaths.append(os.path.join(os.path.dirname(cpFile), "DpRSIc.bin"))
+        output_filepaths.append(os.path.join(in_dir, "DpRSI.bin"))
     else:
-        output_filepaths.append(os.path.join(os.path.dirname(cpFile), "DpRSIc.tif"))
+        output_filepaths.append(os.path.join(in_dir, "DpRSI.tif"))
 
     process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
-                            processing_func=process_chunk_dprsic,block_size=block_size, max_workers=max_workers,  num_outputs=1,
+                            processing_func=process_chunk_dprsi,block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
-def process_chunk_dprsic(chunks, window_size,*args):
+def process_chunk_dprsi(chunks, window_size,*args):
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
-    c11 = np.array(chunks[0])
-    c22 = np.array(chunks[1])
+    c11_T1 = np.array(chunks[0])
+    c12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
+    # c21_T1 = np.conj(c12_T1)
+    c22_T1 = np.array(chunks[3])
 
-
+    ##### Normalizing Stokes vector elements
     def S_norm(S_array):
         S_5 = np.percentile(S_array, 5)
         S_95 = np.percentile(S_array, 95)
@@ -95,25 +92,51 @@ def process_chunk_dprsic(chunks, window_size,*args):
         return S_norm_array
 
     if window_size>1:
-        c11 = conv2d(c11,kernel)
-        c22 = conv2d(c22,kernel)
+        c11s = conv2d(np.real(c11_T1),kernel)+1j*conv2d(np.imag(c11_T1),kernel)
+        c12s = conv2d(np.real(c12_T1),kernel)+1j*conv2d(np.imag(c12_T1),kernel)
+        # c21s = conv2d(np.real(c21_T1),kernel)+1j*conv2d(np.imag(c21_T1),kernel)
+        c22s = conv2d(np.real(c22_T1),kernel)+1j*conv2d(np.imag(c22_T1),kernel)
 
-    s0 = np.abs(c11 + c22)
-    s1 = np.abs(c11 - c22)
+    else:
+        c11s = c11_T1
+        c12s = c12_T1
+        c22s = c22_T1
 
-    C11_av_db = 10*np.log10(c11)
+    C11_av_db = 10*np.log10(c11s)
+    s0 = c11s + c22s
+    s1 = c11s - c22s
+    s2 = 2*c12s.real
+    s3 = 2*c12s.imag
 
-    prob1 = c11/(c11 + c22)
-    prob2 = c22/(c11 + c22)
+
+    ##### Calculate Entropy
+    ## Here eigen values are calculated using Stokes vector elements
+
+    tpp = np.sqrt(np.square(s1) + np.square(s2) + np.square(s3))
+
+    lmbd1 = (s0 + tpp)/2
+    lmbd2 = (s0 - tpp)/2
+
+    prob1 = lmbd1/(lmbd1 + lmbd2)
+    prob2 = lmbd2/(lmbd1 + lmbd2)
 
     ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
+
+    ##### Taking abs of Stokes vector elements
+    s0 = np.abs(s0)
+    s1 = np.abs(s1)
+    s2 = np.abs(s2)
+    s3 = np.abs(s3)
+
     s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
+
+    ##### Dual-pol Radar Surface Index
+
 
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)); # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)); # For Noise pixels 
 
     NESZ = -16 ## For Sentinel-1
-    dprsic = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
+    dprsi = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
 
-
-    return dprsic.astype(np.float32)
+    return dprsi.astype(np.float32)

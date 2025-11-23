@@ -1,0 +1,637 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polsartools.polsar.dxp.powers_dp_grd &#8212; PolSARtools 0.10 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/powers_dp_grd';</script>
+    <link rel="icon" href="../../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PolSARtools</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.polsar.dxp.powers_dp_grd</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for polsartools.polsar.dxp.powers_dp_grd</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span>
+<div class="viewcode-block" id="powers_dp_grd">
+<a class="viewcode-back" href="../../../../files/functions/dual_pol/powers_dp_grd.html#polsartools.powers_dp_grd">[docs]</a>
+<span class="nd">@time_it</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">powers_dp_grd</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span><span class="n">xpFile</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
+           <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+           <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
+           <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function computes the scattering power components for GRD (only intensity no phase) dual-pol SAR data (decomposition/factorization based approach)</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Basic usage with default parameters</span>
+<span class="sd">    &gt;&gt;&gt; powers_dp_grd(&quot;/path/to/copol_file.tif&quot;, &quot;/path/to/crosspol_file.tif&quot;)</span>
+
+<span class="sd">    &gt;&gt;&gt; # Advanced usage with custom parameters</span>
+<span class="sd">    &gt;&gt;&gt; powers_dp_grd(</span>
+<span class="sd">    ...     cpFile=&quot;/path/to/copol_file.tif&quot;,</span>
+<span class="sd">    ...     xpFile=&quot;/path/to/crosspol_file.tif&quot;,</span>
+<span class="sd">    ...     method=2,    </span>
+<span class="sd">    ...     win=3,</span>
+<span class="sd">    ...     fmt=&quot;tif&quot;,</span>
+<span class="sd">    ...     cog=True,</span>
+<span class="sd">    ...     block_size=(1024, 1024)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cpFile : str</span>
+<span class="sd">        Path to the co-polarized backscatter (linear) SAR raster file.</span>
+<span class="sd">    xpFile : str</span>
+<span class="sd">        Path to the cross-polarized backscatter (linear) SAR raster file.</span>
+<span class="sd">    method : int</span>
+<span class="sd">        1: Decomposition based powers</span>
+<span class="sd">        2: Factorisation based powers</span>
+<span class="sd">    win : int, default=1</span>
+<span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
+<span class="sd">        but decrease spatial resolution.</span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">        Output file format:</span>
+<span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
+<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
+<span class="sd">    cog : bool, default=False</span>
+<span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
+<span class="sd">        and overviews for efficient web access.</span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">        Overview levels for COG creation. Each number represents the</span>
+<span class="sd">        decimation factor for that overview level.</span>
+<span class="sd">    comp : bool, default=False</span>
+<span class="sd">        If True, applies LZW compression to the output GeoTIFF files.</span>
+<span class="sd">    max_workers : int | None, default=None</span>
+<span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
+<span class="sd">        CPU count - 1 workers.</span>
+<span class="sd">    block_size : tuple[int, int], default=(512, 512)</span>
+<span class="sd">        Size of processing blocks (rows, cols) for parallel computation.</span>
+<span class="sd">        Larger blocks use more memory but may be more efficient.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">input_filepaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">cpFile</span><span class="p">,</span><span class="n">xpFile</span><span class="p">]</span>
+    <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Alpha_dp_grd.bin&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pdl_dcmp_grd.bin&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Psl_dcmp_grd.bin&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pu_dcmp_grd.bin&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pdl_fact_grd.bin&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Psl_fact_grd.bin&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pr_fact_grd.bin&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Alpha_dp_grd.tif&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pdl_dcmp_grd.tif&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Psl_dcmp_grd.tif&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pu_dcmp_grd.tif&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pdl_fact_grd.tif&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Psl_fact_grd.tif&quot;</span><span class="p">))</span>
+            <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;Pr_fact_grd.tif&quot;</span><span class="p">))</span>
+
+    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="p">,</span> 
+                            <span class="n">process_chunk_dp_powers</span><span class="p">,</span>
+                            <span class="o">*</span><span class="p">[</span><span class="n">method</span><span class="p">],</span>
+                            <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
+                            <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                            <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
+                            <span class="p">)</span></div>
+
+    
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dp_powers</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
+    <span class="n">c11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">c22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">S_norm</span><span class="p">(</span><span class="n">S_array</span><span class="p">):</span>
+        <span class="n">S_5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">S_array</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">S_95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">S_array</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+        <span class="n">S_cln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">S_array</span> <span class="o">&gt;</span> <span class="n">S_95</span><span class="p">,</span> <span class="n">S_95</span><span class="p">,</span> <span class="n">S_array</span><span class="p">)</span>
+        <span class="n">S_cln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">S_cln</span> <span class="o">&lt;</span> <span class="n">S_5</span><span class="p">,</span> <span class="n">S_5</span><span class="p">,</span> <span class="n">S_cln</span><span class="p">)</span>
+        <span class="n">S_cln_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">S_cln</span><span class="p">)</span>
+        <span class="n">S_norm_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">S_cln</span><span class="p">,</span><span class="n">S_cln_max</span><span class="p">)</span> 
+        
+        <span class="k">return</span> <span class="n">S_norm_array</span>
+
+    <span class="k">if</span> <span class="n">window_size</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">c11</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">c11</span><span class="p">,</span><span class="n">kernel</span><span class="p">)</span>
+        <span class="n">c22</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">c22</span><span class="p">,</span><span class="n">kernel</span><span class="p">)</span>
+
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c11</span> <span class="o">+</span> <span class="n">c22</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c11</span> <span class="o">-</span> <span class="n">c22</span><span class="p">)</span>
+
+    <span class="n">C11_av_db</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">c11</span><span class="p">)</span>
+
+    <span class="n">prob1</span> <span class="o">=</span> <span class="n">c11</span><span class="o">/</span><span class="p">(</span><span class="n">c11</span> <span class="o">+</span> <span class="n">c22</span><span class="p">)</span>
+    <span class="n">prob2</span> <span class="o">=</span> <span class="n">c22</span><span class="o">/</span><span class="p">(</span><span class="n">c11</span> <span class="o">+</span> <span class="n">c22</span><span class="p">)</span>
+
+    <span class="n">ent</span> <span class="o">=</span> <span class="o">-</span><span class="n">prob1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">prob1</span><span class="p">)</span> <span class="o">-</span> <span class="n">prob2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">prob2</span><span class="p">)</span>
+    <span class="n">s1_s_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="c1">#This is S1 normalzied for DpRSI, does not include slope mask</span>
+    <span class="n">C11_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">c11</span><span class="p">)</span>
+    <span class="n">C22_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">c22</span><span class="p">)</span>
+
+
+    <span class="n">dop</span> <span class="o">=</span> <span class="p">(</span><span class="n">c11</span> <span class="o">-</span> <span class="n">c22</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">c11</span> <span class="o">+</span> <span class="n">c22</span><span class="p">)</span>
+    <span class="n">dop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dop</span><span class="p">)</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">prob1</span>
+
+    <span class="c1">##### Power Calculation</span>
+
+    <span class="n">dprbi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">C11_norm</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">C22_norm</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+
+    <span class="n">dprsi_con1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ent</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">s1_s_norm</span><span class="p">))</span> <span class="c1"># For Valid pixels</span>
+    <span class="n">dprsi_con2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">s1_s_norm</span><span class="p">))</span> <span class="c1"># For Noise pixels </span>
+
+    <span class="n">NESZ</span> <span class="o">=</span> <span class="o">-</span><span class="mi">16</span> <span class="c1">## For Sentinel-1</span>
+    <span class="n">dprsi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">C11_av_db</span> <span class="o">&gt;</span> <span class="n">NESZ</span><span class="p">,</span> <span class="n">dprsi_con1</span><span class="p">,</span> <span class="n">dprsi_con2</span><span class="p">)</span> 
+
+    <span class="n">shp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">dprbi</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+
+        <span class="n">alpha1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">dprbi</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">dprbi</span><span class="p">)</span>
+        <span class="n">alpha1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">alpha1</span><span class="p">)</span>
+
+        <span class="n">alpha2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">dprsi</span><span class="p">,</span> <span class="n">dprsi</span><span class="p">)</span>
+        <span class="n">alpha2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">alpha2</span><span class="p">)</span>
+
+        <span class="n">alpha_dp</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha1</span> <span class="o">+</span> <span class="n">alpha2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span> <span class="c1">#Dual-pol target characteristic parameter proposed in Verma et al. 2024</span>
+
+        <span class="c1">## Alpha as geomteric factor</span>
+        <span class="n">alpha_dp_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">alpha_dp</span><span class="p">)</span> 
+
+        <span class="n">cos_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">alpha_dp_rad</span><span class="p">)</span>
+
+        <span class="c1">## Power components for valid pixels (VV &gt; NESZ)</span>
+        <span class="n">Pu_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dop</span><span class="p">)</span><span class="o">*</span><span class="n">s0</span> 
+        <span class="n">Pd_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dop</span><span class="o">*</span><span class="n">s0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos_a</span><span class="p">)</span>
+        <span class="n">Ps_v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dop</span><span class="o">*</span><span class="n">s0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">cos_a</span><span class="p">)</span>
+
+        <span class="c1">## Power components for noise pixels (VV &lt; NESZ)</span>
+        <span class="n">Pu_n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span><span class="o">*</span><span class="n">s0</span> 
+        <span class="n">Pd_n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="n">s0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos_a</span><span class="p">)</span>
+        <span class="n">Ps_n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="n">s0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">cos_a</span><span class="p">)</span>
+
+        <span class="c1">## Dual-pol scattering power</span>
+        <span class="n">Pu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">C11_av_db</span> <span class="o">&gt;</span> <span class="n">NESZ</span><span class="p">,</span> <span class="n">Pu_v</span><span class="p">,</span> <span class="n">Pu_n</span><span class="p">)</span> <span class="c1"># Unpolized power</span>
+        <span class="n">Pd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">C11_av_db</span> <span class="o">&gt;</span> <span class="n">NESZ</span><span class="p">,</span> <span class="n">Pd_v</span><span class="p">,</span> <span class="n">Pd_n</span><span class="p">)</span> <span class="c1"># &quot;Dihedral-like&quot; power</span>
+        <span class="n">Ps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">C11_av_db</span> <span class="o">&gt;</span> <span class="n">NESZ</span><span class="p">,</span> <span class="n">Ps_v</span><span class="p">,</span> <span class="n">Ps_n</span><span class="p">)</span> <span class="c1"># &quot;Surface-like&quot; power</span>
+    
+
+        <span class="k">return</span> <span class="n">alpha_dp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Pd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Ps</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Pu</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dprbi_flt</span> <span class="o">=</span> <span class="n">dprbi</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">dprsi_flt</span> <span class="o">=</span> <span class="n">dprsi</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">shp_flt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">dprbi_flt</span><span class="p">)</span>
+
+
+        <span class="n">indices_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dprsi_flt</span><span class="p">,</span> <span class="n">dprbi_flt</span><span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">indices_vec_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="nb">max</span><span class="p">(</span><span class="n">row</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">row</span><span class="p">)]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">indices_vec</span><span class="p">])</span>
+
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">indices_vec_sort</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#First dominant</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">indices_vec_sort</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">indices_vec_sort</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#Second dominant</span>
+
+        <span class="n">residue</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">y1</span> <span class="o">+</span> <span class="n">y2</span><span class="p">)</span>
+
+        <span class="n">dprsi_dom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dprsi_flt</span> <span class="o">&gt;</span> <span class="n">dprbi_flt</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#Keeps the tuple where dprsi is dominant</span>
+        <span class="n">dprbi_dom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dprsi_flt</span> <span class="o">&lt;</span> <span class="n">dprbi_flt</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#Keeps the tuple where dprbi is dominant</span>
+
+        <span class="c1">## Surface-like power component</span>
+        <span class="n">Ps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shp_flt</span><span class="p">)</span>
+        <span class="c1">##dprsi_dom and dprbi_dom are not dprsi and dprbi values, they just indicate tuples (pixel) for which they are greater</span>
+        <span class="n">Ps</span><span class="p">[</span><span class="n">dprsi_dom</span><span class="p">]</span> <span class="o">=</span> <span class="n">y1</span><span class="p">[</span><span class="n">dprsi_dom</span><span class="p">]</span> <span class="c1">#In these tuples dprsi was dominant, hence taking y1 (first dominant)</span>
+        <span class="n">Ps</span><span class="p">[</span><span class="n">dprbi_dom</span><span class="p">]</span> <span class="o">=</span> <span class="n">y2</span><span class="p">[</span><span class="n">dprbi_dom</span><span class="p">]</span> <span class="c1">#In these tuples dprbi was dominant, hence taking y2 (Second domiant)</span>
+
+        <span class="n">Ps</span> <span class="o">=</span> <span class="n">Ps</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">shp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">Ps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span><span class="n">Ps</span><span class="p">)</span>
+
+        <span class="c1">## Dihedral-like power component</span>
+        <span class="n">Pd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shp_flt</span><span class="p">)</span>
+        <span class="n">Pd</span><span class="p">[</span><span class="n">dprbi_dom</span><span class="p">]</span> <span class="o">=</span> <span class="n">y1</span><span class="p">[</span><span class="n">dprbi_dom</span><span class="p">]</span>
+        <span class="n">Pd</span><span class="p">[</span><span class="n">dprsi_dom</span><span class="p">]</span> <span class="o">=</span> <span class="n">y2</span><span class="p">[</span><span class="n">dprsi_dom</span><span class="p">]</span>
+
+        <span class="n">Pd</span> <span class="o">=</span> <span class="n">Pd</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">shp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">Pd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span><span class="n">Pd</span><span class="p">)</span>
+
+        <span class="c1">## Residue (diffused) power component</span>
+
+        <span class="n">Pr</span> <span class="o">=</span> <span class="n">residue</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">shp</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">Pr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">s0</span><span class="p">,</span><span class="n">Pr</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Pd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Ps</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">Pr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, PolSARtools team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

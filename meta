@@ -6,22 +6,21 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
+v0.10
 renamed function_name convension
 added s1 grd
-added dpric,dprsic,powers_dp_grd, alos2_wbd
+added dpric,dprsic,powers_dp_grd,dpri,dprsi,powers_dp, alos2_wbd,chyaan_cp
 
 
-v0.10 [to do]
+v0.11 [to do]
 
 full-pol <-> compact pol 
 convert_C and convert_T
-mrslab dual-pol functions
 rectangular window
 NISAR GCOV
 NISAR-ISCE3?
 NISAR incidence angle
 EOS-04
-Sentinel-1 GRD - Done
 Fix ALOS-1 reader
 # tests
 

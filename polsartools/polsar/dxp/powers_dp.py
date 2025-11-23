@@ -4,25 +4,22 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files
 @time_it
-def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif", 
-           cog=False, ovr = [2, 4, 8, 16], comp=False,
-           max_workers=None,block_size=(512, 512),
-           progress_callback=None,  # for QGIS plugin          
-           ):
-    """
-    This function computes the scattering power components for GRD (only intensity no phase) dual-pol SAR data (decomposition/factorization based approach)
-
+def powers_dp(in_dir, method=1, win=1, fmt="tif", cog=False, 
+          ovr = [2, 4, 8, 16], comp=False,
+          max_workers=None,block_size=(512, 512),
+          progress_callback=None,  # for QGIS plugin          
+          ):
+    """ This function computes the scattering power components for dual-pol SAR C2 matrix data (decomposition/factorization based approach)
 
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> powers_dp_grd("/path/to/copol_file.tif", "/path/to/crosspol_file.tif")
-
+    >>> powers_dp("/path/to/c2_data")
+    
     >>> # Advanced usage with custom parameters
-    >>> powers_dp_grd(
-    ...     cpFile="/path/to/copol_file.tif",
-    ...     xpFile="/path/to/crosspol_file.tif",
-    ...     method=2,    
+    >>> powers_dp(
+    ...     in_dir="/path/to/c2_data",
+    ...     method=2,   
     ...     win=3,
     ...     fmt="tif",
     ...     cog=True,
@@ -31,10 +28,8 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
     
     Parameters
     ----------
-    cpFile : str
-        Path to the co-polarized backscatter (linear) SAR raster file.
-    xpFile : str
-        Path to the cross-polarized backscatter (linear) SAR raster file.
+    in_dir : str
+        Path to the input folder containing C2 matrix files.
     method : int
         1: Decomposition based powers
         2: Factorisation based powers
@@ -67,45 +62,50 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
 
     """
     write_flag=True
-    input_filepaths = [cpFile,xpFile]
+    input_filepaths = dxpc2files(in_dir)
     output_filepaths = []
+
 
     if fmt == "bin":
         if method==1:
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Alpha_dp_grd.bin"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pdl_dcmp_grd.bin"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Psl_dcmp_grd.bin"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pu_dcmp_grd.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Alpha_dp.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Pdl_dcmp.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Psl_dcmp.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Pu_dcmp.bin"))
         else:
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pdl_fact_grd.bin"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Psl_fact_grd.bin"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pr_fact_grd.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Pdl_fact.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Psl_fact.bin"))
+            output_filepaths.append(os.path.join(in_dir, "Pr_fact.bin"))
     else:
         if method==1:
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Alpha_dp_grd.tif"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pdl_dcmp_grd.tif"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Psl_dcmp_grd.tif"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pu_dcmp_grd.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Alpha_dp.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Pdl_dcmp.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Psl_dcmp.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Pu_dcmp.tif"))
         else:
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pdl_fact_grd.tif"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Psl_fact_grd.tif"))
-            output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pr_fact_grd.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Pdl_fact.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Psl_fact.tif"))
+            output_filepaths.append(os.path.join(in_dir, "Pr_fact.tif"))
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag, 
-                            process_chunk_dp_powers,
+
+
+    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
+                            process_chunk_dp_pow,
                             *[method],
-                            block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
+                            block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
-def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
+def process_chunk_dp_pow(chunks, window_size,*args):
     method = int(args[-1])
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
-    c11 = np.array(chunks[0])
-    c22 = np.array(chunks[1])
+    c11_T1 = np.array(chunks[0])
+    c12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
+    # c21_T1 = np.conj(c12_T1)
+    c22_T1 = np.array(chunks[3])
 
-
+    ##### Normalizing Stokes vector elements
     def S_norm(S_array):
         S_5 = np.percentile(S_array, 5)
         S_95 = np.percentile(S_array, 95)
@@ -117,41 +117,62 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
         return S_norm_array
 
     if window_size>1:
-        c11 = conv2d(c11,kernel)
-        c22 = conv2d(c22,kernel)
+        c11s = conv2d(np.real(c11_T1),kernel)+1j*conv2d(np.imag(c11_T1),kernel)
+        c12s = conv2d(np.real(c12_T1),kernel)+1j*conv2d(np.imag(c12_T1),kernel)
+        # c21s = conv2d(np.real(c21_T1),kernel)+1j*conv2d(np.imag(c21_T1),kernel)
+        c22s = conv2d(np.real(c22_T1),kernel)+1j*conv2d(np.imag(c22_T1),kernel)
 
-    s0 = np.abs(c11 + c22)
-    s1 = np.abs(c11 - c22)
+    else:
+        c11s = c11_T1
+        c12s = c12_T1
+        c22s = c22_T1
 
-    C11_av_db = 10*np.log10(c11)
+    C11_av_db = 10*np.log10(c11s)
+    s0 = c11s + c22s
+    s1 = c11s - c22s
+    s2 = 2*c12s.real
+    s3 = 2*c12s.imag
 
-    prob1 = c11/(c11 + c22)
-    prob2 = c22/(c11 + c22)
+
+    ##### Calculate Entropy
+    ## Here eigen values are calculated using Stokes vector elements
+
+    tpp = np.sqrt(np.square(s1) + np.square(s2) + np.square(s3))
+
+    lmbd1 = (s0 + tpp)/2
+    lmbd2 = (s0 - tpp)/2
+
+    prob1 = lmbd1/(lmbd1 + lmbd2)
+    prob2 = lmbd2/(lmbd1 + lmbd2)
 
     ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
+    dop = (lmbd1 - lmbd2)/(lmbd1 + lmbd2)
+    beta = lmbd1/(lmbd1 + lmbd2)
+
+    ##### Taking abs of Stokes vector elements
+    s0 = np.abs(s0)
+    s1 = np.abs(s1)
+    s2 = np.abs(s2)
+    s3 = np.abs(s3)
+
     s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
-    C11_norm = S_norm(c11)
-    C22_norm = S_norm(c22)
-
-
-    dop = (c11 - c22)/(c11 + c22)
-    dop = np.abs(dop)
-    beta = prob1
-
-    ##### Power Calculation
-
-    dprbi = np.sqrt(np.square(C11_norm) + np.square(C22_norm))/np.sqrt(2)
-
-
-    dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)) # For Valid pixels
-    dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)) # For Noise pixels 
-
-    NESZ = -16 ## For Sentinel-1
-    dprsi = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
-
-    shp = np.shape(dprbi)
-
+    s1_norm = S_norm(s1)
+    s2_norm = S_norm(s2)
+    s3_norm = S_norm(s3)
+    
     if method==1:
+        ##### Power Calculation
+
+        dprbi = np.sqrt(np.square(s1_norm) + np.square(s2_norm) + np.square(s3_norm))/np.sqrt(3)
+
+        dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)) # For Valid pixels
+        dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)) # For Noise pixels 
+
+        NESZ = -16 ## For Sentinel-1
+        dprsi = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
+
+        shp = np.shape(dprbi)
+
 
         alpha1 = np.arctan2(dprbi, 1 - dprbi)
         alpha1 = np.degrees(alpha1)
@@ -180,10 +201,23 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
         Pu = np.where(C11_av_db > NESZ, Pu_v, Pu_n) # Unpolized power
         Pd = np.where(C11_av_db > NESZ, Pd_v, Pd_n) # "Dihedral-like" power
         Ps = np.where(C11_av_db > NESZ, Ps_v, Ps_n) # "Surface-like" power
-    
+
 
         return alpha_dp.astype(np.float32), Pd.astype(np.float32), Ps.astype(np.float32), Pu.astype(np.float32)
     else:
+
+        ##### Power Calculation
+
+        dprbi = np.sqrt(np.square(s1_norm) + np.square(s2_norm) + np.square(s3_norm))/np.sqrt(3)
+
+        dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)) # For Valid pixels
+        dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)) # For Noise pixels 
+
+        NESZ = -16 ## For Sentinel-1
+        dprsi = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
+
+        shp = np.shape(dprbi)
+
         dprbi_flt = dprbi.flatten()
         dprsi_flt = dprsi.flatten()
         shp_flt = np.shape(dprbi_flt)

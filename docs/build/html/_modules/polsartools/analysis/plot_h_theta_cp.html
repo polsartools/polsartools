@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.plot_h_theta_cp &#8212; PolSARtools 0.9.1 documentation</title>
+    <title>polsartools.analysis.plot_h_theta_cp &#8212; PolSARtools 0.10 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
+    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/plot_h_theta_cp';</script>
@@ -468,7 +468,7 @@
 <span class="c1">#%%</span>
 <div class="viewcode-block" id="plot_h_theta_cp">
 <a class="viewcode-back" href="../../../files/functions/analysis/htheta_plot_cp.html#polsartools.plot_h_theta_cp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">plot_h_theta_cp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span> <span class="n">pname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_h_theta_cp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span> <span class="n">ppath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> 
                    <span class="n">cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
                     <span class="n">grey_region</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zone_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">zone_line_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">zone_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">gridsize</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
@@ -482,7 +482,7 @@
 <span class="sd">    </span>
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; plot_h_theta_cp(h, theta, path=&quot;HT_plot.png&quot;, cmap=&#39;jet&#39;, cbar=True, norm=&#39;log&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plot_h_theta_cp(h, theta, ppath=&quot;HT_plot.png&quot;, cmap=&#39;jet&#39;, cbar=True, norm=&#39;log&#39;)</span>
 <span class="sd">    This will generates a H/Theta plot  from the input arrays and save it as HT_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
@@ -491,7 +491,7 @@
 <span class="sd">        path to the Entropy file or Array representing entropy values.</span>
 <span class="sd">    theta : path or array-like</span>
 <span class="sd">        path to the Theta file or Array representing theta values in degrees.</span>
-<span class="sd">    pname : str, optional</span>
+<span class="sd">    ppath : str, optional</span>
 <span class="sd">        Path to save the generated plot. If a folder is given, the plot is saved as &#39;htheta_plot_cp.png&#39; inside that folder.</span>
 <span class="sd">        If the file already exists, it will be overwritten.</span>
 <span class="sd">    cmap : str, optional</span>
@@ -650,11 +650,11 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">pname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">pname</span><span class="p">):</span>
-            <span class="n">pname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="s1">&#39;htheta_plot_cp.png&#39;</span><span class="p">)</span>  
+    <span class="k">if</span> <span class="n">ppath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">ppath</span><span class="p">):</span>
+            <span class="n">ppath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ppath</span><span class="p">,</span> <span class="s1">&#39;htheta_plot_cp.png&#39;</span><span class="p">)</span>  
             
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">ppath</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
 
 
 </pre></div>

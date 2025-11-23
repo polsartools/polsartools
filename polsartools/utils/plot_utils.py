@@ -6,7 +6,7 @@ plt.rcParams.update({'font.size': 8})
 # plt.rcParams["font.family"] = "sans-serif"
 # plt.rcParams["mathtext.fontset"] = "dejavuserif"
 
-def pol_sign(data1, data2, title='', pname='',cmap='jet',fig=None, axes=None, start_index=0):
+def pol_sign(data1, data2, title='', ppath='',cmap='jet',fig=None, axes=None, start_index=0):
     x, y = np.mgrid[-90: 91 : 1, -45 : 46 : 1]
     if axes is None or fig is None:
         fig, axes = plt.subplots(1, 2, figsize=(6, 4), dpi=300, subplot_kw={'projection': '3d'})
@@ -44,13 +44,16 @@ def pol_sign(data1, data2, title='', pname='',cmap='jet',fig=None, axes=None, st
     plt.suptitle(title)
     plt.tight_layout()
     
-    if pname:
-        plt.savefig(pname, dpi=300)
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'pol_signature.png')  
+            
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')
     
     plt.show()
     return fig, axes
 
-def poincare_plot(cp_sign, xp_sign, title='', pname='',cmap='jet'):
+def poincare_plot(cp_sign, xp_sign, title='', ppath='',cmap='jet'):
     
     # Azimuth and elevation grids
     azimuth, elevation = np.mgrid[-180:182:2, -90:92:2]
@@ -118,10 +121,17 @@ def poincare_plot(cp_sign, xp_sign, title='', pname='',cmap='jet'):
     
     plt.tight_layout()
     plt.suptitle(title)
-    if pname:
-        plt.savefig(pname, dpi=300)
+    # if pname:
+    #     plt.savefig(pname, dpi=300)
 
-def pol_sign2d(cp_sign, xp_sign, title='', pname='',cmap='jet'):
+
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'poincare_plot.png')  
+            
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')
+
+def pol_sign2d(cp_sign, xp_sign, title='', ppath='',cmap='jet'):
     x, y = np.mgrid[-90:91:1, -45:46:1]
     extent = [y.min(), y.max(), x.min(), x.max()]
     
@@ -149,11 +159,14 @@ def pol_sign2d(cp_sign, xp_sign, title='', pname='',cmap='jet'):
     plt.suptitle(title)
     plt.tight_layout()
 
-    if pname:
-        plt.savefig(pname, dpi=300)
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'pol_sign2d.png')  
+            
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')
 
 
-def poincare_sphere(pname=''):
+def poincare_sphere(ppath=''):
      # Axii
     stokes_vectors = np.array([
         [1.8, 0, 0],   # Horizontal linear
@@ -259,5 +272,8 @@ def poincare_sphere(pname=''):
     plt.title('Poincaré sphere')
     
     plt.tight_layout()
-    if pname:
-        plt.savefig(pname,dpi=300)
+    if ppath is not None:
+        if os.path.isdir(ppath):
+            ppath = os.path.join(ppath, 'poincare_sphere.png')  
+            
+        plt.savefig(ppath,dpi=300,bbox_inches='tight')

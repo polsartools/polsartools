@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Compact-pol H-theta plot (plot_h_theta_cp) &#8212; PolSARtools 0.10 documentation</title>
+    <title>Dual-pol Radar Surface Index (dprsi) &#8212; PolSARtools 0.10 documentation</title>
   
   
   
@@ -41,12 +41,12 @@
     <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/analysis/htheta_plot_cp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/dual_pol/dprsi';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Refined-Lee filter (filter_refined_lee)" href="../speckle_filts.html" />
-    <link rel="prev" title="Full-pol H-theta plot (plot_h_theta_fp)" href="htheta_plot_fp.html" />
+    <link rel="next" title="Dual-pol scattering power components (powers_dp)" href="powers_dp.html" />
+    <link rel="prev" title="Dual-pol Radar Built-up Index (dprbi)" href="dprbi.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -319,28 +319,34 @@
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../dataDP.html">Dual-pol data format</a></li>
 </ul>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">h_alpha_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
-</ul>
 <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dprbi.html">Dual-pol Radar Built-up Index (<code class="docutils literal notranslate"><span class="pre">dprbi</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dual-pol Radar Surface Index (<code class="docutils literal notranslate"><span class="pre">dprsi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="powers_dp.html">Dual-pol scattering power components (<code class="docutils literal notranslate"><span class="pre">powers_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dprbic.html">Dual-pol Radar Built-up Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprbic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dprsic.html">Dual-pol Radar Surface Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprsic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="powers_dp_grd.html">Dual-pol scattering power components for GRD (<code class="docutils literal notranslate"><span class="pre">powers_dp_grd</span></code>)</a></li>
+</ul>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="../full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
@@ -397,7 +403,7 @@
     
     <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Dual-pol Radar Surface Index (<code class="docutils literal notranslate"><span class="pre">dprsi</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -414,57 +420,55 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="compact-pol-h-theta-plot-plot-h-theta-cp">
-<h1>Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)<a class="headerlink" href="#compact-pol-h-theta-plot-plot-h-theta-cp" title="Link to this heading">#</a></h1>
+  <section id="dual-pol-radar-surface-index-dprsi">
+<h1>Dual-pol Radar Surface Index (<code class="docutils literal notranslate"><span class="pre">dprsi</span></code>)<a class="headerlink" href="#dual-pol-radar-surface-index-dprsi" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">plot_h_theta_cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grey_region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_lines</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_line_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/plot_h_theta_cp.html#plot_h_theta_cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Generates and saves a density plot of entropy (H) versus theta (degrees) for compact-pol data,
-including optional zone lines, zone IDs, and grey regions.</p>
-<p>radial axis is 1-H
-angular axis is 2*theta</p>
-<section id="example">
-<h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plot_h_theta_cp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">ppath</span><span class="o">=</span><span class="s2">&quot;HT_plot.png&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="go">This will generates a H/Theta plot  from the input arrays and save it as HT_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">dprsi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/dxp/dprsi.html#dprsi"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>This codes computes the Dual-pol Radar Surface Index (DpRSI) from C2 matrix</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dprsi</span><span class="p">(</span><span class="s2">&quot;/path/to/c2_data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>h<span class="classifier">path or array-like</span></dt><dd><p>path to the Entropy file or Array representing entropy values.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Advanced usage with custom parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dprsi</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">in_dir</span><span class="o">=</span><span class="s2">&quot;/path/to/c2_data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">win</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_dir</strong> (<em>str</em>) – Path to the input folder containing C2 matrix files.</p></li>
+<li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the spatial averaging window. Larger windows reduce speckle noise
+but decrease spatial resolution.</p></li>
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
+- ‘tif’: GeoTIFF format with georeferencing information
+- ‘bin’: Raw binary format</p></li>
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
+and overviews for efficient web access.</p></li>
+<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG creation. Each number represents the
+decimation factor for that overview level.</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, applies LZW compression to the output GeoTIFF files.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel processing workers. If None, uses
+CPU count - 1 workers.</p></li>
+<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks (rows, cols) for parallel computation.
+Larger blocks use more memory but may be more efficient.</p></li>
+</ul>
 </dd>
-<dt>theta<span class="classifier">path or array-like</span></dt><dd><p>path to the Theta file or Array representing theta values in degrees.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Results are written to disk as either ‘DpRSI.tif’ or ‘DpRSI.bin’
+in the input folder.</p>
 </dd>
-<dt>ppath<span class="classifier">str, optional</span></dt><dd><p>Path to save the generated plot. If a folder is given, the plot is saved as ‘htheta_plot_cp.png’ inside that folder.
-If the file already exists, it will be overwritten.</p>
-</dd>
-<dt>cmap<span class="classifier">str, optional</span></dt><dd><p>Colormap used for the hexbin plot. Defaults to ‘jet’.</p>
-</dd>
-<dt>colorbar<span class="classifier">bool, optional</span></dt><dd><p>If True, displays a colorbar representing sample count. Defaults to True.</p>
-</dd>
-<dt>norm<span class="classifier">str, optional</span></dt><dd><p>If set to ‘log’, applies logarithmic normalization to the hexbin plot.</p>
-</dd>
-<dt>grey_region<span class="classifier">bool, optional</span></dt><dd><p>If True, fills non-feasible regions of the plot with a grey color to indicate feasible boundaries. Defaults to True.</p>
-</dd>
-<dt>zone_lines<span class="classifier">bool, optional</span></dt><dd><p>If True, adds dashed lines to mark different entropy-alpha zones. Defaults to True.</p>
-</dd>
-<dt>zone_line_color<span class="classifier">str, optional</span></dt><dd><p>Color used for zone boundary lines. Defaults to ‘k’ (black).</p>
-</dd>
-<dt>zone_ids<span class="classifier">bool, optional</span></dt><dd><p>If True, labels predefined zones with numerical identifiers. Defaults to True.</p>
-</dd>
-<dt>gridsize<span class="classifier">int, optional</span></dt><dd><p>Number of hexagonal bins used in the plot. Higher values result in finer binning. Defaults to 200.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>None</dt><dd><p>Displays the plot and optionally saves it to the specified location.</p>
-</dd>
-</dl>
-</section>
 </dd></dl>
 
 </section>
@@ -480,20 +484,20 @@ If the file already exists, it will be overwritten.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="htheta_plot_fp.html"
+       href="dprbi.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</p>
+        <p class="prev-next-title">Dual-pol Radar Built-up Index (<code class="docutils literal notranslate"><span class="pre">dprbi</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
-       href="../speckle_filts.html"
+       href="powers_dp.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</p>
+        <p class="prev-next-title">Dual-pol scattering power components (<code class="docutils literal notranslate"><span class="pre">powers_dp</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -512,7 +516,7 @@ If the file already exists, it will be overwritten.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../../_sources/files/functions/analysis/htheta_plot_cp.rst.txt"
+      <li><a href="../../../_sources/files/functions/dual_pol/dprsi.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

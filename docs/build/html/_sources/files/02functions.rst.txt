@@ -81,6 +81,14 @@ Following are the avaialble functions for dual-pol data:
     functions/dual_pol/mf3cd
     functions/dual_pol/dprvic
     functions/dual_pol/dp_desc
+    functions/dual_pol/dprbi
+    functions/dual_pol/dprsi
+    functions/dual_pol/powers_dp
+    functions/dual_pol/dprbic
+    functions/dual_pol/dprsic
+    functions/dual_pol/powers_dp_grd
+
+
 
 Analysis functions
 -------------------

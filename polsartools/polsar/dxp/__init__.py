@@ -9,3 +9,7 @@ from .dprvic import dprvic
 from .dp_desc import dp_desc
 from .dprbic import dprbic
 from .dprsic import dprsic
+from .powers_dp_grd import powers_dp_grd
+from .dprbi import dprbi
+from .dprsi import dprsi
+from .powers_dp import powers_dp

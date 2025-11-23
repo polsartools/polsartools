@@ -91,32 +91,32 @@ import polsartools as pst
 
 def main():
   # Generate C3 from NISAR GSLC full-pol data with 5x5 multilooking
-  pst.nisar_gslc('path/to/nisar_gslc.h5',mat='C3',
+  pst.import_nisar_gslc('path/to/nisar_gslc.h5',mat='C3',
                     azlks=5, rglks=5,
                     fmt='tif', cog=False, 
                     )
 
   # Visualize Pauli-decomposition RGB
   c3path = 'path/to/nisar_gslc/C3'
-  pst.pauliRGB(c3path)
+  pst.pauli_rgb(c3path)
 
   # Apply 3x3 refined-Lee speckle filter
-  pst.rlee(c3path,win=3)
+  pst.filter_refined_lee(c3path,win=3)
 
   # Perform H-A-Alpha decomposition
   c3_rlee = 'path/to/nisar_gslc/rlee_3x3/C3'
-  pst.halpha_fp(c3_rlee)
+  pst.h_a_alpha_fp(c3_rlee)
 
   # Generate H-Alpha 2d plot
   entropy_path = c3_rlee+'/H_fp.tif'
   alpha_path = c3_rlee+'/alpha_fp.tif'
-  pst.halpha_plot_fp(entropy_path, alpha_path,
-                      pname='./halpha_2D.png')
+  pst.plot_h_alpha_fp(entropy_path, alpha_path,
+                      ppath='./halpha_2D.png')
 
   # Generate H-A-Alpha 3d plot
   ani_path = c3_rlee + '/anisotropy_fp.tif'
-  pst.haalpha_plot_fp(entropy_path, ani_path,alpha_path,
-                      pname='./haalpha_3D.png')
+  pst.plot_h_a_alpha_fp(entropy_path, ani_path,alpha_path,
+                      ppath='./haalpha_3D.png')
 
 if __name__ == "__main__":
     main()
@@ -206,24 +206,20 @@ We’re always open to suggestions for new features or improvements!
      [Click here to request a feature](https://github.com/polsartools/polsartools/issues/new?template=feature_request.md)
 
 
-<!-- ## 💠Cite
+## 💠Cite
 
 If you use **`PolSARtools`** in your research or projects, please cite it as follows:
 
 
-> Bhogapurapu, N., Dey, S., Mandal, D., Bhattacharya, A. and Rao, Y.S., 2021. PolSAR tools: A QGIS plugin for generating SAR descriptors. Journal of Open Source Software, 6(60), p.2970. doi:  [10.21105/joss.02970](https://doi.org/10.21105/joss.02970)  
+> Bhogapurapu, Narayanarao and Siqueira, Paul and Bhattacharya, Avik, polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale. doi:  [10.2139/ssrn.5554303](http://dx.doi.org/10.2139/ssrn.5554303)  
 
 
 ```bibtex
-@article{bhogapurapu2021polsar,
-  title={PolSAR tools: A QGIS plugin for generating SAR descriptors},
-  author={Bhogapurapu, Narayanarao and Dey, Subhadip and Mandal, Dipankar and Bhattacharya, Avik and Rao, YS},
-  journal={Journal of Open Source Software},
-  volume={6},
-  number={60},
-  pages={2970},
-  year={2021},
-  doi= {10.21105/joss.02970}
+@article{bhogapurapupolsartools,
+  title={{polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale}},
+  author={Bhogapurapu, Narayanarao and Siqueira, Paul and Bhattacharya, Avik},
+  journal={Available at SSRN 5554303},
+  doi={10.2139/ssrn.5554303}
 }
 
-``` -->
+```
