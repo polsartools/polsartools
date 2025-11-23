@@ -6,6 +6,11 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
+renamed function_name convension
+added s1 grd
+added dpric,dprsic,powers_dp_grd, alos2_wbd
+
+
 v0.10 [to do]
 
 full-pol <-> compact pol 

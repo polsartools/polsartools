@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.chyaan2 &#8212; PolSARtools 0.9.1 documentation</title>
+    <title>polsartools.sensors.chyaan2 &#8212; PolSARtools 0.10 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
+    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/chyaan2';</script>
@@ -528,7 +528,7 @@
         <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">temp_dir</span>
         
     
-    <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">in_dir</span><span class="o">+</span><span class="s1">&#39;/data/calibrated/*/*sli*.xml&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="s1">&#39;data/calibrated/*/*sli*.xml&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">fxml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fxml</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;output_line_spacing&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
@@ -709,8 +709,7 @@
         <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;temp_S2_&#39;</span><span class="p">)</span>
         <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">temp_dir</span>
         
-    
-    <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">in_dir</span><span class="o">+</span><span class="s1">&#39;/data/calibrated/*/*sli*.xml&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xmlFile</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="s1">&#39;data/calibrated/*/ch2_sar_*sli*.xml&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">fxml</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fxml</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;output_line_spacing&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>

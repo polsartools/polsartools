@@ -191,7 +191,7 @@ def import_chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
         base_out_dir = temp_dir
         
     
-    xmlFile = glob.glob(in_dir+'/data/calibrated/*/*sli*.xml')[0]
+    xmlFile = glob.glob(os.path.join(in_dir,'data/calibrated/*/*sli*.xml'))[0]
     fxml = open(xmlFile, 'r')
     for line in fxml:
         if "output_line_spacing" in line:
@@ -369,8 +369,7 @@ def import_chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
         temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
         base_out_dir = temp_dir
         
-    
-    xmlFile = glob.glob(in_dir+'/data/calibrated/*/*sli*.xml')[0]
+    xmlFile = glob.glob(os.path.join(in_dir,'data/calibrated/*/ch2_sar_*sli*.xml'))[0]
     fxml = open(xmlFile, 'r')
     for line in fxml:
         if "output_line_spacing" in line:

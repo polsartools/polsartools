@@ -3,7 +3,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.9.1"  
+__version__ = "0.10"  
 
 
 # Importing functions from the submodules for direct access
@@ -27,7 +27,7 @@ from .preprocess import prepare_dem, mlook
 """ Importing polsar modules """
 from .polsar.fp import grvi,nned_fp, h_a_alpha_fp, neumann_parm, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yamaguchi_4c,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
 from .polsar.cp import cprvi, dop_cp, s_omega, mf3cc
-from .polsar.dxp import dprvi, dop_dp, prvi_dp, rvi_dp, h_alpha_dp, shannon_h_dp,dprvic, dp_desc
+from .polsar.dxp import dprvi, dop_dp, prvi_dp, rvi_dp, h_alpha_dp, shannon_h_dp,dprvic, dp_desc, dprbic, dprsic
 from .polsar.dcp import mf3cd
 from .polsar.others.stokes_parm import stokes_parm
 
@@ -65,6 +65,7 @@ __all__ = [
     'dprvi', 'dop_dp', 'prvi_dp', 'rvi_dp', 'h_alpha_dp', 
     'shannon_h_dp',     
     'dprvic','dp_desc',
+    'dprbic','dprsic',
     # DUAL-CO-POL
     'mf3cd' ,
 
