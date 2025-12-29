@@ -92,7 +92,7 @@ def powers_dp(in_dir, method=1, win=1, fmt="tif", cog=False,
     process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
                             process_chunk_dp_pow,
                             *[method],
-                            block_size=block_size, max_workers=max_workers,  num_outputs=1,
+                            block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
@@ -117,10 +117,10 @@ def process_chunk_dp_pow(chunks, window_size,*args):
         return S_norm_array
 
     if window_size>1:
-        c11s = conv2d(np.real(c11_T1),kernel)+1j*conv2d(np.imag(c11_T1),kernel)
+        c11s = conv2d(np.real(c11_T1),kernel)
         c12s = conv2d(np.real(c12_T1),kernel)+1j*conv2d(np.imag(c12_T1),kernel)
         # c21s = conv2d(np.real(c21_T1),kernel)+1j*conv2d(np.imag(c21_T1),kernel)
-        c22s = conv2d(np.real(c22_T1),kernel)+1j*conv2d(np.imag(c22_T1),kernel)
+        c22s = conv2d(np.real(c22_T1),kernel)
 
     else:
         c11s = c11_T1

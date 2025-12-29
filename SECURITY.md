@@ -6,8 +6,8 @@ The following versions of **PolSARtools** are currently supported with security 
 
 | Version   | Supported          |
 |-----------|--------------------|
-| 0.9       | ✅ Yes             |
-| < 0.8     | ❌ No              |
+| 0.10       | ✅ Yes             |
+| < 0.9     | ❌ No              |
 
 We recommend using the latest version to benefit from ongoing improvements and security maintenance.
 

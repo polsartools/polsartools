@@ -141,7 +141,7 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
     ##### Power Calculation
 
     dprbi = np.sqrt(np.square(C11_norm) + np.square(C22_norm))/np.sqrt(2)
-
+    dprbi = dprbi*s1_s_norm
 
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)) # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)) # For Noise pixels 

@@ -34,7 +34,6 @@ from polsartools.tests.test_filters import test_filters_processing
 test_filters_processing()
 
 
-
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build
 sphinx-build -M html docs/source docs/build

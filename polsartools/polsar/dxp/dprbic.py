@@ -102,14 +102,18 @@ def process_chunk_dprbic(chunks, window_size,*args):
     # s0 = np.abs(c11 + c22)
     # s1 = np.abs(c11 - c22)
 
-    prob1 = c11/(c11 + c22)
-    prob2 = c22/(c11 + c22)
+    # prob1 = c11/(c11 + c22)
+    # prob2 = c22/(c11 + c22)
 
-    ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
+    # ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
+
+    s1 = np.abs(c11-c22)
 
     C11_norm = S_norm(c11)
     C22_norm = S_norm(c22)
+    s1_norm = S_norm(s1)
 
     dprbic = np.sqrt(np.square(C11_norm) + np.square(C22_norm))/np.sqrt(2)
+    dprbic = dprbic*s1_norm
 
     return dprbic.astype(np.float32)
