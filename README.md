@@ -4,6 +4,7 @@
 
 ## A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 
+![Silver Medal](https://img.shields.io/badge/Award-ISRS--ICON_Silver-silver?style=flat-square&logo=github) 
 [![Build](https://github.com/polsartools/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/polsartools/polsartools/actions/workflows/ci.yml)
 [![Documentation Status](https://readthedocs.org/projects/polsartools/badge/?version=latest)](https://polsartools.readthedocs.io/en/latest/?badge=latest)
 
@@ -44,10 +45,28 @@
   </tr>
 </table>
 
-## 💠General Information
+
+
+## 🏆 Awards & Recognition
+
+### **ISRS I-CON (Silver)**
+This award was presented by the **Indian Society of Remote Sensing (ISRS)** during the *Innovation Contest for Geo Spatial Information Technology-2025*.
+
+**Why this work was recognized:**
+Our project was honored for addressing the "Big Data" challenges of the current generation of SAR missions (such as NISAR, EOS-04, BIOMASS, and Sentinel-1). The judges recognized **PolSARtools** for:
+
+* ☁️ **Cloud-Native Innovation:** Bridging the gap between raw polarimetric data and **Analysis Ready Data (ARD)** using cloud-optimized formats.
+* 🔓 **Open Science:** Promoting inclusive research by lowering the coding barrier through our integrated **QGIS plugin**.
+* 🏗️ **Scalability:** Providing a reproducible architecture capable of handling the petabyte-scale influx of modern satellite imagery.
+
+
+
+
+## 💠 General Information
 This package generates derived SAR parameters (viz. polarimetric descriptors, vegetation indices, polarimetric decomposition parameters) from various SAR sensors or input polarimetric matrix (S2, C4, C3, T4, T3, Sxy, C2, T2). 
 
-## 💠Installation
+
+## 💠 Installation
 1. **Install `gdal` Package**
 	
 	```bash
@@ -82,7 +101,7 @@ This package generates derived SAR parameters (viz. polarimetric descriptors, ve
 		Download here: https://visualstudio.microsoft.com/visual-cpp-build-tools
 
 
-## 💠Example Usage
+## 💠 Example Usage
 
 The following code example demonstrates a typical processing pipeline using ```polsartools``` on NASA-ISRO SAR (NISAR) Geocoded Single-look Complex (GSLC) data. It includes polarimetric covariance matrix (C3) extraction, Pauli RGB visualization, speckle filtering,  H/A/α decomposition, and plotting in the H/α and H/A/α feature spaces.  
 
@@ -127,7 +146,7 @@ if __name__ == "__main__":
 More example use cases and notebooks are provided at [polsartools-notebooks](https://github.com/polsartools/polsartools-tutorials) repo. Detailed documentation is available at [polsartools.readthedocs.io](https://polsartools.readthedocs.io/en/latest/) 
 
 
-## 💠Available functionalities:
+## 💠 Available functionalities:
 Full list of available functions is provided here : [Functions](https://polsartools.readthedocs.io/en/latest/files/02functions.html)
 
 
@@ -143,7 +162,7 @@ The package logo visually encapsulates key concepts in PolSAR data processing:
 
 > Designed to reflect what this package does best: demystify PolSAR, one pixel at a time.
 
-## 💠Contributing
+## 💠 Contributing
 
 We welcome contributions! Whether it's fixing bugs, adding new features, or improving documentation, your help is greatly appreciated.
 
@@ -175,7 +194,7 @@ We welcome contributions! Whether it's fixing bugs, adding new features, or impr
 <!-- For more detailed guidelines on contributing, see the CONTRIBUTING.md (if available). -->
 
 
-## 💠Bug Reporting
+## 💠 Bug Reporting
 
 If you encounter a bug or issue, please follow these steps to report it:
 
@@ -192,7 +211,7 @@ If you encounter a bug or issue, please follow these steps to report it:
 [Click here to report a bug](https://github.com/polsartools/polsartools/issues/new?template=bug_report.md)
 
 
-## 💠Feature Requests
+## 💠 Feature Requests
 
 We’re always open to suggestions for new features or improvements!
 
@@ -205,21 +224,20 @@ We’re always open to suggestions for new features or improvements!
 
      [Click here to request a feature](https://github.com/polsartools/polsartools/issues/new?template=feature_request.md)
 
+## 💠 Cite
 
-## 💠Cite
+If you use **`polsartoos`** in your research or projects, please cite the official journal paper:
 
-If you use **`PolSARtools`** in your research or projects, please cite it as follows:
+> Bhogapurapu, N., Siqueira, P., & Bhattacharya, A. (2025). **polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale**. *SoftwareX* (Accepted). doi: [10.2139/ssrn.5554303](http://dx.doi.org/10.2139/ssrn.5554303)
 
-
-> Bhogapurapu, Narayanarao and Siqueira, Paul and Bhattacharya, Avik, polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale. doi:  [10.2139/ssrn.5554303](http://dx.doi.org/10.2139/ssrn.5554303)  
-
+### BibTeX
 
 ```bibtex
-@article{bhogapurapupolsartools,
+@article{bhogapurapu2025polsartools,
   title={{polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale}},
   author={Bhogapurapu, Narayanarao and Siqueira, Paul and Bhattacharya, Avik},
-  journal={Available at SSRN 5554303},
+  journal={SoftwareX},
+  year={2025},
+  note={Accepted / In Press},
   doi={10.2139/ssrn.5554303}
 }
-
-```
