@@ -228,16 +228,21 @@ We’re always open to suggestions for new features or improvements!
 
 If you use **`polsartoos`** in your research or projects, please cite the official journal paper:
 
-> Bhogapurapu, N., Siqueira, P., & Bhattacharya, A. (2025). **polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale**. *SoftwareX* (Accepted). doi: [10.2139/ssrn.5554303](http://dx.doi.org/10.2139/ssrn.5554303)
+> Bhogapurapu, N., Siqueira, P., & Bhattacharya, A. 2025. **polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale**. *SoftwareX*, 33, 102490. doi: [10.1016/j.softx.2025.102490](http://dx.doi.org/10.1016/j.softx.2025.102490)
 
 ### BibTeX
 
 ```bibtex
 @article{bhogapurapu2025polsartools,
-  title={{polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale}},
-  author={Bhogapurapu, Narayanarao and Siqueira, Paul and Bhattacharya, Avik},
-  journal={SoftwareX},
-  year={2025},
-  note={Accepted / In Press},
-  doi={10.2139/ssrn.5554303}
+title = {Polsartools: A cloud-native python library for processing open polarimetric SAR data at scale},
+author = {Narayanarao Bhogapurapu and Paul Siqueira and Avik Bhattacharya},journal = {SoftwareX},
+volume = {33},
+pages = {102490},
+year = {2026},
+publisher={Elsevier},
+issn = {2352-7110},
+doi = {https://doi.org/10.1016/j.softx.2025.102490},
 }
+
+## 💠 Funding
+The author(s) would like to thank a NASA NISAR grant (#80NSSC22K1869) and the Multi-Mission Algorithm and Analysis Platform (MAAP) for supporting and motivating this work.
