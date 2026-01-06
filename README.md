@@ -243,6 +243,7 @@ publisher={Elsevier},
 issn = {2352-7110},
 doi = {https://doi.org/10.1016/j.softx.2025.102490},
 }
+```
 
 ## 💠 Funding
-The author(s) would like to thank a NASA NISAR grant (#80NSSC22K1869) and the Multi-Mission Algorithm and Analysis Platform (MAAP) for supporting and motivating this work.
+This research was partially supported by NASA through the NISAR grant (#80NSSC22K1869), with additional support from the Multi-Mission Algorithm and Analysis Platform (MAAP).
