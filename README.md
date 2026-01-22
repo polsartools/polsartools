@@ -2,7 +2,7 @@
   <img src="logo.png" alt=""/>
 </p>
 
-## A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
+## A Python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.
 
 ![Silver Medal](https://img.shields.io/badge/Award-ISRS--ICON_Silver-silver?style=flat-square&logo=github) 
 [![Build](https://github.com/polsartools/polsartools/actions/workflows/ci.yml/badge.svg)](https://github.com/polsartools/polsartools/actions/workflows/ci.yml)
@@ -16,6 +16,7 @@
 
 [![GitHub commits](https://img.shields.io/github/commits-since/polsartools/polsartools/0.9.svg)](https://GitHub.com/polsartools/polsartools/commit/)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
+
 
 
 
