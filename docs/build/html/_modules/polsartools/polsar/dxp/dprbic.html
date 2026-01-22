@@ -440,15 +440,19 @@
     <span class="c1"># s0 = np.abs(c11 + c22)</span>
     <span class="c1"># s1 = np.abs(c11 - c22)</span>
 
-    <span class="n">prob1</span> <span class="o">=</span> <span class="n">c11</span><span class="o">/</span><span class="p">(</span><span class="n">c11</span> <span class="o">+</span> <span class="n">c22</span><span class="p">)</span>
-    <span class="n">prob2</span> <span class="o">=</span> <span class="n">c22</span><span class="o">/</span><span class="p">(</span><span class="n">c11</span> <span class="o">+</span> <span class="n">c22</span><span class="p">)</span>
+    <span class="c1"># prob1 = c11/(c11 + c22)</span>
+    <span class="c1"># prob2 = c22/(c11 + c22)</span>
 
-    <span class="n">ent</span> <span class="o">=</span> <span class="o">-</span><span class="n">prob1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">prob1</span><span class="p">)</span> <span class="o">-</span> <span class="n">prob2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">prob2</span><span class="p">)</span>
+    <span class="c1"># ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)</span>
+
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c11</span><span class="o">-</span><span class="n">c22</span><span class="p">)</span>
 
     <span class="n">C11_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">c11</span><span class="p">)</span>
     <span class="n">C22_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">c22</span><span class="p">)</span>
+    <span class="n">s1_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
 
     <span class="n">dprbic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">C11_norm</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">C22_norm</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">dprbic</span> <span class="o">=</span> <span class="n">dprbic</span><span class="o">*</span><span class="n">s1_norm</span>
 
     <span class="k">return</span> <span class="n">dprbic</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>

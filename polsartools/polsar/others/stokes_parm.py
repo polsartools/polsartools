@@ -18,12 +18,12 @@ def stokes_parm(SxxFile,SxyFile,  win=3, fmt="tif", cog=False,
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> stokes_parm("/path/to/s11.bin", "/path/to/s21.bin")
+    >>> stokes_parm("/path/to/s11.bin", "/path/to/s12.bin")
     
     >>> # Advanced usage with custom parameters
     >>> stokes_parm(
     ...     "/path/to/s11.bin",
-    ...     "/path/to/s21.bin",
+    ...     "/path/to/s12.bin",
     ...     win=5,
     ...     fmt="tif",
     ...     cog=True,

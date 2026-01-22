@@ -78,12 +78,15 @@ ext_modules = [
 #         # Call the install command
 #         install.run(self)
 #         # Optionally run additional post-installation commands here
-
+with open("README.md", encoding="utf-8") as f: 
+    long_description = f.read()
+    
 setup(
     name='polsartools',
     version=get_version(),
     description='A python package for processing Polarimetric Synthetic Aperture Radar (PolSAR) data.',
-    long_description=open('README.md').read(),
+    # long_description=open('README.md').read(),
+    long_description=long_description,
     long_description_content_type='text/markdown',
     author='Narayanarao Bhogapurapu',
     author_email='bnarayanarao@nitw.ac.in',

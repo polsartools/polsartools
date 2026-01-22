@@ -329,6 +329,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/dprbi.html">Dual-pol Radar Built-up Index (<code class="docutils literal notranslate"><span class="pre">dprbi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/dprsi.html">Dual-pol Radar Surface Index (<code class="docutils literal notranslate"><span class="pre">dprsi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/powers_dp.html">Dual-pol scattering power components (<code class="docutils literal notranslate"><span class="pre">powers_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/dprbic.html">Dual-pol Radar Built-up Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprbic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/dprsic.html">Dual-pol Radar Surface Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprsic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dual_pol/powers_dp_grd.html">Dual-pol scattering power components for GRD (<code class="docutils literal notranslate"><span class="pre">powers_dp_grd</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
@@ -422,13 +428,13 @@
 <dd><p>This function computes the Stokes parameters and child parameters from Single look Scattering Matrix elements.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stokes_parm</span><span class="p">(</span><span class="s2">&quot;/path/to/s11.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/s21.bin&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stokes_parm</span><span class="p">(</span><span class="s2">&quot;/path/to/s11.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/s12.bin&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Advanced usage with custom parameters</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stokes_parm</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="s2">&quot;/path/to/s11.bin&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s2">&quot;/path/to/s21.bin&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;/path/to/s12.bin&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">win</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>

@@ -7,13 +7,28 @@
 # docs/source/conf.py
 
 v0.10
-renamed function_name convension
-added s1 grd
-added dpric,dprsic,powers_dp_grd,dpri,dprsi,powers_dp, alos2_wbd,chyaan_cp
+updated:
+    renamed all function identifiers according to reviwer suggestion
+    updated yamaguchi_4c with c++
+    minor bug fixes in output datatypes
+    added dev_template folder for testing new functions
+added: 
+    sensors: 
+            import_chyaan2_cp,
+            import_s1_grd,
+            import_alos2_wbd_l11,
 
+    functions:
+            dprbic,
+            dprsic,
+            powers_dp_grd,
+            dprbi,
+            dprsi,
+            powers_dp, 
+            
 
 v0.11 [to do]
-
+MRSLab functions image-wide parameters
 full-pol <-> compact pol 
 convert_C and convert_T
 rectangular window
