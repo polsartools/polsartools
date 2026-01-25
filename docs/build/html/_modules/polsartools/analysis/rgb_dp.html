@@ -371,6 +371,7 @@
 <span class="sd">        - 2: Blue=C22, Red=C11, Green=|C11 + C22 - 2·C12_real|</span>
 <span class="sd">        - 3: Blue=C11, Red=C22, Green=|C11 - C22|</span>
 <span class="sd">        - 4: Blue=C22, Red=C11, Green=|C22 - C11|</span>
+<span class="sd">        - 5: Blue=C11, Red=C11, Green=C22</span>
 <span class="sd">    save_tif : bool, default=False</span>
 <span class="sd">        If True, generates a GeoTIFF (.tif) file alongside the PNG image.</span>
 
@@ -439,8 +440,13 @@
         <span class="n">red</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">C11</span><span class="p">)</span>
         <span class="n">blue</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">C22</span><span class="p">)</span>
         <span class="n">green</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">C22</span> <span class="o">-</span> <span class="n">C11</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">red</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">C11</span><span class="p">)</span>
+        <span class="n">blue</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">C11</span><span class="p">)</span>
+        <span class="n">green</span> <span class="o">=</span> <span class="n">norm_data</span><span class="p">(</span><span class="n">C22</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid type!! Valid types are 1,2,3,4&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid type!! Valid types are 1,2,3,4,5&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">c11_path</span><span class="p">:</span>
         <span class="n">georef_file</span> <span class="o">=</span> <span class="n">c11_path</span>
     <span class="k">else</span><span class="p">:</span>

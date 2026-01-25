@@ -34,6 +34,7 @@ def rgb_dp(infolder, type=1, save_tif=False, window_size=None):
         - 2: Blue=C22, Red=C11, Green=|C11 + C22 - 2·C12_real|
         - 3: Blue=C11, Red=C22, Green=|C11 - C22|
         - 4: Blue=C22, Red=C11, Green=|C22 - C11|
+        - 5: Blue=C11, Red=C11, Green=C22
     save_tif : bool, default=False
         If True, generates a GeoTIFF (.tif) file alongside the PNG image.
 
@@ -102,8 +103,13 @@ def rgb_dp(infolder, type=1, save_tif=False, window_size=None):
         red = norm_data(C11)
         blue = norm_data(C22)
         green = norm_data(np.abs(C22 - C11))
+    elif type == 5:
+        red = norm_data(C11)
+        blue = norm_data(C11)
+        green = norm_data(C22)
+
     else:
-        raise ValueError("Invalid type!! Valid types are 1,2,3,4")
+        raise ValueError("Invalid type!! Valid types are 1,2,3,4,5")
     if c11_path:
         georef_file = c11_path
     else:
