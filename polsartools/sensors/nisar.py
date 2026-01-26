@@ -104,6 +104,53 @@ def gslc_meta(inFile):
 
     return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
 
+def gcov_meta(inFile):
+    band_table = [
+        ('/science/LSAR', 'L'),
+        ('/science/SSAR', 'S')
+    ]
+
+    # Step 1: Identify frequency band and root path
+    try:
+        with tables.open_file(inFile, mode="r") as h5:
+            for path, band in band_table:
+                if path in h5:
+                    freq_band = band
+                    freq_path = path
+                    break
+            else:
+                print("Neither LSAR nor SSAR data found in the file.")
+                return None
+
+            # Step 2: Read polarization list
+            pol_path = f'{freq_path}/GCOV/grids/frequencyA/listOfPolarizations'
+            try:
+                listOfPolarizations = np.array(h5.get_node(pol_path).read()).astype(str)
+            except tables.NoSuchNodeError:
+                print(f"Polarization node missing: {pol_path}")
+                listOfPolarizations = None
+
+    except Exception:
+        raise RuntimeError("Invalid .h5 file !!")
+
+    # Step 3: Reopen to read raster metadata
+    with tables.open_file(inFile, "r") as h5:
+        base_grid = f'{freq_path}/GCOV/grids/frequencyA'
+        projection_path = f'{freq_path}/GCOV/grids/frequencyA/projection'
+
+        try:
+            projection = np.array(h5.get_node(projection_path).read())
+            xSpacing = np.array(h5.get_node(base_grid + '/xCoordinateSpacing').read())
+            ySpacing = np.array(h5.get_node(base_grid + '/yCoordinateSpacing').read())
+        except tables.NoSuchNodeError as e:
+            print(f"⚠️ Missing expected metadata node: {e}")
+            return None
+
+    return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
+
+
+
+
 def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
                  inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
@@ -283,6 +330,7 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         outshape=outshape,
         calibration_constant=cc
     )
+
 @time_it 
 def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
@@ -462,4 +510,168 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
         nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
         None, None, out_dir)
+
+
+
+
+
+def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
+                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
+
+    # Determine matrix type based on available polarizations
+    # if matrix_type in ['C2','C2HV','C2HX','C2VX']:
+
+    print(f"Extracting {matrix_type} matrix elements...")
+    if len(listOfPolarizations)==2:
+        if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+            # matrix_type = 'C2HX'
+            channels = ['HHHH', 'HVHV']
+        elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+            # matrix_type = 'C2VX'
+            channels = ['VVVV', 'VHVH']
+        elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+            # matrix_type = 'C2HV'
+            channels = ['HHHH', 'VVVV']
+        else:
+            print("No valid dual-channel polarization combination found.")
+            return
+    elif len(listOfPolarizations)==4:
+        channels = ['HHHH', 'HVHV','VVVV','VHVH']
+
+
+
+    # Directory setup
+    base_name = os.path.basename(inFile).split('.h5')[0]
+    if out_dir is None:
+        out_dir = os.path.join(inFolder, base_name, matrix_type)
+    else:
+        out_dir = os.path.join(out_dir, matrix_type)
+    os.makedirs(out_dir, exist_ok=True)
+
+    temp_dir = tempfile.mkdtemp(prefix=f"{matrix_type}_", dir=out_dir)
+    os.makedirs(temp_dir, exist_ok=True)
+
+    # Dataset paths
+    dataset_paths = {ch: f"{base_path}/{ch}" for ch in channels}
+
+    # Call h5_polsar
+    h5_polsar(
+        h5_file=inFile,
+        dataset_paths=dataset_paths,
+        output_dir=out_dir,
+        temp_dir=temp_dir,
+        azlks=azlks,
+        rglks=rglks,
+        matrix_type=matrix_type,
+        apply_multilook=True,
+        recip=recip,
+        chunk_size_x=get_ml_chunk(rglks, 512),
+        chunk_size_y=get_ml_chunk(azlks, 512),
+        max_workers=max_workers,
+        start_x=start_x, start_y=start_y,
+        xres=xres, yres=yres,
+        epsg=int(projection),
+        fmt=fmt, cog=cog, ovr=ovr, comp=comp,
+        dtype=np.float32,
+        inshape=inshape,
+        outshape=outshape,
+        calibration_constant=cc
+    )        
+    
+@time_it 
+def import_nisar_gcov(inFile, mat='II', azlks=1, rglks=1, fmt='tif',
+             cog=False,ovr = [2, 4, 8, 16],comp=False,
+             out_dir=None,
+             recip=False,
+            max_workers=None):
+    """
+    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
+    and saves them into respective binary files.
+
+    Example:
+    --------
+    >>> import_nisar_gcov("path_to_file.h5", azlks=30, rglks=15)
+    This will extract the C2 matrix elements from the dual-pol NISAR GSLC file 
+    and save them in the 'C2' folder. or for full-pol 'T3'
+    
+    Parameters:
+    -----------
+    inFile : str
+        The path to the NISAR GCOV HDF5 file containing the radar data.
+
+    mat : str, optional (default = 'II')
+
+    azlks : int, optional (default=3)
+        The number of azimuth looks for multi-looking. 
+
+    rglks : int, optional (default=3)
+        The number of range looks for multi-looking. 
+    
+    fmt : {'tif', 'bin'}, optional (default='tif')
+        Output format:
+        - 'tif': GeoTIFF with georeferencing
+        - 'bin': Raw binary format
+
+    cog : bool, optional (default=False)
+        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.
+
+    ovr : list of int, optional (default=[2, 4, 8, 16])
+        Overview levels for COG generation. Ignored if cog=False.
+
+    comp : bool, optional (default=False)
+        If True, applies LZW compression to GeoTIFF outputs.
+
+    out_dir : str or None, optional (default=None)
+        Directory to save output files. If None, a folder named after the matrix type will be created
+        in the same location as the input file.
+        
+    recip : bool, optional (default=False)
+        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
+
+
+    """
+        
+    
+    freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)
+    nchannels = len(listOfPolarizations)
+    print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
+    
+    ds = Dataset(inFile, "r")
+    xcoords = ds.groups["science"].groups[f"{freq_band}SAR"].groups["GCOV"] \
+                   .groups["grids"].groups["frequencyA"] \
+                   .variables["xCoordinates"][:]
+    ycoords = ds.groups["science"].groups[f"{freq_band}SAR"].groups["GCOV"] \
+                   .groups["grids"].groups["frequencyA"] \
+                   .variables["yCoordinates"][:]                
+    ds=None
+
+    inshape = [len(xcoords),len(ycoords)]
+    outshape = [len(xcoords)//rglks,len(ycoords)//azlks]
+    
+    start_x = min(xcoords)
+    start_y = max(ycoords)
+    
+    # print(projection,start_x,start_y,xres,yres,inshape,outshape)
+    # print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))
+    
+    inFolder = os.path.dirname(inFile)   
+    if not inFolder:
+        inFolder = "."
+    
+    base_path = f'/science/{freq_band}SAR/GCOV/grids/frequencyA'
+
+    
+    mat='II'
+    # if nchannels==2:
+    #     # print("Dual-Pol data detected.",mat)
+    nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+                start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
+                inshape, outshape, listOfPolarizations, out_dir)
+        
+                
+    # elif nchannels==4:
+    #     nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+    #     start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
+    #     inshape, outshape, out_dir)
         

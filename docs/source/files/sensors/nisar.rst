@@ -18,3 +18,12 @@ The `import_nisar_gslc` function extracts Sxy/C2/T2 (for dual-pol), S2/C4/T4/C3/
 
 .. autofunction:: polsartools.import_nisar_gslc
    :noindex:
+
+
+GCOV (``import_nisar_gcov``)
+----------------------------
+
+The `import_nisar_gcov` function extracts intensity elements (dual-pol: HHHH,HVHV or VVVV,VHVH; Full-pol: HHHH,HVHV,VHVH,VVVV) from the given NISAR GCOV `.h5` file and saves them into a II directory.
+
+.. autofunction:: polsartools.import_nisar_gcov
+   :noindex:

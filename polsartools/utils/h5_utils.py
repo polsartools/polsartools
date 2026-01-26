@@ -68,7 +68,8 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,ca
         return compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "Sxy":
         return compute_sxy(chunks, calibration_constant)
-
+    elif matrix_type == "II":
+        return compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant)
     else:
         raise ValueError(f"Unsupported matrix type: {matrix_type}")
         
@@ -128,6 +129,44 @@ def compute_sxy(chunks, calibration_constant):
         }
     else:
         raise ValueError(f"Insufficient dual-pol channels. Found: {available_channels}")
+
+
+
+# def compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant):
+    
+#     def opt_mlook(data):
+#         return mlook_arr(data, azlks, rglks) if apply_multilook else data
+    
+    
+#     # Identify available channels
+#     available_channels = set(chunks.keys())
+#     # print("available_channels",available_channels)
+#     # Define co-pol and cross-pol combinations
+#     copol_priority = ['HHHH', 'VVVV']
+#     crosspol_priority = ['HVHV', 'VHVH']
+
+#     # Select co-pol channel
+#     copol = next((ch for ch in copol_priority if ch in available_channels), None)
+#     crosspol = next((ch for ch in crosspol_priority if ch in available_channels), None)
+
+#     return {
+#         "HH": opt_mlook(chunks[copol] / calibration_constant),
+#         "HV": opt_mlook(chunks[crosspol] / calibration_constant)
+#     }
+
+def compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+    # Identify available channels
+    available_channels = set(chunks.keys())
+
+    # Process all channels without priority
+    processed = {}
+    for ch in available_channels:
+        processed[ch] = opt_mlook(chunks[ch] / calibration_constant)
+
+    return processed
 
 
 
@@ -488,9 +527,18 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
                             calibration_constant=1):
     if max_workers is None:
         max_workers = max(multiprocessing.cpu_count() - 1, 1)
-    
-    polarization_key = 'HH' if 'HH' in dataset_paths else 'VV' if 'VV' in dataset_paths else None
-    
+    # print("dataset_paths",dataset_paths)
+    # polarization_key = 'HH' if 'HH' in dataset_paths else 'VV' if 'VV' in dataset_paths else None
+    polarization_key = (
+    'HH'   if 'HH'   in dataset_paths else
+    'VV'   if 'VV'   in dataset_paths else
+    'HHHH' if 'HHHH' in dataset_paths else
+    'HVHV' if 'HVHV' in dataset_paths else
+    None
+    )
+
+    # print("polarization_key",polarization_key)
+
     # jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
     jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
 

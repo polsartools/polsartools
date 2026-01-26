@@ -10,7 +10,7 @@ __version__ = "0.10"
 
 """ Importing sensors """
 from .sensors.uavsar import import_uavsar_grd,import_uavsar_mlc
-from .sensors.nisar import import_nisar_gslc,import_nisar_rslc
+from .sensors.nisar import import_nisar_gslc,import_nisar_rslc, import_nisar_gcov
 from .sensors.alos2 import import_alos2_fbd_l11,import_alos2_hbq_l11, import_alos2_wbd_l11
 from .sensors.alos1 import import_alos1_l11
 from .sensors.chyaan2 import import_chyaan2_fp,import_chyaan2_cp
@@ -41,7 +41,7 @@ from .utils import time_it, read_rst
 __all__ = [
     # SENSORS
     'import_uavsar_grd', 'import_uavsar_mlc','import_isro_asar',  'import_esar_gtc',
-    'import_nisar_gslc', 'import_nisar_rslc',
+    'import_nisar_gslc', 'import_nisar_rslc','import_nisar_gcov',
     'import_alos2_fbd_l11','import_alos2_hbq_l11', 'import_alos2_wbd_l11',
     'import_chyaan2_fp','import_chyaan2_cp',
     'import_rs2_fp',  
