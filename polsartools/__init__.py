@@ -19,6 +19,8 @@ from .sensors.isro_asar import import_isro_asar
 from .sensors.risat import import_risat_l11
 from .sensors.esar import import_esar_gtc
 from .sensors.sentinel1 import import_s1_grd
+from .sensors.biomass import import_biomass_l1a
+
 """ Importing preprocessing modules """
 from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip
 from .preprocess.filters import filter_boxcar, filter_refined_lee
@@ -46,6 +48,7 @@ __all__ = [
     'import_chyaan2_fp','import_chyaan2_cp',
     'import_rs2_fp',  
     'import_risat_l11','import_alos1_l11', 'import_s1_grd',
+    'import_biomass_l1a',
     #
     'signature_fp','pauli_rgb','rgb_dp','plot_h_alpha_fp','plot_h_a_alpha_fp','cluster_h_alpha_fp',
     'plot_h_alpha_dp','rgb', 'plot_h_theta_fp','plot_h_theta_cp',

@@ -10,10 +10,12 @@ Supported sensors
     sensors/isro_asar
     sensors/esar
     sensors/nisar
+    sensors/biomass
     sensors/risat
     sensors/radarsat2
     sensors/alos2
     sensors/chandrayaan2
+    
     
 
 
