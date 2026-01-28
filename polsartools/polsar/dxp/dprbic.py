@@ -86,8 +86,8 @@ def process_chunk_dprbic(chunks, window_size,*args):
 
 
     def S_norm(S_array):
-        S_5 = np.nanpercentile(S_array, 5)
-        S_95 = np.nanpercentile(S_array, 95)
+        S_5 = np.nanpercentile(S_array, 2)
+        S_95 = np.nanpercentile(S_array, 98)
         S_cln = np.where(S_array > S_95, S_95, S_array)
         S_cln = np.where(S_cln < S_5, S_5, S_cln)
         S_cln_max = np.nanmax(S_cln)
