@@ -108,7 +108,6 @@ def process_chunk_dprsi(chunks, window_size,*args):
     s2 = 2*c12s.real
     s3 = 2*c12s.imag
 
-
     ##### Calculate Entropy
     ## Here eigen values are calculated using Stokes vector elements
 
@@ -125,13 +124,10 @@ def process_chunk_dprsi(chunks, window_size,*args):
     ##### Taking abs of Stokes vector elements
     s0 = np.abs(s0)
     s1 = np.abs(s1)
-    s2 = np.abs(s2)
-    s3 = np.abs(s3)
-
+    
     s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
 
     ##### Dual-pol Radar Surface Index
-
 
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)); # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)); # For Noise pixels 
