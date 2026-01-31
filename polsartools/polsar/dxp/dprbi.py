@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
-from .dxp_infiles import dxpc2files
+from .dxp_infiles import dxpc2files, S_norm
 @time_it
 def dprbi(in_dir,  win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp=False,
@@ -81,15 +81,15 @@ def process_chunk_dprbi(chunks, window_size,*args):
     c22_T1 = np.array(chunks[3])
 
     ##### Normalizing Stokes vector elements
-    def S_norm(S_array):
-        S_5 = np.nanpercentile(S_array, 2)
-        S_95 = np.nanpercentile(S_array, 98)
-        S_cln = np.where(S_array > S_95, S_95, S_array)
-        S_cln = np.where(S_cln < S_5, S_5, S_cln)
-        S_cln_max = np.nanmax(S_cln)
-        S_norm_array = np.divide(S_cln,S_cln_max) 
+    # def S_norm(S_array):
+    #     S_5 = np.nanpercentile(S_array, 2)
+    #     S_95 = np.nanpercentile(S_array, 98)
+    #     S_cln = np.where(S_array > S_95, S_95, S_array)
+    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
+    #     S_cln_max = np.nanmax(S_cln)
+    #     S_norm_array = np.divide(S_cln,S_cln_max) 
         
-        return S_norm_array
+    #     return S_norm_array
 
     if window_size>1:
         c11s = conv2d(np.real(c11_T1),kernel)+1j*conv2d(np.imag(c11_T1),kernel)

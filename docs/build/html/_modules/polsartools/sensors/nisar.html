@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.10.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../../_static/documentation_options.js?v=261ea15a"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/nisar';</script>
@@ -856,14 +856,11 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">nisar_gcov</span><span class="p">(</span><span class="n">matrix_type</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">nisar_gcov</span><span class="p">(</span><span class="n">matrix_type</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
                  <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
-    <span class="c1"># Determine matrix type based on available polarizations</span>
-    <span class="c1"># if matrix_type in [&#39;C2&#39;,&#39;C2HV&#39;,&#39;C2HX&#39;,&#39;C2VX&#39;]:</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting </span><span class="si">{</span><span class="n">matrix_type</span><span class="si">}</span><span class="s2"> matrix elements...&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting elements...&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
             <span class="c1"># matrix_type = &#39;C2HX&#39;</span>
@@ -895,7 +892,7 @@
 
     <span class="c1"># Dataset paths</span>
     <span class="n">dataset_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">ch</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">ch</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">}</span>
-
+    <span class="n">recip</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="c1"># Call h5_polsar</span>
     <span class="n">h5_polsar</span><span class="p">(</span>
         <span class="n">h5_file</span><span class="o">=</span><span class="n">inFile</span><span class="p">,</span>
@@ -923,32 +920,30 @@
 <div class="viewcode-block" id="import_nisar_gcov">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.import_nisar_gcov">[docs]</a>
 <span class="nd">@time_it</span> 
-<span class="k">def</span><span class="w"> </span><span class="nf">import_nisar_gcov</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;II&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_nisar_gcov</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
              <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-             <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file </span>
-<span class="sd">    and saves them into respective binary files.</span>
+<span class="sd">    Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; import_nisar_gcov(&quot;path_to_file.h5&quot;, azlks=30, rglks=15)</span>
-<span class="sd">    This will extract the C2 matrix elements from the dual-pol NISAR GSLC file </span>
-<span class="sd">    and save them in the &#39;C2&#39; folder. or for full-pol &#39;T3&#39;</span>
+<span class="sd">    &gt;&gt;&gt; import_nisar_gcov(&quot;path_to_file.h5&quot;)</span>
+<span class="sd">    This will extract the intensity elements from NISAR GCOV HDF5 file without multi-looking</span>
+
+<span class="sd">    &gt;&gt;&gt; import_nisar_gcov(&quot;path_to_file.h5&quot;, azlks=3, rglks=3)</span>
+<span class="sd">    This will extract the intensity elements from NISAR GCOV HDF5 file with 3x3 multi-looking.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    inFile : str</span>
 <span class="sd">        The path to the NISAR GCOV HDF5 file containing the radar data.</span>
 
-<span class="sd">    mat : str, optional (default = &#39;II&#39;)</span>
-
-<span class="sd">    azlks : int, optional (default=3)</span>
+<span class="sd">    azlks : int, optional (default=1)</span>
 <span class="sd">        The number of azimuth looks for multi-looking. </span>
 
-<span class="sd">    rglks : int, optional (default=3)</span>
+<span class="sd">    rglks : int, optional (default=1)</span>
 <span class="sd">        The number of range looks for multi-looking. </span>
 <span class="sd">    </span>
 <span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, optional (default=&#39;tif&#39;)</span>
@@ -968,14 +963,9 @@
 <span class="sd">    out_dir : str or None, optional (default=None)</span>
 <span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
 <span class="sd">        in the same location as the input file.</span>
-<span class="sd">        </span>
-<span class="sd">    recip : bool, optional (default=False)</span>
-<span class="sd">        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</span>
-
 
 <span class="sd">    &quot;&quot;&quot;</span>
-        
-    
+    <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;II&#39;</span>    
     <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">gcov_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
     <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band polarization channels: </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -995,30 +985,15 @@
     <span class="n">start_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span>
     <span class="n">start_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span>
     
-    <span class="c1"># print(projection,start_x,start_y,xres,yres,inshape,outshape)</span>
-    <span class="c1"># print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))</span>
-    
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
         <span class="n">inFolder</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
     
     <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GCOV/grids/frequencyA&#39;</span>
-
-    
-    <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;II&#39;</span>
-    <span class="c1"># if nchannels==2:</span>
-    <span class="c1">#     # print(&quot;Dual-Pol data detected.&quot;,mat)</span>
-    <span class="n">nisar_gcov</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
+    <span class="n">nisar_gcov</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                 <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
 
-        
-                
-    <span class="c1"># elif nchannels==4:</span>
-    <span class="c1">#     nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,</span>
-    <span class="c1">#     start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,</span>
-    <span class="c1">#     inshape, outshape, out_dir)</span>
-        
 </pre></div>
 
                 </article>

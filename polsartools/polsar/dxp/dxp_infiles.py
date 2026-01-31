@@ -1,5 +1,5 @@
 import os
-
+import numpy as np
 def find_file(infolder, base_name):
     for ext in [".bin", ".tif"]:
         path = os.path.join(infolder, f"{base_name}{ext}")
@@ -19,3 +19,13 @@ def dxpc2files(infolder):
     else:
         print("Invalid C2 folder: missing required files or unsupported formats.")
         return None
+
+def S_norm(S_array):
+    S_5 = np.nanpercentile(S_array, 2)
+    S_95 = np.nanpercentile(S_array, 98)
+    S_cln = np.where(S_array > S_95, S_95, S_array)
+    S_cln = np.where(S_cln < S_5, S_5, S_cln)
+    S_cln_max = np.nanmax(S_cln)
+    S_norm_array = np.divide(S_cln,S_cln_max) 
+    
+    return S_norm_array

@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
-from .dxp_infiles import dxpc2files
+from .dxp_infiles import dxpc2files, S_norm
 @time_it
 def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif", 
            cog=False, ovr = [2, 4, 8, 16], comp=False,
@@ -106,15 +106,15 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
     c22 = np.array(chunks[1])
 
 
-    def S_norm(S_array):
-        S_5 = np.nanpercentile(S_array, 2)
-        S_95 = np.nanpercentile(S_array, 98)
-        S_cln = np.where(S_array > S_95, S_95, S_array)
-        S_cln = np.where(S_cln < S_5, S_5, S_cln)
-        S_cln_max = np.nanmax(S_cln)
-        S_norm_array = np.divide(S_cln,S_cln_max) 
+    # def S_norm(S_array):
+    #     S_5 = np.nanpercentile(S_array, 2)
+    #     S_95 = np.nanpercentile(S_array, 98)
+    #     S_cln = np.where(S_array > S_95, S_95, S_array)
+    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
+    #     S_cln_max = np.nanmax(S_cln)
+    #     S_norm_array = np.divide(S_cln,S_cln_max) 
         
-        return S_norm_array
+    #     return S_norm_array
 
     if window_size>1:
         c11 = conv2d(c11,kernel)

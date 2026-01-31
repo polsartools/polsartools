@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>🔸NISAR &#8212; PolSARtools 0.10 documentation</title>
+    <title>🔸NISAR &#8212; PolSARtools 0.10.1 documentation</title>
   
   
   
@@ -38,14 +38,14 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../_static/documentation_options.js?v=261ea15a"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/sensors/nisar';</script>
     <link rel="icon" href="../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="🔸RISAT-1A" href="risat.html" />
+    <link rel="next" title="🔸BIOMASS" href="biomass.html" />
     <link rel="prev" title="🔸ESAR" href="esar.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -292,6 +292,7 @@
 <li class="toctree-l1"><a class="reference internal" href="isro_asar.html">🔸ISRO ASAR</a></li>
 <li class="toctree-l1"><a class="reference internal" href="esar.html">🔸ESAR</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">🔸NISAR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="biomass.html">🔸BIOMASS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="risat.html">🔸RISAT-1A</a></li>
 <li class="toctree-l1"><a class="reference internal" href="radarsat2.html">🔸RADARSAT-2</a></li>
 <li class="toctree-l1"><a class="reference internal" href="alos2.html">🔸ALOS-2 PALSAR-2</a></li>
@@ -459,14 +460,16 @@ in the same location as the input file.</p>
 <p>The <cite>import_nisar_gcov</cite> function extracts intensity elements (dual-pol: HHHH,HVHV or VVVV,VHVH; Full-pol: HHHH,HVHV,VHVH,VVVV) from the given NISAR GCOV <cite>.h5</cite> file and saves them into a II directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_nisar_gcov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'II'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#import_nisar_gcov"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file
-and saves them into respective binary files.</p>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_nisar_gcov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#import_nisar_gcov"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.</p>
 <section id="id3">
 <h3>Example:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">import_nisar_gcov</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="go">This will extract the C2 matrix elements from the dual-pol NISAR GSLC file</span>
-<span class="go">and save them in the &#39;C2&#39; folder. or for full-pol &#39;T3&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">import_nisar_gcov</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">)</span>
+<span class="go">This will extract the intensity elements from NISAR GCOV HDF5 file without multi-looking</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">import_nisar_gcov</span><span class="p">(</span><span class="s2">&quot;path_to_file.h5&quot;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">This will extract the intensity elements from NISAR GCOV HDF5 file with 3x3 multi-looking.</span>
 </pre></div>
 </div>
 </section>
@@ -475,12 +478,9 @@ and saves them into respective binary files.</p>
 <dl class="simple">
 <dt>inFile<span class="classifier">str</span></dt><dd><p>The path to the NISAR GCOV HDF5 file containing the radar data.</p>
 </dd>
-</dl>
-<p>mat : str, optional (default = ‘II’)</p>
-<dl class="simple">
-<dt>azlks<span class="classifier">int, optional (default=3)</span></dt><dd><p>The number of azimuth looks for multi-looking.</p>
+<dt>azlks<span class="classifier">int, optional (default=1)</span></dt><dd><p>The number of azimuth looks for multi-looking.</p>
 </dd>
-<dt>rglks<span class="classifier">int, optional (default=3)</span></dt><dd><p>The number of range looks for multi-looking.</p>
+<dt>rglks<span class="classifier">int, optional (default=1)</span></dt><dd><p>The number of range looks for multi-looking.</p>
 </dd>
 <dt>fmt<span class="classifier">{‘tif’, ‘bin’}, optional (default=’tif’)</span></dt><dd><p>Output format:
 - ‘tif’: GeoTIFF with georeferencing
@@ -494,8 +494,6 @@ and saves them into respective binary files.</p>
 </dd>
 <dt>out_dir<span class="classifier">str or None, optional (default=None)</span></dt><dd><p>Directory to save output files. If None, a folder named after the matrix type will be created
 in the same location as the input file.</p>
-</dd>
-<dt>recip<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p>
 </dd>
 </dl>
 </section>
@@ -524,11 +522,11 @@ in the same location as the input file.</p>
       </div>
     </a>
     <a class="right-next"
-       href="risat.html"
+       href="biomass.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">🔸RISAT-1A</p>
+        <p class="prev-next-title">🔸BIOMASS</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

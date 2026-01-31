@@ -9,13 +9,14 @@
 v0.11
 update rgb_dp with type=5 for NISAR
 added import_biomass_l1a
+Added NISAR GCOV
+fix dp functions nan issue
 
 [to do]
 MRSLab functions image-wide parameters
 full-pol <-> compact pol 
 convert_C and convert_T
 rectangular window
-NISAR GCOV
 NISAR-ISCE3?
 NISAR incidence angle
 EOS-04

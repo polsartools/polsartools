@@ -3,9 +3,48 @@ from osgeo import gdal
 gdal.UseExceptions()
 import os,tempfile,shutil
 import xml.etree.ElementTree as ET
+from netCDF4 import Dataset
+from scipy.interpolate import LinearNDInterpolator
 from polsartools.utils.utils import time_it
 # from polsartools.utils.io_utils import write_T3, write_C3
 from polsartools.preprocess.convert_S2 import convert_S
+
+
+def resample_lut(filepath, newrows, newcols,bsc="sigma0"):
+    nc_file = Dataset(filepath, mode="r")
+    valid_options = ["sigma0", "gamma0"]
+    if bsc =="sigma0": 
+        lut = nc_file.groups["radiometry"].variables["sigmaNought"][:]
+    elif bsc=="gamma0":
+        lut = nc_file.groups["radiometry"].variables["gammaNought"][:]
+    else:
+        raise ValueError(f"Invalid bsc: '{bsc}'. Valid options are: {', '.join(valid_options)}")
+    
+    lut_array = np.array(lut)
+
+    del lut
+    nc_file.close()
+
+    # Original shape
+    rows0, cols0 = lut_array.shape
+
+    # Build coordinate grid for original data
+    yy, xx = np.mgrid[0:rows0, 0:cols0]
+    coord = np.column_stack((xx.ravel(), yy.ravel()))
+    values = lut_array.ravel()
+
+    # Create interpolator
+    interpfn = LinearNDInterpolator(coord, values)
+
+    # New grid
+    fullY, fullX = np.mgrid[0:newrows, 0:newcols]
+
+    # Scale coordinates to original domain
+    sigma_resampled = interpfn(fullX * (cols0 / newcols),
+                               fullY * (rows0 / newrows))
+
+    return sigma_resampled.astype(np.float32)
+
 
 def write_rst(out_file, data,
               driver='GTiff', out_dtype=gdal.GDT_CFloat32,
@@ -36,6 +75,7 @@ def write_rst(out_file, data,
 def import_biomass_l1a(in_dir,mat='T3',
            azlks=8,rglks=2,fmt='tif',
             cog=False,ovr = [2, 4, 8, 16],comp=False,
+            bsc='sigma0',
            out_dir = None,
            recip=False,
            ):
@@ -71,6 +111,7 @@ def import_biomass_l1a(in_dir,mat='T3',
 
     rglks : int, optional (default=2)
         The number of range looks to apply during the C/Tprocessing.
+
     fmt : {'tif', 'bin'}, optional (default='tif')
         Output format:
         - 'tif': GeoTIFF
@@ -84,7 +125,13 @@ def import_biomass_l1a(in_dir,mat='T3',
 
     comp : bool, optional (default=False)
         If True, applies LZW compression to GeoTIFF outputs.
+
+    bsc : str, optional (default='sigma0')
+        The type of radar cross-section to use for scaling. Available options:
         
+        - 'sigma0' : Uses `sigmaNought` LUT for scaling.
+        - 'gamma0' : Uses `gammaNought` LUT for scaling.
+
     out_dir : str or None, optional (default=None)
         Directory to save output files. If None, a folder named after the matrix type will be created
         in the same location as the input file.
@@ -93,7 +140,10 @@ def import_biomass_l1a(in_dir,mat='T3',
         If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
                 
     """
-    bsc='sigma0'
+    
+    cf_dB = 39.68531599998061
+    calfac_linear = np.sqrt(10 ** ((cf_dB) / 10))
+
     valid_full_pol = ['S2', 'C4', 'C3', 'T4', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV']
     # valid_dual_pol = ['Sxy', 'C2', 'T2']
     valid_matrices = valid_full_pol
@@ -104,7 +154,7 @@ def import_biomass_l1a(in_dir,mat='T3',
     
     temp_dir = None
     ext = 'bin' if fmt == 'bin' else 'tif'
-    driver = 'ENVI' if fmt == 'bin' else None
+    driver = 'ENVI' if fmt == 'bin' else "GTiff"
 
     # Final output directory
     if out_dir is None:
@@ -127,6 +177,8 @@ def import_biomass_l1a(in_dir,mat='T3',
     biomassDataAbsPath = os.path.join(in_dir,"measurement",biomassPath + "_i_abs.tiff")
     biomassDataPhasePath = os.path.join(in_dir,"measurement",biomassPath + "_i_phase.tiff")
 
+    lut_path = os.path.join(in_dir,"annotation",biomassPath + "_lut.nc")
+
     # try:
     dataAbsSet = gdal.Open(biomassDataAbsPath, gdal.GA_ReadOnly)
     dataPhaseSet = gdal.Open(biomassDataPhasePath, gdal.GA_ReadOnly)
@@ -145,11 +197,14 @@ def import_biomass_l1a(in_dir,mat='T3',
         bandAbs = dataAbsSet.GetRasterBand(idx).ReadAsArray()
         bandPhase = dataPhaseSet.GetRasterBand(idx).ReadAsArray()
 
-        bandReal = bandAbs * np.cos(bandPhase)
-        bandImag = bandAbs * np.sin(bandPhase)
-        bandComplex = bandReal + 1j*bandImag
+        bandReal = bandAbs * np.cos(bandPhase) #* calfac_linear
+        bandImag = bandAbs * np.sin(bandPhase) #* calfac_linear
 
-        del bandReal, bandImag
+        lut_g0 = resample_lut(lut_path, bandReal.shape[0], bandReal.shape[1],bsc)
+
+        bandComplex = (bandReal + 1j*bandImag)*lut_g0
+
+        del bandReal, bandImag, lut_g0
 
         if driver == "GTiff":
             ext = ".tif"

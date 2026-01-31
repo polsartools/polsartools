@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.powers_dp_grd &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.polsar.dxp.powers_dp_grd &#8212; PolSARtools 0.10.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../../../_static/documentation_options.js?v=261ea15a"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/powers_dp_grd';</script>
@@ -337,7 +337,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span><span class="p">,</span> <span class="n">S_norm</span>
 <div class="viewcode-block" id="powers_dp_grd">
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/powers_dp_grd.html#polsartools.powers_dp_grd">[docs]</a>
 <span class="nd">@time_it</span>
@@ -444,15 +444,15 @@
     <span class="n">c22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">S_norm</span><span class="p">(</span><span class="n">S_array</span><span class="p">):</span>
-        <span class="n">S_5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">S_array</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="n">S_95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">S_array</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
-        <span class="n">S_cln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">S_array</span> <span class="o">&gt;</span> <span class="n">S_95</span><span class="p">,</span> <span class="n">S_95</span><span class="p">,</span> <span class="n">S_array</span><span class="p">)</span>
-        <span class="n">S_cln</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">S_cln</span> <span class="o">&lt;</span> <span class="n">S_5</span><span class="p">,</span> <span class="n">S_5</span><span class="p">,</span> <span class="n">S_cln</span><span class="p">)</span>
-        <span class="n">S_cln_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">S_cln</span><span class="p">)</span>
-        <span class="n">S_norm_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">S_cln</span><span class="p">,</span><span class="n">S_cln_max</span><span class="p">)</span> 
+    <span class="c1"># def S_norm(S_array):</span>
+    <span class="c1">#     S_5 = np.nanpercentile(S_array, 2)</span>
+    <span class="c1">#     S_95 = np.nanpercentile(S_array, 98)</span>
+    <span class="c1">#     S_cln = np.where(S_array &gt; S_95, S_95, S_array)</span>
+    <span class="c1">#     S_cln = np.where(S_cln &lt; S_5, S_5, S_cln)</span>
+    <span class="c1">#     S_cln_max = np.nanmax(S_cln)</span>
+    <span class="c1">#     S_norm_array = np.divide(S_cln,S_cln_max) </span>
         
-        <span class="k">return</span> <span class="n">S_norm_array</span>
+    <span class="c1">#     return S_norm_array</span>
 
     <span class="k">if</span> <span class="n">window_size</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">c11</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">c11</span><span class="p">,</span><span class="n">kernel</span><span class="p">)</span>

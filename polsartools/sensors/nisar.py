@@ -515,14 +515,11 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
 
 
 
-def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
                  inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
 
-    # Determine matrix type based on available polarizations
-    # if matrix_type in ['C2','C2HV','C2HX','C2VX']:
-
-    print(f"Extracting {matrix_type} matrix elements...")
+    print(f"Extracting elements...")
     if len(listOfPolarizations)==2:
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
             # matrix_type = 'C2HX'
@@ -554,7 +551,7 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, ma
 
     # Dataset paths
     dataset_paths = {ch: f"{base_path}/{ch}" for ch in channels}
-
+    recip = False
     # Call h5_polsar
     h5_polsar(
         h5_file=inFile,
@@ -580,32 +577,30 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, ma
     )        
     
 @time_it 
-def import_nisar_gcov(inFile, mat='II', azlks=1, rglks=1, fmt='tif',
+def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
-             recip=False,
             max_workers=None):
     """
-    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
-    and saves them into respective binary files.
+    Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.
 
     Example:
     --------
-    >>> import_nisar_gcov("path_to_file.h5", azlks=30, rglks=15)
-    This will extract the C2 matrix elements from the dual-pol NISAR GSLC file 
-    and save them in the 'C2' folder. or for full-pol 'T3'
+    >>> import_nisar_gcov("path_to_file.h5")
+    This will extract the intensity elements from NISAR GCOV HDF5 file without multi-looking
+
+    >>> import_nisar_gcov("path_to_file.h5", azlks=3, rglks=3)
+    This will extract the intensity elements from NISAR GCOV HDF5 file with 3x3 multi-looking.
     
     Parameters:
     -----------
     inFile : str
         The path to the NISAR GCOV HDF5 file containing the radar data.
 
-    mat : str, optional (default = 'II')
-
-    azlks : int, optional (default=3)
+    azlks : int, optional (default=1)
         The number of azimuth looks for multi-looking. 
 
-    rglks : int, optional (default=3)
+    rglks : int, optional (default=1)
         The number of range looks for multi-looking. 
     
     fmt : {'tif', 'bin'}, optional (default='tif')
@@ -625,14 +620,9 @@ def import_nisar_gcov(inFile, mat='II', azlks=1, rglks=1, fmt='tif',
     out_dir : str or None, optional (default=None)
         Directory to save output files. If None, a folder named after the matrix type will be created
         in the same location as the input file.
-        
-    recip : bool, optional (default=False)
-        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.
-
 
     """
-        
-    
+    mat='II'    
     freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
@@ -652,26 +642,11 @@ def import_nisar_gcov(inFile, mat='II', azlks=1, rglks=1, fmt='tif',
     start_x = min(xcoords)
     start_y = max(ycoords)
     
-    # print(projection,start_x,start_y,xres,yres,inshape,outshape)
-    # print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))
-    
     inFolder = os.path.dirname(inFile)   
     if not inFolder:
         inFolder = "."
     
     base_path = f'/science/{freq_band}SAR/GCOV/grids/frequencyA'
-
-    
-    mat='II'
-    # if nchannels==2:
-    #     # print("Dual-Pol data detected.",mat)
-    nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
+    nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, max_workers,
                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
                 inshape, outshape, listOfPolarizations, out_dir)
-        
-                
-    # elif nchannels==4:
-    #     nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
-    #     start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-    #     inshape, outshape, out_dir)
-        

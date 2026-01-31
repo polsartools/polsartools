@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.biomass &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.sensors.biomass &#8212; PolSARtools 0.10.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../../_static/documentation_options.js?v=261ea15a"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/biomass';</script>
@@ -338,9 +338,48 @@
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="nn">tempfile</span><span class="o">,</span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ET</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netCDF4</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearNDInterpolator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span>
 <span class="c1"># from polsartools.utils.io_utils import write_T3, write_C3</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.preprocess.convert_S2</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_S</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">resample_lut</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">newrows</span><span class="p">,</span> <span class="n">newcols</span><span class="p">,</span><span class="n">bsc</span><span class="o">=</span><span class="s2">&quot;sigma0&quot;</span><span class="p">):</span>
+    <span class="n">nc_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">valid_options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sigma0&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma0&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">bsc</span> <span class="o">==</span><span class="s2">&quot;sigma0&quot;</span><span class="p">:</span> 
+        <span class="n">lut</span> <span class="o">=</span> <span class="n">nc_file</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;radiometry&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;sigmaNought&quot;</span><span class="p">][:]</span>
+    <span class="k">elif</span> <span class="n">bsc</span><span class="o">==</span><span class="s2">&quot;gamma0&quot;</span><span class="p">:</span>
+        <span class="n">lut</span> <span class="o">=</span> <span class="n">nc_file</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;radiometry&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;gammaNought&quot;</span><span class="p">][:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid bsc: &#39;</span><span class="si">{</span><span class="n">bsc</span><span class="si">}</span><span class="s2">&#39;. Valid options are: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_options</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">lut_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">lut</span>
+    <span class="n">nc_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Original shape</span>
+    <span class="n">rows0</span><span class="p">,</span> <span class="n">cols0</span> <span class="o">=</span> <span class="n">lut_array</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Build coordinate grid for original data</span>
+    <span class="n">yy</span><span class="p">,</span> <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">rows0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">cols0</span><span class="p">]</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">xx</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">lut_array</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="c1"># Create interpolator</span>
+    <span class="n">interpfn</span> <span class="o">=</span> <span class="n">LinearNDInterpolator</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
+    <span class="c1"># New grid</span>
+    <span class="n">fullY</span><span class="p">,</span> <span class="n">fullX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">newrows</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">newcols</span><span class="p">]</span>
+
+    <span class="c1"># Scale coordinates to original domain</span>
+    <span class="n">sigma_resampled</span> <span class="o">=</span> <span class="n">interpfn</span><span class="p">(</span><span class="n">fullX</span> <span class="o">*</span> <span class="p">(</span><span class="n">cols0</span> <span class="o">/</span> <span class="n">newcols</span><span class="p">),</span>
+                               <span class="n">fullY</span> <span class="o">*</span> <span class="p">(</span><span class="n">rows0</span> <span class="o">/</span> <span class="n">newrows</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">sigma_resampled</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
 
 <span class="k">def</span><span class="w"> </span><span class="nf">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
               <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
@@ -373,6 +412,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">import_biomass_l1a</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;T3&#39;</span><span class="p">,</span>
            <span class="n">azlks</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
             <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">bsc</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span>
            <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
            <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
            <span class="p">):</span>
@@ -408,6 +448,7 @@
 
 <span class="sd">    rglks : int, optional (default=2)</span>
 <span class="sd">        The number of range looks to apply during the C/Tprocessing.</span>
+
 <span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, optional (default=&#39;tif&#39;)</span>
 <span class="sd">        Output format:</span>
 <span class="sd">        - &#39;tif&#39;: GeoTIFF</span>
@@ -421,7 +462,13 @@
 
 <span class="sd">    comp : bool, optional (default=False)</span>
 <span class="sd">        If True, applies LZW compression to GeoTIFF outputs.</span>
+
+<span class="sd">    bsc : str, optional (default=&#39;sigma0&#39;)</span>
+<span class="sd">        The type of radar cross-section to use for scaling. Available options:</span>
 <span class="sd">        </span>
+<span class="sd">        - &#39;sigma0&#39; : Uses `sigmaNought` LUT for scaling.</span>
+<span class="sd">        - &#39;gamma0&#39; : Uses `gammaNought` LUT for scaling.</span>
+
 <span class="sd">    out_dir : str or None, optional (default=None)</span>
 <span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
 <span class="sd">        in the same location as the input file.</span>
@@ -430,7 +477,10 @@
 <span class="sd">        If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</span>
 <span class="sd">                </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">bsc</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span>
+    
+    <span class="n">cf_dB</span> <span class="o">=</span> <span class="mf">39.68531599998061</span>
+    <span class="n">calfac_linear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">((</span><span class="n">cf_dB</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">))</span>
+
     <span class="n">valid_full_pol</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;S2&#39;</span><span class="p">,</span> <span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">]</span>
     <span class="c1"># valid_dual_pol = [&#39;Sxy&#39;, &#39;C2&#39;, &#39;T2&#39;]</span>
     <span class="n">valid_matrices</span> <span class="o">=</span> <span class="n">valid_full_pol</span>
@@ -441,7 +491,7 @@
     
     <span class="n">temp_dir</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s1">&#39;tif&#39;</span>
-    <span class="n">driver</span> <span class="o">=</span> <span class="s1">&#39;ENVI&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="s1">&#39;ENVI&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s2">&quot;GTiff&quot;</span>
 
     <span class="c1"># Final output directory</span>
     <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -464,6 +514,8 @@
     <span class="n">biomassDataAbsPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="s2">&quot;measurement&quot;</span><span class="p">,</span><span class="n">biomassPath</span> <span class="o">+</span> <span class="s2">&quot;_i_abs.tiff&quot;</span><span class="p">)</span>
     <span class="n">biomassDataPhasePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="s2">&quot;measurement&quot;</span><span class="p">,</span><span class="n">biomassPath</span> <span class="o">+</span> <span class="s2">&quot;_i_phase.tiff&quot;</span><span class="p">)</span>
 
+    <span class="n">lut_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="s2">&quot;annotation&quot;</span><span class="p">,</span><span class="n">biomassPath</span> <span class="o">+</span> <span class="s2">&quot;_lut.nc&quot;</span><span class="p">)</span>
+
     <span class="c1"># try:</span>
     <span class="n">dataAbsSet</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">biomassDataAbsPath</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GA_ReadOnly</span><span class="p">)</span>
     <span class="n">dataPhaseSet</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">biomassDataPhasePath</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GA_ReadOnly</span><span class="p">)</span>
@@ -482,11 +534,14 @@
         <span class="n">bandAbs</span> <span class="o">=</span> <span class="n">dataAbsSet</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
         <span class="n">bandPhase</span> <span class="o">=</span> <span class="n">dataPhaseSet</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
 
-        <span class="n">bandReal</span> <span class="o">=</span> <span class="n">bandAbs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bandPhase</span><span class="p">)</span>
-        <span class="n">bandImag</span> <span class="o">=</span> <span class="n">bandAbs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bandPhase</span><span class="p">)</span>
-        <span class="n">bandComplex</span> <span class="o">=</span> <span class="n">bandReal</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">bandImag</span>
+        <span class="n">bandReal</span> <span class="o">=</span> <span class="n">bandAbs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bandPhase</span><span class="p">)</span> <span class="c1">#* calfac_linear</span>
+        <span class="n">bandImag</span> <span class="o">=</span> <span class="n">bandAbs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bandPhase</span><span class="p">)</span> <span class="c1">#* calfac_linear</span>
 
-        <span class="k">del</span> <span class="n">bandReal</span><span class="p">,</span> <span class="n">bandImag</span>
+        <span class="n">lut_g0</span> <span class="o">=</span> <span class="n">resample_lut</span><span class="p">(</span><span class="n">lut_path</span><span class="p">,</span> <span class="n">bandReal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bandReal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">bsc</span><span class="p">)</span>
+
+        <span class="n">bandComplex</span> <span class="o">=</span> <span class="p">(</span><span class="n">bandReal</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">bandImag</span><span class="p">)</span><span class="o">*</span><span class="n">lut_g0</span>
+
+        <span class="k">del</span> <span class="n">bandReal</span><span class="p">,</span> <span class="n">bandImag</span><span class="p">,</span> <span class="n">lut_g0</span>
 
         <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;GTiff&quot;</span><span class="p">:</span>
             <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.tif&quot;</span>
