@@ -102,10 +102,10 @@ def process_chunk_dprbi(chunks, window_size,*args):
         c12s = c12_T1
         c22s = c22_T1
 
-    s0 = c11s + c22s
-    s1 = c11s - c22s
-    s2 = 2*c12s.real
-    s3 = 2*c12s.imag
+    s0 = np.abs(c11s + c22s)
+    s1 = np.abs(c11s - c22s)
+    s2 = np.abs(2*c12s.real)
+    s3 = np.abs(2*c12s.imag)
 
 
     ##### Calculate Entropy
