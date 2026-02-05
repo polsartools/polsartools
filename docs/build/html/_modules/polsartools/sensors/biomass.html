@@ -380,30 +380,127 @@
 
     <span class="k">return</span> <span class="n">sigma_resampled</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-
 <span class="k">def</span><span class="w"> </span><span class="nf">write_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span>
-              <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
-              <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+              <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GTiff&quot;</span><span class="p">,</span> <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+              <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">geocode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-    <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s1">&#39;ENVI&#39;</span><span class="p">:</span>
+    <span class="c1"># --- Choose driver and extension ---</span>
+    <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;ENVI&quot;</span><span class="p">:</span>
         <span class="n">drv</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">drv</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_dtype</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">drv</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;GTiff&quot;</span><span class="p">)</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BIGTIFF=IF_SAFER&#39;</span><span class="p">]</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BIGTIFF=IF_SAFER&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">comp</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;COMPRESS=LZW&#39;</span><span class="p">]</span>
+            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;COMPRESS=LZW&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKXSIZE=512&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKYSIZE=512&#39;</span><span class="p">]</span>
+            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;TILED=YES&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKXSIZE=512&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKYSIZE=512&quot;</span><span class="p">]</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">drv</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">out_dtype</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
 
-    <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="c1"># --- Write data ---</span>
+    <span class="n">band</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">SetNoDataValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># nodata set to 0</span>
+
     <span class="n">dataset</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+    <span class="c1"># --- Build overviews if requested ---</span>
+    <span class="k">if</span> <span class="n">cog</span> <span class="ow">and</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;GTiff&quot;</span><span class="p">:</span>
         <span class="n">dataset</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">ovr</span><span class="p">)</span>
 
-    <span class="n">dataset</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># --- Copy georeferencing and metadata if ref_ds provided ---</span>
+    <span class="k">if</span> <span class="n">ref_ds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">(</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">())</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetProjection</span><span class="p">())</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">SetMetadata</span><span class="p">(</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetMetadata</span><span class="p">())</span>
+
+        <span class="n">gcps</span> <span class="o">=</span> <span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPs</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">gcps</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">gcps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dataset</span><span class="o">.</span><span class="n">SetGCPs</span><span class="p">(</span><span class="n">gcps</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPProjection</span><span class="p">())</span>
+
+    <span class="n">dataset</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># close dataset</span>
+
+    <span class="c1"># --- Optional geocoding step ---</span>
+    <span class="k">if</span> <span class="n">geocode</span> <span class="ow">and</span> <span class="n">ref_ds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gcps</span> <span class="o">=</span> <span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPs</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">gcps</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">gcps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">gdal</span><span class="o">.</span><span class="n">Warp</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">out_file</span><span class="p">,</span>
+                      <span class="n">dstSRS</span><span class="o">=</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPProjection</span><span class="p">(),</span>
+                      <span class="n">dstNodata</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">save_l1b</span><span class="p">(</span><span class="n">ref_ds</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">band_name</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">common_metadata</span><span class="p">,</span>
+             <span class="n">geocode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GTiff&quot;</span><span class="p">,</span> <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">,</span>
+             <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="c1"># --- Choose extension based on driver ---</span>
+    <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;ENVI&quot;</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.bin&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.tif&quot;</span>
+
+    <span class="n">out_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">band_name</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Create dataset with options ---</span>
+    <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;ENVI&quot;</span><span class="p">:</span>
+        <span class="n">drv</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+        <span class="n">out_ds</span> <span class="o">=</span> <span class="n">drv</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span>
+                            <span class="n">ref_ds</span><span class="o">.</span><span class="n">RasterXSize</span><span class="p">,</span>
+                            <span class="n">ref_ds</span><span class="o">.</span><span class="n">RasterYSize</span><span class="p">,</span>
+                            <span class="mi">1</span><span class="p">,</span>
+                            <span class="n">out_dtype</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">drv</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;GTiff&quot;</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BIGTIFF=IF_SAFER&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">comp</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;COMPRESS=LZW&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;TILED=YES&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKXSIZE=512&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKYSIZE=512&quot;</span><span class="p">]</span>
+        <span class="n">out_ds</span> <span class="o">=</span> <span class="n">drv</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span>
+                            <span class="n">ref_ds</span><span class="o">.</span><span class="n">RasterXSize</span><span class="p">,</span>
+                            <span class="n">ref_ds</span><span class="o">.</span><span class="n">RasterYSize</span><span class="p">,</span>
+                            <span class="mi">1</span><span class="p">,</span>
+                            <span class="n">out_dtype</span><span class="p">,</span>
+                            <span class="n">options</span><span class="p">)</span>
+
+    <span class="c1"># --- Copy georeferencing ---</span>
+    <span class="n">out_ds</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">(</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">())</span>
+    <span class="n">out_ds</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetProjection</span><span class="p">())</span>
+
+    <span class="c1"># --- Copy GCPs if present ---</span>
+    <span class="n">gcps</span> <span class="o">=</span> <span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPs</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">gcps</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">gcps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">out_ds</span><span class="o">.</span><span class="n">SetGCPs</span><span class="p">(</span><span class="n">gcps</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPProjection</span><span class="p">())</span>
+
+    <span class="c1"># --- Add dataset-level metadata ---</span>
+    <span class="n">out_ds</span><span class="o">.</span><span class="n">SetMetadata</span><span class="p">(</span><span class="n">common_metadata</span><span class="p">)</span>
+
+    <span class="c1"># --- Add band-specific metadata ---</span>
+    <span class="n">band</span> <span class="o">=</span> <span class="n">out_ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">SetDescription</span><span class="p">(</span><span class="n">band_name</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">SetMetadata</span><span class="p">({</span><span class="s2">&quot;POLARIMETRIC_INTERP&quot;</span><span class="p">:</span> <span class="n">band_name</span><span class="p">})</span>
+
+    <span class="c1"># --- Set nodata to 0 ---</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">SetNoDataValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">out_ds</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
+
+    <span class="c1"># --- Build overviews if requested ---</span>
+    <span class="k">if</span> <span class="n">cog</span> <span class="ow">and</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;GTiff&quot;</span><span class="p">:</span>
+        <span class="n">out_ds</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">ovr</span><span class="p">)</span>
+
+    <span class="n">out_ds</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># close dataset</span>
+
+    <span class="c1"># --- Optional geocoding step ---</span>
+    <span class="k">if</span> <span class="n">geocode</span> <span class="ow">and</span> <span class="n">gcps</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">gcps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">gdal</span><span class="o">.</span><span class="n">Warp</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span>
+                  <span class="n">dstSRS</span><span class="o">=</span><span class="n">ref_ds</span><span class="o">.</span><span class="n">GetGCPProjection</span><span class="p">(),</span>
+                  <span class="n">dstNodata</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
 
 
 <div class="viewcode-block" id="import_biomass_l1a">
@@ -415,6 +512,7 @@
             <span class="n">bsc</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span>
            <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
            <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">geocode</span><span class="o">=</span><span class="kc">False</span>
            <span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -530,6 +628,11 @@
     <span class="n">s12_data</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">s21_data</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="n">firstAbs</span> <span class="o">=</span> <span class="n">dataAbsSet</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
+    <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">firstAbs</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">lut_g0</span> <span class="o">=</span> <span class="n">resample_lut</span><span class="p">(</span><span class="n">lut_path</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">bsc</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">firstAbs</span>
+
     <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">bands</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">bandAbs</span> <span class="o">=</span> <span class="n">dataAbsSet</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
         <span class="n">bandPhase</span> <span class="o">=</span> <span class="n">dataPhaseSet</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
@@ -537,11 +640,10 @@
         <span class="n">bandReal</span> <span class="o">=</span> <span class="n">bandAbs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bandPhase</span><span class="p">)</span> <span class="c1">#* calfac_linear</span>
         <span class="n">bandImag</span> <span class="o">=</span> <span class="n">bandAbs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bandPhase</span><span class="p">)</span> <span class="c1">#* calfac_linear</span>
 
-        <span class="n">lut_g0</span> <span class="o">=</span> <span class="n">resample_lut</span><span class="p">(</span><span class="n">lut_path</span><span class="p">,</span> <span class="n">bandReal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bandReal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">bsc</span><span class="p">)</span>
-
+        <span class="c1"># lut_g0 = resample_lut(lut_path, bandReal.shape[0], bandReal.shape[1],bsc)</span>
         <span class="n">bandComplex</span> <span class="o">=</span> <span class="p">(</span><span class="n">bandReal</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">bandImag</span><span class="p">)</span><span class="o">*</span><span class="n">lut_g0</span>
 
-        <span class="k">del</span> <span class="n">bandReal</span><span class="p">,</span> <span class="n">bandImag</span><span class="p">,</span> <span class="n">lut_g0</span>
+        <span class="k">del</span> <span class="n">bandReal</span><span class="p">,</span> <span class="n">bandImag</span>
 
         <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span> <span class="s2">&quot;GTiff&quot;</span><span class="p">:</span>
             <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.tif&quot;</span>
@@ -551,8 +653,8 @@
         <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">outFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;s11</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">write_rst</span><span class="p">(</span><span class="n">outFile</span><span class="p">,</span> <span class="n">bandComplex</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span>
-                    <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat_tag</span> <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mat</span><span class="p">,</span>
-                    <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                    <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                    <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span><span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">=</span><span class="n">dataAbsSet</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">recip</span><span class="p">:</span>
@@ -560,8 +662,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">outFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;s12</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">write_rst</span><span class="p">(</span><span class="n">outFile</span><span class="p">,</span> <span class="n">bandComplex</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span>
-                        <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat_tag</span> <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mat</span><span class="p">,</span>
-                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                        <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span><span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">=</span><span class="n">dataAbsSet</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">recip</span><span class="p">:</span>
@@ -569,23 +671,23 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">outFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;s21</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">write_rst</span><span class="p">(</span><span class="n">outFile</span><span class="p">,</span> <span class="n">bandComplex</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span>
-                        <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat_tag</span> <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mat</span><span class="p">,</span>
-                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                        <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                        <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span><span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">=</span><span class="n">dataAbsSet</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">outFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;s22</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">write_rst</span><span class="p">(</span><span class="n">outFile</span><span class="p">,</span> <span class="n">bandComplex</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span>
-                    <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat_tag</span> <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mat</span><span class="p">,</span>
-                    <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
-
+                    <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                    <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span><span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">=</span><span class="n">dataAbsSet</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">lut_g0</span>
     <span class="c1"># Handle reciprocity only once, after both s12 and s21 are read</span>
     <span class="k">if</span> <span class="n">recip</span> <span class="ow">and</span> <span class="n">s12_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">s21_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">avg_s12_s21</span> <span class="o">=</span> <span class="p">(</span><span class="n">s12_data</span> <span class="o">+</span> <span class="n">s21_data</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;s12&quot;</span><span class="p">,</span> <span class="s2">&quot;s21&quot;</span><span class="p">]:</span>
             <span class="n">outFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">write_rst</span><span class="p">(</span><span class="n">outFile</span><span class="p">,</span> <span class="n">avg_s12_s21</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span>
-                    <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat_tag</span> <span class="k">if</span> <span class="n">mat</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mat</span><span class="p">,</span>
-                    <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+                    <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                    <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span><span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">,</span> <span class="n">ref_ds</span><span class="o">=</span><span class="n">dataAbsSet</span><span class="p">)</span>
 
 
     <span class="c1"># except Exception as e:</span>
@@ -604,6 +706,122 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not delete temporary directory </span><span class="si">{</span><span class="n">temp_dir</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
+
+
+<span class="nd">@time_it</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_biomass_l1b</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span>
+            <span class="c1"># azlks=1,rglks=1,</span>
+            <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
+            <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">bsc</span><span class="o">=</span><span class="s1">&#39;sigma0&#39;</span><span class="p">,</span>
+           <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+           <span class="n">geocode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="c1">#    recip=False,</span>
+           <span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extracts the backscatter intensity elements from a BIOMASS L2B  &#39;_DGM__&#39; folder and saves them into respective tif/binar files.</span>
+
+<span class="sd">    Example Usage:</span>
+<span class="sd">    --------------</span>
+<span class="sd">    The following code will extract the intensity elements from a BIOMASS L2B  &#39;_DGM__&#39; folder</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import_biomass_l1b(&quot;/path/to/data&quot;)</span>
+
+<span class="sd">        </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    in_dir : str</span>
+<span class="sd">        Path to the folder containing the BIOMASS L1B files.</span>
+
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, optional (default=&#39;tif&#39;)</span>
+<span class="sd">        Output format:</span>
+<span class="sd">        - &#39;tif&#39;: GeoTIFF</span>
+<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
+
+<span class="sd">    cog : bool, optional (default=False)</span>
+<span class="sd">        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</span>
+
+<span class="sd">    ovr : list of int, optional (default=[2, 4, 8, 16])</span>
+<span class="sd">        Overview levels for COG generation. Ignored if cog=False.</span>
+
+<span class="sd">    comp : bool, optional (default=False)</span>
+<span class="sd">        If True, applies LZW compression to GeoTIFF outputs.</span>
+
+<span class="sd">    bsc : str, optional (default=&#39;sigma0&#39;)</span>
+<span class="sd">        The type of radar cross-section to use for scaling. Available options:</span>
+<span class="sd">        </span>
+<span class="sd">        - &#39;sigma0&#39; : Uses `sigmaNought` LUT for scaling.</span>
+<span class="sd">        - &#39;gamma0&#39; : Uses `gammaNought` LUT for scaling.</span>
+
+<span class="sd">    out_dir : str or None, optional (default=None)</span>
+<span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
+<span class="sd">        in the same location as the input file.</span>
+
+<span class="sd">    geocode : bool, default=True</span>
+<span class="sd">        If True, performs a coarse geocoding using GCPs in the file.</span>
+<span class="sd">                </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;II&#39;</span>
+    <span class="n">cf_dB</span> <span class="o">=</span> <span class="mf">39.68531599998061</span>
+    <span class="n">calfac_linear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">((</span><span class="n">cf_dB</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="n">temp_dir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s1">&#39;tif&#39;</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="s1">&#39;ENVI&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s2">&quot;GTiff&quot;</span>
+
+    <span class="c1"># Final output directory</span>
+    <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">final_out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">final_out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">final_out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Intermediate output directory</span>
+    <span class="k">if</span> <span class="n">mat</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;II&#39;</span><span class="p">]:</span>
+        <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">final_out_dir</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;temp_S2_&#39;</span><span class="p">)</span>
+        <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">temp_dir</span>
+
+    <span class="n">biomassPath</span> <span class="o">=</span> <span class="n">in_dir</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">biomassPath</span> <span class="o">=</span> <span class="n">biomassPath</span><span class="p">[</span><span class="o">-</span><span class="mi">80</span><span class="p">:]</span>
+    <span class="n">biomassPath</span> <span class="o">=</span> <span class="n">biomassPath</span><span class="p">[:</span><span class="mi">70</span><span class="p">]</span>
+    <span class="n">biomassDataAbsPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;measurement&quot;</span><span class="p">,</span> <span class="n">biomassPath</span> <span class="o">+</span> <span class="s2">&quot;_i_abs.tiff&quot;</span><span class="p">)</span>
+
+    <span class="n">lut_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="s2">&quot;annotation&quot;</span><span class="p">,</span><span class="n">biomassPath</span> <span class="o">+</span> <span class="s2">&quot;_lut.nc&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Open dataset</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">biomassDataAbsPath</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GA_ReadOnly</span><span class="p">)</span>
+    <span class="c1"># Extract dataset-level metadata</span>
+    <span class="n">common_metadata</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetMetadata</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;Could not open:&quot;</span><span class="p">,</span> <span class="n">biomassDataAbsPath</span><span class="p">)</span>
+        
+    
+    <span class="c1"># bsc = &quot;sigma0&quot;</span>
+
+    <span class="n">HH_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">RasterYSize</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">RasterXSize</span><span class="p">)</span>
+    <span class="n">lut_g0</span> <span class="o">=</span> <span class="n">resample_lut</span><span class="p">(</span><span class="n">lut_path</span><span class="p">,</span> <span class="n">HH_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">HH_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bsc</span><span class="p">)</span>
+    
+    <span class="n">HH</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+    <span class="n">HH</span> <span class="o">=</span> <span class="n">HH</span> <span class="o">*</span> <span class="n">lut_g0</span>
+    <span class="n">save_l1b</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">HH</span><span class="p">,</span> <span class="s2">&quot;HH&quot;</span><span class="p">,</span> <span class="n">base_out_dir</span><span class="p">,</span> <span class="n">common_metadata</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">HH</span>
+
+    <span class="n">HV</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+    <span class="n">save_l1b</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">HV</span><span class="p">,</span> <span class="s2">&quot;HV&quot;</span><span class="p">,</span> <span class="n">base_out_dir</span><span class="p">,</span> <span class="n">common_metadata</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">HV</span>
+    
+    <span class="n">VH</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+    <span class="n">save_l1b</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">VH</span><span class="p">,</span> <span class="s2">&quot;VH&quot;</span><span class="p">,</span> <span class="n">base_out_dir</span><span class="p">,</span> <span class="n">common_metadata</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">VH</span>
+    
+    <span class="n">VV</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+    <span class="n">save_l1b</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">VV</span><span class="p">,</span> <span class="s2">&quot;VV&quot;</span><span class="p">,</span> <span class="n">base_out_dir</span><span class="p">,</span> <span class="n">common_metadata</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span><span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="n">ovr</span><span class="p">,</span><span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span> <span class="n">geocode</span><span class="o">=</span><span class="n">geocode</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">VV</span>
 </pre></div>
 
                 </article>

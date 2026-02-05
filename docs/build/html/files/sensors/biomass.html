@@ -364,7 +364,7 @@
 <p>The <cite>import_biomass_l1a</cite> function extracts matrix elements (S2/C4/T4/C3/T3/C2/T2) from the given BIOMASS L1-A folder and saves them into respective directories.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_biomass_l1a</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/biomass.html#import_biomass_l1a"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_biomass_l1a</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geocode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/biomass.html#import_biomass_l1a"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extract polarimetric S2/T4/C4/T3/C3 matrix data from BIOMASS L1A SLC data.</p>
 <section id="example-usage">
 <h3>Example Usage:<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h3>
@@ -409,6 +409,51 @@
 in the same location as the input file.</p>
 </dd>
 <dt>recip<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="l1-b-import-biomass-l1b">
+<h2>L1-B (<code class="docutils literal notranslate"><span class="pre">import_biomass_l1b</span></code>)<a class="headerlink" href="#l1-b-import-biomass-l1b" title="Link to this heading">#</a></h2>
+<p>The <cite>import_biomass_l1b</cite> function extracts intensity elements (HH,HV,VH,VV; sigma0 or gamma0) from the given L1B folder and saves them into a II directory.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_biomass_l1b</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geocode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/biomass.html#import_biomass_l1b"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts the backscatter intensity elements from a BIOMASS L2B  ‘_DGM__’ folder and saves them into respective tif/binar files.</p>
+<section id="id1">
+<h3>Example Usage:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>The following code will extract the intensity elements from a BIOMASS L2B  ‘_DGM__’ folder</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">import_biomass_l1b</span><span class="p">(</span><span class="s2">&quot;/path/to/data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Parameters:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>in_dir<span class="classifier">str</span></dt><dd><p>Path to the folder containing the BIOMASS L1B files.</p>
+</dd>
+<dt>fmt<span class="classifier">{‘tif’, ‘bin’}, optional (default=’tif’)</span></dt><dd><p>Output format:
+- ‘tif’: GeoTIFF
+- ‘bin’: Raw binary format</p>
+</dd>
+<dt>cog<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</p>
+</dd>
+<dt>ovr<span class="classifier">list of int, optional (default=[2, 4, 8, 16])</span></dt><dd><p>Overview levels for COG generation. Ignored if cog=False.</p>
+</dd>
+<dt>comp<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, applies LZW compression to GeoTIFF outputs.</p>
+</dd>
+<dt>bsc<span class="classifier">str, optional (default=’sigma0’)</span></dt><dd><p>The type of radar cross-section to use for scaling. Available options:</p>
+<ul class="simple">
+<li><p>‘sigma0’ : Uses <cite>sigmaNought</cite> LUT for scaling.</p></li>
+<li><p>‘gamma0’ : Uses <cite>gammaNought</cite> LUT for scaling.</p></li>
+</ul>
+</dd>
+<dt>out_dir<span class="classifier">str or None, optional (default=None)</span></dt><dd><p>Directory to save output files. If None, a folder named after the matrix type will be created
+in the same location as the input file.</p>
+</dd>
+<dt>geocode<span class="classifier">bool, default=True</span></dt><dd><p>If True, performs a coarse geocoding using GCPs in the file.</p>
 </dd>
 </dl>
 </section>
@@ -465,6 +510,7 @@ in the same location as the input file.</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l1-a-import-biomass-l1a">L1-A (<code class="docutils literal notranslate"><span class="pre">import_biomass_l1a</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#l1-b-import-biomass-l1b">L1-B (<code class="docutils literal notranslate"><span class="pre">import_biomass_l1b</span></code>)</a></li>
 </ul>
   </nav></div>
 
