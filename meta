@@ -11,6 +11,8 @@ update rgb_dp with type=5 for NISAR
 added import_biomass_l1a, import_biomass_l1b
 Added NISAR GCOV
 fix dp functions nan issue
+update rgb to handle array input
+update pauli RGB with II folder
 
 [to do]
 MRSLab functions image-wide parameters

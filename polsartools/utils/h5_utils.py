@@ -68,7 +68,7 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,ca
         return compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "Sxy":
         return compute_sxy(chunks, calibration_constant)
-    elif matrix_type == "II":
+    elif matrix_type == "I2" or matrix_type == "I4":
         return compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant)
     else:
         raise ValueError(f"Unsupported matrix type: {matrix_type}")

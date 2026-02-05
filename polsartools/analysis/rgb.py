@@ -7,6 +7,18 @@ gdal.UseExceptions()
 
 from .pauli_rgb import generate_rgb_png, create_pgw, generate_rgb_tif, norm_data, read_bin #create_prj
 
+def ensure_array(x):
+    # If it's a path-like object (string or Path), read from file
+    if isinstance(x, (str, os.PathLike)):
+        return np.array(read_bin(x), dtype=np.float32)
+    # If it's already a NumPy array, just cast dtype
+    elif isinstance(x, np.ndarray):
+        return x.astype(np.float32)
+    # If it's a list or other sequence, convert to array
+    else:
+        return np.array(x, dtype=np.float32)
+
+
 
 @time_it
 def rgb(Rpath,Gpath,Bpath,
@@ -59,9 +71,14 @@ def rgb(Rpath,Gpath,Bpath,
     # R = read_bin(Rpath)
     # G = read_bin(Gpath)
     # B = read_bin(Bpath)
-    R = np.array(read_bin(Rpath), dtype=np.float32)
-    G = np.array(read_bin(Gpath), dtype=np.float32)
-    B = np.array(read_bin(Bpath), dtype=np.float32)
+
+    R = ensure_array(Rpath)
+    G = ensure_array(Gpath)
+    B = ensure_array(Bpath)
+
+    # R = np.array(read_bin(Rpath), dtype=np.float32)
+    # G = np.array(read_bin(Gpath), dtype=np.float32)
+    # B = np.array(read_bin(Bpath), dtype=np.float32)
 
     if window_size is not None:
         kernel = np.ones((window_size, window_size), np.float32) / (window_size * window_size)
@@ -86,18 +103,29 @@ def rgb(Rpath,Gpath,Bpath,
         green = G
         blue = B
     
-    georef_file = Rpath
-    infolder = os.path.dirname(georef_file)
-    output_path = os.path.join(infolder, 'RGB.png')
-    generate_rgb_png(red, green, blue, georef_file, output_path)
-    create_pgw(georef_file, output_path)
-    
-    print(f"RGB image saved as {output_path}")
-    
-    if save_tif:
-        tif_path = os.path.join(infolder, f'RGB.tif')
-        generate_rgb_tif(red, green, blue, georef_file, tif_path)
-        print(f"RGB GeoTIFF saved as {tif_path}")
+    if isinstance(Rpath, (str, os.PathLike)):
+        georef_file = Rpath
+        infolder = os.path.dirname(georef_file)
+        output_path = os.path.join(infolder, 'RGB.png')
+        generate_rgb_png(red, green, blue, georef_file, output_path)
+        create_pgw(georef_file, output_path)
+        
+        print(f"RGB image saved as {output_path}")
+        
+        if save_tif:
+            tif_path = os.path.join(infolder, f'RGB.tif')
+            generate_rgb_tif(red, green, blue, georef_file, tif_path)
+            print(f"RGB GeoTIFF saved as {tif_path}")
+    elif isinstance(Rpath, np.ndarray):
+        georef_file = None
+        infolder = './'
+        output_path = os.path.join(infolder, 'RGB.png')
+        generate_rgb_png(red, green, blue, georef_file, output_path)
+        # create_pgw(georef_file, output_path)
+        
+        print(f"RGB image saved as {output_path}")
+    else:
+        raise('Invalid input!!')
 
     
     

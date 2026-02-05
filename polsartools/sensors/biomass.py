@@ -426,7 +426,7 @@ def import_biomass_l1b(in_dir,
         If True, performs a coarse geocoding using GCPs in the file.
                 
     """
-    mat='II'
+    mat='I4'
     cf_dB = 39.68531599998061
     calfac_linear = np.sqrt(10 ** ((cf_dB) / 10))
     
@@ -442,7 +442,7 @@ def import_biomass_l1b(in_dir,
     os.makedirs(final_out_dir, exist_ok=True)
 
     # Intermediate output directory
-    if mat in ['II']:
+    if mat in ['I4']:
         base_out_dir = final_out_dir
     else:
         temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
@@ -474,13 +474,16 @@ def import_biomass_l1b(in_dir,
     del HH
 
     HV = ds.GetRasterBand(2).ReadAsArray().astype("float32")
+    HV = HV * lut_g0
     save_l1b(ds, HV, "HV", base_out_dir, common_metadata, driver=driver,cog=cog,ovr = ovr,comp=comp, geocode=geocode)
     del HV
     
     VH = ds.GetRasterBand(3).ReadAsArray().astype("float32")
+    VH = VH * lut_g0
     save_l1b(ds, VH, "VH", base_out_dir, common_metadata, driver=driver,cog=cog,ovr = ovr,comp=comp, geocode=geocode)
     del VH
     
     VV = ds.GetRasterBand(4).ReadAsArray().astype("float32")
+    VV = VV * lut_g0
     save_l1b(ds, VV, "VV", base_out_dir, common_metadata, driver=driver,cog=cog,ovr = ovr,comp=comp, geocode=geocode)
     del VV

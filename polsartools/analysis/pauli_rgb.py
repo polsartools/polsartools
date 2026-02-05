@@ -253,8 +253,34 @@ def pauli_rgb(infolder,save_tif=False, window_size=None):
         green = norm_data(np.abs((2 / np.sqrt(2)) * S12)**2)
         georef_file = find_file(infolder, "s11")
 
+    # HH/HV/VH/VV case
+    elif all(find_file(infolder, pol) for pol in ["HH", "HV", "VH", "VV"]):
+        HH = read_bin(find_file(infolder, "HH"))
+        VV = read_bin(find_file(infolder, "VV"))
+        HV = read_bin(find_file(infolder, "HV"))
+        VH = read_bin(find_file(infolder, "VH"))
+
+        blue  = norm_data((HH + VV) / np.sqrt(2.0))
+        red   = norm_data((HH - VV) / np.sqrt(2.0))
+        green = norm_data(np.sqrt(2)*((HV + VH)))
+
+        georef_file = os.path.join(infolder, "HH.tif")
+
+    # HHHH/HVHV/VHVH/VVVV case
+    elif all(find_file(infolder, pol) for pol in ["HHHH", "HVHV", "VHVH", "VVVV"]):
+        HHHH = read_bin(find_file(infolder, "HHHH"))
+        HVHV = read_bin(find_file(infolder, "HVHV"))
+        VHVH = read_bin(find_file(infolder, "VHVH"))
+        VVVV = read_bin(find_file(infolder, "VVVV"))
+
+        blue  = norm_data((HHHH + VVVV) / np.sqrt(2.0))
+        red   = norm_data((HHHH - VVVV) / np.sqrt(2.0))
+        green = norm_data(np.sqrt(2)*((HVHV + VHVH) ))
+
+        georef_file = find_file(infolder, "HHHH")
+
     else:
-        raise ValueError("No matching dataset found for C4, C3, T3, or S2!")
+        raise ValueError("No matching dataset found for C4, C3, T3, S2 or II!")
     output_path = os.path.join(infolder, "PauliRGB.png")
     
     if window_size is not None:

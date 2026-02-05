@@ -622,7 +622,7 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
         in the same location as the input file.
 
     """
-    mat='II'    
+      
     freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
@@ -647,6 +647,13 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
         inFolder = "."
     
     base_path = f'/science/{freq_band}SAR/GCOV/grids/frequencyA'
+
+    if nchannels==2:
+        mat='I2'
+    elif nchannels==4:
+        mat='I4'
+    else:
+        raise('Invalid number of channels!!')
     nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, max_workers,
                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
                 inshape, outshape, listOfPolarizations, out_dir)
