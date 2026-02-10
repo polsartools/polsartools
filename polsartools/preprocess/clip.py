@@ -8,7 +8,7 @@ from polsartools.utils.utils import time_it
 def clip(folder_path, output_folder=None, 
          start_x=None, start_y=None, dx=None, dy=None,
          north=None, south=None, east=None, west=None,
-         vector_path=None, outType='tif', auto_reference=True):
+         vector_path=None, in_crs=None, outType='tif', auto_reference=True):
 
     """
     Subsets PolSAR matrix rasters (e.g., C3, C2, T3) from a given folder using spatial or pixel-based criteria.
@@ -184,12 +184,58 @@ def clip(folder_path, output_folder=None,
             xoff, yoff = start_x, start_y
             xsize, ysize = dx, dy
 
+        # elif geo_params:
+        #     origin_x, pixel_width, _, origin_y, _, pixel_height = geotransform
+        #     xoff = int((west - origin_x) / pixel_width)
+        #     yoff = int((north - origin_y) / pixel_height)
+        #     xsize = int((east - west) / pixel_width)
+        #     ysize = int((south - north) / pixel_height)
         elif geo_params:
+            raster_srs = osr.SpatialReference()
+            raster_srs.ImportFromWkt(projection)
+
+            # If in_crs is None, assume input bounds are already in raster CRS
+            if in_crs is None:
+                input_srs = raster_srs
+            elif isinstance(in_crs, int):
+                input_srs = osr.SpatialReference()
+                input_srs.ImportFromEPSG(in_crs)
+            elif isinstance(in_crs, str):
+                input_srs = osr.SpatialReference()
+                if in_crs.lower().startswith("epsg:"):
+                    input_srs.ImportFromEPSG(int(in_crs.split(":")[1]))
+                else:
+                    input_srs.ImportFromWkt(in_crs)
+            else:
+                raise ValueError("in_crs must be None, an EPSG integer, or a WKT string")
+
+
+            # Build transformation from input CRS to raster CRS
+            coord_transform = osr.CoordinateTransformation(input_srs, raster_srs)
+
+            # Create polygon from NSWE bounds in input CRS
+            ring = ogr.Geometry(ogr.wkbLinearRing)
+            ring.AddPoint(west, south)
+            ring.AddPoint(east, south)
+            ring.AddPoint(east, north)
+            ring.AddPoint(west, north)
+            ring.AddPoint(west, south)
+            poly = ogr.Geometry(ogr.wkbPolygon)
+            poly.AddGeometry(ring)
+
+            # Transform polygon to raster CRS (no-op if input_srs == raster_srs)
+            poly.Transform(coord_transform)
+
+            # Get bounding box in raster CRS
+            min_x, max_x, min_y, max_y = poly.GetEnvelope()
+
             origin_x, pixel_width, _, origin_y, _, pixel_height = geotransform
-            xoff = int((west - origin_x) / pixel_width)
-            yoff = int((north - origin_y) / pixel_height)
-            xsize = int((east - west) / pixel_width)
-            ysize = int((south - north) / pixel_height)
+            xoff = int((min_x - origin_x) / pixel_width)
+            yoff = int((max_y - origin_y) / pixel_height)
+            xsize = int((max_x - min_x) / pixel_width)
+            ysize = int((max_y - min_y) / abs(pixel_height))
+
+
 
         else:
             print(f"Skipping {filename}: insufficient clipping parameters.")

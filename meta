@@ -13,6 +13,7 @@ Added NISAR GCOV
 fix dp functions nan issue
 update rgb to handle array input
 update pauli RGB with II folder
+update cluster_h_alpha_fp, clip (with UTM support)
 
 [to do]
 MRSLab functions image-wide parameters
