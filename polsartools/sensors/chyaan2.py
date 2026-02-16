@@ -6,12 +6,22 @@ from polsartools.utils.utils import time_it
 # from polsartools.utils.io_utils import  write_T3, write_C3
 from polsartools.preprocess.convert_S2 import convert_S
 
-def read_rs2_tif(file):
+# def read_rs2_tif(file):
+#     ds = gdal.Open(file)
+#     band1 = ds.GetRasterBand(1).ReadAsArray().astype(np.float32)
+#     band2 = ds.GetRasterBand(2).ReadAsArray().astype(np.float32)
+#     ds=None
+#     return np.dstack((band1,band2))
+
+
+def read_rs2_tif(file, calFactor):
     ds = gdal.Open(file)
-    band1 = ds.GetRasterBand(1).ReadAsArray()
-    band2 = ds.GetRasterBand(2).ReadAsArray()
-    ds=None
-    return np.dstack((band1,band2))
+    real = (ds.GetRasterBand(1).ReadAsArray() * calFactor).astype(np.float32)
+    imag = (ds.GetRasterBand(2).ReadAsArray() * calFactor).astype(np.float32)
+    ds = None
+    return (real + 1j*imag).astype(np.complex64)
+
+
 
 def write_rst(out_file,data,
                 driver='GTiff', out_dtype=gdal.GDT_CFloat32,
@@ -232,42 +242,71 @@ def import_chyaan2_fp(in_dir,mat='T3',azlks=None,rglks=None,
     calFactor = 1/np.sqrt(10**(cc/10))
     # print(lines)
     inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hh_*.tif'))[0]
-    S11 = read_rs2_tif(inFile)
+    # S11 = read_rs2_tif(inFile)
+    # write_rst(os.path.join(base_out_dir, f's11.{ext}'),
+    #           S11[:,:,0]*calFactor+1j*(S11[:,:,1]*calFactor),   
+    #           driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    # del S11
+
     write_rst(os.path.join(base_out_dir, f's11.{ext}'),
-              S11[:,:,0]*calFactor+1j*(S11[:,:,1]*calFactor),   
+              read_rs2_tif(inFile, calFactor),   
               driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S11
+
     # write_s2_bin(out_file,data[:,:,0]*calFactor+1j*(data[:,:,1]*calFactor))
     
-    inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
-    # data_xy = read_rs2_tif(inFile)
-    S12 = read_rs2_tif(inFile)
+    # inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+    # # data_xy = read_rs2_tif(inFile)
+    # S12 = read_rs2_tif(inFile)
 
 
-    inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
-    # data_yx = read_rs2_tif(inFile)    
-    S21 = read_rs2_tif(inFile)
+    # inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+    # # data_yx = read_rs2_tif(inFile)    
+    # S21 = read_rs2_tif(inFile)
+    
+    # if recip:
+    #     S12 = (S12 + S21)/2
+    #     S21 = S12    
+        
+    # write_rst(os.path.join(base_out_dir, f's12.{ext}'),
+    #           S12[:,:,0]*calFactor+1j*(S12[:,:,1]*calFactor),   
+    #           driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    # del S12
+    # write_rst(os.path.join(base_out_dir, f's21.{ext}'),
+    #           S21[:,:,0]*calFactor+1j*(S21[:,:,1]*calFactor),   
+    #           driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    # del S21    
     
     if recip:
-        S12 = (S12 + S21)/2
-        S21 = S12    
-        
-    write_rst(os.path.join(base_out_dir, f's12.{ext}'),
-              S12[:,:,0]*calFactor+1j*(S12[:,:,1]*calFactor),   
-              driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S12
-    write_rst(os.path.join(base_out_dir, f's21.{ext}'),
-              S21[:,:,0]*calFactor+1j*(S21[:,:,1]*calFactor),   
-              driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S21    
+        inFile1 = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        inFile2 = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        write_rst(os.path.join(base_out_dir, f's21.{ext}'),
+                (read_rs2_tif(inFile1, calFactor)+read_rs2_tif(inFile2, calFactor))/2,   
+                driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    else:
+
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_hv_*.tif'))[0]
+        write_rst(os.path.join(base_out_dir, f's12.{ext}'),
+                read_rs2_tif(inFile, calFactor),   
+                driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+        inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vh_*.tif'))[0]
+        write_rst(os.path.join(base_out_dir, f's21.{ext}'),
+                read_rs2_tif(inFile, calFactor),   
+                driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     
+
+
+
     inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_vv_*.tif'))[0]
-    S22 = read_rs2_tif(inFile)
+    # S22 = read_rs2_tif(inFile)
     
+    # write_rst(os.path.join(base_out_dir, f's22.{ext}'),
+    #           S22[:,:,0]*calFactor+1j*(S22[:,:,1]*calFactor),   
+    #           driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    # del S22    
+
     write_rst(os.path.join(base_out_dir, f's22.{ext}'),
-              S22[:,:,0]*calFactor+1j*(S22[:,:,1]*calFactor),   
-              driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S22    
+            read_rs2_tif(inFile, calFactor),   
+            driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
     
     with open(os.path.join(final_out_dir, 'multilook_info.txt'), 'w') as f:
         f.writelines(lines)
@@ -412,23 +451,31 @@ def import_chyaan2_cp(in_dir,mat='C2',azlks=None,rglks=None,
         inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_lh_*.tif'))[0]
     except:
         inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_rh_*.tif'))[0]
-    S11 = read_rs2_tif(inFile)
+    # S11 = read_rs2_tif(inFile)
+    # write_rst(os.path.join(base_out_dir, f's11.{ext}'),
+    #           S11[:,:,0]*calFactor+1j*(S11[:,:,1]*calFactor),   
+    #           driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    
+    # S11 = read_rs2_tif(inFile)
     write_rst(os.path.join(base_out_dir, f's11.{ext}'),
-              S11[:,:,0]*calFactor+1j*(S11[:,:,1]*calFactor),   
+              read_rs2_tif(inFile, calFactor),   
               driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S11
+    # del S11
 
     try:
         inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_lv_*.tif'))[0]
     except:
         inFile = glob.glob(os.path.join(in_dir, 'data/calibrated/*/*sli*_rv_*.tif'))[0]
     # data_xy = read_rs2_tif(inFile)
-    S12 = read_rs2_tif(inFile)
+    # S12 = read_rs2_tif(inFile)
+    # write_rst(os.path.join(base_out_dir, f's12.{ext}'),
+    #         S12[:,:,0]*calFactor+1j*(S12[:,:,1]*calFactor),   
+    #         driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+    # del S12
     write_rst(os.path.join(base_out_dir, f's12.{ext}'),
-            S12[:,:,0]*calFactor+1j*(S12[:,:,1]*calFactor),   
-            driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
-    del S12
-    
+              read_rs2_tif(inFile, calFactor),   
+              driver=driver, mat=mat, cog=cog, ovr=ovr, comp=comp)
+        
     with open(os.path.join(final_out_dir, 'multilook_info.txt'), 'w') as f:
         f.writelines(lines)
     f.close()
