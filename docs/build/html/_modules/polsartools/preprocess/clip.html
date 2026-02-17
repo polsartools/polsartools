@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.preprocess.clip &#8212; PolSARtools 0.9.1 documentation</title>
+    <title>polsartools.preprocess.clip &#8212; PolSARtools 0.11 documentation</title>
   
   
   
@@ -37,9 +37,9 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/clip';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -345,7 +345,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">clip</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="n">output_folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
          <span class="n">start_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
          <span class="n">north</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">south</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">east</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">west</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-         <span class="n">vector_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">auto_reference</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+         <span class="n">vector_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_crs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">auto_reference</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Subsets PolSAR matrix rasters (e.g., C3, C2, T3) from a given folder using spatial or pixel-based criteria.</span>
@@ -521,12 +521,58 @@
             <span class="n">xoff</span><span class="p">,</span> <span class="n">yoff</span> <span class="o">=</span> <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span>
             <span class="n">xsize</span><span class="p">,</span> <span class="n">ysize</span> <span class="o">=</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span>
 
+        <span class="c1"># elif geo_params:</span>
+        <span class="c1">#     origin_x, pixel_width, _, origin_y, _, pixel_height = geotransform</span>
+        <span class="c1">#     xoff = int((west - origin_x) / pixel_width)</span>
+        <span class="c1">#     yoff = int((north - origin_y) / pixel_height)</span>
+        <span class="c1">#     xsize = int((east - west) / pixel_width)</span>
+        <span class="c1">#     ysize = int((south - north) / pixel_height)</span>
         <span class="k">elif</span> <span class="n">geo_params</span><span class="p">:</span>
+            <span class="n">raster_srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
+            <span class="n">raster_srs</span><span class="o">.</span><span class="n">ImportFromWkt</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+
+            <span class="c1"># If in_crs is None, assume input bounds are already in raster CRS</span>
+            <span class="k">if</span> <span class="n">in_crs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">input_srs</span> <span class="o">=</span> <span class="n">raster_srs</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_crs</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">input_srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
+                <span class="n">input_srs</span><span class="o">.</span><span class="n">ImportFromEPSG</span><span class="p">(</span><span class="n">in_crs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_crs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">input_srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">in_crs</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;epsg:&quot;</span><span class="p">):</span>
+                    <span class="n">input_srs</span><span class="o">.</span><span class="n">ImportFromEPSG</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">in_crs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">input_srs</span><span class="o">.</span><span class="n">ImportFromWkt</span><span class="p">(</span><span class="n">in_crs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;in_crs must be None, an EPSG integer, or a WKT string&quot;</span><span class="p">)</span>
+
+
+            <span class="c1"># Build transformation from input CRS to raster CRS</span>
+            <span class="n">coord_transform</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">CoordinateTransformation</span><span class="p">(</span><span class="n">input_srs</span><span class="p">,</span> <span class="n">raster_srs</span><span class="p">)</span>
+
+            <span class="c1"># Create polygon from NSWE bounds in input CRS</span>
+            <span class="n">ring</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbLinearRing</span><span class="p">)</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">west</span><span class="p">,</span> <span class="n">south</span><span class="p">)</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">east</span><span class="p">,</span> <span class="n">south</span><span class="p">)</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">east</span><span class="p">,</span> <span class="n">north</span><span class="p">)</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">west</span><span class="p">,</span> <span class="n">north</span><span class="p">)</span>
+            <span class="n">ring</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="n">west</span><span class="p">,</span> <span class="n">south</span><span class="p">)</span>
+            <span class="n">poly</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbPolygon</span><span class="p">)</span>
+            <span class="n">poly</span><span class="o">.</span><span class="n">AddGeometry</span><span class="p">(</span><span class="n">ring</span><span class="p">)</span>
+
+            <span class="c1"># Transform polygon to raster CRS (no-op if input_srs == raster_srs)</span>
+            <span class="n">poly</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">coord_transform</span><span class="p">)</span>
+
+            <span class="c1"># Get bounding box in raster CRS</span>
+            <span class="n">min_x</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_y</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">GetEnvelope</span><span class="p">()</span>
+
             <span class="n">origin_x</span><span class="p">,</span> <span class="n">pixel_width</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">origin_y</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_height</span> <span class="o">=</span> <span class="n">geotransform</span>
-            <span class="n">xoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">west</span> <span class="o">-</span> <span class="n">origin_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_width</span><span class="p">)</span>
-            <span class="n">yoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">north</span> <span class="o">-</span> <span class="n">origin_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_height</span><span class="p">)</span>
-            <span class="n">xsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">east</span> <span class="o">-</span> <span class="n">west</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_width</span><span class="p">)</span>
-            <span class="n">ysize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">south</span> <span class="o">-</span> <span class="n">north</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_height</span><span class="p">)</span>
+            <span class="n">xoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">min_x</span> <span class="o">-</span> <span class="n">origin_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_width</span><span class="p">)</span>
+            <span class="n">yoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">origin_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_height</span><span class="p">)</span>
+            <span class="n">xsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixel_width</span><span class="p">)</span>
+            <span class="n">ysize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">max_y</span> <span class="o">-</span> <span class="n">min_y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pixel_height</span><span class="p">))</span>
+
+
 
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: insufficient clipping parameters.&quot;</span><span class="p">)</span>
@@ -595,7 +641,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -604,7 +650,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>

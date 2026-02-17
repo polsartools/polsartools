@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.rgb &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.analysis.rgb &#8212; PolSARtools 0.11 documentation</title>
   
   
   
@@ -37,9 +37,9 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/rgb';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -342,6 +342,18 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.pauli_rgb</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_rgb_png</span><span class="p">,</span> <span class="n">create_pgw</span><span class="p">,</span> <span class="n">generate_rgb_tif</span><span class="p">,</span> <span class="n">norm_data</span><span class="p">,</span> <span class="n">read_bin</span> <span class="c1">#create_prj</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_array</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># If it&#39;s a path-like object (string or Path), read from file</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">read_bin</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="c1"># If it&#39;s already a NumPy array, just cast dtype</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="c1"># If it&#39;s a list or other sequence, convert to array</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+
 
 <div class="viewcode-block" id="rgb">
 <a class="viewcode-back" href="../../../files/functions/analysis.html#polsartools.rgb">[docs]</a>
@@ -396,9 +408,14 @@
     <span class="c1"># R = read_bin(Rpath)</span>
     <span class="c1"># G = read_bin(Gpath)</span>
     <span class="c1"># B = read_bin(Bpath)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">read_bin</span><span class="p">(</span><span class="n">Rpath</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">read_bin</span><span class="p">(</span><span class="n">Gpath</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">read_bin</span><span class="p">(</span><span class="n">Bpath</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">ensure_array</span><span class="p">(</span><span class="n">Rpath</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">ensure_array</span><span class="p">(</span><span class="n">Gpath</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">ensure_array</span><span class="p">(</span><span class="n">Bpath</span><span class="p">)</span>
+
+    <span class="c1"># R = np.array(read_bin(Rpath), dtype=np.float32)</span>
+    <span class="c1"># G = np.array(read_bin(Gpath), dtype=np.float32)</span>
+    <span class="c1"># B = np.array(read_bin(Bpath), dtype=np.float32)</span>
 
     <span class="k">if</span> <span class="n">window_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_size</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">window_size</span> <span class="o">*</span> <span class="n">window_size</span><span class="p">)</span>
@@ -423,18 +440,29 @@
         <span class="n">green</span> <span class="o">=</span> <span class="n">G</span>
         <span class="n">blue</span> <span class="o">=</span> <span class="n">B</span>
     
-    <span class="n">georef_file</span> <span class="o">=</span> <span class="n">Rpath</span>
-    <span class="n">infolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">georef_file</span><span class="p">)</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s1">&#39;RGB.png&#39;</span><span class="p">)</span>
-    <span class="n">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-    <span class="n">create_pgw</span><span class="p">(</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">save_tif</span><span class="p">:</span>
-        <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;RGB.tif&#39;</span><span class="p">)</span>
-        <span class="n">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">tif_path</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RGB GeoTIFF saved as </span><span class="si">{</span><span class="n">tif_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Rpath</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">)):</span>
+        <span class="n">georef_file</span> <span class="o">=</span> <span class="n">Rpath</span>
+        <span class="n">infolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">georef_file</span><span class="p">)</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s1">&#39;RGB.png&#39;</span><span class="p">)</span>
+        <span class="n">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+        <span class="n">create_pgw</span><span class="p">(</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">save_tif</span><span class="p">:</span>
+            <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;RGB.tif&#39;</span><span class="p">)</span>
+            <span class="n">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">tif_path</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RGB GeoTIFF saved as </span><span class="si">{</span><span class="n">tif_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Rpath</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">georef_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">infolder</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s1">&#39;RGB.png&#39;</span><span class="p">)</span>
+        <span class="n">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+        <span class="c1"># create_pgw(georef_file, output_path)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid input!!&#39;</span><span class="p">)</span></div>
 
 
     
@@ -487,7 +515,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -496,7 +524,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>

@@ -52,6 +52,8 @@ Following are the avaialble functions for compact-pol data:
     functions/compact_pol/iS_Omega
     functions/compact_pol/MF3CC
     functions/compact_pol/DOP_cp
+    functions/compact_pol/m_chi
+    functions/compact_pol/m_delta
 
 
 

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.cluster_h_alpha_fp &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.analysis.cluster_h_alpha_fp &#8212; PolSARtools 0.11 documentation</title>
   
   
   
@@ -37,9 +37,9 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/cluster_h_alpha_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -341,10 +341,9 @@
 <div class="viewcode-block" id="cluster_h_alpha_fp">
 <a class="viewcode-back" href="../../../files/functions/analysis/halpha_cluster_fp.html#polsartools.cluster_h_alpha_fp">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">cluster_h_alpha_fp</span><span class="p">(</span><span class="n">hFile</span><span class="p">,</span><span class="n">alphaFile</span> <span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog_flag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
-          <span class="n">cog_overviews</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
-          <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-          <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cluster_h_alpha_fp</span><span class="p">(</span><span class="n">hFile</span><span class="p">,</span><span class="n">alphaFile</span> <span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> 
+            <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+            <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin    </span>
             <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform H-alpha clustering on given H-alpha files for full-pol SAR data.</span>
@@ -358,9 +357,9 @@
 <span class="sd">    &gt;&gt;&gt; halpha_cluster_fp(</span>
 <span class="sd">    ...     hFile=&quot;h_fp.tif&quot;,</span>
 <span class="sd">    ...     alphaFile=&quot;alpha_fp.tif&quot;,</span>
-<span class="sd">    ...     window_size=5,</span>
-<span class="sd">    ...     outType=&quot;tif&quot;,</span>
-<span class="sd">    ...     cog_flag=True,</span>
+<span class="sd">    ...     win=5,</span>
+<span class="sd">    ...     fmt=&quot;tif&quot;,</span>
+<span class="sd">    ...     cog=True,</span>
 <span class="sd">    ...     block_size=(1024, 1024)</span>
 <span class="sd">    ... )</span>
 
@@ -371,21 +370,19 @@
 <span class="sd">        Path to the input Entropy file, H  (polarimetric entropy).</span>
 <span class="sd">    alphaFile : str</span>
 <span class="sd">        Path to the input alpha file (average scattering angle).</span>
-<span class="sd">    window_size : int, default=1</span>
+<span class="sd">    win : int, default=1</span>
 <span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
 <span class="sd">        but decrease spatial resolution.</span>
-<span class="sd">    outType : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
 <span class="sd">        Output file format:</span>
 <span class="sd">        - &#39;tif&#39;: GeoTIFF format with georeferencing information</span>
 <span class="sd">        - &#39;bin&#39;: Raw binary format</span>
-<span class="sd">    cog_flag : bool, default=False</span>
+<span class="sd">    cog : bool, default=False</span>
 <span class="sd">        If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling</span>
 <span class="sd">        and overviews for efficient web access.</span>
-<span class="sd">    cog_overviews : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
 <span class="sd">        Overview levels for COG creation. Each number represents the</span>
 <span class="sd">        decimation factor for that overview level.</span>
-<span class="sd">    write_flag : bool, default=True</span>
-<span class="sd">        If True, writes results to disk. If False, only processes data in memory.</span>
 <span class="sd">    max_workers : int | None, default=None</span>
 <span class="sd">        Maximum number of parallel processing workers. If None, uses</span>
 <span class="sd">        CPU count - 1 workers.</span>
@@ -404,56 +401,59 @@
     <span class="n">input_filepaths</span> <span class="o">=</span> <span class="p">[</span><span class="n">hFile</span><span class="p">,</span><span class="n">alphaFile</span><span class="p">]</span>
     <span class="n">infolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">hFile</span><span class="p">)</span>
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="n">outType</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
+    <span class="n">write_flag</span><span class="o">=</span><span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;bin&quot;</span><span class="p">:</span>
         <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;ha_cluster.bin&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;ha_cluster.tif&quot;</span><span class="p">))</span>
     
     
     
-    <span class="k">def</span><span class="w"> </span><span class="nf">post_processing_task</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">zones</span> <span class="o">=</span> <span class="n">read_rst</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_processing_task</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">zones</span> <span class="o">=</span> <span class="n">read_rst</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">zones</span><span class="p">[</span><span class="n">zones</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListedColormap</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListedColormap</span><span class="p">,</span> <span class="n">BoundaryNorm</span>
 
-        <span class="c1"># Define colors for Z1–Z9 (index 0 is unused)</span>
+
+
+        <span class="c1"># Define colors for Z0-Z9</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;#000000&#39;</span><span class="p">,</span>     <span class="c1"># Index 0 (unused)</span>
-            <span class="s1">&#39;#00FF00&#39;</span><span class="p">,</span>     <span class="c1"># Z1 - bright green (strong volume)</span>
-            <span class="s1">&#39;#ADFF2F&#39;</span><span class="p">,</span>     <span class="c1"># Z2 - yellow-green (moderate volume)</span>
-            <span class="s1">&#39;#FF00FF&#39;</span><span class="p">,</span>     <span class="c1"># Z3 - megenta (low volume/helicity)</span>
-            <span class="s1">&#39;#228B22&#39;</span><span class="p">,</span>     <span class="c1"># Z4 - forest green (dense volume)</span>
-            <span class="s1">&#39;#FFD700&#39;</span><span class="p">,</span>     <span class="c1"># Z5 - gold (mixed vegetation-ground)</span>
-            <span class="s1">&#39;#4682B4&#39;</span><span class="p">,</span>     <span class="c1"># Z6 - steel blue (rough surface)</span>
-            <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span>     <span class="c1"># Z7 - red (strong double-bounce)</span>
-            <span class="s1">&#39;#D2691E&#39;</span><span class="p">,</span>     <span class="c1"># Z8 - tan/brown (mixed corner-ground)</span>
-            <span class="s1">&#39;#0000ff&#39;</span>      <span class="c1"># Z9 - light gray (flat surface / Bragg)</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>   <span class="c1"># Index 0 transparent (RGBA)</span>
+            <span class="s1">&#39;#fe9394&#39;</span><span class="p">,</span>      <span class="c1"># Z1</span>
+            <span class="s1">&#39;#6aff68&#39;</span><span class="p">,</span>      <span class="c1"># Z2</span>
+            <span class="s1">&#39;#000000&#39;</span><span class="p">,</span>      <span class="c1"># Z3</span>
+            <span class="s1">&#39;#ff5151&#39;</span><span class="p">,</span>      <span class="c1"># Z4</span>
+            <span class="s1">&#39;#53fe4e&#39;</span><span class="p">,</span>      <span class="c1"># Z5</span>
+            <span class="s1">&#39;#5052fe&#39;</span><span class="p">,</span>      <span class="c1"># Z6</span>
+            <span class="s1">&#39;#8B0000&#39;</span><span class="p">,</span>      <span class="c1"># Z7</span>
+            <span class="s1">&#39;#0a9700&#39;</span><span class="p">,</span>      <span class="c1"># Z8</span>
+            <span class="s1">&#39;#000399&#39;</span>       <span class="c1"># Z9</span>
         <span class="p">]</span>
 
-        <span class="c1"># Create custom colormap</span>
-        <span class="n">zone_cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>  <span class="c1"># Skip index 0</span>
+        <span class="c1"># Create colormap including index 0</span>
+        <span class="n">zone_cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
 
-        <span class="c1"># Display zone map</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">zones</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">zone_cmap</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> 
-        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>  
+        <span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">zones</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">zone_cmap</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> 
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;Z</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)])</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">outline</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;H-$\overline{\alpha}$ clusters&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> 
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;ha_cluster.png&quot;</span><span class="p">),</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;ha_cluster.png&quot;</span><span class="p">),</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         
         
         
         
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> 
-                            <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
-                        <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_hacfp</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> 
-                        <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
-                        <span class="n">cog_flag</span><span class="o">=</span><span class="n">cog_flag</span><span class="p">,</span>
-                        <span class="n">cog_overviews</span><span class="o">=</span><span class="n">cog_overviews</span><span class="p">,</span><span class="n">post_proc</span><span class="o">=</span><span class="n">post_processing_task</span><span class="p">,</span>
-                        <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
+                            <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
+                            <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_hacfp</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
+                            <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span><span class="n">post_proc</span><span class="o">=</span><span class="n">post_processing_task</span><span class="p">,</span>
+                            <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                         
                         <span class="p">)</span></div>
 
@@ -530,7 +530,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -539,7 +539,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>

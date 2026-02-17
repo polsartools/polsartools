@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.dprbi &#8212; PolSARtools 0.10.1 documentation</title>
+    <title>polsartools.polsar.dxp.dprbi &#8212; PolSARtools 0.11 documentation</title>
   
   
   
@@ -37,9 +37,9 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=261ea15a"></script>
-    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/dprbi';</script>
     <link rel="icon" href="../../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -440,10 +440,10 @@
         <span class="n">c12s</span> <span class="o">=</span> <span class="n">c12_T1</span>
         <span class="n">c22s</span> <span class="o">=</span> <span class="n">c22_T1</span>
 
-    <span class="n">s0</span> <span class="o">=</span> <span class="n">c11s</span> <span class="o">+</span> <span class="n">c22s</span>
-    <span class="n">s1</span> <span class="o">=</span> <span class="n">c11s</span> <span class="o">-</span> <span class="n">c22s</span>
-    <span class="n">s2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">c12s</span><span class="o">.</span><span class="n">real</span>
-    <span class="n">s3</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">c12s</span><span class="o">.</span><span class="n">imag</span>
+    <span class="n">s0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c11s</span> <span class="o">+</span> <span class="n">c22s</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c11s</span> <span class="o">-</span> <span class="n">c22s</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">c12s</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">s3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">c12s</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
 
 
     <span class="c1">##### Calculate Entropy</span>
@@ -512,7 +512,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -521,7 +521,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>

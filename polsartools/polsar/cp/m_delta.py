@@ -65,11 +65,14 @@ def m_delta(in_dir,   chi=45, psi=0, win=1, fmt="tif", cog=False,
 
     Returns
     -------
-    None
+
         Writes four output files to disk:
-        1. Ps_m_delta: Surface scattering power component
-        2. Pd_m_delta: Double-bounce scattering power component
-        3. Pv_m_delta: Volume scattering power component
+
+         - Ps_m_delta: Surface scattering power component
+         - Pd_m_delta: Double-bounce scattering power component
+         - Pv_m_delta: Volume scattering power component
+         - m_cp: Degree of polarization
+         - chi_cp: chi angle in degrees
 
 
     """

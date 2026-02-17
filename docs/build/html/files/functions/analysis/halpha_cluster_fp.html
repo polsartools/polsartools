@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Full-pol H-alpha clusters (cluster_h_alpha_fp) &#8212; PolSARtools 0.10.1 documentation</title>
+    <title>Full-pol H-alpha clusters (cluster_h_alpha_fp) &#8212; PolSARtools 0.11 documentation</title>
   
   
   
@@ -38,9 +38,9 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=261ea15a"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/analysis/halpha_cluster_fp';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -424,7 +424,7 @@
 <h1>Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)<a class="headerlink" href="#full-pol-h-alpha-clusters-cluster-h-alpha-fp" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">cluster_h_alpha_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphaFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog_overviews</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/cluster_h_alpha_fp.html#cluster_h_alpha_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">cluster_h_alpha_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphaFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/cluster_h_alpha_fp.html#cluster_h_alpha_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Perform H-alpha clustering on given H-alpha files for full-pol SAR data.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters</span>
@@ -435,9 +435,9 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">halpha_cluster_fp</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">hFile</span><span class="o">=</span><span class="s2">&quot;h_fp.tif&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">alphaFile</span><span class="o">=</span><span class="s2">&quot;alpha_fp.tif&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">window_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">outType</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">cog_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">win</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
@@ -447,16 +447,15 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>hFile</strong> (<em>str</em>) – Path to the input Entropy file, H  (polarimetric entropy).</p></li>
 <li><p><strong>alphaFile</strong> (<em>str</em>) – Path to the input alpha file (average scattering angle).</p></li>
-<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the spatial averaging window. Larger windows reduce speckle noise
+<li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the spatial averaging window. Larger windows reduce speckle noise
 but decrease spatial resolution.</p></li>
-<li><p><strong>outType</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
 - ‘tif’: GeoTIFF format with georeferencing information
 - ‘bin’: Raw binary format</p></li>
-<li><p><strong>cog_flag</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
 and overviews for efficient web access.</p></li>
-<li><p><strong>cog_overviews</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG creation. Each number represents the
+<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG creation. Each number represents the
 decimation factor for that overview level.</p></li>
-<li><p><strong>write_flag</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, writes results to disk. If False, only processes data in memory.</p></li>
 <li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel processing workers. If None, uses
 CPU count - 1 workers.</p></li>
 <li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks (rows, cols) for parallel computation.
@@ -549,7 +548,7 @@ Larger blocks use more memory but may be more efficient.</p></li>
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -558,7 +557,7 @@ Larger blocks use more memory but may be more efficient.</p></li>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
