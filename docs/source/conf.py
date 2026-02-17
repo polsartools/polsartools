@@ -7,11 +7,11 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'PolSARtools'
-copyright = '2025, PolSARtools team'
+copyright = '2026, PolSARtools team'
 author = 'Narayanarao Bhogapurapu'
 
 
-release = '0.10.1'
+release = '0.11'
 
 
 # -- General configuration ---------------------------------------------------
