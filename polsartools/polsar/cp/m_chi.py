@@ -136,5 +136,6 @@ def process_chunk_mchi(chunks, window_size, *args, **kwargs):
     Ps_CP= np.sqrt((m * s0 * (1 - np.sin(2 * chi))) / 2)
     Pd_CP= np.sqrt((m * s0 * (1 + np.sin(2 * chi))) / 2)
     Pv_CP= np.sqrt(s0 * (1 - m))   
+    chi = chi * 180 * np.pi
     
     return Ps_CP.astype(np.float32), Pd_CP.astype(np.float32), Pv_CP.astype(np.float32),m.astype(np.float32),chi.astype(np.float32) 

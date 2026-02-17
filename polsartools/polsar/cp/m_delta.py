@@ -135,6 +135,6 @@ def process_chunk_mdelta(chunks, window_size, *args, **kwargs):
     Ps_CP= np.sqrt((m * s0 * (1 + np.sin(delta))) / 2)
     Pd_CP= np.sqrt((m * s0 * (1 - np.sin(delta))) / 2)
     Pv_CP= np.sqrt((s0 * (1 - m)) / 2)   
-    
+    delta = delta * 180 * np.pi
 
     return Ps_CP.astype(np.float32), Pd_CP.astype(np.float32), Pv_CP.astype(np.float32),m.astype(np.float32),delta.astype(np.float32) 
