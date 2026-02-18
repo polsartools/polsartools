@@ -14,7 +14,7 @@
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/version.svg)](https://anaconda.org/bnarayanarao/polsartools)
 [![image](https://anaconda.org/bnarayanarao/polsartools/badges/downloads.svg)](https://anaconda.org/bnarayanarao/polsartools/files)
 
-[![GitHub commits](https://img.shields.io/github/commits-since/polsartools/polsartools/0.10.svg)](https://GitHub.com/polsartools/polsartools/commit/)
+[![GitHub commits](https://img.shields.io/github/commits-since/polsartools/polsartools/0.11.svg)](https://GitHub.com/polsartools/polsartools/commit/)
 [![License: GPL 3.0](https://img.shields.io/badge/License-GPL_3.0-green.svg)](https://opensource.org/licenses/gpl-license)
 
 
@@ -229,7 +229,7 @@ We’re always open to suggestions for new features or improvements!
 
 If you use **`polsartoos`** in your research or projects, please cite the official journal paper:
 
-> Bhogapurapu, N., Siqueira, P., & Bhattacharya, A. 2025. **polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale**. *SoftwareX*, 33, 102490. doi: [10.1016/j.softx.2025.102490](http://dx.doi.org/10.1016/j.softx.2025.102490)
+> Bhogapurapu, N., Siqueira, P., & Bhattacharya, A. 2026. **polsartools: A Cloud-Native Python Library for Processing Open Polarimetric SAR Data at Scale**. *SoftwareX*, 33, 102490. doi: [10.1016/j.softx.2025.102490](http://dx.doi.org/10.1016/j.softx.2025.102490)
 
 ### BibTeX
 

@@ -6,15 +6,8 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
-v0.11
-update rgb_dp with type=5 for NISAR
-added import_biomass_l1a, import_biomass_l1b
-Added NISAR GCOV, m_chi, m_delta
-fix dp functions nan issue
-update rgb to handle array input
-update pauli RGB with I4 folder
-update cluster_h_alpha_fp, clip (with UTM support)
-update chandrayaan-2 reader to handle large datasets; fix RAM issue
+v0.12
+
 
 [to do]
 MRSLab functions image-wide parameters
