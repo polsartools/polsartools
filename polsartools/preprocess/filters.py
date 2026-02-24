@@ -232,6 +232,27 @@ def process_chunk_rfl(chunks, window_size, *args):
         # print(np.nanmean(real_part),' ' ,np.nanmean(imag_part))
     filtered_chunks = []
 
+    if len(chunks)==16:
+            filtered_chunks.append(np.real(out_chunks[0]))
+            filtered_chunks.append(np.real(out_chunks[1]))
+            filtered_chunks.append(np.imag(out_chunks[1]))
+            filtered_chunks.append(np.real(out_chunks[2]))
+            filtered_chunks.append(np.imag(out_chunks[2]))
+            filtered_chunks.append(np.real(out_chunks[3]))
+            filtered_chunks.append(np.imag(out_chunks[3]))
+
+            filtered_chunks.append(np.real(out_chunks[5]))
+            filtered_chunks.append(np.real(out_chunks[6]))
+            filtered_chunks.append(np.imag(out_chunks[6]))
+            filtered_chunks.append(np.real(out_chunks[7]))
+            filtered_chunks.append(np.imag(out_chunks[7]))
+
+            filtered_chunks.append(np.real(out_chunks[10]))
+            filtered_chunks.append(np.real(out_chunks[11]))
+            filtered_chunks.append(np.imag(out_chunks[11]))
+
+            filtered_chunks.append(np.real(out_chunks[15]))
+
     if len(chunks)==9:
         # print("out_chunks shape:", np.shape(out_chunks))
         filtered_chunks.append(np.real(out_chunks[0]))

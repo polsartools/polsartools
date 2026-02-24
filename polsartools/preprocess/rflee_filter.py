@@ -17,6 +17,36 @@ def process_chunk_refined_lee(chunks, window_size=3, *args ):
                             mode='constant', constant_values=0)
 
 
+
+    # print("after pad",np.shape(chunks[0]))
+    if len(chunks)==16:
+        t11_T1 = np.array(chunks[0])
+        t12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
+        t13_T1 = np.array(chunks[3])+1j*np.array(chunks[4])
+        t14_T1 = np.array(chunks[5])+1j*np.array(chunks[6])
+
+        t21_T1 = np.conj(t12_T1)
+        t22_T1 = np.array(chunks[7])
+        t23_T1 = np.array(chunks[8])+1j*np.array(chunks[9])
+        t24_T1 = np.array(chunks[10])+1j*np.array(chunks[11])
+        
+        t31_T1 = np.conj(t13_T1)
+        t32_T1 = np.conj(t23_T1)
+        t33_T1 = np.array(chunks[12])
+        t34_T1 = np.array(chunks[13])+1j*np.array(chunks[14])
+
+        t41_T1 = np.conj(t14_T1)
+        t42_T1 = np.conj(t24_T1)
+        t43_T1 = np.conj(t34_T1)
+        t44_T1 = np.array(chunks[15])
+
+        M_in = np.dstack((t11_T1,t12_T1,t13_T1,t14_T1,
+                            t21_T1,t22_T1,t23_T1,t24_T1,
+                            t31_T1,t32_T1,t33_T1,t34_T1,
+                            t41_T1,t42_T1,t43_T1,t44_T1,
+                            ))
+        PolTypeOut = "C4"
+
     # print("after pad",np.shape(chunks[0]))
     if len(chunks)==9:
         t11_T1 = np.array(chunks[0])
@@ -123,6 +153,28 @@ def process_chunk_refined_lee(chunks, window_size=3, *args ):
                     M_out[Np, lig, col] = mean + coeff[lig, col] * (center_pixel - mean)
     
     filtered_chunks = []
+
+    if len(chunks)==16:
+            filtered_chunks.append(np.real(M_out[0,:,:]))
+            filtered_chunks.append(np.real(M_out[1,:,:]))
+            filtered_chunks.append(np.imag(M_out[1,:,:]))
+            filtered_chunks.append(np.real(M_out[2,:,:]))
+            filtered_chunks.append(np.imag(M_out[2,:,:]))
+            filtered_chunks.append(np.real(M_out[3,:,:]))
+            filtered_chunks.append(np.imag(M_out[3,:,:]))
+
+            filtered_chunks.append(np.real(M_out[5,:,:]))
+            filtered_chunks.append(np.real(M_out[6,:,:]))
+            filtered_chunks.append(np.imag(M_out[6,:,:]))
+            filtered_chunks.append(np.real(M_out[7,:,:]))
+            filtered_chunks.append(np.imag(M_out[7,:,:]))
+
+            filtered_chunks.append(np.real(M_out[10,:,:]))
+            filtered_chunks.append(np.real(M_out[11,:,:]))
+            filtered_chunks.append(np.imag(M_out[11,:,:]))
+
+            filtered_chunks.append(np.real(M_out[15,:,:]))
+
 
     if len(chunks)==9:
             filtered_chunks.append(np.real(M_out[0,:,:]))
