@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Dual-pol data format &#8212; PolSARtools 0.11 documentation</title>
+    <title>Dual-pol data format &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/dataDP';</script>
@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Radar Vegetation Index (rvi_dp)" href="dual_pol/RVI_dp.html" />
-    <link rel="prev" title="Degree of Polarization (dop_cp)" href="compact_pol/DOP_cp.html" />
+    <link rel="prev" title="m-δ decomposition (m_delta)" href="compact_pol/m_delta.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -315,6 +315,8 @@
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/iS_Omega.html">improved S-<span class="math notranslate nohighlight">\(\Omega\)</span> decomposition (<code class="docutils literal notranslate"><span class="pre">s_omega</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/MF3CC.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cc</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compact_pol/DOP_cp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compact_pol/m_chi.html">m-χ decomposition (<code class="docutils literal notranslate"><span class="pre">m_chi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compact_pol/m_delta.html">m-δ decomposition (<code class="docutils literal notranslate"><span class="pre">m_delta</span></code>)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Dual-pol data format</a></li>
@@ -499,12 +501,12 @@ A typical file structures of T2 matrix is as follows:</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="compact_pol/DOP_cp.html"
+       href="compact_pol/m_delta.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_cp</span></code>)</p>
+        <p class="prev-next-title">m-δ decomposition (<code class="docutils literal notranslate"><span class="pre">m_delta</span></code>)</p>
       </div>
     </a>
     <a class="right-next"

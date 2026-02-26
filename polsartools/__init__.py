@@ -3,7 +3,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.11"  
+__version__ = "0.12"  
 
 
 # Importing functions from the submodules for direct access
@@ -24,7 +24,8 @@ from .sensors.biomass import import_biomass_l1a, import_biomass_l1b
 """ Importing preprocessing modules """
 from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip
 from .preprocess.filters import filter_boxcar, filter_refined_lee
-from .preprocess import prepare_dem, mlook
+from .preprocess import prepare_dem, mlook, simulate_CP
+
 
 """ Importing polsar modules """
 from .polsar.fp import grvi,nned_fp, h_a_alpha_fp, neumann_parm, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yamaguchi_4c,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
@@ -57,7 +58,7 @@ __all__ = [
     # UTILS
     'mlook', 'clip','stokes_parm',
     'read_rst', 'time_it',
-    'convert_T3_C3', 'convert_C3_T3', 'convert_S', 
+    'convert_T3_C3', 'convert_C3_T3', 'convert_S', 'simulate_CP',
     # FULL-POL
     'grvi', 'rvi_fp', 'mf3cf', 'mf4cf', 'dop_fp', 'prvi_fp', 'neumann_parm', 
     'nned_fp', 'freeman_3c','freeman_2c',

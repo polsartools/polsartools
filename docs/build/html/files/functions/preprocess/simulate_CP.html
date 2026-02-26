@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Dual-pol H-alpha plot (plot_h_alpha_dp) &#8212; PolSARtools 0.12 documentation</title>
+    <title>Simulate Compact-polo SAR (simulate_CP) &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -41,12 +41,12 @@
     <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/dual_pol/halpha_plot_dp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/preprocess/simulate_CP';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Full-pol H-A-alpha plot (plot_h_a_alpha_fp)" href="../analysis/haalpha_plot_fp.html" />
-    <link rel="prev" title="Full-pol H-alpha plot (plot_h_alpha_fp)" href="../full_pol/halpha_plot_fp.html" />
+    <link rel="next" title="Derive stokes parameters (stokes_parm)" href="../misc.html" />
+    <link rel="prev" title="Convert single-look S (S2,Sxy) (convert_S)" href="convert_S.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -322,29 +322,29 @@
 <li class="toctree-l1"><a class="reference internal" href="../dataDP.html">Dual-pol data format</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">h_alpha_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dprbi.html">Dual-pol Radar Built-up Index (<code class="docutils literal notranslate"><span class="pre">dprbi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dprsi.html">Dual-pol Radar Surface Index (<code class="docutils literal notranslate"><span class="pre">dprsi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="powers_dp.html">Dual-pol scattering power components (<code class="docutils literal notranslate"><span class="pre">powers_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dprbic.html">Dual-pol Radar Built-up Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprbic</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dprsic.html">Dual-pol Radar Surface Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprsic</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="powers_dp_grd.html">Dual-pol scattering power components for GRD (<code class="docutils literal notranslate"><span class="pre">powers_dp_grd</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/RVI_dp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/DpRVI.html">Dual-pol Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">dprvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/PRVI_dp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/DOP_dp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halphadxp.html">H/α decomposition (<code class="docutils literal notranslate"><span class="pre">h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/shannon_h_dp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/mf3cd.html">Model Free 3-Component decomposition for dual-co-pol (<code class="docutils literal notranslate"><span class="pre">mf3cd</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprvic.html">Dual-pol Radar Vegetation Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprvic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dp_desc.html">Dual polarimetric descriptors (<code class="docutils literal notranslate"><span class="pre">dp_desc</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprbi.html">Dual-pol Radar Built-up Index (<code class="docutils literal notranslate"><span class="pre">dprbi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprsi.html">Dual-pol Radar Surface Index (<code class="docutils literal notranslate"><span class="pre">dprsi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/powers_dp.html">Dual-pol scattering power components (<code class="docutils literal notranslate"><span class="pre">powers_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprbic.html">Dual-pol Radar Built-up Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprbic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprsic.html">Dual-pol Radar Surface Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprsic</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/powers_dp_grd.html">Dual-pol scattering power components for GRD (<code class="docutils literal notranslate"><span class="pre">powers_dp_grd</span></code>)</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
 <li class="toctree-l1"><a class="reference internal" href="../full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
@@ -354,10 +354,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
 
 </ul>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../preprocess/clip.html">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../preprocess/mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../preprocess/convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="clip.html">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Simulate Compact-polo SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../misc.html">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
@@ -405,7 +406,7 @@
     
     <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Simulate Compact-polo SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -422,56 +423,46 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="dual-pol-h-alpha-plot-plot-h-alpha-dp">
-<h1>Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)<a class="headerlink" href="#dual-pol-h-alpha-plot-plot-h-alpha-dp" title="Link to this heading">#</a></h1>
+  <section id="simulate-compact-polo-sar-simulate-cp">
+<h1>Simulate Compact-polo SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)<a class="headerlink" href="#simulate-compact-polo-sar-simulate-cp" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">plot_h_alpha_dp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grey_region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/plot_h_alpha_dp.html#plot_h_alpha_dp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Generates and saves a hexbin density plot of entropy (H) versus alpha (degrees) for dual-pol data.</p>
-<section id="example">
-<h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plot_h_alpha_dp</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">ppath</span><span class="o">=</span><span class="s2">&quot;HA_plot.png&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="go">This will generates a H/Alpha plot  from the input arrays and save it as HA_plot.png, using the &#39;jet&#39; colormap and logarithmic normalization</span>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">simulate_CP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/preprocess/simulate_CP.html#simulate_CP"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>This function simulates Compact polarimetric C2 matrix (RHV, LHV, pi/4 etc) from full polarimetric C3/T3 matrix.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default LC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simulate_CP</span><span class="p">(</span><span class="s2">&quot;/path/to/C3&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>h<span class="classifier">array-like</span></dt><dd><p>Array representing entropy values.</p>
-</dd>
-<dt>alpha<span class="classifier">array-like</span></dt><dd><p>Array representing alpha values in degrees.</p>
-</dd>
-<dt>ppath<span class="classifier">str, optional</span></dt><dd><p>Path to save the generated plot. If a folder is given, the plot is saved as ‘halpha_plot_dp.png’ inside that folder.
-If the file already exists, it will be overwritten.</p>
-</dd>
-<dt>cmap<span class="classifier">str, optional</span></dt><dd><p>Colormap used for the hexbin plot. Defaults to ‘viridis’.</p>
-</dd>
-<dt>colorbar<span class="classifier">bool, optional</span></dt><dd><p>If True, displays a colorbar representing sample count. Defaults to True.</p>
-</dd>
-<dt>norm<span class="classifier">str, optional</span></dt><dd><p>If set to ‘log’, applies logarithmic normalization to the hexbin plot.</p>
-</dd>
-<dt>grey_region<span class="classifier">bool, optional</span></dt><dd><p>If True, fills non-feasible regions of the plot with a grey color to indicate feasible boundaries.
-Defaults to True.</p>
-</dd>
-<dt>gridsize<span class="classifier">int, optional</span></dt><dd><p>Number of hexagonal bins used in the plot. Higher values result in finer binning. Defaults to 300.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>None</dt><dd><p>Displays the plot and optionally saves it to the specified location.</p>
-</dd>
-</dl>
-</section>
-<section id="notes">
-<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Uses <cite>get_feas_bounds()</cite> to obtain feasible boundary curves for plotting.</p></li>
-<li><p>If <cite>norm</cite> is ‘log’, a <cite>LogNorm()</cite> normalization is applied.</p></li>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># With chi, psi and COG GeoTIFF output</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simulate_CP</span><span class="p">(</span><span class="s2">&quot;/path/to/C3&quot;</span><span class="p">,</span> <span class="n">chi</span><span class="o">=-</span><span class="mi">45</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_dir</strong> (<em>str</em>) – Path to the input folder containing a supported polarimetric matrix.</p></li>
+<li><p><strong>chi</strong> (<em>float</em><em>, </em><em>default=45</em>) – Ellipticity angle chi of the transmitted wave in degrees.
+For circular polarization, chi = 45° (right circular) or -45° (left circular).</p></li>
+<li><p><strong>psi</strong> (<em>float</em><em>, </em><em>default=0</em>) – Orientation angle psi of the transmitted wave in degrees.
+For circular polarization, typically 0°.</p></li>
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output format:
+- ‘tif’: Cloud-optimized GeoTIFF (if cog_flag is True)
+- ‘bin’: Raw binary format</p></li>
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Enable Cloud Optimized GeoTIFF output with internal overviews and tiling.</p></li>
+<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for pyramid generation (used with COGs).</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, uses LZW compression for GeoTIFF outputs.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel worker threads (defaults to all available CPUs).</p></li>
+<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks for chunked and parallel execution.</p></li>
 </ul>
-</section>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The simulated CP C2 matrix elements</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -487,20 +478,20 @@ Defaults to True.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../full_pol/halpha_plot_fp.html"
+       href="convert_S.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</p>
+        <p class="prev-next-title">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
-       href="../analysis/haalpha_plot_fp.html"
+       href="../misc.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</p>
+        <p class="prev-next-title">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -519,7 +510,7 @@ Defaults to True.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../../_sources/files/functions/dual_pol/halpha_plot_dp.rst.txt"
+      <li><a href="../../../_sources/files/functions/preprocess/simulate_CP.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.preprocess.filters &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.preprocess.filters &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,9 +37,9 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/filters';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -573,6 +573,27 @@
         <span class="c1"># print(np.nanmean(real_part),&#39; &#39; ,np.nanmean(imag_part))</span>
     <span class="n">filtered_chunks</span> <span class="o">=</span> <span class="p">[]</span>
 
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="o">==</span><span class="mi">16</span><span class="p">:</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">10</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">11</span><span class="p">]))</span>
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">11</span><span class="p">]))</span>
+
+            <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">15</span><span class="p">]))</span>
+
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span><span class="o">==</span><span class="mi">9</span><span class="p">:</span>
         <span class="c1"># print(&quot;out_chunks shape:&quot;, np.shape(out_chunks))</span>
         <span class="n">filtered_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out_chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -635,7 +656,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -644,7 +665,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
