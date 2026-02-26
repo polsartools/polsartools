@@ -1,5 +1,5 @@
 
-Simulate Compact-polo SAR (``simulate_CP``)
+Simulate Compact-pol SAR (``simulate_CP``)
 -------------------------------------------
 
 .. autofunction:: polsartools.simulate_CP
