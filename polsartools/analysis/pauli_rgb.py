@@ -12,22 +12,45 @@ def read_bin(file):
     band = ds.GetRasterBand(1)
     arr = band.ReadAsArray()
     arr[arr==0] = np.nan
-    return arr
+    return arr.astype(np.float32)
 
-def norm_data(data,lp=5,gp=95,dB_scale = True):
-    
+
+def norm_data(data, lp=5, gp=95, dB_scale=True):
     if dB_scale:
-        data = 10*np.log10(data)
-    data[data==-np.inf] = np.nan
-    data[data==np.inf] = np.nan
-    data = (data - np.nanmin(data)) / (np.nanmax(data) - np.nanmin(data))
+        data = 10 * np.log10(data)
+    
+    # Replace infinities with NaN
+    data[np.isinf(data)] = np.nan
+    
+    # Normalize to [0,1]
+    dmin, dmax = np.nanmin(data), np.nanmax(data)
+    if dmax > dmin:
+        data = (data - dmin) / (dmax - dmin)
+    
+    # Percentile clipping
+    p_low, p_high = np.nanpercentile(data, [lp, gp])
+    data = np.clip(data, p_low, p_high)
+    
+    # Final normalization to [0,1]
+    if p_high > p_low:
+        data = (data - p_low) / (p_high - p_low)
+    
+    return (data * 255).astype(np.uint8)
 
-    p5 = np.nanpercentile(data, lp)
-    p95 = np.nanpercentile(data, gp)
-    data = np.clip(data, p5, p95)
-    data = (data - p5) / (p95 - p5)
+# def norm_data(data,lp=5,gp=95,dB_scale = True):
+    
+#     if dB_scale:
+#         data = 10*np.log10(data)
+#     data[data==-np.inf] = np.nan
+#     data[data==np.inf] = np.nan
+#     data = (data - np.nanmin(data)) / (np.nanmax(data) - np.nanmin(data))
 
-    return data 
+#     p5 = np.nanpercentile(data, lp)
+#     p95 = np.nanpercentile(data, gp)
+#     data = np.clip(data, p5, p95)
+#     data = (data - p5) / (p95 - p5)
+
+#     return (data*255).astype(np.uint8)
 
 def read_and_normalize(file_path):
     """Reads binary data and normalizes it."""
@@ -67,27 +90,30 @@ def generate_rgb_png(red, green, blue,georef_file, output_path):
     
 
     alpha_channel = get_alpha_channel(red, green, blue)
-    rgb_uint8 = (np.dstack((red, green, blue)) * 255).astype(np.uint8)
+    rgb_uint8 = np.dstack((red, green, blue)).astype(np.uint8)
     # alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)
     rgba_uint8 = np.dstack((rgb_uint8, alpha_channel))
     
     plt.imsave(output_path, rgba_uint8)
     # print(f"Pauli RGB image saved as {output_path}")
     
-    fig, ax = plt.subplots()
-    plt.imshow(rgba_uint8, vmin=0, vmax=255)
-    ax.axis('off')
-    plt.savefig(output_path.replace(".png", "_thumb.png"), format='png', 
-                bbox_inches='tight', pad_inches=0, transparent=True)
+    try:
+        fig, ax = plt.subplots()
+        plt.imshow(rgba_uint8, vmin=0, vmax=255)
+        ax.axis('off')
+        plt.savefig(output_path.replace(".png", "_thumb.png"), format='png', 
+                    bbox_inches='tight', pad_inches=0, transparent=True)
+    except Exception as e:
+        print(f"Fialed to create thumbnail!! {e}")
 
 def generate_rgb_tif(red, green, blue, georef_file, output_path):
     driver = gdal.GetDriverByName('GTiff')
     height, width = red.shape
     dataset = driver.Create(output_path, width, height, 4, gdal.GDT_Byte,options=['COMPRESS=DEFLATE','PREDICTOR=2','ZLEVEL=9', 'BIGTIFF=YES','TILED=YES'])
     # Prepare the image bands
-    red_uint8 = (red * 255).astype(np.uint8)
-    green_uint8 = (green * 255).astype(np.uint8)
-    blue_uint8 = (blue * 255).astype(np.uint8)
+    red_uint8 = red.astype(np.uint8)
+    green_uint8 = green.astype(np.uint8)
+    blue_uint8 = blue.astype(np.uint8)
     # alpha = np.where((red_uint8 == 0) & (green_uint8 == 0) & (blue_uint8 == 0), 0, 255).astype(np.uint8)
     
     # Get geotransform and projection from reference file
@@ -281,19 +307,22 @@ def pauli_rgb(infolder,save_tif=False, window_size=None):
 
     else:
         raise ValueError("No matching dataset found for C4, C3, T3, S2 or II!")
-    output_path = os.path.join(infolder, "PauliRGB.png")
+    
     
     if window_size is not None:
-        kernel = np.ones((window_size, window_size), np.float32) / (window_size * window_size)
-        red = conv2d(red, kernel).astype(np.float32)
-        green = conv2d(green, kernel).astype(np.float32)
-        blue = conv2d(blue, kernel).astype(np.float32)
+        kernel = np.ones((window_size, window_size), np.uint8) / (window_size * window_size)
+        red = conv2d(red, kernel).astype(np.uint8)
+        green = conv2d(green, kernel).astype(np.uint8)
+        blue = conv2d(blue, kernel).astype(np.uint8)
     
-    generate_rgb_png(red, green, blue,georef_file, output_path)
-    create_pgw(georef_file, output_path)
-    # create_prj(georef_file, output_path)
-    print(f"Pauli RGB image saved as {output_path}")
     if save_tif:
         output_path = os.path.join(infolder, "PauliRGB.tif")
         generate_rgb_tif(red, green, blue, georef_file, output_path)
         print(f"Pauli RGB image saved as {output_path}")
+        
+    output_path = os.path.join(infolder, "PauliRGB.png")
+    generate_rgb_png(red, green, blue,georef_file, output_path)
+    create_pgw(georef_file, output_path)
+    # create_prj(georef_file, output_path)
+    print(f"Pauli RGB image saved as {output_path}")
+

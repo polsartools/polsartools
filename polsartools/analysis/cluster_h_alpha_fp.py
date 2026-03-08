@@ -1,5 +1,7 @@
 import os
 import numpy as np
+from osgeo import gdal
+
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,read_rst
 
@@ -71,7 +73,41 @@ def cluster_h_alpha_fp(hFile,alphaFile , win=1, fmt="tif", cog=False, ovr = [2, 
     else:
         output_filepaths.append(os.path.join(infolder, "ha_cluster.tif"))
     
-    
+
+    def update_gdal_colors(filepath):
+        # Open the dataset in Update mode
+        ds = gdal.Open(filepath, gdal.GA_Update)
+        if ds is None:
+            print(f"Could not open {filepath}")
+            return
+
+        band = ds.GetRasterBand(1)
+        band.SetNoDataValue(0)
+        # Initialize the GDAL Color Table
+        ct = gdal.ColorTable()
+
+        # SetColorEntry(index, (R, G, B, Alpha))
+        ct.SetColorEntry(0, (0, 0, 0, 0))          # Transparent (Zones == 0 or NaN)
+        ct.SetColorEntry(1, (254, 147, 148, 255)) # Z1: #fe9394
+        ct.SetColorEntry(2, (106, 255, 104, 255)) # Z2: #6aff68
+        ct.SetColorEntry(3, (0, 0, 0, 255))       # Z3: #000000 (Solid Black)
+        ct.SetColorEntry(4, (255, 81, 81, 255))   # Z4: #ff5151
+        ct.SetColorEntry(5, (83, 254, 78, 255))   # Z5: #53fe4e
+        ct.SetColorEntry(6, (80, 82, 254, 255))   # Z6: #5052fe
+        ct.SetColorEntry(7, (139, 0, 0, 255))     # Z7: #8B0000
+        ct.SetColorEntry(8, (10, 151, 0, 255))    # Z8: #0a9700
+        ct.SetColorEntry(9, (0, 3, 153, 255))     # Z9: #000399
+
+        # Apply the color table to the band
+        band.SetRasterColorTable(ct)
+        
+        # Tell GIS software to interpret these pixels as palette indices
+        band.SetRasterColorInterpretation(gdal.GCI_PaletteIndex)
+        
+        # Properly close the dataset to flush changes to disk
+        band = None
+        ds = None
+        # print(f"Color table successfully applied to {filepath}")
     
     def post_processing_task(input_filepaths, output_filepaths, **kwargs):
         zones = read_rst(output_filepaths[0]).astype(np.float32)
@@ -107,8 +143,10 @@ def cluster_h_alpha_fp(hFile,alphaFile , win=1, fmt="tif", cog=False, ovr = [2, 
         plt.axis('off') 
         plt.tight_layout()
         plt.savefig(os.path.join(infolder, "ha_cluster.png"), bbox_inches='tight',dpi=300,transparent=True)
-        plt.show()
-        
+        plt.close()
+        update_gdal_colors(output_filepaths[0])
+
+
         
         
         

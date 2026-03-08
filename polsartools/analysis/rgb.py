@@ -87,15 +87,15 @@ def rgb(Rpath,Gpath,Bpath,
         B = conv2d(B, kernel).astype(np.float32)
         
     if norm_each:
-        R = norm_data(R, lp, gp, dB_scale=True).astype(np.float32)
-        G = norm_data(G, lp, gp, dB_scale=True).astype(np.float32)
-        B = norm_data(B, lp, gp, dB_scale=True).astype(np.float32)
+        R = norm_data(R, lp, gp, dB_scale=True)
+        G = norm_data(G, lp, gp, dB_scale=True)
+        B = norm_data(B, lp, gp, dB_scale=True)
         
     if norm_span:
         total = R + G + B
-        red = R / total
-        green = G / total
-        blue = B / total
+        red = ((R / total)*255).astype(np.uint8)
+        green = ((G / total)*255).astype(np.uint8)
+        blue = ((B / total)*255).astype(np.uint8)
         
         del R,G,B,total
     else:
