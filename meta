@@ -8,6 +8,8 @@
 
 v0.12
 added simulate_CP
+extend esar to biosar data
+fix rflee comp issue
 
 [to do]
 MRSLab functions image-wide parameters
@@ -30,6 +32,8 @@ from polsartools.tests.test_filters import test_filters_processing
 test_filters_processing()
 
 
+
+pip install sphinx sphinxcontrib.bibtex pydata_sphinx_theme
 # BUILD DOCS
 sphinx-build -M clean docs/source docs/build
 sphinx-build -M html docs/source docs/build

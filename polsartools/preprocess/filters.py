@@ -148,10 +148,10 @@ def filter_refined_lee(in_dir,  win=3, fmt="tif",sub_dir=True,
     
     #### Uncomment below to use C++ implementation 
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
+    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag, 
                             processing_func=process_chunk_rfl,block_size=block_size, max_workers=max_workers,  num_outputs=num_outputs,
                             cog=cog,
-                            ovr=ovr,
+                            ovr=ovr,comp=comp,
                             progress_callback=progress_callback
                             )
 

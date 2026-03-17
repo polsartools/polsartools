@@ -358,6 +358,7 @@
 <li class="toctree-l1"><a class="reference internal" href="preprocess/clip.html">Clip PolSAR data (<code class="docutils literal notranslate"><span class="pre">clip</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocess/mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocess/convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocess/simulate_CP.html">Simulate Compact-pol SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
@@ -563,14 +564,14 @@ Supports full- and dual-pol data in formats: C4, C3, T4, T3, or S2.</p></li>
 <li><p><strong>mat</strong> (<em>np.ndarray</em><em> (</em><em>2x2</em><em> or </em><em>3x3</em><em>) or </em><em>None</em>) – Input matrix. If shape is (2, 2), treated as S2. If (3, 3), treated as T3.
 If None, only theoretical/canonical plots will be generated.</p></li>
 <li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of the plot. Default is an empty string.</p></li>
-<li><p><strong>ppath</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the output file (<a href="#id1"><span class="problematic" id="id2">*</span></a>.png). Default is an empty string.</p></li>
+<li><p><strong>ppath</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the output file (*.png). Default is an empty string.</p></li>
 <li><p><strong>cmap</strong> (<em>str</em><em>, </em><em>optional</em>) – Colormap used for visualizing the data. Default is ‘jet’.</p></li>
 <li><p><strong>plotType</strong> (<em>int</em><em>, </em><em>optional</em>) – <p>Determines the type of plot to generate:</p>
 <ul>
-<li><p>1: Standard polarimetric signature via <cite>pol_sign</cite>.</p></li>
-<li><p>2: 2D polarimetric signature via <cite>pol_sign2d</cite>.</p></li>
-<li><p>3: Poincaré sphere mapping via <cite>poincare_plot</cite>.</p></li>
-<li><p>4: Render empty or canonical Poincaré sphere via <cite>poincare_sphere</cite> (S2 not required).</p></li>
+<li><p>1: Standard polarimetric signature via <code class="docutils literal notranslate"><span class="pre">pol_sign</span></code>.</p></li>
+<li><p>2: 2D polarimetric signature via <code class="docutils literal notranslate"><span class="pre">pol_sign2d</span></code>.</p></li>
+<li><p>3: Poincaré sphere mapping via <code class="docutils literal notranslate"><span class="pre">poincare_plot</span></code>.</p></li>
+<li><p>4: Render empty or canonical Poincaré sphere via <code class="docutils literal notranslate"><span class="pre">poincare_sphere</span></code> (S2 not required).</p></li>
 </ul>
 </p></li>
 </ul>

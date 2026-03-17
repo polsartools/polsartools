@@ -4,6 +4,7 @@ import os,glob,time
 import tempfile,shutil
 import numpy as np
 from osgeo import gdal, osr
+# import re
 gdal.UseExceptions()
 
 from polsartools.utils.utils import time_it,mlook_arr
@@ -32,6 +33,44 @@ def get_geometa(txt_path):
 
     return metadata
 
+# def parse_slc_geo_info(filepath):
+#     geo_info = {}              # filename → {frequency, polarization}
+#     polarization_map = {}      # polarization → filename
+#     frequency = None           # assumed to be consistent across all entries
+
+#     with open(filepath, "r") as file:
+#         lines = file.readlines()
+
+#     in_section_11 = False
+#     for line in lines:
+#         line = line.strip()
+
+#         # Detect start of section [11]
+#         if line.startswith("[11]"):
+#             in_section_11 = True
+#             continue
+
+#         # Stop parsing when section [12] begins
+#         if in_section_11 and line.startswith("[12]"):
+#             break
+
+#         if in_section_11:
+#             parts = line.split()
+#             for i in range(len(parts)):
+#                 part = parts[i]
+#                 if part.endswith(".dat") and i + 1 < len(parts):
+#                     pol_part = parts[i + 1]
+#                     if pol_part.startswith("(") and "-" in pol_part and pol_part.endswith(")"):
+#                         freq, pol = pol_part.strip("()").split("-")
+#                         geo_info[part] = {
+#                             "frequency": freq,
+#                             "polarization": pol
+#                         }
+#                         polarization_map[pol] = part
+#                         frequency = freq  # assumes same frequency across all
+
+#     return geo_info, polarization_map, frequency
+
 def parse_slc_geo_info(filepath):
     geo_info = {}              # filename → {frequency, polarization}
     polarization_map = {}      # polarization → filename
@@ -40,20 +79,20 @@ def parse_slc_geo_info(filepath):
     with open(filepath, "r") as file:
         lines = file.readlines()
 
-    in_section_11 = False
+    in_section = False
     for line in lines:
         line = line.strip()
 
-        # Detect start of section [11]
-        if line.startswith("[11]"):
-            in_section_11 = True
+        # Detect start of any section that has TITLE and SingleLook Complex Image
+        if line.startswith("[") and "]" in line and "TITLE:" in line and "SingleLook Complex Image" in line:
+            in_section = True
             continue
 
-        # Stop parsing when section [12] begins
-        if in_section_11 and line.startswith("[12]"):
+        # Stop parsing when another section begins (line starts with [number])
+        if in_section and line.startswith("[") and "]" in line and "TITLE:" in line:
             break
 
-        if in_section_11:
+        if in_section:
             parts = line.split()
             for i in range(len(parts)):
                 part = parts[i]
@@ -70,6 +109,7 @@ def parse_slc_geo_info(filepath):
 
     return geo_info, polarization_map, frequency
 
+
 def get_size(filename):
     found_title = False
     records = words = None
@@ -79,7 +119,8 @@ def get_size(filename):
             line = line.strip()
 
             # Detect the start of the desired block
-            if line.startswith("[11]  TITLE:") and "SingleLook Complex Image" in line:
+            if line.startswith("[") and "]" in line and "TITLE:" in line and "SingleLook Complex Image" in line:
+                # This ensures it begins with [number] and contains TITLE + SingleLook Complex Image
                 found_title = True
 
             # Extract the ARRAY line once inside the correct block
@@ -88,7 +129,7 @@ def get_size(filename):
                 try:
                     records = int(parts[1])  
                     words = int(parts[4])    
-                    break  # Stop after finding the needed info
+                    break
                 except (IndexError, ValueError):
                     raise ValueError("Couldn't parse records and words from ARRAY line.")
 
@@ -96,6 +137,33 @@ def get_size(filename):
         return records, words
     else:
         raise ValueError("Specified TITLE block or ARRAY line not found.")
+
+# def get_size(filename):
+#     found_title = False
+#     records = words = None
+
+#     with open(filename, 'r') as f:
+#         for line in f:
+#             line = line.strip()
+
+#             # Detect the start of the desired block
+#             if line.startswith("[11]  TITLE:") and "SingleLook Complex Image" in line:
+#                 found_title = True
+
+#             # Extract the ARRAY line once inside the correct block
+#             elif found_title and "ARRAY:" in line and "Records with" in line:
+#                 parts = line.split()
+#                 try:
+#                     records = int(parts[1])  
+#                     words = int(parts[4])    
+#                     break  # Stop after finding the needed info
+#                 except (IndexError, ValueError):
+#                     raise ValueError("Couldn't parse records and words from ARRAY line.")
+
+#     if records is not None and words is not None:
+#         return records, words
+#     else:
+#         raise ValueError("Specified TITLE block or ARRAY line not found.")
 
 def get_meta(in_dir):
     
@@ -304,11 +372,11 @@ def import_esar_gtc(in_dir,mat='S2',
         base_out_dir = temp_dir
 
     # Read incidence map
-    inc_file = glob.glob(os.path.join(in_dir, "incmap*.dat"))[0]
+    inc_file = glob.glob(os.path.join(in_dir, "incmap*slc*.dat"))[0]
     inc = get_incmap(inc_file, metadata['slc records'], metadata['slc words'] // 2)
     inc[inc < 0] = np.nan
     inc = np.flipud(inc)
-
+    # print(files)
     if len(files) == 4:
         # Quad-pol case
         s11 = read_data(glob.glob(os.path.join(in_dir, files['HH']))[0], metadata['slc records'], metadata['slc words'])

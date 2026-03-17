@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.pauli_rgb &#8212; PolSARtools 0.11 documentation</title>
+    <title>polsartools.analysis.pauli_rgb &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/pauli_rgb';</script>
@@ -347,22 +347,45 @@
     <span class="n">band</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">arr</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>
     <span class="n">arr</span><span class="p">[</span><span class="n">arr</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">return</span> <span class="n">arr</span>
+    <span class="k">return</span> <span class="n">arr</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">norm_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">lp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">gp</span><span class="o">=</span><span class="mi">95</span><span class="p">,</span><span class="n">dB_scale</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    
+
+<span class="k">def</span><span class="w"> </span><span class="nf">norm_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lp</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">gp</span><span class="o">=</span><span class="mi">95</span><span class="p">,</span> <span class="n">dB_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">dB_scale</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">==-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    
+    <span class="c1"># Replace infinities with NaN</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">data</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    
+    <span class="c1"># Normalize to [0,1]</span>
+    <span class="n">dmin</span><span class="p">,</span> <span class="n">dmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dmax</span> <span class="o">&gt;</span> <span class="n">dmin</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">dmin</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dmax</span> <span class="o">-</span> <span class="n">dmin</span><span class="p">)</span>
+    
+    <span class="c1"># Percentile clipping</span>
+    <span class="n">p_low</span><span class="p">,</span> <span class="n">p_high</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="n">lp</span><span class="p">,</span> <span class="n">gp</span><span class="p">])</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p_low</span><span class="p">,</span> <span class="n">p_high</span><span class="p">)</span>
+    
+    <span class="c1"># Final normalization to [0,1]</span>
+    <span class="k">if</span> <span class="n">p_high</span> <span class="o">&gt;</span> <span class="n">p_low</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">p_low</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_high</span> <span class="o">-</span> <span class="n">p_low</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">(</span><span class="n">data</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
 
-    <span class="n">p5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">lp</span><span class="p">)</span>
-    <span class="n">p95</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">gp</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">p5</span><span class="p">,</span> <span class="n">p95</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">p5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p95</span> <span class="o">-</span> <span class="n">p5</span><span class="p">)</span>
+<span class="c1"># def norm_data(data,lp=5,gp=95,dB_scale = True):</span>
+    
+<span class="c1">#     if dB_scale:</span>
+<span class="c1">#         data = 10*np.log10(data)</span>
+<span class="c1">#     data[data==-np.inf] = np.nan</span>
+<span class="c1">#     data[data==np.inf] = np.nan</span>
+<span class="c1">#     data = (data - np.nanmin(data)) / (np.nanmax(data) - np.nanmin(data))</span>
 
-    <span class="k">return</span> <span class="n">data</span> 
+<span class="c1">#     p5 = np.nanpercentile(data, lp)</span>
+<span class="c1">#     p95 = np.nanpercentile(data, gp)</span>
+<span class="c1">#     data = np.clip(data, p5, p95)</span>
+<span class="c1">#     data = (data - p5) / (p95 - p5)</span>
+
+<span class="c1">#     return (data*255).astype(np.uint8)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">read_and_normalize</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads binary data and normalizes it.&quot;&quot;&quot;</span>
@@ -402,27 +425,30 @@
     
 
     <span class="n">alpha_channel</span> <span class="o">=</span> <span class="n">get_alpha_channel</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">)</span>
-    <span class="n">rgb_uint8</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">))</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">rgb_uint8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
     <span class="c1"># alpha_channel = np.where(np.all(rgb_uint8 == 0, axis=2), 0, 255).astype(np.uint8)</span>
     <span class="n">rgba_uint8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">rgb_uint8</span><span class="p">,</span> <span class="n">alpha_channel</span><span class="p">))</span>
     
     <span class="n">plt</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">rgba_uint8</span><span class="p">)</span>
     <span class="c1"># print(f&quot;Pauli RGB image saved as {output_path}&quot;)</span>
     
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rgba_uint8</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.png&quot;</span><span class="p">,</span> <span class="s2">&quot;_thumb.png&quot;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> 
-                <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rgba_uint8</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.png&quot;</span><span class="p">,</span> <span class="s2">&quot;_thumb.png&quot;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> 
+                    <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fialed to create thumbnail!! </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
     <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s1">&#39;GTiff&#39;</span><span class="p">)</span>
     <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">red</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span><span class="p">,</span><span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;COMPRESS=DEFLATE&#39;</span><span class="p">,</span><span class="s1">&#39;PREDICTOR=2&#39;</span><span class="p">,</span><span class="s1">&#39;ZLEVEL=9&#39;</span><span class="p">,</span> <span class="s1">&#39;BIGTIFF=YES&#39;</span><span class="p">,</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">])</span>
     <span class="c1"># Prepare the image bands</span>
-    <span class="n">red_uint8</span> <span class="o">=</span> <span class="p">(</span><span class="n">red</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-    <span class="n">green_uint8</span> <span class="o">=</span> <span class="p">(</span><span class="n">green</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-    <span class="n">blue_uint8</span> <span class="o">=</span> <span class="p">(</span><span class="n">blue</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">red_uint8</span> <span class="o">=</span> <span class="n">red</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">green_uint8</span> <span class="o">=</span> <span class="n">green</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">blue_uint8</span> <span class="o">=</span> <span class="n">blue</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
     <span class="c1"># alpha = np.where((red_uint8 == 0) &amp; (green_uint8 == 0) &amp; (blue_uint8 == 0), 0, 255).astype(np.uint8)</span>
     
     <span class="c1"># Get geotransform and projection from reference file</span>
@@ -618,22 +644,25 @@
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No matching dataset found for C4, C3, T3, S2 or II!&quot;</span><span class="p">)</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;PauliRGB.png&quot;</span><span class="p">)</span>
+    
     
     <span class="k">if</span> <span class="n">window_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_size</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">window_size</span> <span class="o">*</span> <span class="n">window_size</span><span class="p">)</span>
-        <span class="n">red</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">green</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">blue</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">blue</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span> <span class="n">window_size</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">window_size</span> <span class="o">*</span> <span class="n">window_size</span><span class="p">)</span>
+        <span class="n">red</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">green</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">green</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">blue</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">blue</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
     
-    <span class="n">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-    <span class="n">create_pgw</span><span class="p">(</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-    <span class="c1"># create_prj(georef_file, output_path)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pauli RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save_tif</span><span class="p">:</span>
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;PauliRGB.tif&quot;</span><span class="p">)</span>
         <span class="n">generate_rgb_tif</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pauli RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pauli RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;PauliRGB.png&quot;</span><span class="p">)</span>
+    <span class="n">generate_rgb_png</span><span class="p">(</span><span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+    <span class="n">create_pgw</span><span class="p">(</span><span class="n">georef_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+    <span class="c1"># create_prj(georef_file, output_path)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pauli RGB image saved as </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
 
 </pre></div>
 

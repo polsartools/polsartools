@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.analysis.cluster_h_alpha_fp &#8212; PolSARtools 0.11 documentation</title>
+    <title>polsartools.analysis.cluster_h_alpha_fp &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
+    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/analysis/cluster_h_alpha_fp';</script>
@@ -335,6 +335,8 @@
   <h1>Source code for polsartools.analysis.cluster_h_alpha_fp</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">read_rst</span>
 
@@ -408,7 +410,41 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;ha_cluster.tif&quot;</span><span class="p">))</span>
     
-    
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_gdal_colors</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+        <span class="c1"># Open the dataset in Update mode</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GA_Update</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not open </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">band</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">band</span><span class="o">.</span><span class="n">SetNoDataValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Initialize the GDAL Color Table</span>
+        <span class="n">ct</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">ColorTable</span><span class="p">()</span>
+
+        <span class="c1"># SetColorEntry(index, (R, G, B, Alpha))</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>          <span class="c1"># Transparent (Zones == 0 or NaN)</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">254</span><span class="p">,</span> <span class="mi">147</span><span class="p">,</span> <span class="mi">148</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span> <span class="c1"># Z1: #fe9394</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">106</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span> <span class="c1"># Z2: #6aff68</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>       <span class="c1"># Z3: #000000 (Solid Black)</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>   <span class="c1"># Z4: #ff5151</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">(</span><span class="mi">83</span><span class="p">,</span> <span class="mi">254</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>   <span class="c1"># Z5: #53fe4e</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">254</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>   <span class="c1"># Z6: #5052fe</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="p">(</span><span class="mi">139</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>     <span class="c1"># Z7: #8B0000</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">151</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>    <span class="c1"># Z8: #0a9700</span>
+        <span class="n">ct</span><span class="o">.</span><span class="n">SetColorEntry</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">153</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>     <span class="c1"># Z9: #000399</span>
+
+        <span class="c1"># Apply the color table to the band</span>
+        <span class="n">band</span><span class="o">.</span><span class="n">SetRasterColorTable</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+        
+        <span class="c1"># Tell GIS software to interpret these pixels as palette indices</span>
+        <span class="n">band</span><span class="o">.</span><span class="n">SetRasterColorInterpretation</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">GCI_PaletteIndex</span><span class="p">)</span>
+        
+        <span class="c1"># Properly close the dataset to flush changes to disk</span>
+        <span class="n">band</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># print(f&quot;Color table successfully applied to {filepath}&quot;)</span>
     
     <span class="k">def</span><span class="w"> </span><span class="nf">post_processing_task</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="n">output_filepaths</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">zones</span> <span class="o">=</span> <span class="n">read_rst</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -444,8 +480,10 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> 
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">infolder</span><span class="p">,</span> <span class="s2">&quot;ha_cluster.png&quot;</span><span class="p">),</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span><span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">update_gdal_colors</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
         
         
         

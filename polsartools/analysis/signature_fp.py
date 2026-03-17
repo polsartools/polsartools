@@ -140,7 +140,7 @@ def signature_fp(mat=None, title='',ppath='',cmap='jet',plotType = 1,
         Title of the plot. Default is an empty string.
 
     ppath : str, optional
-        Name of the output file (*.png). Default is an empty string.
+        Name of the output file (\*.png). Default is an empty string.
 
     cmap : str, optional
         Colormap used for visualizing the data. Default is 'jet'.
@@ -148,10 +148,10 @@ def signature_fp(mat=None, title='',ppath='',cmap='jet',plotType = 1,
     plotType : int, optional
         Determines the type of plot to generate:
         
-        - 1: Standard polarimetric signature via `pol_sign`.
-        - 2: 2D polarimetric signature via `pol_sign2d`.
-        - 3: Poincaré sphere mapping via `poincare_plot`.
-        - 4: Render empty or canonical Poincaré sphere via `poincare_sphere` (S2 not required).
+        - 1: Standard polarimetric signature via ``pol_sign``.
+        - 2: 2D polarimetric signature via ``pol_sign2d``.
+        - 3: Poincaré sphere mapping via ``poincare_plot``.
+        - 4: Render empty or canonical Poincaré sphere via ``poincare_sphere`` (S2 not required).
     """
 
     if mat is not None:
