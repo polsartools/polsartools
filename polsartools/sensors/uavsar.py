@@ -331,7 +331,7 @@ def import_uavsar_grd(ann,mat='C3',fmt='tif',
     
     if mat=='T3':
         print("Converting C3 to T3")
-        convert_C3_T3(outFolder)
+        convert_C3_T3(outFolder,fmt=fmt,cog=cog,ovr = ovr,comp=comp,)
     
 
     
@@ -497,4 +497,4 @@ def import_uavsar_mlc(ann,mat='C3',fmt='tif',
 
     if mat=='T3':
         print("Converting C3 to T3")
-        convert_C3_T3(outFolder)
+        convert_C3_T3(outFolder,fmt=fmt,cog=cog,ovr = ovr,comp=comp,)

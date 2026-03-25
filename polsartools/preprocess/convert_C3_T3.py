@@ -8,13 +8,14 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
 
 @time_it
-def convert_C3_T3(infolder, outType="tif", window_size=1, 
-                  write_flag=True, max_workers=None,block_size=(512, 512), 
-                  cog_flag=False,cog_overviews = [2, 4, 8, 16], 
+def convert_C3_T3(infolder, fmt="tif", win=1, 
+                   max_workers=None,block_size=(512, 512), 
+                  cog=False,ovr = [2, 4, 8, 16], 
+                  comp=False,
                   progress_callback=None  
                   
                   ):
-
+    write_flag=True
     if os.path.isfile(os.path.join(infolder,"C11.bin")):
         ds = gdal.Open(os.path.join(infolder,"C11.bin"))
         rows,cols = ds.RasterYSize, ds.RasterXSize 
@@ -49,7 +50,7 @@ def convert_C3_T3(infolder, outType="tif", window_size=1,
 
     output_filepaths = []
     
-    if outType == "bin":
+    if fmt == "bin":
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T11.bin"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T12_real.bin"))
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T12_imag.bin"))
@@ -72,11 +73,13 @@ def convert_C3_T3(infolder, outType="tif", window_size=1,
         output_filepaths.append(os.path.join(os.path.dirname(infolder), "T3", "T33.tif"))
     
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
-                            window_size=window_size, write_flag=write_flag,
+                            window_size=win, write_flag=write_flag,
             processing_func=process_chunk_C3T3,
             block_size=block_size, max_workers=max_workers, 
-            num_outputs=len(output_filepaths), cog_flag=cog_flag, 
-            cog_overviews=cog_overviews, 
+            num_outputs=len(output_filepaths), 
+            cog=cog, 
+            ovr=ovr, 
+            comp=comp,
             progress_callback=progress_callback
             )
     

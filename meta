@@ -10,8 +10,11 @@ v0.12
 added simulate_CP
 extend esar to biosar data
 fix rflee comp issue
+fix uavsar C3->T3
+
 
 [to do]
+windows arm CI
 MRSLab functions image-wide parameters
 full-pol <-> compact pol 
 convert_C and convert_T
