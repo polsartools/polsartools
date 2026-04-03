@@ -130,7 +130,9 @@ def process_chunk_mdelta(chunks, window_size, *args, **kwargs):
     s1 = np.real(c11_T1 - c22_T1)
     s2 = np.real(c12_T1 + c21_T1)
     # s3 = np.where(chi >= 0, 1j * (c12_T1 - c21_T1), -1j * (c12_T1 - c21_T1))
-    s3 = -2*np.imag(c12_T1)
+    # s3 = -2*np.imag(c12_T1)
+    s3 = np.where(chi >= 0, 1j * (c12_T1 - c21_T1), -1j * (c12_T1 - c21_T1))
+    s3 = np.real(s3)
 
     m = np.sqrt(s1**2 + s2**2 + s3**2) / (s0)
     delta = np.arctan2(s3, s2) 
