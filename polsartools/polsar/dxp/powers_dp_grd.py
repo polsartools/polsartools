@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from osgeo import gdal
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files, S_norm
@@ -91,30 +92,49 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
             output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Psl_fact_grd.tif"))
             output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pr_fact_grd.tif"))
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag, 
+    # Compute global S_norm parameters from the full input rasters so that
+    # normalisation is consistent across all processing chunks (per-chunk
+    # normalisation causes block-boundary grid artefacts).
+    def _snorm_params(arr):
+        p2  = float(np.nanpercentile(arr, 2))
+        p98 = float(np.nanpercentile(arr, 98))
+        cln = np.clip(arr, p2, p98)
+        mx  = float(np.nanmax(cln))
+        return (p2, p98, mx if mx != 0.0 else 1.0)
+
+    _ds = gdal.Open(cpFile, gdal.GA_ReadOnly)
+    _c11 = _ds.GetRasterBand(1).ReadAsArray().astype(np.float32); _ds = None
+    _ds = gdal.Open(xpFile, gdal.GA_ReadOnly)
+    _c22 = _ds.GetRasterBand(1).ReadAsArray().astype(np.float32); _ds = None
+    _s1  = np.abs(_c11 - _c22)
+
+    c11_norm_params = _snorm_params(_c11)
+    c22_norm_params = _snorm_params(_c22)
+    s1_norm_params  = _snorm_params(_s1)
+    del _c11, _c22, _s1
+
+    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
                             process_chunk_dp_powers,
                             *[method],
                             block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
                             cog=cog,ovr=ovr, comp=comp,
-                            progress_callback=progress_callback
+                            progress_callback=progress_callback,
+                            c11_norm_params=c11_norm_params,
+                            c22_norm_params=c22_norm_params,
+                            s1_norm_params=s1_norm_params,
                             )
     
+def _apply_global_norm(arr, params):
+    """Apply S_norm using pre-computed global percentile parameters."""
+    p2, p98, mx = params
+    return np.clip(arr, p2, p98) / mx
+
+
 def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
     method = int(args[-1])
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11 = np.array(chunks[0])
     c22 = np.array(chunks[1])
-
-
-    # def S_norm(S_array):
-    #     S_5 = np.nanpercentile(S_array, 2)
-    #     S_95 = np.nanpercentile(S_array, 98)
-    #     S_cln = np.where(S_array > S_95, S_95, S_array)
-    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
-    #     S_cln_max = np.nanmax(S_cln)
-    #     S_norm_array = np.divide(S_cln,S_cln_max) 
-        
-    #     return S_norm_array
 
     if window_size>1:
         c11 = conv2d(c11,kernel)
@@ -129,9 +149,20 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
     prob2 = c22/(c11 + c22)
 
     ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
-    s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
-    C11_norm = S_norm(c11)
-    C22_norm = S_norm(c22)
+
+    # Use globally pre-computed parameters to normalise consistently across
+    # all chunks; falling back to per-chunk S_norm only when params are absent.
+    c11_norm_params = kwargs.get('c11_norm_params')
+    c22_norm_params = kwargs.get('c22_norm_params')
+    s1_norm_params  = kwargs.get('s1_norm_params')
+    if c11_norm_params and c22_norm_params and s1_norm_params:
+        s1_s_norm = _apply_global_norm(s1,  s1_norm_params)
+        C11_norm  = _apply_global_norm(c11, c11_norm_params)
+        C22_norm  = _apply_global_norm(c22, c22_norm_params)
+    else:
+        s1_s_norm = S_norm(s1)
+        C11_norm  = S_norm(c11)
+        C22_norm  = S_norm(c22)
 
 
     dop = (c11 - c22)/(c11 + c22)
