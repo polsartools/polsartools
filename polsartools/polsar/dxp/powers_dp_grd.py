@@ -2,7 +2,8 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
-from .dxp_infiles import dxpc2files, S_norm
+from .dxp_infiles import dxpc2files, grd_global_stats
+
 @time_it
 def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif", 
            cog=False, ovr = [2, 4, 8, 16], comp=False,
@@ -91,30 +92,37 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
             output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Psl_fact_grd.tif"))
             output_filepaths.append(os.path.join(os.path.dirname(cpFile), "Pr_fact_grd.tif"))
 
+    print("Computing global statistics for normalization...")
+
+    S2_c11, S98_c11, Smax_c11, S2_c22, S98_c22, Smax_c22, S2_s1, S98_s1, Smax_s1 = grd_global_stats(cpFile, xpFile)
+
+    # print(f"Global stats - C11: S5={S5_c11:.4f}, S95={S95_c11:.4f}, Max={Smax_c11:.4f}")
+    # print(f"Global stats - C22: S5={S5_c22:.4f}, S95={S95_c22:.4f}, Max={Smax_c22:.4f}")
+    # print(f"Global stats - S1: S5={S5_s1:.4f}, S95={S95_s1:.4f}, Max={Smax_s1:.4f}")
     process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag, 
                             process_chunk_dp_powers,
-                            *[method],
+                            *[method,S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
                             block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
-    method = int(args[-1])
+    method = int(args[-10])
+    S2_c11 = float(args[-9])
+    S98_c11 = float(args[-8])
+    Smax_c11  = float(args[-7])
+    S2_c22 = float(args[-6])
+    S98_c22 = float(args[-5])
+    Smax_c22 = float(args[-4])
+    S2_s1 = float(args[-3])
+    S98_s1 = float(args[-2])
+    Smax_s1 = float(args[-1])
+
+
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11 = np.array(chunks[0])
     c22 = np.array(chunks[1])
-
-
-    # def S_norm(S_array):
-    #     S_5 = np.nanpercentile(S_array, 2)
-    #     S_95 = np.nanpercentile(S_array, 98)
-    #     S_cln = np.where(S_array > S_95, S_95, S_array)
-    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
-    #     S_cln_max = np.nanmax(S_cln)
-    #     S_norm_array = np.divide(S_cln,S_cln_max) 
-        
-    #     return S_norm_array
 
     if window_size>1:
         c11 = conv2d(c11,kernel)
@@ -129,10 +137,14 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
     prob2 = c22/(c11 + c22)
 
     ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
-    s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
-    C11_norm = S_norm(c11)
-    C22_norm = S_norm(c22)
+    # s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
+    # C11_norm = S_norm(c11)
+    # C22_norm = S_norm(c22)
 
+
+    s1_s_norm = np.clip(s1, S2_s1, S98_s1) / Smax_s1
+    C11_norm  = np.clip(c11, S2_c11, S98_c11) / Smax_c11
+    C22_norm  = np.clip(c22, S2_c22, S98_c22) / Smax_c22
 
     dop = (c11 - c22)/(c11 + c22)
     dop = np.abs(dop)
