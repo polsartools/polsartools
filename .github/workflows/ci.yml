@@ -15,8 +15,8 @@ jobs:
       matrix:
         # os: [ubuntu-latest, macos-latest, windows-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest,macos-13]
-        os: [windows-11-arm]
-
+        # os: [windows-11-arm]
+        os: [windows-latest]
         python-version: ["3.11"]
 
     steps:
@@ -43,8 +43,8 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         # miniconda-version: "latest"
-        miniforge-version: latest
-        conda-solver: libmamba
+        # miniforge-version: latest
+        # conda-solver: libmamba
         activate-environment: pst-env
         environment-file: env-template.yml
         auto-activate-base: false
