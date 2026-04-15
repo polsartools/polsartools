@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
-from .dxp_infiles import dxpc2files, S_norm
+from .dxp_infiles import dxpc2files, grd_global_stats
 @time_it
 def dprbic(cpFile,xpFile,  win=1, fmt="tif", 
            cog=False, ovr = [2, 4, 8, 16], comp=False,
@@ -72,28 +72,32 @@ def dprbic(cpFile,xpFile,  win=1, fmt="tif",
         output_filepaths.append(os.path.join(os.path.dirname(cpFile), "DpRBIc.bin"))
     else:
         output_filepaths.append(os.path.join(os.path.dirname(cpFile), "DpRBIc.tif"))
-
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
-                            processing_func=process_chunk_dprbic,block_size=block_size, max_workers=max_workers,  num_outputs=1,
+    
+    print("Computing global statistics for normalization...")
+    
+    S2_c11, S98_c11, Smax_c11, S2_c22, S98_c22, Smax_c22, S2_s1, S98_s1, Smax_s1 = grd_global_stats(cpFile, xpFile)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
+                            process_chunk_dprbic,
+                            *[S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
+                            block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dprbic(chunks, window_size,*args):
+    S2_c11 = float(args[-9])
+    S98_c11 = float(args[-8])
+    Smax_c11  = float(args[-7])
+    S2_c22 = float(args[-6])
+    S98_c22 = float(args[-5])
+    Smax_c22 = float(args[-4])
+    S2_s1 = float(args[-3])
+    S98_s1 = float(args[-2])
+    Smax_s1 = float(args[-1])
+    
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11 = np.array(chunks[0])
     c22 = np.array(chunks[1])
-
-
-    # def S_norm(S_array):
-    #     S_5 = np.nanpercentile(S_array, 2)
-    #     S_95 = np.nanpercentile(S_array, 98)
-    #     S_cln = np.where(S_array > S_95, S_95, S_array)
-    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
-    #     S_cln_max = np.nanmax(S_cln)
-    #     S_norm_array = np.divide(S_cln,S_cln_max) 
-        
-    #     return S_norm_array
 
     if window_size>1:
         c11 = conv2d(c11,kernel)
@@ -109,9 +113,13 @@ def process_chunk_dprbic(chunks, window_size,*args):
 
     s1 = np.abs(c11-c22)
 
-    C11_norm = S_norm(c11)
-    C22_norm = S_norm(c22)
-    s1_norm = S_norm(s1)
+    # C11_norm = S_norm(c11)
+    # C22_norm = S_norm(c22)
+    # s1_norm = S_norm(s1)
+
+    s1_norm = np.clip(s1, S2_s1, S98_s1) / Smax_s1
+    C11_norm  = np.clip(c11, S2_c11, S98_c11) / Smax_c11
+    C22_norm  = np.clip(c22, S2_c22, S98_c22) / Smax_c22
 
     dprbic = np.sqrt(np.square(C11_norm) + np.square(C22_norm))/np.sqrt(2)
     dprbic = dprbic*s1_norm

@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
-from .dxp_infiles import dxpc2files, S_norm
+from .dxp_infiles import dxpc2files, grd_global_stats
 @time_it
 def dprsic(cpFile,xpFile,  win=1, fmt="tif", 
            cog=False, ovr = [2, 4, 8, 16], comp=False,
@@ -71,28 +71,31 @@ def dprsic(cpFile,xpFile,  win=1, fmt="tif",
         output_filepaths.append(os.path.join(os.path.dirname(cpFile), "DpRSIc.bin"))
     else:
         output_filepaths.append(os.path.join(os.path.dirname(cpFile), "DpRSIc.tif"))
+    print("Computing global statistics for normalization...")
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
-                            processing_func=process_chunk_dprsic,block_size=block_size, max_workers=max_workers,  num_outputs=1,
+    S2_c11, S98_c11, Smax_c11, S2_c22, S98_c22, Smax_c22, S2_s1, S98_s1, Smax_s1 = grd_global_stats(cpFile, xpFile)
+    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
+                            process_chunk_dprsic,
+                            *[S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
+                            block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dprsic(chunks, window_size,*args):
+
+    S2_c11 = float(args[-9])
+    S98_c11 = float(args[-8])
+    Smax_c11  = float(args[-7])
+    S2_c22 = float(args[-6])
+    S98_c22 = float(args[-5])
+    Smax_c22 = float(args[-4])
+    S2_s1 = float(args[-3])
+    S98_s1 = float(args[-2])
+    Smax_s1 = float(args[-1])
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11 = np.array(chunks[0])
     c22 = np.array(chunks[1])
-
-
-    # def S_norm(S_array):
-    #     S_5 = np.nanpercentile(S_array, 2)
-    #     S_95 = np.nanpercentile(S_array, 98)
-    #     S_cln = np.where(S_array > S_95, S_95, S_array)
-    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
-    #     S_cln_max = np.nanmax(S_cln)
-    #     S_norm_array = np.divide(S_cln,S_cln_max) 
-        
-    #     return S_norm_array
 
     if window_size>1:
         c11 = conv2d(c11,kernel)
@@ -107,7 +110,8 @@ def process_chunk_dprsic(chunks, window_size,*args):
     prob2 = c22/(c11 + c22)
 
     ent = -prob1*np.log2(prob1) - prob2*np.log2(prob2)
-    s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
+    # s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
+    s1_s_norm = np.clip(s1, S2_s1, S98_s1) / Smax_s1
 
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)); # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)); # For Noise pixels 

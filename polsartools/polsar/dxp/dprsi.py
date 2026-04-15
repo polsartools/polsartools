@@ -2,7 +2,7 @@ import os
 import numpy as np
 from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
-from .dxp_infiles import dxpc2files, S_norm
+from .dxp_infiles import dxpc2files, S_norm, stokes_global_stats
 @time_it
 def dprsi(in_dir,  win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp=False,
@@ -67,29 +67,42 @@ def dprsi(in_dir,  win=1, fmt="tif", cog=False,
     else:
         output_filepaths.append(os.path.join(in_dir, "DpRSI.tif"))
 
-    process_chunks_parallel(input_filepaths, list(output_filepaths), window_size=win, write_flag=write_flag,
-                            processing_func=process_chunk_dprsi,block_size=block_size, max_workers=max_workers,  num_outputs=1,
+    print("Computing global statistics for normalization...")
+
+    c11File = next(f for f in input_filepaths if "C11" in f)
+    c22File = next(f for f in input_filepaths if "C22" in f)
+    c12realFile = next(f for f in input_filepaths if "C12_real" in f)
+    c12imagFile = next(f for f in input_filepaths if "C12_imag" in f)
+    S0_2, S0_98, S0_max, S1_2, S1_98, S1_max, S2_2, S2_98, S2_max, S3_2, S3_98, S3_max = stokes_global_stats(c11File, c22File, c12realFile, c12imagFile)
+
+    process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
+                            process_chunk_dprsi,
+                            *[S0_2, S0_98, S0_max, S1_2, S1_98, S1_max, S2_2, S2_98, S2_max, S3_2, S3_98, S3_max],
+                            block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dprsi(chunks, window_size,*args):
+
+    S0_2 = float(args[-12])
+    S0_98 = float(args[-11])
+    S0_max = float(args[-10])
+    S1_2 = float(args[-9])
+    S1_98 = float(args[-8])
+    S1_max = float(args[-7])
+    S2_2 = float(args[-6])
+    S2_98 = float(args[-5])
+    S2_max = float(args[-4])
+    S3_2 = float(args[-3])
+    S3_98 = float(args[-2])
+    S3_max = float(args[-1])
+
     kernel = np.ones((window_size,window_size),np.float32)/(window_size*window_size)
     c11_T1 = np.array(chunks[0])
     c12_T1 = np.array(chunks[1])+1j*np.array(chunks[2])
     # c21_T1 = np.conj(c12_T1)
     c22_T1 = np.array(chunks[3])
-
-    # ##### Normalizing Stokes vector elements
-    # def S_norm(S_array):
-    #     S_5 = np.nanpercentile(S_array, 2)
-    #     S_95 = np.nanpercentile(S_array, 98)
-    #     S_cln = np.where(S_array > S_95, S_95, S_array)
-    #     S_cln = np.where(S_cln < S_5, S_5, S_cln)
-    #     S_cln_max = np.nanmax(S_cln)
-    #     S_norm_array = np.divide(S_cln,S_cln_max) 
-        
-    #     return S_norm_array
 
     if window_size>1:
         c11s = conv2d(np.real(c11_T1),kernel)+1j*conv2d(np.imag(c11_T1),kernel)
@@ -125,7 +138,10 @@ def process_chunk_dprsi(chunks, window_size,*args):
     s0 = np.abs(s0)
     s1 = np.abs(s1)
     
-    s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
+    # s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask
+    s1_s_norm = np.clip(s1, S1_2, S1_98) / S1_max
+
+
 
     ##### Dual-pol Radar Surface Index
 
