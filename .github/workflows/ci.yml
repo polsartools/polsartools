@@ -43,6 +43,8 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         # miniconda-version: "latest"
+        miniforge-version: latest
+        conda-solver: libmamba
         activate-environment: pst-env
         environment-file: env-template.yml
         auto-activate-base: false
