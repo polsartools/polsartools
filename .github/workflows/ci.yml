@@ -13,9 +13,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
         # os: [ubuntu-latest, windows-latest, macos-latest,macos-13]
-        # os: [windows-latest]
+        os: [windows-11-arm]
 
         python-version: ["3.11"]
 
@@ -353,7 +353,8 @@ jobs:
       if: runner.os == 'Windows'
       env:
         # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
-        CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+        # CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+        CIBW_BUILD: "cp311-win_arm64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
         conda init cmd.exe  # Initialize Conda for Windows
@@ -457,10 +458,10 @@ jobs:
         python -m pip install --upgrade pip
         conda config --add channels conda-forge
         conda config --set channel_priority strict
-        conda build ./conda-recipe --output-folder output --python 3.10 
+        # conda build ./conda-recipe --output-folder output --python 3.10 
         conda build ./conda-recipe --output-folder output --python 3.11 
-        conda build ./conda-recipe --output-folder output --python 3.12
-        conda build ./conda-recipe --output-folder output --python 3.13 
+        # conda build ./conda-recipe --output-folder output --python 3.12
+        # conda build ./conda-recipe --output-folder output --python 3.13 
 
 
     - name: Upload conda package
