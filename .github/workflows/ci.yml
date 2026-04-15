@@ -354,9 +354,9 @@ jobs:
     - name: Build wheels with cibuildwheel (Windows)
       if: runner.os == 'Windows'
       env:
-        # CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64"  # For Windows x86_64
-        # CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
-        CIBW_BUILD: "cp311-win_arm64"
+        CIBW_BUILD: "cp311-win_amd64"  # For Windows x86_64 testing
+        # CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64" # For Windows x86_64 
+        # CIBW_BUILD: "cp311-win_arm64" # For Windows arm64
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
         conda init cmd.exe  # Initialize Conda for Windows
