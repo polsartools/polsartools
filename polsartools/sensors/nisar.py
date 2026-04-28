@@ -17,7 +17,7 @@ def rslc_meta(inFile):
         ('/science/SSAR', 'S')
     ]
 
-    # Step 1: Identify frequency band and root path
+    # Identify frequency band and root path
     try:
         with tables.open_file(inFile, mode="r") as h5:
             for path, band in band_table:
@@ -29,7 +29,7 @@ def rslc_meta(inFile):
                 print("Neither LSAR nor SSAR data found in the file.")
                 return None
 
-            # Step 2: Read polarization list
+            # Read polarization list
             listOfPolarizations = None
             for base in ['RSLC', 'SLC']:
                 pol_path = f'{freq_path}/{base}/swaths/frequencyA/listOfPolarizations'
@@ -50,6 +50,8 @@ def rslc_meta(inFile):
         raise RuntimeError("Invalid .h5 file !!")
 
     return freq_band,listOfPolarizations
+
+    
 def get_rslc_path(h5, freq_band):
     for product_type in ['RSLC', 'SLC']:
         base_path = f'/science/{freq_band}SAR/{product_type}/swaths/frequencyA'
@@ -66,7 +68,7 @@ def gslc_meta(inFile):
         ('/science/SSAR', 'S')
     ]
 
-    # Step 1: Identify frequency band and root path
+    # Identify frequency band and root path
     try:
         with tables.open_file(inFile, mode="r") as h5:
             for path, band in band_table:
@@ -78,7 +80,7 @@ def gslc_meta(inFile):
                 print("Neither LSAR nor SSAR data found in the file.")
                 return None
 
-            # Step 2: Read polarization list
+            # Read polarization list
             pol_path = f'{freq_path}/GSLC/grids/frequencyA/listOfPolarizations'
             try:
                 listOfPolarizations = np.array(h5.get_node(pol_path).read()).astype(str)
@@ -89,7 +91,7 @@ def gslc_meta(inFile):
     except Exception:
         raise RuntimeError("Invalid .h5 file !!")
 
-    # Step 3: Reopen to read raster metadata
+    # Reopen to read raster metadata
     with tables.open_file(inFile, "r") as h5:
         base_grid = f'{freq_path}/GSLC/grids/frequencyA'
         projection_path = f'{freq_path}/GSLC/metadata/radarGrid/projection'
@@ -99,7 +101,7 @@ def gslc_meta(inFile):
             xSpacing = np.array(h5.get_node(base_grid + '/xCoordinateSpacing').read())
             ySpacing = np.array(h5.get_node(base_grid + '/yCoordinateSpacing').read())
         except tables.NoSuchNodeError as e:
-            print(f"⚠️ Missing expected metadata node: {e}")
+            print(f"Missing expected metadata node: {e}")
             return None
 
     return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
@@ -110,7 +112,7 @@ def gcov_meta(inFile):
         ('/science/SSAR', 'S')
     ]
 
-    # Step 1: Identify frequency band and root path
+    # Identify frequency band and root path
     try:
         with tables.open_file(inFile, mode="r") as h5:
             for path, band in band_table:
@@ -122,7 +124,7 @@ def gcov_meta(inFile):
                 print("Neither LSAR nor SSAR data found in the file.")
                 return None
 
-            # Step 2: Read polarization list
+            # Read polarization list
             pol_path = f'{freq_path}/GCOV/grids/frequencyA/listOfPolarizations'
             try:
                 listOfPolarizations = np.array(h5.get_node(pol_path).read()).astype(str)
@@ -133,7 +135,7 @@ def gcov_meta(inFile):
     except Exception:
         raise RuntimeError("Invalid .h5 file !!")
 
-    # Step 3: Reopen to read raster metadata
+    # Reopen to read raster metadata
     with tables.open_file(inFile, "r") as h5:
         base_grid = f'{freq_path}/GCOV/grids/frequencyA'
         projection_path = f'{freq_path}/GCOV/grids/frequencyA/projection'
@@ -143,12 +145,72 @@ def gcov_meta(inFile):
             xSpacing = np.array(h5.get_node(base_grid + '/xCoordinateSpacing').read())
             ySpacing = np.array(h5.get_node(base_grid + '/yCoordinateSpacing').read())
         except tables.NoSuchNodeError as e:
-            print(f"⚠️ Missing expected metadata node: {e}")
+            print(f"Missing expected metadata node: {e}")
             return None
 
     return freq_band,listOfPolarizations, xSpacing, ySpacing, int(projection)
 
+def get_geo_meta(inFile):
+    """
+    Combined metadata extractor for GSLC and GCOV products.
+    """
+    band_table = [('/science/LSAR', 'L'), ('/science/SSAR', 'S')]
+    
+    try:
+        with tables.open_file(inFile, mode="r") as h5:
+            # Detect frequency band (LSAR or SSAR)
+            freq_band, freq_path = None, None
+            for path, band in band_table:
+                if path in h5:
+                    freq_band, freq_path = band, path
+                    break
+            
+            if not freq_band:
+                print("Neither LSAR nor SSAR data found.")
+                return None
 
+            # Detect Product Type (GSLC or GCOV)
+            # We check which group exists under the detected frequency path
+            product_type = None
+            for p_type in ["GSLC", "GCOV"]:
+                if f"{freq_path}/{p_type}" in h5:
+                    product_type = p_type
+                    break
+            
+            if not product_type:
+                print("Neither GSLC nor GCOV group found.")
+                return None
+
+            # 2. Set up paths based on detected product
+            base_grid = f'{freq_path}/{product_type}/grids/frequencyA'
+            pol_path = f'{base_grid}/listOfPolarizations'
+            
+            # Note: GCOV usually puts projection in the grid, GSLC in metadata/radarGrid
+            if product_type == "GCOV":
+                projection_path = f'{base_grid}/projection'
+            else:
+                projection_path = f'{freq_path}/GSLC/metadata/radarGrid/projection'
+
+            # 3. Read the data
+            try:
+                # Read Polarization
+                pol_node = h5.get_node(pol_path).read()
+                list_of_polarizations = np.array(pol_node).astype(str)
+                
+                # Read Spacing and Projection
+                projection = int(h5.get_node(projection_path).read())
+                x_spacing = h5.get_node(f"{base_grid}/xCoordinateSpacing").read()
+                y_spacing = h5.get_node(f"{base_grid}/yCoordinateSpacing").read()
+                
+                return freq_band, list_of_polarizations, x_spacing, y_spacing, int(projection)
+
+            except tables.NoSuchNodeError as e:
+                print(f"Missing expected metadata node: {e}")
+                return None
+
+    except Exception as e:
+        print(f"Error: {e}")
+        raise RuntimeError("Invalid .h5 file or structure!!")
 
 
 def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
@@ -170,6 +232,12 @@ def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_
         elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
             # matrix_type = 'C2HV'
             channels = ['HH', 'VV']
+        elif 'RH' in listOfPolarizations and 'RV' in listOfPolarizations:
+            # matrix_type = 'C2HV'
+            channels = ['RH', 'RV']
+        elif 'LH' in listOfPolarizations and 'LV' in listOfPolarizations:
+            # matrix_type = 'C2HV'
+            channels = ['LH', 'LV']
         else:
             print("No valid dual-channel polarization combination found.")
             return
@@ -223,6 +291,12 @@ def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_
         elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
             matrix_type = 'C2HV'
             channels = ['HH', 'VV']
+        elif 'RH' in listOfPolarizations and 'RV' in listOfPolarizations:
+            matrix_type = 'C2R'
+            channels = ['RH', 'RV']
+        elif 'LH' in listOfPolarizations and 'LV' in listOfPolarizations:
+            matrix_type = 'C2L'
+            channels = ['LH', 'LV']
         else:
             print("No valid dual-channel polarization combination found.")
             return
@@ -282,6 +356,8 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         'C2HX': {'channels': ['HH', 'HV'],             'apply_multilook': True,  'dtype': np.float32},
         'C2VX': {'channels': ['VV', 'VH'],             'apply_multilook': True,  'dtype': np.float32},
         'T2HV': {'channels': ['HH', 'VV'],             'apply_multilook': True,  'dtype': np.float32},
+        'C2L':  {'channels': ['LH', 'LV'],             'apply_multilook': True,  'dtype': np.float32},
+        'C2R':  {'channels': ['RH', 'RV'],             'apply_multilook': True,  'dtype': np.float32},
     }
 
 
@@ -330,6 +406,50 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         outshape=outshape,
         calibration_constant=cc
     )
+
+
+tables.parameters.PYTABLES_SYS_ATTRS = False 
+def get_geo_info(inFile, azlks, rglks):
+
+    with tables.open_file(inFile, "r") as h5:
+        try:
+            # Access the 'science' group
+            science_grp = h5.root.science
+            
+            # Detect SAR band (e.g., 'SSAR' or 'LSAR')
+            sar_key = [node._v_name for node in science_grp if "SAR" in node._v_name][0]
+            sar_node = h5.get_node(f"/science/{sar_key}")
+            
+            # Detect Product Type ('GSLC' or 'GCOV')
+            product_type = [node._v_name for node in sar_node if node._v_name in ["GSLC", "GCOV"]][0]
+            
+            # Construct path and fetch coordinates
+            grid_base = f"/science/{sar_key}/{product_type}/grids/frequencyA"
+            
+            xcoords = h5.get_node(f"{grid_base}/xCoordinates").read()
+            ycoords = h5.get_node(f"{grid_base}/yCoordinates").read()
+        
+            # Calculate Shapes and Extents
+            # Note: PyTables/HDF5 usually follows [y, x] (Row, Col) convention
+            # inshape = [len(ycoords), len(xcoords)] 
+            # outshape = [len(ycoords) // azlks, len(xcoords) // rglks]
+            inshape = [len(xcoords), len(ycoords)]  
+            outshape = [len(xcoords) // rglks, len(ycoords) // azlks]
+            
+            # Standard Geo-referencing: min X (West) and max Y (North)
+            start_x = np.min(xcoords)
+            start_y = np.max(ycoords)
+            
+            # Optional: Print detection for debugging
+            # print(f"Detected: {sar_key} | {product_type}")
+            
+            return inshape, outshape, start_x, start_y, xcoords, ycoords
+
+        except IndexError:
+            raise KeyError(f"Could not find valid SAR band or GSLC/GCOV group in {inFile}")
+        except Exception as e:
+            print(f"Error processing HDF5: {e}")
+            raise
 
 @time_it 
 def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
@@ -387,24 +507,12 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
     """
         
     
-    freq_band,listOfPolarizations, xres, yres, projection = gslc_meta(inFile)
+    # freq_band,listOfPolarizations, xres, yres, projection = gslc_meta(inFile)
+    freq_band,listOfPolarizations, xres, yres, projection = get_geo_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
-    
-    ds = Dataset(inFile, "r")
-    xcoords = ds.groups["science"].groups[f"{freq_band}SAR"].groups["GSLC"] \
-                   .groups["grids"].groups["frequencyA"] \
-                   .variables["xCoordinates"][:]
-    ycoords = ds.groups["science"].groups[f"{freq_band}SAR"].groups["GSLC"] \
-                   .groups["grids"].groups["frequencyA"] \
-                   .variables["yCoordinates"][:]                
-    ds=None
 
-    inshape = [len(xcoords),len(ycoords)]
-    outshape = [len(xcoords)//rglks,len(ycoords)//azlks]
-    
-    start_x = min(xcoords)
-    start_y = max(ycoords)
+    inshape, outshape, start_x, start_y, xcoords,ycoords = get_geo_info(inFile, azlks, rglks)
     
     # print(projection,start_x,start_y,xres,yres,inshape,outshape)
     # print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))
@@ -520,7 +628,7 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
                  inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
 
     print(f"Extracting elements...")
-    if len(listOfPolarizations)==2:
+    if len(listOfPolarizations)==2 or len(listOfPolarizations)==3:
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
             # matrix_type = 'C2HX'
             channels = ['HHHH', 'HVHV']
@@ -530,13 +638,14 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
         elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
             # matrix_type = 'C2HV'
             channels = ['HHHH', 'VVVV']
+        elif 'RH' in listOfPolarizations and 'RV' in listOfPolarizations:
+            # matrix_type = 'C2HV'
+            channels = ['RHRH', 'RVRV']
         else:
             print("No valid dual-channel polarization combination found.")
             return
     elif len(listOfPolarizations)==4:
         channels = ['HHHH', 'HVHV','VVVV','VHVH']
-
-
 
     # Directory setup
     base_name = os.path.basename(inFile).split('.h5')[0]
@@ -623,24 +732,13 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
 
     """
       
-    freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)
+    # freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)
+    freq_band,listOfPolarizations, xres, yres, projection = get_geo_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
-    
-    ds = Dataset(inFile, "r")
-    xcoords = ds.groups["science"].groups[f"{freq_band}SAR"].groups["GCOV"] \
-                   .groups["grids"].groups["frequencyA"] \
-                   .variables["xCoordinates"][:]
-    ycoords = ds.groups["science"].groups[f"{freq_band}SAR"].groups["GCOV"] \
-                   .groups["grids"].groups["frequencyA"] \
-                   .variables["yCoordinates"][:]                
-    ds=None
 
-    inshape = [len(xcoords),len(ycoords)]
-    outshape = [len(xcoords)//rglks,len(ycoords)//azlks]
-    
-    start_x = min(xcoords)
-    start_y = max(ycoords)
+
+    inshape, outshape, start_x, start_y, xcoords,ycoords = get_geo_info(inFile, azlks, rglks)
     
     inFolder = os.path.dirname(inFile)   
     if not inFolder:

@@ -66,6 +66,10 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,ca
         return compute_c2hx(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "C2VX":
         return compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant)
+    elif matrix_type == "C2L":
+        return compute_c2c(chunks, azlks, rglks, apply_multilook,calibration_constant)
+    elif matrix_type == "C2R":
+        return compute_c2c(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "Sxy":
         return compute_sxy(chunks, calibration_constant)
     elif matrix_type == "I2" or matrix_type == "I4":
@@ -240,6 +244,28 @@ def compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant):
     C22 = opt_mlook(np.abs(chunks["VH"]/calibration_constant)**2).astype(np.float32)
     C12 = opt_mlook(chunks["VV"]/calibration_constant * np.conj(chunks["VH"]/calibration_constant)).astype(np.complex64)
 
+    return {
+        "C11": C11,
+        "C12_real": np.real(C12),
+        "C12_imag": np.imag(C12),
+        "C22": C22
+    }
+
+def compute_c2c(chunks, azlks, rglks, apply_multilook,calibration_constant):
+    def opt_mlook(data):
+        return mlook_arr(data, azlks, rglks) if apply_multilook else data
+    if "RH" in chunks and "RV" in chunks:
+        
+        C11 = opt_mlook(np.abs(chunks["RH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["RV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(chunks["RH"]/calibration_constant * np.conj(chunks["RV"]/calibration_constant)).astype(np.complex64)
+    elif "LH" in chunks and "LV" in chunks:
+        
+        C11 = opt_mlook(np.abs(chunks["LH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["LV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(chunks["LH"]/calibration_constant * np.conj(chunks["LV"]/calibration_constant)).astype(np.complex64)
+    else:
+        raise ValueError("Neither RH/RV nor LH/LV channels found for C2L/C2R computation.")
     return {
         "C11": C11,
         "C12_real": np.real(C12),
@@ -532,8 +558,11 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
     polarization_key = (
     'HH'   if 'HH'   in dataset_paths else
     'VV'   if 'VV'   in dataset_paths else
+    'RH'   if 'RH'   in dataset_paths else
+    'LH'   if 'LH'   in dataset_paths else
     'HHHH' if 'HHHH' in dataset_paths else
     'HVHV' if 'HVHV' in dataset_paths else
+    'RHRH' if 'RHRH' in dataset_paths else
     None
     )
 
