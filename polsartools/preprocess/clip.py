@@ -173,7 +173,7 @@ def clip(folder_path, output_folder=None,
                 cutlineDSName=vector_path,
                 cropToCutline=True,
                 dstNodata=0,
-                options=['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9', 'TILED=YES'] if outType == 'tif' else None
+                creationOptions=['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9', 'TILED=YES'] if outType == 'tif' else None
             )
             gdal.Warp(output_path, dataset, options=warp_options)
             print(f"Saved file {output_path}")
