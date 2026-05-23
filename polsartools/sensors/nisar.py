@@ -215,7 +215,7 @@ def get_geo_meta(inFile):
 
 def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
+                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1, progress_callback=None):
 
     # Determine matrix type based on available polarizations
     # if matrix_type in ['C2','C2HV','C2HX','C2VX']:
@@ -279,7 +279,8 @@ def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_
             dtype=np.complex64,
             inshape=inshape,
             outshape=outshape,
-            calibration_constant=cc
+            calibration_constant=cc,
+            progress_callback=progress_callback
         )        
     else:
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
@@ -338,13 +339,14 @@ def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_
             dtype=np.float32,
             inshape=inshape,
             outshape=outshape,
-            calibration_constant=cc
+            calibration_constant=cc,
+            progress_callback=progress_callback
         )
 
 
 def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                    start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                   inshape, outshape, out_dir=None,cc=1):
+                   inshape, outshape, out_dir=None,cc=1, progress_callback=None):
 
     MATRIX_CONFIG = {
         'S2':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': False, 'dtype': np.complex64},
@@ -404,7 +406,8 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         dtype=MATRIX_CONFIG[mat]['dtype'],
         inshape=inshape,
         outshape=outshape,
-        calibration_constant=cc
+        calibration_constant=cc,
+        progress_callback=progress_callback
     )
 
 
@@ -456,7 +459,8 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False,
-            max_workers=None):
+            max_workers=None,
+            progress_callback=None):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
     and saves them into respective binary files.
@@ -527,13 +531,13 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
         # print("Dual-Pol data detected.",mat)
         nisar_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir)
+                 inshape, outshape, listOfPolarizations, out_dir, progress_callback=progress_callback)
         
                 
     elif nchannels==4:
         nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-        inshape, outshape, out_dir)
+        inshape, outshape, out_dir, progress_callback=progress_callback)
         
 
 @time_it  
@@ -541,7 +545,8 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
                fmt='tif', cog=False, ovr = [2, 4, 8, 16], comp=False,
               out_dir=None,
               recip=False,
-               max_workers=None ):
+               max_workers=None,
+                progress_callback=None ):
     """
     Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file 
     and saves them into respective binary files.
@@ -611,13 +616,13 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
     if nchannels==2:    
         nisar_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
             start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-            None, None, listOfPolarizations, out_dir)   
+            None, None, listOfPolarizations, out_dir, progress_callback=progress_callback)   
         
 
     elif nchannels==4:
         nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-        None, None, out_dir)
+        None, None, out_dir, progress_callback=progress_callback)
 
 
 
@@ -625,7 +630,7 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
 
 def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1):
+                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1, progress_callback=None):
 
     print(f"Extracting elements...")
     if len(listOfPolarizations)==2 or len(listOfPolarizations)==3:
@@ -682,14 +687,16 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
         dtype=np.float32,
         inshape=inshape,
         outshape=outshape,
-        calibration_constant=cc
+        calibration_constant=cc,
+        progress_callback=progress_callback
     )        
     
 @time_it 
 def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
-            max_workers=None):
+            max_workers=None,
+            progress_callback=None):
     """
     Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.
 
@@ -754,4 +761,4 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
         raise('Invalid number of channels!!')
     nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, max_workers,
                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                inshape, outshape, listOfPolarizations, out_dir)
+                inshape, outshape, listOfPolarizations, out_dir,progress_callback=progress_callback)

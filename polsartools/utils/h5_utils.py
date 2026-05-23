@@ -542,54 +542,116 @@ def cleanup_temp_files(temp_dir):
     os.rmdir(temp_dir)
 
 
+# def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
+#                             azlks, rglks,matrix_type, apply_multilook,recip=False,
+#                             chunk_size_x=512, chunk_size_y=512,
+#                             max_workers=None,
+#                             start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
+#                             fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
+#                             dtype=np.float32,
+#                             inshape=None,outshape=None,
+#                             calibration_constant=1):
+#     if max_workers is None:
+#         max_workers = max(multiprocessing.cpu_count() - 1, 1)
+#     # print("dataset_paths",dataset_paths)
+#     # polarization_key = 'HH' if 'HH' in dataset_paths else 'VV' if 'VV' in dataset_paths else None
+#     polarization_key = (
+#     'HH'   if 'HH'   in dataset_paths else
+#     'VV'   if 'VV'   in dataset_paths else
+#     'RH'   if 'RH'   in dataset_paths else
+#     'LH'   if 'LH'   in dataset_paths else
+#     'HHHH' if 'HHHH' in dataset_paths else
+#     'HVHV' if 'HVHV' in dataset_paths else
+#     'RHRH' if 'RHRH' in dataset_paths else
+#     None
+#     )
+
+#     # print("polarization_key",polarization_key)
+
+#     # jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
+#     jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
+
+#     with ProcessPoolExecutor(max_workers=max_workers) as pool:
+#         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,
+#                                azlks, rglks, matrix_type, apply_multilook, recip,temp_dir, 
+#                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
+#                                calibration_constant=calibration_constant) for job in jobs]
+#         with tqdm(total=len(futures), desc="Processing chunks") as pbar:
+#             for _ in as_completed(futures):
+#                 pbar.update(1)
+
+#     # Discover output band names
+#     dummy_shape = (azlks * 2, rglks * 2)
+#     dummy_data = {k: np.zeros(dummy_shape, dtype=np.complex64) for k in dataset_paths.keys()}
+#     keys = compute_elements(dummy_data, matrix_type, azlks, rglks, 
+#                             apply_multilook,recip,calibration_constant).keys()
+
+#     for name in keys:
+#         mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
+#                       azlks, rglks, apply_multilook, 
+#                       start_x, start_y, xres, yres, epsg, 
+#                       fmt,cog,ovr,comp, dtype,inshape,outshape)
+
+#     cleanup_temp_files(temp_dir)
+
 def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
-                            azlks, rglks,matrix_type, apply_multilook,recip=False,
-                            chunk_size_x=512, chunk_size_y=512,
-                            max_workers=None,
-                            start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
-                            fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
-                            dtype=np.float32,
-                            inshape=None,outshape=None,
-                            calibration_constant=1):
+              azlks, rglks, matrix_type, apply_multilook, recip=False,
+              chunk_size_x=512, chunk_size_y=512,
+              max_workers=None,
+              start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
+              fmt='tif', cog=False, ovr=[2, 4, 8, 16], comp=False,
+              dtype=np.float32,
+              inshape=None, outshape=None,
+              calibration_constant=1,
+              progress_callback=None):   # NEW PARAM
     if max_workers is None:
         max_workers = max(multiprocessing.cpu_count() - 1, 1)
-    # print("dataset_paths",dataset_paths)
-    # polarization_key = 'HH' if 'HH' in dataset_paths else 'VV' if 'VV' in dataset_paths else None
+
     polarization_key = (
-    'HH'   if 'HH'   in dataset_paths else
-    'VV'   if 'VV'   in dataset_paths else
-    'RH'   if 'RH'   in dataset_paths else
-    'LH'   if 'LH'   in dataset_paths else
-    'HHHH' if 'HHHH' in dataset_paths else
-    'HVHV' if 'HVHV' in dataset_paths else
-    'RHRH' if 'RHRH' in dataset_paths else
-    None
+        'HH'   if 'HH'   in dataset_paths else
+        'VV'   if 'VV'   in dataset_paths else
+        'RH'   if 'RH'   in dataset_paths else
+        'LH'   if 'LH'   in dataset_paths else
+        'HHHH' if 'HHHH' in dataset_paths else
+        'HVHV' if 'HVHV' in dataset_paths else
+        'RHRH' if 'RHRH' in dataset_paths else
+        None
     )
 
-    # print("polarization_key",polarization_key)
-
-    # jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
     jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
+
+    total_tasks = len(jobs)
+    completed = 0
 
     with ProcessPoolExecutor(max_workers=max_workers) as pool:
         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,
-                               azlks, rglks, matrix_type, apply_multilook, recip,temp_dir, 
+                               azlks, rglks, matrix_type, apply_multilook, recip, temp_dir,
                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
                                calibration_constant=calibration_constant) for job in jobs]
-        with tqdm(total=len(futures), desc="Processing chunks") as pbar:
-            for _ in as_completed(futures):
+
+        use_tqdm = progress_callback is None
+        pbar = tqdm(total=total_tasks, desc="Processing chunks") if use_tqdm else None
+
+        for _ in as_completed(futures):
+            completed += 1
+            if progress_callback:
+                progress_callback(completed / total_tasks)
+            elif use_tqdm:
                 pbar.update(1)
+
+        if pbar:
+            pbar.close()
 
     # Discover output band names
     dummy_shape = (azlks * 2, rglks * 2)
     dummy_data = {k: np.zeros(dummy_shape, dtype=np.complex64) for k in dataset_paths.keys()}
-    keys = compute_elements(dummy_data, matrix_type, azlks, rglks, 
-                            apply_multilook,recip,calibration_constant).keys()
+    keys = compute_elements(dummy_data, matrix_type, azlks, rglks,
+                            apply_multilook, recip, calibration_constant).keys()
 
     for name in keys:
         mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
-                      azlks, rglks, apply_multilook, 
-                      start_x, start_y, xres, yres, epsg, 
-                      fmt,cog,ovr,comp, dtype,inshape,outshape)
+                      azlks, rglks, apply_multilook,
+                      start_x, start_y, xres, yres, epsg,
+                      fmt, cog, ovr, comp, dtype, inshape, outshape)
 
     cleanup_temp_files(temp_dir)
