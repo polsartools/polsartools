@@ -350,21 +350,49 @@ jobs:
         # Run cibuildwheel to build the wheels
         python -m cibuildwheel --output-dir wheelhouse
 
-
-    - name: Build wheels with cibuildwheel (Windows)
+    - name: Build legacy wheels (Windows Python 3.6 to 3.9)
       if: runner.os == 'Windows'
       env:
-        # CIBW_BUILD: "cp311-win_amd64"  # For Windows x86_64 testing
-        CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64" # For Windows x86_64 
-        # CIBW_BUILD: "cp311-win_arm64" # For Windows arm64
+        # Targets older Python versions using cibuildwheel v2
+        CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64"
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
-        conda init cmd.exe  # Initialize Conda for Windows
-        refreshenv  # Refresh environment variables (needed on Windows)
-        conda activate pst-env  # Activate the Conda environment
-        echo "Active Conda Environment:"
-
+        conda init cmd.exe
+        refreshenv
+        conda activate pst-env
+        
+        # Install the older cibuildwheel version that supports 3.6 and 3.7
+        python -m pip install "cibuildwheel<3.0.0"
         python -m cibuildwheel --output-dir wheelhouse
+
+    - name: Build modern wheels (Windows Python 3.10 to 3.13)
+      if: runner.os == 'Windows'
+      env:
+        # Targets newer Python versions using cibuildwheel v3
+        CIBW_BUILD: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+        CIBW_OUTPUT_DIR: wheelhouse
+      run: |
+        conda init cmd.exe
+        refreshenv
+        conda activate pst-env
+        
+        # Upgrade cibuildwheel to the latest v3 release for modern Python support
+        python -m pip install --upgrade cibuildwheel
+        python -m cibuildwheel --output-dir wheelhouse
+    # - name: Build wheels with cibuildwheel (Windows)
+    #   if: runner.os == 'Windows'
+    #   env:
+    #     # CIBW_BUILD: "cp311-win_amd64"  # For Windows x86_64 testing
+    #     CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64" # For Windows x86_64 
+    #     # CIBW_BUILD: "cp311-win_arm64" # For Windows arm64
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: |
+    #     conda init cmd.exe  # Initialize Conda for Windows
+    #     refreshenv  # Refresh environment variables (needed on Windows)
+    #     conda activate pst-env  # Activate the Conda environment
+    #     echo "Active Conda Environment:"
+
+    #     python -m cibuildwheel --output-dir wheelhouse
 
     - name: Upload wheel artifacts
       uses: actions/upload-artifact@v4.6.0
