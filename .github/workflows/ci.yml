@@ -354,8 +354,8 @@ jobs:
     - name: Build wheels with cibuildwheel (Windows)
       if: runner.os == 'Windows'
       env:
-        CIBW_BUILD: "cp311-win_amd64"  # For Windows x86_64 testing
-        # CIBW_BUILD: "cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64" # For Windows x86_64 
+        # CIBW_BUILD: "cp311-win_amd64"  # For Windows x86_64 testing
+        CIBW_BUILD: "cp37-win_amd64 cp38-win_amd64 cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64" # For Windows x86_64 
         # CIBW_BUILD: "cp311-win_arm64" # For Windows arm64
         CIBW_OUTPUT_DIR: wheelhouse
       run: |
@@ -379,102 +379,102 @@ jobs:
 ##########################################################################
 
 
-##########################################################################
-# Build conda packages with conda-build
-##########################################################################
-    - name: Build Conda package (macOS)
-      if: runner.os == 'macOS' 
-      run: |
-        conda init bash 
-        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-        if [ -f ~/.bashrc ]; then
-          source ~/.bashrc  # Use .bashrc if it exists
-        else
-          source ~/.bash_profile  # Fallback to .bash_profile
-        fi
-        conda activate pst-env  
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
+# ##########################################################################
+# # Build conda packages with conda-build
+# ##########################################################################
+#     - name: Build Conda package (macOS)
+#       if: runner.os == 'macOS' 
+#       run: |
+#         conda init bash 
+#         # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+#         if [ -f ~/.bashrc ]; then
+#           source ~/.bashrc  # Use .bashrc if it exists
+#         else
+#           source ~/.bash_profile  # Fallback to .bash_profile
+#         fi
+#         conda activate pst-env  
+#         echo "Active Conda Environment:"
+#         conda info --envs  # Print the list of Conda environments and show the active one
 
-        conda install --yes pip
-        python -m pip install --upgrade pip
+#         conda install --yes pip
+#         python -m pip install --upgrade pip
 
-        # Detect the architecture of the runner (ARM or Intel) on macOS 
-        if [[ "$(uname -m)" == "x86_64" ]]; then
-          # Intel architecture (x86_64) - macOS Intel
-          ARCH="osx-x86_64"
-        elif [[ "$(uname -m)" == "arm64" ]]; then
-          # ARM architecture (arm64) - macOS Apple Silicon
-          ARCH="osx-arm64"
-        else
-          echo "Unsupported architecture: $(uname -m)"
-          exit 1
-        fi
+#         # Detect the architecture of the runner (ARM or Intel) on macOS 
+#         if [[ "$(uname -m)" == "x86_64" ]]; then
+#           # Intel architecture (x86_64) - macOS Intel
+#           ARCH="osx-x86_64"
+#         elif [[ "$(uname -m)" == "arm64" ]]; then
+#           # ARM architecture (arm64) - macOS Apple Silicon
+#           ARCH="osx-arm64"
+#         else
+#           echo "Unsupported architecture: $(uname -m)"
+#           exit 1
+#         fi
 
-        echo "Building for $ARCH architecture"
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
-        # conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
-        # conda build ./conda-recipe --output-folder output --python 3.10
-        conda build ./conda-recipe --output-folder output --python 3.11
-        conda build ./conda-recipe --output-folder output --python 3.12
-        conda build ./conda-recipe --output-folder output --python 3.13
+#         echo "Building for $ARCH architecture"
+#         conda config --add channels conda-forge
+#         conda config --set channel_priority strict
+#         # conda build ./conda-recipe --output-folder output --python 3.8
+#         # conda build ./conda-recipe --output-folder output --python 3.9
+#         # conda build ./conda-recipe --output-folder output --python 3.10
+#         conda build ./conda-recipe --output-folder output --python 3.11
+#         conda build ./conda-recipe --output-folder output --python 3.12
+#         conda build ./conda-recipe --output-folder output --python 3.13
 
 
-    - name: Build Conda package (Linux)
-      if: runner.os == 'Linux' 
-      run: |
-        conda init bash 
-        # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-        if [ -f ~/.bashrc ]; then
-          source ~/.bashrc  # Use .bashrc if it exists
-        else
-          source ~/.bash_profile  # Fallback to .bash_profile
-        fi
-        conda activate pst-env  
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
+#     - name: Build Conda package (Linux)
+#       if: runner.os == 'Linux' 
+#       run: |
+#         conda init bash 
+#         # Check if ~/.bashrc exists. If not, use ~/.bash_profile
+#         if [ -f ~/.bashrc ]; then
+#           source ~/.bashrc  # Use .bashrc if it exists
+#         else
+#           source ~/.bash_profile  # Fallback to .bash_profile
+#         fi
+#         conda activate pst-env  
+#         echo "Active Conda Environment:"
+#         conda info --envs  # Print the list of Conda environments and show the active one
 
-        conda install --yes pip
-        python -m pip install --upgrade pip
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
-        # conda build ./conda-recipe --output-folder output --python 3.7
-        # conda build ./conda-recipe --output-folder output --python 3.8
-        # conda build ./conda-recipe --output-folder output --python 3.9
-        # conda build ./conda-recipe --output-folder output --python 3.10
-        conda build ./conda-recipe --output-folder output --python 3.11
-        conda build ./conda-recipe --output-folder output --python 3.12
-        conda build ./conda-recipe --output-folder output --python 3.13  
+#         conda install --yes pip
+#         python -m pip install --upgrade pip
+#         conda config --add channels conda-forge
+#         conda config --set channel_priority strict
+#         # conda build ./conda-recipe --output-folder output --python 3.7
+#         # conda build ./conda-recipe --output-folder output --python 3.8
+#         # conda build ./conda-recipe --output-folder output --python 3.9
+#         # conda build ./conda-recipe --output-folder output --python 3.10
+#         conda build ./conda-recipe --output-folder output --python 3.11
+#         conda build ./conda-recipe --output-folder output --python 3.12
+#         conda build ./conda-recipe --output-folder output --python 3.13  
         
 
-    - name:  Build Conda package (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        conda init cmd.exe  # Initialize Conda for Windows
-        refreshenv  # Refresh environment variables (needed on Windows)
-        conda activate pst-env  # Activate the Conda environment
-        echo "Active Conda Environment:"
-        conda info --envs  # Print the list of Conda environments and show the active one
-        python -m pip install --upgrade pip
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
-        # conda build ./conda-recipe --output-folder output --python 3.10 
-        conda build ./conda-recipe --output-folder output --python 3.11 
-        # conda build ./conda-recipe --output-folder output --python 3.12
-        # conda build ./conda-recipe --output-folder output --python 3.13 
+#     - name:  Build Conda package (Windows)
+#       if: runner.os == 'Windows'
+#       run: |
+#         conda init cmd.exe  # Initialize Conda for Windows
+#         refreshenv  # Refresh environment variables (needed on Windows)
+#         conda activate pst-env  # Activate the Conda environment
+#         echo "Active Conda Environment:"
+#         conda info --envs  # Print the list of Conda environments and show the active one
+#         python -m pip install --upgrade pip
+#         conda config --add channels conda-forge
+#         conda config --set channel_priority strict
+#         # conda build ./conda-recipe --output-folder output --python 3.10 
+#         conda build ./conda-recipe --output-folder output --python 3.11 
+#         # conda build ./conda-recipe --output-folder output --python 3.12
+#         # conda build ./conda-recipe --output-folder output --python 3.13 
 
 
-    - name: Upload conda package
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
-        path: |
-          output/**/*.tar.bz2
-          output/**/*.conda
-        if-no-files-found: ignore
-        overwrite: false
-        include-hidden-files: false
+#     - name: Upload conda package
+#       uses: actions/upload-artifact@v4.6.0
+#       with:
+#         name: conda-package-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}
+#         path: |
+#           output/**/*.tar.bz2
+#           output/**/*.conda
+#         if-no-files-found: ignore
+#         overwrite: false
+#         include-hidden-files: false
 
-  ###########################################################################
+#   ###########################################################################

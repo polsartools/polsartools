@@ -8,23 +8,24 @@
 
 v0.12
 added simulate_CP
-extend esar to biosar data
+extend esar to BioSAR data
 fix rflee comp issue
 fix uavsar C3->T3
-MRSLab functions image-wide parameters done
+MRSLab functions image-wide parameters
 fix vector clip
-extend NISAR S-band
+extend NISAR S-band and update for QGIS plugin
 added ALOS-4 UWD reader
 
 [to do]
-windows arm CI
-full-pol <-> compact pol 
+windows arm CI --> not yet there
+full-pol <- compact pol 
 convert_C and convert_T
 rectangular window
 NISAR-ISCE3?
 NISAR incidence angle
 EOS-04
 Fix ALOS-1 reader
+
 # tests
 
 from polsartools.tests.test_all import test_all
