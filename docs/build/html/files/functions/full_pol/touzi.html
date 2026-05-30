@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Full-pol H-alpha clusters (cluster_h_alpha_fp) &#8212; PolSARtools 0.12 documentation</title>
+    <title>Touzi decomposition (touzi_decomposition) &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -41,12 +41,12 @@
     <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/analysis/halpha_cluster_fp';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/full_pol/touzi';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Full-pol H-theta plot (plot_h_theta_fp)" href="htheta_plot_fp.html" />
-    <link rel="prev" title="Full-pol H-A-alpha plot (plot_h_a_alpha_fp)" href="haalpha_plot_fp.html" />
+    <link rel="next" title="Yamaguchi 4-Component decomposition (yamaguchi_4c)" href="yam4cfp.html" />
+    <link rel="prev" title="H/A/α Decomposition (h_a_alpha_fp)" href="halphafp.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -290,22 +290,22 @@
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../dataFP.html">Full-pol data format</a></li>
 </ul>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/tsvm.html">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">tsvm</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neumann_parm</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_fp</span></code> )</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_fp</span></code> )</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_fp</span></code>)</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="halphafp.html">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">touzi_decomposition</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yam4cfp.html">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freeman_3c.html">Freeman 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_3c</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freeman_2c.html">Freeman 2-Component decomposition (<code class="docutils literal notranslate"><span class="pre">freeman_2c</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MF3CF.html">Model Free 3-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf3cf</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mf4cf.html">Model Free 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">mf4cf</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neufp.html">Neumann decomposition (<code class="docutils literal notranslate"><span class="pre">neumann_parm</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nnedfp.html">Non-negative Eigen Value decomposition (<code class="docutils literal notranslate"><span class="pre">nned_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="shannon_h_fp.html">Shannon entropy (<code class="docutils literal notranslate"><span class="pre">shannon_h_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="praks_parm_fp.html">Praks polarimetric parameters (<code class="docutils literal notranslate"><span class="pre">praks_parm_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RVI_fp.html">Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">rvi_fp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_fp</span></code> )</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_fp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../dataCP.html">Compact-pol data format</a></li>
@@ -338,17 +338,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/dprsic.html">Dual-pol Radar Surface Index for GRD (<code class="docutils literal notranslate"><span class="pre">dprsic</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/powers_dp_grd.html">Dual-pol scattering power components for GRD (<code class="docutils literal notranslate"><span class="pre">powers_dp_grd</span></code>)</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../analysis.html">Generate Pauli RGB for FP data (<code class="docutils literal notranslate"><span class="pre">pauli_rgb</span></code>)</a></li>
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="../full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/halpha_cluster_fp.html">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_fp.html">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/htheta_plot_cp.html">Compact-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_cp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../speckle_filts.html">Refined-Lee filter (<code class="docutils literal notranslate"><span class="pre">filter_refined_lee</span></code>)</a></li>
@@ -406,7 +406,7 @@
     
     <li class="breadcrumb-item"><a href="../../02functions.html" class="nav-link">Functions</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">touzi_decomposition</span></code>)</span></li>
   </ul>
 </nav>
 </div>
@@ -423,21 +423,20 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="full-pol-h-alpha-clusters-cluster-h-alpha-fp">
-<h1>Full-pol H-alpha clusters (<code class="docutils literal notranslate"><span class="pre">cluster_h_alpha_fp</span></code>)<a class="headerlink" href="#full-pol-h-alpha-clusters-cluster-h-alpha-fp" title="Link to this heading">#</a></h1>
+  <section id="touzi-decomposition-touzi-decomposition">
+<h1>Touzi decomposition (<code class="docutils literal notranslate"><span class="pre">touzi_decomposition</span></code>)<a class="headerlink" href="#touzi-decomposition-touzi-decomposition" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">cluster_h_alpha_fp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphaFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/analysis/cluster_h_alpha_fp.html#cluster_h_alpha_fp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Perform H-alpha clustering on given H-alpha files for full-pol SAR data.</p>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">touzi_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/polsar/fp/touzi_decomposition.html#touzi_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Perform Touzi Decomposition for full-pol SAR data.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic usage with default parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cluster_h_alpha_fp</span><span class="p">(</span><span class="s2">&quot;h_fp.tif&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha_fp.tif&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">touzi_decomposition</span><span class="p">(</span><span class="s2">&quot;/path/to/fullpol_data&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Advanced usage with custom parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">halpha_cluster_fp</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">hFile</span><span class="o">=</span><span class="s2">&quot;h_fp.tif&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">alphaFile</span><span class="o">=</span><span class="s2">&quot;alpha_fp.tif&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">touzi_decomposition</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">in_dir</span><span class="o">=</span><span class="s2">&quot;/path/to/fullpol_data&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">win</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -448,17 +447,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>hFile</strong> (<em>str</em>) – Path to the input Entropy file, H  (polarimetric entropy).</p></li>
-<li><p><strong>alphaFile</strong> (<em>str</em>) – Path to the input alpha file (average scattering angle).</p></li>
+<li><p><strong>in_dir</strong> (<em>str</em>) – Path to the input folder containing full-pol T3 or C3 matrix files.</p></li>
 <li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the spatial averaging window. Larger windows reduce speckle noise
 but decrease spatial resolution.</p></li>
 <li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
 - ‘tif’: GeoTIFF format with georeferencing information
 - ‘bin’: Raw binary format</p></li>
-<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates a Cloud Optimized GeoTIFF (COG) with internal tiling
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates Cloud Optimized GeoTIFF (COG) outputs with internal tiling
 and overviews for efficient web access.</p></li>
 <li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview levels for COG creation. Each number represents the
 decimation factor for that overview level.</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, uses LZW compression for GeoTIFF outputs.</p></li>
 <li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel processing workers. If None, uses
 CPU count - 1 workers.</p></li>
 <li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of processing blocks (rows, cols) for parallel computation.
@@ -466,9 +465,26 @@ Larger blocks use more memory but may be more efficient.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Writes one output file to disk:
-- ‘ha_cluster.tif’ or ‘ha_cluster.bin’
-- ‘ha_cluster.png’</p>
+<dd class="field-even"><p><p>Writes the follwing files to disk:</p>
+<ol class="arabic simple">
+<li><p>touzi_alpha1</p></li>
+<li><p>touzi_alpha2</p></li>
+<li><p>touzi_alpha3</p></li>
+<li><p>touzi_phi1</p></li>
+<li><p>touzi_phi2</p></li>
+<li><p>touzi_phi3</p></li>
+<li><p>touzi_tau1</p></li>
+<li><p>touzi_tau2</p></li>
+<li><p>touzi_tau3</p></li>
+<li><p>touzi_psi1</p></li>
+<li><p>touzi_psi2</p></li>
+<li><p>touzi_psi3</p></li>
+<li><p>touzi_alphas</p></li>
+<li><p>touzi_phis</p></li>
+<li><p>touzi_taus</p></li>
+<li><p>touzi_psis</p></li>
+</ol>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -489,20 +505,20 @@ Larger blocks use more memory but may be more efficient.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="haalpha_plot_fp.html"
+       href="halphafp.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</p>
+        <p class="prev-next-title">H/A/α Decomposition (<code class="docutils literal notranslate"><span class="pre">h_a_alpha_fp</span></code>)</p>
       </div>
     </a>
     <a class="right-next"
-       href="htheta_plot_fp.html"
+       href="yam4cfp.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Full-pol H-theta plot (<code class="docutils literal notranslate"><span class="pre">plot_h_theta_fp</span></code>)</p>
+        <p class="prev-next-title">Yamaguchi 4-Component decomposition (<code class="docutils literal notranslate"><span class="pre">yamaguchi_4c</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -521,7 +537,7 @@ Larger blocks use more memory but may be more efficient.</p></li>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../../../_sources/files/functions/analysis/halpha_cluster_fp.rst.txt"
+      <li><a href="../../../_sources/files/functions/full_pol/touzi.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div></div>

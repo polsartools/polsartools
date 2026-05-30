@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.esar &#8212; PolSARtools 0.10 documentation</title>
+    <title>polsartools.sensors.esar &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=ac14934e"></script>
+    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/esar';</script>
@@ -339,6 +339,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span><span class="o">,</span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span> <span class="n">osr</span>
+<span class="c1"># import re</span>
 <span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span><span class="n">mlook_arr</span>
@@ -367,6 +368,44 @@
 
     <span class="k">return</span> <span class="n">metadata</span>
 
+<span class="c1"># def parse_slc_geo_info(filepath):</span>
+<span class="c1">#     geo_info = {}              # filename → {frequency, polarization}</span>
+<span class="c1">#     polarization_map = {}      # polarization → filename</span>
+<span class="c1">#     frequency = None           # assumed to be consistent across all entries</span>
+
+<span class="c1">#     with open(filepath, &quot;r&quot;) as file:</span>
+<span class="c1">#         lines = file.readlines()</span>
+
+<span class="c1">#     in_section_11 = False</span>
+<span class="c1">#     for line in lines:</span>
+<span class="c1">#         line = line.strip()</span>
+
+<span class="c1">#         # Detect start of section [11]</span>
+<span class="c1">#         if line.startswith(&quot;[11]&quot;):</span>
+<span class="c1">#             in_section_11 = True</span>
+<span class="c1">#             continue</span>
+
+<span class="c1">#         # Stop parsing when section [12] begins</span>
+<span class="c1">#         if in_section_11 and line.startswith(&quot;[12]&quot;):</span>
+<span class="c1">#             break</span>
+
+<span class="c1">#         if in_section_11:</span>
+<span class="c1">#             parts = line.split()</span>
+<span class="c1">#             for i in range(len(parts)):</span>
+<span class="c1">#                 part = parts[i]</span>
+<span class="c1">#                 if part.endswith(&quot;.dat&quot;) and i + 1 &lt; len(parts):</span>
+<span class="c1">#                     pol_part = parts[i + 1]</span>
+<span class="c1">#                     if pol_part.startswith(&quot;(&quot;) and &quot;-&quot; in pol_part and pol_part.endswith(&quot;)&quot;):</span>
+<span class="c1">#                         freq, pol = pol_part.strip(&quot;()&quot;).split(&quot;-&quot;)</span>
+<span class="c1">#                         geo_info[part] = {</span>
+<span class="c1">#                             &quot;frequency&quot;: freq,</span>
+<span class="c1">#                             &quot;polarization&quot;: pol</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         polarization_map[pol] = part</span>
+<span class="c1">#                         frequency = freq  # assumes same frequency across all</span>
+
+<span class="c1">#     return geo_info, polarization_map, frequency</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_slc_geo_info</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="n">geo_info</span> <span class="o">=</span> <span class="p">{}</span>              <span class="c1"># filename → {frequency, polarization}</span>
     <span class="n">polarization_map</span> <span class="o">=</span> <span class="p">{}</span>      <span class="c1"># polarization → filename</span>
@@ -375,20 +414,20 @@
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
 
-    <span class="n">in_section_11</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">in_section</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-        <span class="c1"># Detect start of section [11]</span>
-        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[11]&quot;</span><span class="p">):</span>
-            <span class="n">in_section_11</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Detect start of any section that has TITLE and SingleLook Complex Image</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;]&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;TITLE:&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;SingleLook Complex Image&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">in_section</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">continue</span>
 
-        <span class="c1"># Stop parsing when section [12] begins</span>
-        <span class="k">if</span> <span class="n">in_section_11</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[12]&quot;</span><span class="p">):</span>
+        <span class="c1"># Stop parsing when another section begins (line starts with [number])</span>
+        <span class="k">if</span> <span class="n">in_section</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;]&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;TITLE:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
             <span class="k">break</span>
 
-        <span class="k">if</span> <span class="n">in_section_11</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">in_section</span><span class="p">:</span>
             <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)):</span>
                 <span class="n">part</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -405,6 +444,7 @@
 
     <span class="k">return</span> <span class="n">geo_info</span><span class="p">,</span> <span class="n">polarization_map</span><span class="p">,</span> <span class="n">frequency</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">get_size</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="n">found_title</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">records</span> <span class="o">=</span> <span class="n">words</span> <span class="o">=</span> <span class="kc">None</span>
@@ -414,7 +454,8 @@
             <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
             <span class="c1"># Detect the start of the desired block</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[11]  TITLE:&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;SingleLook Complex Image&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;]&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;TITLE:&quot;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="s2">&quot;SingleLook Complex Image&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="c1"># This ensures it begins with [number] and contains TITLE + SingleLook Complex Image</span>
                 <span class="n">found_title</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Extract the ARRAY line once inside the correct block</span>
@@ -423,7 +464,7 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">records</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  
                     <span class="n">words</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>    
-                    <span class="k">break</span>  <span class="c1"># Stop after finding the needed info</span>
+                    <span class="k">break</span>
                 <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t parse records and words from ARRAY line.&quot;</span><span class="p">)</span>
 
@@ -431,6 +472,33 @@
         <span class="k">return</span> <span class="n">records</span><span class="p">,</span> <span class="n">words</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified TITLE block or ARRAY line not found.&quot;</span><span class="p">)</span>
+
+<span class="c1"># def get_size(filename):</span>
+<span class="c1">#     found_title = False</span>
+<span class="c1">#     records = words = None</span>
+
+<span class="c1">#     with open(filename, &#39;r&#39;) as f:</span>
+<span class="c1">#         for line in f:</span>
+<span class="c1">#             line = line.strip()</span>
+
+<span class="c1">#             # Detect the start of the desired block</span>
+<span class="c1">#             if line.startswith(&quot;[11]  TITLE:&quot;) and &quot;SingleLook Complex Image&quot; in line:</span>
+<span class="c1">#                 found_title = True</span>
+
+<span class="c1">#             # Extract the ARRAY line once inside the correct block</span>
+<span class="c1">#             elif found_title and &quot;ARRAY:&quot; in line and &quot;Records with&quot; in line:</span>
+<span class="c1">#                 parts = line.split()</span>
+<span class="c1">#                 try:</span>
+<span class="c1">#                     records = int(parts[1])  </span>
+<span class="c1">#                     words = int(parts[4])    </span>
+<span class="c1">#                     break  # Stop after finding the needed info</span>
+<span class="c1">#                 except (IndexError, ValueError):</span>
+<span class="c1">#                     raise ValueError(&quot;Couldn&#39;t parse records and words from ARRAY line.&quot;)</span>
+
+<span class="c1">#     if records is not None and words is not None:</span>
+<span class="c1">#         return records, words</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         raise ValueError(&quot;Specified TITLE block or ARRAY line not found.&quot;)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_meta</span><span class="p">(</span><span class="n">in_dir</span><span class="p">):</span>
     
@@ -641,11 +709,11 @@
         <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">temp_dir</span>
 
     <span class="c1"># Read incidence map</span>
-    <span class="n">inc_file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;incmap*.dat&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">inc_file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;incmap*slc*.dat&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">inc</span> <span class="o">=</span> <span class="n">get_incmap</span><span class="p">(</span><span class="n">inc_file</span><span class="p">,</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;slc records&#39;</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;slc words&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">inc</span><span class="p">[</span><span class="n">inc</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     <span class="n">inc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">inc</span><span class="p">)</span>
-
+    <span class="c1"># print(files)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
         <span class="c1"># Quad-pol case</span>
         <span class="n">s11</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">files</span><span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">]))[</span><span class="mi">0</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;slc records&#39;</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;slc words&#39;</span><span class="p">])</span>
@@ -753,7 +821,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>

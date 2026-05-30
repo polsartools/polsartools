@@ -17,7 +17,7 @@ Following are the avaialble functions for full-pol data:
     :maxdepth: 3
 
     functions/full_pol/halphafp
-    functions/full_pol/tsvm
+    functions/full_pol/touzi
     functions/full_pol/yam4cfp
     functions/full_pol/freeman_3c
     functions/full_pol/freeman_2c

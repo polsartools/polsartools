@@ -5,7 +5,7 @@ from polsartools.utils.utils import conv2d,time_it
 from polsartools.utils.convert_matrices import C3_T3_mat
 from .fp_infiles import fp_c3t3files
 @time_it
-def tsvm(in_dir,  win=1, fmt="tif", cog=False, 
+def touzi_decomposition(in_dir,  win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp=False, 
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin
@@ -16,10 +16,10 @@ def tsvm(in_dir,  win=1, fmt="tif", cog=False,
     Examples
     --------
     >>> # Basic usage with default parameters
-    >>> tsvm("/path/to/fullpol_data")
+    >>> touzi_decomposition("/path/to/fullpol_data")
     
     >>> # Advanced usage with custom parameters
-    >>> tsvm(
+    >>> touzi_decomposition(
     ...     in_dir="/path/to/fullpol_data",
     ...     win=5,
     ...     fmt="tif",
@@ -59,22 +59,22 @@ def tsvm(in_dir,  win=1, fmt="tif", cog=False,
     None
         Writes the follwing files to disk:
         
-        1. TSVM_alpha1
-        2. TSVM_alpha2
-        3. TSVM_alpha3 
-        4. TSVM_phi1 
-        5. TSVM_phi2 
-        6. TSVM_phi3 
-        7. TSVM_tau1 
-        8. TSVM_tau2 
-        9. TSVM_tau3 
-        10. TSVM_psi1 
-        11. TSVM_psi2 
-        12. TSVM_psi3
-        13. TSVM_alphas
-        14. TSVM_phis
-        15. TSVM_taus
-        16. TSVM_psis
+        1. touzi_alpha1
+        2. touzi_alpha2
+        3. touzi_alpha3 
+        4. touzi_phi1 
+        5. touzi_phi2 
+        6. touzi_phi3 
+        7. touzi_tau1 
+        8. touzi_tau2 
+        9. touzi_tau3 
+        10. touzi_psi1 
+        11. touzi_psi2 
+        12. touzi_psi3
+        13. touzi_alphas
+        14. touzi_phis
+        15. touzi_taus
+        16. touzi_psis
 
     """
     write_flag=True
@@ -82,55 +82,55 @@ def tsvm(in_dir,  win=1, fmt="tif", cog=False,
 
     output_filepaths = []
     if fmt == "bin":
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alpha1.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alpha2.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alpha3.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phi1.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phi2.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phi3.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_tau1.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_tau2.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_tau3.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psi1.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psi2.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psi3.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alpha1.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alpha2.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alpha3.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phi1.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phi2.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phi3.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_tau1.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_tau2.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_tau3.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psi1.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psi2.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psi3.bin"))
         
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alphas.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phis.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_taus.bin"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psis.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alphas.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phis.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_taus.bin"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psis.bin"))
         
         
         
     else:
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alpha1.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alpha2.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alpha3.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phi1.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phi2.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phi3.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_tau1.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_tau2.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_tau3.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psi1.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psi2.tif"))
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psi3.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alpha1.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alpha2.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alpha3.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phi1.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phi2.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_phi3.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_tau1.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_tau2.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_tau3.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psi1.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psi2.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_psi3.tif"))
         
-        output_filepaths.append(os.path.join(in_dir, "TSVM_alphas.tif"))        
-        output_filepaths.append(os.path.join(in_dir, "TSVM_phis.tif"))        
-        output_filepaths.append(os.path.join(in_dir, "TSVM_taus.tif"))        
-        output_filepaths.append(os.path.join(in_dir, "TSVM_psis.tif"))
+        output_filepaths.append(os.path.join(in_dir, "touzi_alphas.tif"))        
+        output_filepaths.append(os.path.join(in_dir, "touzi_phis.tif"))        
+        output_filepaths.append(os.path.join(in_dir, "touzi_taus.tif"))        
+        output_filepaths.append(os.path.join(in_dir, "touzi_psis.tif"))
 
             
     process_chunks_parallel(input_filepaths, list(output_filepaths), 
                             window_size=win, write_flag=write_flag,
-                        processing_func=process_chunk_tsvm,block_size=block_size, 
+                        processing_func=process_chunk_touzi,block_size=block_size, 
                         max_workers=max_workers,  num_outputs=len(output_filepaths),
                         cog=cog, ovr=ovr, comp=comp,
                         progress_callback=progress_callback
                         )
 
-def process_chunk_tsvm(chunks, window_size, input_filepaths,*args):
+def process_chunk_touzi(chunks, window_size, input_filepaths,*args):
 
     if 'T11' in input_filepaths[0] and 'T22' in input_filepaths[5] and 'T33' in input_filepaths[8]:
         t11_T1 = np.array(chunks[0])

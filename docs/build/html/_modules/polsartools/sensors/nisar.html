@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.11 documentation</title>
+    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,9 +37,9 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=086c1757"></script>
-    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/nisar';</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -352,7 +352,7 @@
         <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="c1"># Step 1: Identify frequency band and root path</span>
+    <span class="c1"># Identify frequency band and root path</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">band_table</span><span class="p">:</span>
@@ -364,7 +364,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
-            <span class="c1"># Step 2: Read polarization list</span>
+            <span class="c1"># Read polarization list</span>
             <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RSLC&#39;</span><span class="p">,</span> <span class="s1">&#39;SLC&#39;</span><span class="p">]:</span>
                 <span class="n">pol_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s1">/swaths/frequencyA/listOfPolarizations&#39;</span>
@@ -385,6 +385,8 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid .h5 file !!&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span>
+
+    
 <span class="k">def</span><span class="w"> </span><span class="nf">get_rslc_path</span><span class="p">(</span><span class="n">h5</span><span class="p">,</span> <span class="n">freq_band</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">product_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RSLC&#39;</span><span class="p">,</span> <span class="s1">&#39;SLC&#39;</span><span class="p">]:</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s1">/swaths/frequencyA&#39;</span>
@@ -401,7 +403,7 @@
         <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="c1"># Step 1: Identify frequency band and root path</span>
+    <span class="c1"># Identify frequency band and root path</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">band_table</span><span class="p">:</span>
@@ -413,7 +415,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
-            <span class="c1"># Step 2: Read polarization list</span>
+            <span class="c1"># Read polarization list</span>
             <span class="n">pol_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GSLC/grids/frequencyA/listOfPolarizations&#39;</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">pol_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
@@ -424,7 +426,7 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid .h5 file !!&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Step 3: Reopen to read raster metadata</span>
+    <span class="c1"># Reopen to read raster metadata</span>
     <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
         <span class="n">base_grid</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GSLC/grids/frequencyA&#39;</span>
         <span class="n">projection_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GSLC/metadata/radarGrid/projection&#39;</span>
@@ -434,7 +436,7 @@
             <span class="n">xSpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">base_grid</span> <span class="o">+</span> <span class="s1">&#39;/xCoordinateSpacing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="n">ySpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">base_grid</span> <span class="o">+</span> <span class="s1">&#39;/yCoordinateSpacing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">except</span> <span class="n">tables</span><span class="o">.</span><span class="n">NoSuchNodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Missing expected metadata node: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing expected metadata node: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xSpacing</span><span class="p">,</span> <span class="n">ySpacing</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
@@ -445,7 +447,7 @@
         <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)</span>
     <span class="p">]</span>
 
-    <span class="c1"># Step 1: Identify frequency band and root path</span>
+    <span class="c1"># Identify frequency band and root path</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">band_table</span><span class="p">:</span>
@@ -457,7 +459,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found in the file.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
-            <span class="c1"># Step 2: Read polarization list</span>
+            <span class="c1"># Read polarization list</span>
             <span class="n">pol_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GCOV/grids/frequencyA/listOfPolarizations&#39;</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">listOfPolarizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">pol_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
@@ -468,7 +470,7 @@
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid .h5 file !!&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Step 3: Reopen to read raster metadata</span>
+    <span class="c1"># Reopen to read raster metadata</span>
     <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
         <span class="n">base_grid</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GCOV/grids/frequencyA&#39;</span>
         <span class="n">projection_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GCOV/grids/frequencyA/projection&#39;</span>
@@ -478,17 +480,77 @@
             <span class="n">xSpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">base_grid</span> <span class="o">+</span> <span class="s1">&#39;/xCoordinateSpacing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
             <span class="n">ySpacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">base_grid</span> <span class="o">+</span> <span class="s1">&#39;/yCoordinateSpacing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">except</span> <span class="n">tables</span><span class="o">.</span><span class="n">NoSuchNodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Missing expected metadata node: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing expected metadata node: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xSpacing</span><span class="p">,</span> <span class="n">ySpacing</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combined metadata extractor for GSLC and GCOV products.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">band_table</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;/science/LSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;/science/SSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">)]</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
+            <span class="c1"># Detect frequency band (LSAR or SSAR)</span>
+            <span class="n">freq_band</span><span class="p">,</span> <span class="n">freq_path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">band_table</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">h5</span><span class="p">:</span>
+                    <span class="n">freq_band</span><span class="p">,</span> <span class="n">freq_path</span> <span class="o">=</span> <span class="n">band</span><span class="p">,</span> <span class="n">path</span>
+                    <span class="k">break</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">freq_band</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither LSAR nor SSAR data found.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
 
+            <span class="c1"># Detect Product Type (GSLC or GCOV)</span>
+            <span class="c1"># We check which group exists under the detected frequency path</span>
+            <span class="n">product_type</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">p_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GSLC&quot;</span><span class="p">,</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">p_type</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">h5</span><span class="p">:</span>
+                    <span class="n">product_type</span> <span class="o">=</span> <span class="n">p_type</span>
+                    <span class="k">break</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">product_type</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neither GSLC nor GCOV group found.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="c1"># 2. Set up paths based on detected product</span>
+            <span class="n">base_grid</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s1">/grids/frequencyA&#39;</span>
+            <span class="n">pol_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s1">/listOfPolarizations&#39;</span>
+            
+            <span class="c1"># Note: GCOV usually puts projection in the grid, GSLC in metadata/radarGrid</span>
+            <span class="k">if</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">:</span>
+                <span class="n">projection_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s1">/projection&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">projection_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GSLC/metadata/radarGrid/projection&#39;</span>
+
+            <span class="c1"># 3. Read the data</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Read Polarization</span>
+                <span class="n">pol_node</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">pol_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">list_of_polarizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pol_node</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                
+                <span class="c1"># Read Spacing and Projection</span>
+                <span class="n">projection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">projection_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="n">x_spacing</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s2">/xCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">y_spacing</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s2">/yCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                
+                <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span> <span class="n">list_of_polarizations</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">tables</span><span class="o">.</span><span class="n">NoSuchNodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing expected metadata node: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid .h5 file or structure!!&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_dp</span><span class="p">(</span><span class="n">matrix_type</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="c1"># Determine matrix type based on available polarizations</span>
     <span class="c1"># if matrix_type in [&#39;C2&#39;,&#39;C2HV&#39;,&#39;C2HX&#39;,&#39;C2VX&#39;]:</span>
@@ -505,6 +567,12 @@
         <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
             <span class="c1"># matrix_type = &#39;C2HV&#39;</span>
             <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;RH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;RV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="c1"># matrix_type = &#39;C2HV&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RH&#39;</span><span class="p">,</span> <span class="s1">&#39;RV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;LH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;LV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="c1"># matrix_type = &#39;C2HV&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LH&#39;</span><span class="p">,</span> <span class="s1">&#39;LV&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid dual-channel polarization combination found.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -546,7 +614,8 @@
             <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
             <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
             <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
-            <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
+            <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span>
+            <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
         <span class="p">)</span>        
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
@@ -558,6 +627,12 @@
         <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
             <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HV&#39;</span>
             <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;RH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;RV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2R&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RH&#39;</span><span class="p">,</span> <span class="s1">&#39;RV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;LH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;LV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2L&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LH&#39;</span><span class="p">,</span> <span class="s1">&#39;LV&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid dual-channel polarization combination found.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -599,13 +674,14 @@
             <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
             <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
             <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
-            <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
+            <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span>
+            <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
         <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                    <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                   <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                   <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="n">MATRIX_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;S2&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">},</span>
@@ -617,6 +693,8 @@
         <span class="s1">&#39;C2HX&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;C2VX&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;VV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;T2HV&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
+        <span class="s1">&#39;C2L&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;LH&#39;</span><span class="p">,</span> <span class="s1">&#39;LV&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
+        <span class="s1">&#39;C2R&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;RH&#39;</span><span class="p">,</span> <span class="s1">&#39;RV&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
     <span class="p">}</span>
 
 
@@ -663,8 +741,53 @@
         <span class="n">dtype</span><span class="o">=</span><span class="n">MATRIX_CONFIG</span><span class="p">[</span><span class="n">mat</span><span class="p">][</span><span class="s1">&#39;dtype&#39;</span><span class="p">],</span>
         <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
         <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
-        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
+        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span>
+        <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
     <span class="p">)</span>
+
+
+<span class="n">tables</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">PYTABLES_SYS_ATTRS</span> <span class="o">=</span> <span class="kc">False</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">get_geo_info</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">):</span>
+
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Access the &#39;science&#39; group</span>
+            <span class="n">science_grp</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">science</span>
+            
+            <span class="c1"># Detect SAR band (e.g., &#39;SSAR&#39; or &#39;LSAR&#39;)</span>
+            <span class="n">sar_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">_v_name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">science_grp</span> <span class="k">if</span> <span class="s2">&quot;SAR&quot;</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">_v_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">sar_node</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">sar_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Detect Product Type (&#39;GSLC&#39; or &#39;GCOV&#39;)</span>
+            <span class="n">product_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">_v_name</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">sar_node</span> <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">_v_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GSLC&quot;</span><span class="p">,</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Construct path and fetch coordinates</span>
+            <span class="n">grid_base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/science/</span><span class="si">{</span><span class="n">sar_key</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s2">/grids/frequencyA&quot;</span>
+            
+            <span class="n">xcoords</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/xCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">ycoords</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/yCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        
+            <span class="c1"># Calculate Shapes and Extents</span>
+            <span class="c1"># Note: PyTables/HDF5 usually follows [y, x] (Row, Col) convention</span>
+            <span class="c1"># inshape = [len(ycoords), len(xcoords)] </span>
+            <span class="c1"># outshape = [len(ycoords) // azlks, len(xcoords) // rglks]</span>
+            <span class="n">inshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">xcoords</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)]</span>  
+            <span class="n">outshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span> <span class="o">//</span> <span class="n">rglks</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span> <span class="o">//</span> <span class="n">azlks</span><span class="p">]</span>
+            
+            <span class="c1"># Standard Geo-referencing: min X (West) and max Y (North)</span>
+            <span class="n">start_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span>
+            <span class="n">start_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span>
+            
+            <span class="c1"># Optional: Print detection for debugging</span>
+            <span class="c1"># print(f&quot;Detected: {sar_key} | {product_type}&quot;)</span>
+            
+            <span class="k">return</span> <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span>
+
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find valid SAR band or GSLC/GCOV group in </span><span class="si">{</span><span class="n">inFile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing HDF5: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
 
 <div class="viewcode-block" id="import_nisar_gslc">
 <a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.import_nisar_gslc">[docs]</a>
@@ -673,7 +796,8 @@
              <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
@@ -724,24 +848,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
         
     
-    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">gslc_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
+    <span class="c1"># freq_band,listOfPolarizations, xres, yres, projection = gslc_meta(inFile)</span>
+    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
     <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band polarization channels: </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
-    <span class="n">xcoords</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;science&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">SAR&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;GSLC&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;grids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;frequencyA&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;xCoordinates&quot;</span><span class="p">][:]</span>
-    <span class="n">ycoords</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;science&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">SAR&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;GSLC&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;grids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;frequencyA&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;yCoordinates&quot;</span><span class="p">][:]</span>                
-    <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
 
-    <span class="n">inshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">xcoords</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)]</span>
-    <span class="n">outshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span><span class="o">//</span><span class="n">rglks</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span><span class="o">//</span><span class="n">azlks</span><span class="p">]</span>
-    
-    <span class="n">start_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span>
-    <span class="n">start_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span>
+    <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">,</span><span class="n">ycoords</span> <span class="o">=</span> <span class="n">get_geo_info</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
     
     <span class="c1"># print(projection,start_x,start_y,xres,yres,inshape,outshape)</span>
     <span class="c1"># print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))</span>
@@ -756,13 +868,13 @@
         <span class="c1"># print(&quot;Dual-Pol data detected.&quot;,mat)</span>
         <span class="n">nisar_dp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span>
+                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span>
         
                 
     <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
         <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-        <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
+        <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span></div>
 
         
 
@@ -773,7 +885,8 @@
                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">recip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
+               <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span> <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the C2 (for dual-pol), S2/C3/T3 (for full-pol) matrix elements from a NISAR RSLC HDF5 file </span>
 <span class="sd">    and saves them into respective binary files.</span>
@@ -843,13 +956,13 @@
     <span class="k">if</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>    
         <span class="n">nisar_dp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
             <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span>   
+            <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span>   
         
 
     <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">nisar_fp</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">recip</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
         <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
+        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span></div>
 
 
 
@@ -858,10 +971,10 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_gcov</span><span class="p">(</span><span class="n">matrix_type</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting elements...&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
             <span class="c1"># matrix_type = &#39;C2HX&#39;</span>
             <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;HVHV&#39;</span><span class="p">]</span>
@@ -871,13 +984,14 @@
         <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
             <span class="c1"># matrix_type = &#39;C2HV&#39;</span>
             <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;VVVV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;RH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;RV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="c1"># matrix_type = &#39;C2HV&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RHRH&#39;</span><span class="p">,</span> <span class="s1">&#39;RVRV&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid dual-channel polarization combination found.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;HVHV&#39;</span><span class="p">,</span><span class="s1">&#39;VVVV&#39;</span><span class="p">,</span><span class="s1">&#39;VHVH&#39;</span><span class="p">]</span>
-
-
 
     <span class="c1"># Directory setup</span>
     <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -914,7 +1028,8 @@
         <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
         <span class="n">inshape</span><span class="o">=</span><span class="n">inshape</span><span class="p">,</span>
         <span class="n">outshape</span><span class="o">=</span><span class="n">outshape</span><span class="p">,</span>
-        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span>
+        <span class="n">calibration_constant</span><span class="o">=</span><span class="n">cc</span><span class="p">,</span>
+        <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
     <span class="p">)</span>        
     
 <div class="viewcode-block" id="import_nisar_gcov">
@@ -923,7 +1038,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">import_nisar_gcov</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span>
              <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.</span>
 
@@ -966,24 +1082,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
       
-    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">gcov_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
+    <span class="c1"># freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)</span>
+    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
     <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band polarization channels: </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
-    <span class="n">ds</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
-    <span class="n">xcoords</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;science&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">SAR&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;GCOV&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;grids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;frequencyA&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;xCoordinates&quot;</span><span class="p">][:]</span>
-    <span class="n">ycoords</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;science&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">SAR&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;GCOV&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;grids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="s2">&quot;frequencyA&quot;</span><span class="p">]</span> \
-                   <span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;yCoordinates&quot;</span><span class="p">][:]</span>                
-    <span class="n">ds</span><span class="o">=</span><span class="kc">None</span>
 
-    <span class="n">inshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">xcoords</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)]</span>
-    <span class="n">outshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span><span class="o">//</span><span class="n">rglks</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span><span class="o">//</span><span class="n">azlks</span><span class="p">]</span>
-    
-    <span class="n">start_x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span>
-    <span class="n">start_y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span>
+
+    <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">,</span><span class="n">ycoords</span> <span class="o">=</span> <span class="n">get_geo_info</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
     
     <span class="n">inFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>   
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inFolder</span><span class="p">:</span>
@@ -999,7 +1104,7 @@
         <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid number of channels!!&#39;</span><span class="p">)</span>
     <span class="n">nisar_gcov</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                 <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">)</span></div>
+                <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span><span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span></div>
 
 </pre></div>
 
@@ -1051,7 +1156,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>

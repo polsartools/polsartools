@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.powers_dp &#8212; PolSARtools 0.10.1 documentation</title>
+    <title>polsartools.polsar.dxp.powers_dp &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=261ea15a"></script>
+    <script src="../../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/powers_dp';</script>
@@ -337,7 +337,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span><span class="p">,</span> <span class="n">S_norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span><span class="p">,</span> <span class="n">S_norm</span><span class="p">,</span> <span class="n">stokes_global_stats</span>
 <div class="viewcode-block" id="powers_dp">
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/powers_dp.html#polsartools.powers_dp">[docs]</a>
 <span class="nd">@time_it</span>
@@ -423,12 +423,18 @@
             <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Pdl_fact.tif&quot;</span><span class="p">))</span>
             <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Psl_fact.tif&quot;</span><span class="p">))</span>
             <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="s2">&quot;Pr_fact.tif&quot;</span><span class="p">))</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing global statistics for normalization...&quot;</span><span class="p">)</span>
 
-
+    <span class="n">c11File</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">input_filepaths</span> <span class="k">if</span> <span class="s2">&quot;C11&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">c22File</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">input_filepaths</span> <span class="k">if</span> <span class="s2">&quot;C22&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">c12realFile</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">input_filepaths</span> <span class="k">if</span> <span class="s2">&quot;C12_real&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">c12imagFile</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">input_filepaths</span> <span class="k">if</span> <span class="s2">&quot;C12_imag&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">S0_2</span><span class="p">,</span> <span class="n">S0_98</span><span class="p">,</span> <span class="n">S0_max</span><span class="p">,</span> <span class="n">S1_2</span><span class="p">,</span> <span class="n">S1_98</span><span class="p">,</span> <span class="n">S1_max</span><span class="p">,</span> <span class="n">S2_2</span><span class="p">,</span> <span class="n">S2_98</span><span class="p">,</span> <span class="n">S2_max</span><span class="p">,</span> <span class="n">S3_2</span><span class="p">,</span> <span class="n">S3_98</span><span class="p">,</span> <span class="n">S3_max</span> <span class="o">=</span> <span class="n">stokes_global_stats</span><span class="p">(</span><span class="n">c11File</span><span class="p">,</span> <span class="n">c22File</span><span class="p">,</span> <span class="n">c12realFile</span><span class="p">,</span> <span class="n">c12imagFile</span><span class="p">)</span>
 
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="p">,</span>
                             <span class="n">process_chunk_dp_pow</span><span class="p">,</span>
-                            <span class="o">*</span><span class="p">[</span><span class="n">method</span><span class="p">],</span>
+                            <span class="o">*</span><span class="p">[</span><span class="n">method</span><span class="p">,</span><span class="n">S0_2</span><span class="p">,</span> <span class="n">S0_98</span><span class="p">,</span> <span class="n">S0_max</span><span class="p">,</span> <span class="n">S1_2</span><span class="p">,</span> <span class="n">S1_98</span><span class="p">,</span> <span class="n">S1_max</span><span class="p">,</span> <span class="n">S2_2</span><span class="p">,</span> <span class="n">S2_98</span><span class="p">,</span> <span class="n">S2_max</span><span class="p">,</span> <span class="n">S3_2</span><span class="p">,</span> <span class="n">S3_98</span><span class="p">,</span> <span class="n">S3_max</span><span class="p">],</span>
                             <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span>
                             <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
@@ -436,23 +442,26 @@
 
     
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dp_pow</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-    <span class="n">method</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">13</span><span class="p">])</span>
+    <span class="n">S0_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">12</span><span class="p">])</span>
+    <span class="n">S0_98</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">11</span><span class="p">])</span>
+    <span class="n">S0_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">])</span>
+    <span class="n">S1_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">9</span><span class="p">])</span>
+    <span class="n">S1_98</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">])</span>
+    <span class="n">S1_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span>
+    <span class="n">S2_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">S2_98</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">S2_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">S3_2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">S3_98</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">S3_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
     <span class="n">c11_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">c12_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="c1"># c21_T1 = np.conj(c12_T1)</span>
     <span class="n">c22_T1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
-    <span class="c1">##### Normalizing Stokes vector elements</span>
-    <span class="c1"># def S_norm(S_array):</span>
-    <span class="c1">#     S_5 = np.nanpercentile(S_array, 2)</span>
-    <span class="c1">#     S_95 = np.nanpercentile(S_array, 98)</span>
-    <span class="c1">#     S_cln = np.where(S_array &gt; S_95, S_95, S_array)</span>
-    <span class="c1">#     S_cln = np.where(S_cln &lt; S_5, S_5, S_cln)</span>
-    <span class="c1">#     S_cln_max = np.nanmax(S_cln)</span>
-    <span class="c1">#     S_norm_array = np.divide(S_cln,S_cln_max) </span>
-        
-    <span class="c1">#     return S_norm_array</span>
 
     <span class="k">if</span> <span class="n">window_size</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">c11s</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">c11_T1</span><span class="p">),</span><span class="n">kernel</span><span class="p">)</span>
@@ -493,10 +502,16 @@
     <span class="n">s2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
     <span class="n">s3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s3</span><span class="p">)</span>
 
-    <span class="n">s1_s_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span> <span class="c1">#This is S1 normalzied for DpRSI, does not include slope mask</span>
-    <span class="n">s1_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
-    <span class="n">s2_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
-    <span class="n">s3_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s3</span><span class="p">)</span>
+    <span class="c1"># s1_s_norm = S_norm(s1) #This is S1 normalzied for DpRSI, does not include slope mask</span>
+    <span class="c1"># s1_norm = S_norm(s1)</span>
+    <span class="c1"># s2_norm = S_norm(s2)</span>
+    <span class="c1"># s3_norm = S_norm(s3)</span>
+
+    <span class="n">s1_s_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">S1_2</span><span class="p">,</span> <span class="n">S1_98</span><span class="p">)</span> <span class="o">/</span> <span class="n">S1_max</span>
+    <span class="n">s1_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">S1_2</span><span class="p">,</span> <span class="n">S1_98</span><span class="p">)</span> <span class="o">/</span> <span class="n">S1_max</span>
+    <span class="n">s2_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">S2_2</span><span class="p">,</span> <span class="n">S2_98</span><span class="p">)</span> <span class="o">/</span> <span class="n">S2_max</span> 
+    <span class="n">s3_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span> <span class="n">S3_2</span><span class="p">,</span> <span class="n">S3_98</span><span class="p">)</span> <span class="o">/</span> <span class="n">S3_max</span>
+
     
     <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
         <span class="c1">##### Power Calculation</span>
@@ -636,7 +651,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.dprbic &#8212; PolSARtools 0.10.1 documentation</title>
+    <title>polsartools.polsar.dxp.dprbic &#8212; PolSARtools 0.12 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=261ea15a"></script>
+    <script src="../../../../_static/documentation_options.js?v=3f949d3d"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/dprbic';</script>
@@ -337,7 +337,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.proc_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_chunks_parallel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">conv2d</span><span class="p">,</span><span class="n">time_it</span><span class="p">,</span><span class="n">eig22</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span><span class="p">,</span> <span class="n">S_norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dxp_infiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">dxpc2files</span><span class="p">,</span> <span class="n">grd_global_stats</span>
 <div class="viewcode-block" id="dprbic">
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/dprbic.html#polsartools.dprbic">[docs]</a>
 <span class="nd">@time_it</span>
@@ -409,29 +409,33 @@
         <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;DpRBIc.bin&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">output_filepaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cpFile</span><span class="p">),</span> <span class="s2">&quot;DpRBIc.tif&quot;</span><span class="p">))</span>
-
-    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="o">=</span><span class="n">write_flag</span><span class="p">,</span>
-                            <span class="n">processing_func</span><span class="o">=</span><span class="n">process_chunk_dprbic</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing global statistics for normalization...&quot;</span><span class="p">)</span>
+    
+    <span class="n">S2_c11</span><span class="p">,</span> <span class="n">S98_c11</span><span class="p">,</span> <span class="n">Smax_c11</span><span class="p">,</span> <span class="n">S2_c22</span><span class="p">,</span> <span class="n">S98_c22</span><span class="p">,</span> <span class="n">Smax_c22</span><span class="p">,</span> <span class="n">S2_s1</span><span class="p">,</span> <span class="n">S98_s1</span><span class="p">,</span> <span class="n">Smax_s1</span> <span class="o">=</span> <span class="n">grd_global_stats</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span> <span class="n">xpFile</span><span class="p">)</span>
+    <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="p">,</span>
+                            <span class="n">process_chunk_dprbic</span><span class="p">,</span>
+                            <span class="o">*</span><span class="p">[</span><span class="n">S2_c11</span><span class="p">,</span> <span class="n">S98_c11</span><span class="p">,</span> <span class="n">Smax_c11</span><span class="p">,</span><span class="n">S2_c22</span><span class="p">,</span> <span class="n">S98_c22</span><span class="p">,</span> <span class="n">Smax_c22</span><span class="p">,</span><span class="n">S2_s1</span><span class="p">,</span> <span class="n">S98_s1</span><span class="p">,</span> <span class="n">Smax_s1</span><span class="p">],</span>
+                            <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                             <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
                             <span class="p">)</span></div>
 
     
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dprbic</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">S2_c11</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">9</span><span class="p">])</span>
+    <span class="n">S98_c11</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">])</span>
+    <span class="n">Smax_c11</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span>
+    <span class="n">S2_c22</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">S98_c22</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">Smax_c22</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">S2_s1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">S98_s1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">Smax_s1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">window_size</span><span class="p">,</span><span class="n">window_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">window_size</span><span class="o">*</span><span class="n">window_size</span><span class="p">)</span>
     <span class="n">c11</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">c22</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-
-    <span class="c1"># def S_norm(S_array):</span>
-    <span class="c1">#     S_5 = np.nanpercentile(S_array, 2)</span>
-    <span class="c1">#     S_95 = np.nanpercentile(S_array, 98)</span>
-    <span class="c1">#     S_cln = np.where(S_array &gt; S_95, S_95, S_array)</span>
-    <span class="c1">#     S_cln = np.where(S_cln &lt; S_5, S_5, S_cln)</span>
-    <span class="c1">#     S_cln_max = np.nanmax(S_cln)</span>
-    <span class="c1">#     S_norm_array = np.divide(S_cln,S_cln_max) </span>
-        
-    <span class="c1">#     return S_norm_array</span>
 
     <span class="k">if</span> <span class="n">window_size</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">c11</span> <span class="o">=</span> <span class="n">conv2d</span><span class="p">(</span><span class="n">c11</span><span class="p">,</span><span class="n">kernel</span><span class="p">)</span>
@@ -447,9 +451,13 @@
 
     <span class="n">s1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c11</span><span class="o">-</span><span class="n">c22</span><span class="p">)</span>
 
-    <span class="n">C11_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">c11</span><span class="p">)</span>
-    <span class="n">C22_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">c22</span><span class="p">)</span>
-    <span class="n">s1_norm</span> <span class="o">=</span> <span class="n">S_norm</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+    <span class="c1"># C11_norm = S_norm(c11)</span>
+    <span class="c1"># C22_norm = S_norm(c22)</span>
+    <span class="c1"># s1_norm = S_norm(s1)</span>
+
+    <span class="n">s1_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">S2_s1</span><span class="p">,</span> <span class="n">S98_s1</span><span class="p">)</span> <span class="o">/</span> <span class="n">Smax_s1</span>
+    <span class="n">C11_norm</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">c11</span><span class="p">,</span> <span class="n">S2_c11</span><span class="p">,</span> <span class="n">S98_c11</span><span class="p">)</span> <span class="o">/</span> <span class="n">Smax_c11</span>
+    <span class="n">C22_norm</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">c22</span><span class="p">,</span> <span class="n">S2_c22</span><span class="p">,</span> <span class="n">S98_c22</span><span class="p">)</span> <span class="o">/</span> <span class="n">Smax_c22</span>
 
     <span class="n">dprbic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">C11_norm</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">C22_norm</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">dprbic</span> <span class="o">=</span> <span class="n">dprbic</span><span class="o">*</span><span class="n">s1_norm</span>
@@ -496,7 +504,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>

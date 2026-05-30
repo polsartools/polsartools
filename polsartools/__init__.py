@@ -30,7 +30,7 @@ from .preprocess import prepare_dem, mlook, simulate_CP
 
 
 """ Importing polsar modules """
-from .polsar.fp import grvi,nned_fp, h_a_alpha_fp, neumann_parm, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yamaguchi_4c,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, tsvm
+from .polsar.fp import grvi,nned_fp, h_a_alpha_fp, neumann_parm, prvi_fp, rvi_fp, mf3cf, mf4cf, dop_fp, yamaguchi_4c,shannon_h_fp,freeman_3c,freeman_2c,praks_parm_fp, touzi_decomposition
 from .polsar.cp import cprvi, dop_cp, s_omega, mf3cc, m_chi, m_delta
 from .polsar.dxp import dprvi, dop_dp, prvi_dp, rvi_dp, h_alpha_dp, shannon_h_dp,dprvic, dp_desc, dprbic, dprsic, powers_dp_grd, dprbi, dprsi, powers_dp
 from .polsar.dcp import mf3cd
@@ -66,7 +66,7 @@ __all__ = [
     # FULL-POL
     'grvi', 'rvi_fp', 'mf3cf', 'mf4cf', 'dop_fp', 'prvi_fp', 'neumann_parm', 
     'nned_fp', 'freeman_3c','freeman_2c',
-    'h_a_alpha_fp', 'shannon_h_fp','yamaguchi_4c',  'praks_parm_fp','tsvm',
+    'h_a_alpha_fp', 'shannon_h_fp','yamaguchi_4c',  'praks_parm_fp','touzi_decomposition',
     # COMPACT-POL
     'cprvi', 'dop_cp', 's_omega', 'mf3cc', 'm_chi','m_delta',                
     # DUAL-CROSS-POL
