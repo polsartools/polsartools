@@ -188,8 +188,10 @@ def get_geo_meta(inFile):
             # Note: GCOV usually puts projection in the grid, GSLC in metadata/radarGrid
             if product_type == "GCOV":
                 projection_path = f'{base_grid}/projection'
+                listofcov_path = f'{base_grid}/listOfCovarianceTerms'
             else:
                 projection_path = f'{freq_path}/GSLC/metadata/radarGrid/projection'
+                listofcov_path = None
 
             # 3. Read the data
             try:
@@ -201,8 +203,14 @@ def get_geo_meta(inFile):
                 projection = int(h5.get_node(projection_path).read())
                 x_spacing = h5.get_node(f"{base_grid}/xCoordinateSpacing").read()
                 y_spacing = h5.get_node(f"{base_grid}/yCoordinateSpacing").read()
+                numberofcovarianceTerms = 0
+                if listofcov_path:
+                    listOfCovarianceTerms = np.array(h5.get_node(listofcov_path).read()).astype(str)
+                    numberofcovarianceTerms = len(listOfCovarianceTerms)
+
                 
-                return freq_band, list_of_polarizations, x_spacing, y_spacing, int(projection)
+                return freq_band, list_of_polarizations, x_spacing, y_spacing, int(projection), numberofcovarianceTerms
+                
 
             except tables.NoSuchNodeError as e:
                 print(f"Missing expected metadata node: {e}")
@@ -630,10 +638,10 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
 
 def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1, progress_callback=None):
+                 inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir=None,cc=1, progress_callback=None):
 
     print(f"Extracting elements...")
-    if len(listOfPolarizations)==2 or len(listOfPolarizations)==3:
+    if len(listOfPolarizations)==2 and numberofcovarianceTerms==2:
         if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
             # matrix_type = 'C2HX'
             channels = ['HHHH', 'HVHV']
@@ -649,8 +657,32 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
         else:
             print("No valid dual-channel polarization combination found.")
             return
-    elif len(listOfPolarizations)==4:
+    elif len(listOfPolarizations)==2 and numberofcovarianceTerms==3:
+        if 'HH' in listOfPolarizations and 'HV' in listOfPolarizations:
+            matrix_type = 'C2HX'
+            channels = ['HHHH', 'HVHV','HHHV']
+        elif 'VV' in listOfPolarizations and 'VH' in listOfPolarizations:
+            matrix_type = 'C2VX'
+            channels = ['VVVV', 'VHVH','VVVH']
+        elif 'HH' in listOfPolarizations and 'VV' in listOfPolarizations:
+            matrix_type = 'C2HV'
+            channels = ['HHHH', 'VVVV','HHVV']
+        elif 'RH' in listOfPolarizations and 'RV' in listOfPolarizations:
+            matrix_type = 'C2R'
+            channels = ['RHRH', 'RVRV','RHRV']
+        elif 'LH' in listOfPolarizations and 'LV' in listOfPolarizations:
+            matrix_type = 'C2L'
+            channels = ['LHLH', 'LVLV','LHLV']
+        else:
+            print("No valid dual-channel polarization combination found.")
+            return
+    elif len(listOfPolarizations)==4 and numberofcovarianceTerms==4:
         channels = ['HHHH', 'HVHV','VVVV','VHVH']
+    elif len(listOfPolarizations)==4 and numberofcovarianceTerms==10:
+        channels = ['HHHH', 'HVHV','VVVV','VHVH','HHHV','HHVV','HVVV','VHVH','VVVH','HHVV']
+    else:
+        print("No valid polarization combination found.")
+        return
 
     # Directory setup
     base_name = os.path.basename(inFile).split('.h5')[0]
@@ -740,7 +772,7 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
     """
       
     # freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)
-    freq_band,listOfPolarizations, xres, yres, projection = get_geo_meta(inFile)
+    freq_band,listOfPolarizations, xres, yres, projection, numberofcovarianceTerms = get_geo_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
 
@@ -752,12 +784,18 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
     
     base_path = f'/science/{freq_band}SAR/GCOV/grids/frequencyA'
 
-    if nchannels==2:
+    listOfCovarianceTerms = f"{base_path}/listOfCovarianceTerms"
+
+    if nchannels==2 and numberofcovarianceTerms==2:
         mat='I2'
-    elif nchannels==4:
+    elif nchannels==2 and numberofcovarianceTerms==3:
+        mat='C2'
+    elif nchannels==4 and numberofcovarianceTerms==4:
         mat='I4'
+    elif nchannels==4 and numberofcovarianceTerms==10:
+        mat='C4'
     else:
         raise('Invalid number of channels!!')
     nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, max_workers,
                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                inshape, outshape, listOfPolarizations, out_dir,progress_callback=progress_callback)
+                inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir,progress_callback=progress_callback)

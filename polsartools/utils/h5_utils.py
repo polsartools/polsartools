@@ -177,42 +177,73 @@ def compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant):
 def compute_c4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip=False):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
-    
-    if recip:
-        chunks["HV"] = (chunks["HV"]+chunks["VH"])*0.5
-        chunks["VH"] = chunks["HV"]
+    if "HH" in chunks and "VV" in chunks and "HV" in chunks and "VH" in chunks:
 
-    Kl = np.array([chunks["HH"]/calibration_constant, 
-                chunks["HV"]/calibration_constant, 
-                chunks["VH"]/calibration_constant, 
-                chunks["VV"]/calibration_constant])
+        if recip:
+            chunks["HV"] = (chunks["HV"]+chunks["VH"])*0.5
+            chunks["VH"] = chunks["HV"]
 
-    return {
-        "C11": opt_mlook(np.real(np.abs(Kl[0])**2)),
-        "C12_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[1]))),
-        "C12_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[1]))),
-        "C13_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[2]))),
-        "C13_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[2]))),
-        "C14_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[3]))),
-        "C14_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[3]))),
-        "C22": opt_mlook(np.real(np.abs(Kl[1])**2)),
-        "C23_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[2]))),
-        "C23_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[2]))),
-        "C24_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[3]))),
-        "C24_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[3]))),
-        "C33": opt_mlook(np.real(np.abs(Kl[2])**2)),
-        "C34_real": opt_mlook(np.real(Kl[2]*np.conj(Kl[3]))),
-        "C34_imag": opt_mlook(np.imag(Kl[2]*np.conj(Kl[3]))),
-        "C44": opt_mlook(np.real(np.abs(Kl[3])**2))
-    }
+        Kl = np.array([chunks["HH"]/calibration_constant, 
+                    chunks["HV"]/calibration_constant, 
+                    chunks["VH"]/calibration_constant, 
+                    chunks["VV"]/calibration_constant])
+
+        return {
+            "C11": opt_mlook(np.real(np.abs(Kl[0])**2)),
+            "C12_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[1]))),
+            "C12_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[1]))),
+            "C13_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[2]))),
+            "C13_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[2]))),
+            "C14_real": opt_mlook(np.real(Kl[0]*np.conj(Kl[3]))),
+            "C14_imag": opt_mlook(np.imag(Kl[0]*np.conj(Kl[3]))),
+            "C22": opt_mlook(np.real(np.abs(Kl[1])**2)),
+            "C23_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[2]))),
+            "C23_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[2]))),
+            "C24_real": opt_mlook(np.real(Kl[1]*np.conj(Kl[3]))),
+            "C24_imag": opt_mlook(np.imag(Kl[1]*np.conj(Kl[3]))),
+            "C33": opt_mlook(np.real(np.abs(Kl[2])**2)),
+            "C34_real": opt_mlook(np.real(Kl[2]*np.conj(Kl[3]))),
+            "C34_imag": opt_mlook(np.imag(Kl[2]*np.conj(Kl[3]))),
+            "C44": opt_mlook(np.real(np.abs(Kl[3])**2))
+        }
+    elif "HHHH" in chunks and "HVHV" in chunks and "VVVV" in chunks and "VHVH" in chunks:
+
+        if recip:
+            chunks["HVHV"] = (chunks["HVHV"]+chunks["VHVH"])*0.5
+            chunks["VHVH"] = chunks["HVHV"]
+
+        return {
+            "C11": opt_mlook(chunks["HHHH"]/calibration_constant),
+            "C12_real": opt_mlook(np.real(chunks["HHHV"]/calibration_constant)),
+            "C12_imag": opt_mlook(np.imag(chunks["HHHV"]/calibration_constant)),
+            "C13_real": opt_mlook(np.real(chunks["HHVH"]/calibration_constant)),
+            "C13_imag": opt_mlook(np.imag(chunks["HHVH"]/calibration_constant)),
+            "C14_real": opt_mlook(np.real(chunks["HHVV"]/calibration_constant)),
+            "C14_imag": opt_mlook(np.imag(chunks["HHVV"]/calibration_constant)),
+            "C22": opt_mlook(chunks["HVHV"]/calibration_constant),
+            "C23_real": opt_mlook(np.real(chunks["HVVH"]/calibration_constant)),
+            "C23_imag": opt_mlook(np.imag(chunks["HVVH"]/calibration_constant)),
+            "C24_real": opt_mlook(np.real(chunks["HVVV"]/calibration_constant)),
+            "C24_imag": opt_mlook(np.imag(chunks["HVVV"]/calibration_constant)),
+            "C33": opt_mlook(chunks["VHVH"]/calibration_constant),
+            "C34_real": opt_mlook(np.real(chunks["VHVV"]/calibration_constant)),
+            "C34_imag": opt_mlook(np.imag(chunks["VHVV"]/calibration_constant)),
+            "C44": opt_mlook(chunks["VVVV"]/calibration_constant)
+        }
 
 def compute_c2hv(chunks, azlks, rglks, apply_multilook,calibration_constant):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
 
-    C11 = opt_mlook(np.abs(chunks["HH"]/calibration_constant)**2).astype(np.float32)
-    C22 = opt_mlook(np.abs(chunks["VV"]/calibration_constant)**2).astype(np.float32)
-    C12 = opt_mlook(chunks["HH"]/calibration_constant * np.conj(chunks["VV"]/calibration_constant)).astype(np.complex64)
+    if "HHHH" in chunks and "VVVV" in chunks:
+        C11 = opt_mlook(np.abs(chunks["HHHH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["VVVV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(np.real(chunks["HHVV"])/calibration_constant +1j * np.imag(chunks["HHVV"])/calibration_constant).astype(np.complex64)
+    else:
+
+        C11 = opt_mlook(np.abs(chunks["HH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["VV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(chunks["HH"]/calibration_constant * np.conj(chunks["VV"]/calibration_constant)).astype(np.complex64)
 
     return {
         "C11": C11,
@@ -225,9 +256,14 @@ def compute_c2hx(chunks, azlks, rglks, apply_multilook,calibration_constant):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
 
-    C11 = opt_mlook(np.abs(chunks["HH"]/calibration_constant)**2).astype(np.float32)
-    C22 = opt_mlook(np.abs(chunks["HV"]/calibration_constant)**2).astype(np.float32)
-    C12 = opt_mlook(chunks["HH"]/calibration_constant * np.conj(chunks["HV"]/calibration_constant)).astype(np.complex64)
+    if 'HHHH' in chunks and 'HVHV' in chunks:
+        C11 = opt_mlook(np.abs(chunks["HHHH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["HVHV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(np.real(chunks["HHHV"])/calibration_constant +1j * np.imag(chunks["HHHV"])/calibration_constant).astype(np.complex64)
+    else:
+        C11 = opt_mlook(np.abs(chunks["HH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["HV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(chunks["HH"]/calibration_constant * np.conj(chunks["HV"]/calibration_constant)).astype(np.complex64)
 
     return {
         "C11": C11,
@@ -239,10 +275,15 @@ def compute_c2hx(chunks, azlks, rglks, apply_multilook,calibration_constant):
 def compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
+    if 'VVVV' in chunks and 'VHVH' in chunks:
+        C11 = opt_mlook(np.abs(chunks["VVVV"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["VHVH"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(np.real(chunks["VVVH"])/calibration_constant +1j * np.imag(chunks["VVVH"])/calibration_constant).astype(np.complex64)
+    else:
 
-    C11 = opt_mlook(np.abs(chunks["VV"]/calibration_constant)**2).astype(np.float32)
-    C22 = opt_mlook(np.abs(chunks["VH"]/calibration_constant)**2).astype(np.float32)
-    C12 = opt_mlook(chunks["VV"]/calibration_constant * np.conj(chunks["VH"]/calibration_constant)).astype(np.complex64)
+        C11 = opt_mlook(np.abs(chunks["VV"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["VH"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(chunks["VV"]/calibration_constant * np.conj(chunks["VH"]/calibration_constant)).astype(np.complex64)
 
     return {
         "C11": C11,
@@ -264,6 +305,17 @@ def compute_c2c(chunks, azlks, rglks, apply_multilook,calibration_constant):
         C11 = opt_mlook(np.abs(chunks["LH"]/calibration_constant)**2).astype(np.float32)
         C22 = opt_mlook(np.abs(chunks["LV"]/calibration_constant)**2).astype(np.float32)
         C12 = opt_mlook(chunks["LH"]/calibration_constant * np.conj(chunks["LV"]/calibration_constant)).astype(np.complex64)
+    
+    elif "RHRH" in chunks and "RVRV" in chunks:
+        
+        C11 = opt_mlook(np.abs(chunks["RHRH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["RVRV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(np.real(chunks["RHRV"]/calibration_constant) + 1j * np.imag(chunks["RHRV"]/calibration_constant)).astype(np.complex64)
+    elif "LHLH" in chunks and "LVLV" in chunks:
+        
+        C11 = opt_mlook(np.abs(chunks["LHLH"]/calibration_constant)**2).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["LVLV"]/calibration_constant)**2).astype(np.float32)
+        C12 = opt_mlook(np.real(chunks["LHLV"]/calibration_constant) + 1j * np.imag(chunks["LHLV"]/calibration_constant)).astype(np.complex64)
     else:
         raise ValueError("Neither RH/RV nor LH/LV channels found for C2L/C2R computation.")
     return {
