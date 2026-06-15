@@ -744,7 +744,6 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
 
-
     inshape, outshape, start_x, start_y, xcoords,ycoords = get_geo_info(inFile, azlks, rglks)
     
     inFolder = os.path.dirname(inFile)   

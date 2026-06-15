@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polsartools.sensors.alos4 &#8212; PolSARtools 0.12 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/alos4';</script>
+    <link rel="icon" href="../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PolSARtools</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.sensors.alos4</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for polsartools.sensors.alos4</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span><span class="o">,</span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.utils.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_it</span><span class="p">,</span> <span class="n">mlook_arr</span>
+<span class="c1"># from polsartools.utils.io_utils import write_T3, write_C3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">polsartools.preprocess.convert_S2</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_S</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_a4</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">calfac_linear</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> 
+            <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">block_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="c1"># 2. Extract Metadata for dimensions</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">236</span><span class="p">)</span>
+        <span class="n">nline</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">248</span><span class="p">)</span>
+        <span class="n">npixel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        
+        <span class="n">prefix_len</span> <span class="o">=</span> <span class="mi">800</span> 
+        <span class="n">nrec_bytes</span> <span class="o">=</span> <span class="n">prefix_len</span> <span class="o">+</span> <span class="p">(</span><span class="n">npixel</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="n">row_width_floats</span> <span class="o">=</span> <span class="n">nrec_bytes</span> <span class="o">//</span> <span class="mi">4</span>
+        <span class="n">pixel_start_idx</span> <span class="o">=</span> <span class="n">prefix_len</span> <span class="o">//</span> <span class="mi">4</span>
+
+        <span class="c1"># print(f&quot;Image Dimensions: {nline} lines x {npixel} pixels&quot;)</span>
+        <span class="c1"># print(f&quot;Processing in blocks of {block_size} lines...&quot;)</span>
+
+        <span class="c1"># 3. Initialize GDAL Output File</span>
+        <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span><span class="s1">&#39;ENVI&#39;</span><span class="p">:</span>
+            <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s1">&#39;ENVI&#39;</span><span class="p">)</span>
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">npixel</span><span class="p">,</span> <span class="n">nline</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;GTiff&quot;</span><span class="p">)</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BIGTIFF=IF_SAFER&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">comp</span><span class="p">:</span>
+                <span class="c1"># options += [&#39;COMPRESS=DEFLATE&#39;, &#39;PREDICTOR=2&#39;, &#39;ZLEVEL=9&#39;]</span>
+                <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;COMPRESS=LZW&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+                <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKXSIZE=512&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKYSIZE=512&#39;</span><span class="p">]</span>
+            
+            <span class="n">dataset</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span>
+                <span class="n">output_file</span><span class="p">,</span>
+                <span class="n">npixel</span><span class="p">,</span> <span class="n">nline</span><span class="p">,</span>     
+                <span class="mi">1</span><span class="p">,</span>                   
+                <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                <span class="n">options</span>    
+            <span class="p">)</span>
+        
+        
+        
+        <span class="n">out_band</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># 4. Block-by-Block Loop</span>
+        <span class="n">fp</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">720</span><span class="p">)</span> <span class="c1"># Skip CEOS header</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting single-look elements...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">start_line</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nline</span><span class="p">,</span> <span class="n">block_size</span><span class="p">)):</span>
+            <span class="c1"># Calculate how many lines to read (don&#39;t overflow the end)</span>
+            <span class="n">current_block_height</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="n">nline</span> <span class="o">-</span> <span class="n">start_line</span><span class="p">)</span>
+            
+            <span class="c1"># Read block of bytes</span>
+            <span class="n">raw_bytes</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nrec_bytes</span> <span class="o">*</span> <span class="n">current_block_height</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">raw_bytes</span><span class="p">:</span>
+                <span class="k">break</span>
+                
+            <span class="c1"># Convert to numpy array</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">raw_bytes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&gt;f4&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">current_block_height</span><span class="p">,</span> <span class="n">row_width_floats</span><span class="p">)</span>
+            
+            <span class="c1"># Extract Pixels (strip 800-byte prefix)</span>
+            <span class="n">pixel_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">pixel_start_idx</span><span class="p">:]</span>
+            
+            <span class="c1"># Convert to Complex and Apply Calibration + Absolute Value</span>
+            <span class="c1"># Process: Real/Imag -&gt; Complex -&gt; Magnitude -&gt; Scale</span>
+            <span class="c1"># real = pixel_data[:, ::2]</span>
+            <span class="c1"># imag = pixel_data[:, 1::2]</span>
+            
+            <span class="n">slc</span> <span class="o">=</span> <span class="p">(</span><span class="n">pixel_data</span><span class="p">[:,</span> <span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">pixel_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">*</span> <span class="n">calfac_linear</span>
+            <span class="c1"># Logic: abs(complex) * calfac = sqrt(re^2 + im^2) * calfac</span>
+            <span class="c1"># We do this in one step to save memory</span>
+            <span class="c1"># mag_block = np.sqrt(real**2 + imag**2).astype(np.float32) * calfac_linear</span>
+            
+            <span class="c1"># 5. Write block to disk</span>
+            <span class="c1"># WriteArray(array, x_offset, y_offset)</span>
+            <span class="n">out_band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">slc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">start_line</span><span class="p">)</span>
+            
+            <span class="c1"># if start_line % (block_size * 5) == 0:</span>
+            <span class="c1">#     print(f&quot;Progress: {start_line}/{nline} lines processed.&quot;)</span>
+        
+        <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+            <span class="n">dataset</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">ovr</span><span class="p">)</span>
+        <span class="c1"># Finalize</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="kc">None</span> 
+    <span class="k">if</span> <span class="n">mat</span> <span class="o">==</span> <span class="s1">&#39;S2&#39;</span> <span class="ow">or</span> <span class="n">mat</span> <span class="o">==</span> <span class="s1">&#39;Sxy&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">write_a2_rst</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span><span class="n">data</span><span class="p">,</span>
+                <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> <span class="n">out_dtype</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+                <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span>
+                 <span class="p">):</span>
+
+    <span class="k">if</span> <span class="n">driver</span> <span class="o">==</span><span class="s1">&#39;ENVI&#39;</span><span class="p">:</span>
+        <span class="c1"># Create GDAL dataset</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span>
+            <span class="n">out_file</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>      
+            <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>      
+            <span class="mi">1</span><span class="p">,</span>                   
+            <span class="n">out_dtype</span>    
+        <span class="p">)</span>
+
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;GTiff&quot;</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BIGTIFF=IF_SAFER&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">comp</span><span class="p">:</span>
+            <span class="c1"># options += [&#39;COMPRESS=DEFLATE&#39;, &#39;PREDICTOR=2&#39;, &#39;ZLEVEL=9&#39;]</span>
+            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;COMPRESS=LZW&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKXSIZE=512&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKYSIZE=512&#39;</span><span class="p">]</span>
+        
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span>
+            <span class="n">out_file</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>      
+            <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>      
+            <span class="mi">1</span><span class="p">,</span>                   
+            <span class="n">out_dtype</span><span class="p">,</span>
+            <span class="n">options</span>    
+        <span class="p">)</span>
+
+        
+    <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="c1"># outdata.GetRasterBand(1).SetNoDataValue(0)##if you want these values transparent</span>
+    <span class="n">dataset</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span> <span class="c1">##saves to disk!!</span>
+    
+    <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">ovr</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">mat</span> <span class="o">==</span> <span class="s1">&#39;S2&#39;</span> <span class="ow">or</span> <span class="n">mat</span> <span class="o">==</span> <span class="s1">&#39;Sxy&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved file: </span><span class="si">{</span><span class="n">out_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1">#################################################################################################</span>
+
+<div class="viewcode-block" id="import_alos4_uwd_l11">
+<a class="viewcode-back" href="../../../files/sensors/alos4.html#polsartools.import_alos4_uwd_l11">[docs]</a>
+<span class="nd">@time_it</span>    
+<span class="k">def</span><span class="w"> </span><span class="nf">import_alos4_uwd_l11</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span><span class="n">rglks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+                 <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span><span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">cf_dB</span><span class="o">=-</span><span class="mi">83</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-4 Ultra Wide Beam Dual-Pol (UWD) CEOS data </span>
+<span class="sd">    and saves them into respective binary files.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import_alos4_uwd_l11(&quot;path_to_folder&quot;, azlks=25, rglks=5)</span>
+<span class="sd">    This will extract the C2 matrix elements from the ALOS-2 Wide Beam Dual-Pol data </span>
+<span class="sd">    in the specified folder and save them in the &#39;C2&#39; directory.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    in_dir : str</span>
+<span class="sd">        The path to the folder containing the ALOS-2 Wide Beam Dual-Pol CEOS data files.</span>
+<span class="sd">    mat : str, optional (default = &#39;S2&#39; or &#39;Sxy)</span>
+<span class="sd">        Type of matrix to extract. Valid options: &#39;Sxy&#39;,&#39;C2&#39;, &#39;T2&#39;.</span>
+<span class="sd">    azlks : int, optional (default=25)</span>
+<span class="sd">        The number of azimuth looks for multi-looking.</span>
+
+<span class="sd">    rglks : int, optional (default=5)</span>
+<span class="sd">        The number of range looks for multi-looking.</span>
+<span class="sd">    </span>
+<span class="sd">    swath : int, optional (default=1)</span>
+<span class="sd">        The swath number [1,2,3,4,5].</span>
+
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, optional (default=&#39;tif&#39;)</span>
+<span class="sd">        Output format:</span>
+<span class="sd">        - &#39;tif&#39;: GeoTIFF </span>
+<span class="sd">        - &#39;bin&#39;: Raw binary format</span>
+
+<span class="sd">    cog : bool, optional (default=False)</span>
+<span class="sd">        If True, outputs will be saved as Cloud Optimized GeoTIFFs with internal tiling and overviews.</span>
+
+<span class="sd">    ovr : list of int, optional (default=[2, 4, 8, 16])</span>
+<span class="sd">        Overview levels for COG generation. Ignored if cog=False.</span>
+
+<span class="sd">    comp : bool, optional (default=False)</span>
+<span class="sd">        If True, applies LZW compression to GeoTIFF outputs.</span>
+
+<span class="sd">    out_dir : str or None, optional (default=None)</span>
+<span class="sd">        Directory to save output files. If None, a folder named after the matrix type will be created</span>
+<span class="sd">        in the same location as the input file.</span>
+<span class="sd">                </span>
+<span class="sd">    cf_dB : float, optional (default=-83)</span>
+<span class="sd">        The calibration factor in dB used to scale the raw radar data. It is applied to </span>
+<span class="sd">        the HH and HV polarization data before matrix computation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    None</span>
+<span class="sd">        The function does not return any value. Instead, it creates a folder named `C2` </span>
+<span class="sd">        (if not already present) and saves the following binary files:</span>
+
+<span class="sd">        - `C11.bin`: Contains the C11 matrix elements.</span>
+<span class="sd">        - `C22.bin`: Contains the C22 matrix elements.</span>
+<span class="sd">        - `C12_real.bin`: Contains the real part of the C12 matrix.</span>
+<span class="sd">        - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.</span>
+
+
+<span class="sd">    Raises:</span>
+<span class="sd">    -------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the required ALOS-4 data files (e.g., `IMG-HH` and `IMG-HV`) cannot be found in the specified folder.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="n">valid_dual_pol</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Sxy&#39;</span><span class="p">,</span> <span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">]</span>
+    <span class="n">valid_matrices</span> <span class="o">=</span> <span class="n">valid_dual_pol</span>
+
+    <span class="k">if</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_matrices</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2">&#39;. </span><span class="se">\n</span><span class="s2"> Supported types are:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;  Dual-pol: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">valid_dual_pol</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">temp_dir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s1">&#39;tif&#39;</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="s1">&#39;ENVI&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="c1"># Final output directory</span>
+    <span class="k">if</span> <span class="n">out_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">final_out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">final_out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">mat</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">final_out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Intermediate output directory</span>
+    <span class="k">if</span> <span class="n">mat</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Sxy&#39;</span><span class="p">]:</span>
+        <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">final_out_dir</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;temp_S2_&#39;</span><span class="p">)</span>
+        <span class="n">base_out_dir</span> <span class="o">=</span> <span class="n">temp_dir</span>
+        
+
+    <span class="n">hh_file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;IMG-HH-*&#39;</span><span class="p">))</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">hv_file</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span><span class="sa">f</span><span class="s1">&#39;IMG-HV-*&#39;</span><span class="p">))</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">calfac_linear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">((</span><span class="n">cf_dB</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">load_a4</span><span class="p">(</span><span class="n">hh_file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;s11.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span> 
+                <span class="n">calfac_linear</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                <span class="n">block_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+    <span class="n">load_a4</span><span class="p">(</span><span class="n">hv_file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;s12.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span> 
+                <span class="n">calfac_linear</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
+                <span class="n">block_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    
+    <span class="c1"># Matrix conversion if needed</span>
+    <span class="k">if</span> <span class="n">mat</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">]:</span>
+        <span class="n">convert_S</span><span class="p">(</span><span class="n">base_out_dir</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span> <span class="n">azlks</span><span class="o">=</span><span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="o">=</span><span class="n">rglks</span><span class="p">,</span> <span class="n">cf</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                  <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="n">final_out_dir</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">)</span>
+
+        <span class="c1"># Clean up temp directory</span>
+        <span class="k">if</span> <span class="n">temp_dir</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not delete temporary directory </span><span class="si">{</span><span class="n">temp_dir</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, PolSARtools team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

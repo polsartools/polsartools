@@ -14,6 +14,7 @@ Supported sensors
     sensors/risat
     sensors/radarsat2
     sensors/alos2
+    sensors/alos4
     sensors/chandrayaan2
     
     

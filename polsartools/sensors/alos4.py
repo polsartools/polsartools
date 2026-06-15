@@ -153,7 +153,7 @@ def import_alos4_uwd_l11(in_dir,mat='C2', azlks=25,rglks=5,
                  out_dir=None,
                   cf_dB=-83):
     """
-    Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-2 Wide Beam Dual-Pol (WBD) CEOS data 
+    Extracts the C2 matrix elements (C11, C22, and C12) from ALOS-4 Ultra Wide Beam Dual-Pol (UWD) CEOS data 
     and saves them into respective binary files.
 
     Example:
@@ -209,19 +209,15 @@ def import_alos4_uwd_l11(in_dir,mat='C2', azlks=25,rglks=5,
         - `C22.bin`: Contains the C22 matrix elements.
         - `C12_real.bin`: Contains the real part of the C12 matrix.
         - `C12_imag.bin`: Contains the imaginary part of the C12 matrix.
-        - `config.txt`: A text file containing grid dimensions and polarimetric configuration.
+
 
     Raises:
     -------
     FileNotFoundError
-        If the required ALOS-2 data files (e.g., `IMG-HH` and `IMG-HV`) cannot be found in the specified folder.
-
-    ValueError
-        If the calibration factor is invalid or if the files are not in the expected format.
+        If the required ALOS-4 data files (e.g., `IMG-HH` and `IMG-HV`) cannot be found in the specified folder.
 
 
     """
-    
     
     
     valid_dual_pol = ['Sxy', 'C2', 'T2']
