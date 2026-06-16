@@ -504,7 +504,6 @@ jobs:
 #         include-hidden-files: false
 #   ###########################################################################
 
-
 ##########################################################################
 # Build conda packages with conda-build
 ##########################################################################
@@ -514,19 +513,21 @@ jobs:
         conda init bash 
         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
-        conda install --yes -n base conda-build
+        # Install conda-build and force setup the ultra-fast libmamba solver
+        conda install --yes -n base conda-build conda-libmamba-solver
+        conda config --set solver libmamba
         
         conda activate pst-env  
         conda install --yes pip
         python -m pip install --upgrade pip
 
+        conda config --add channels conda-forge
+        # Shift to flexible priority to stop dependency locks on old Python versions
+        conda config --set channel_priority flexible
+
         if [[ "$(uname -m)" == "x86_64" ]]; then
           ARCH="osx-x86_64"
           echo "Building for $ARCH architecture"
-          conda config --add channels conda-forge
-          conda config --set channel_priority strict
-          
-          # Intel can build all legacy variants
           conda build ./conda-recipe --output-folder output --python 3.6
           conda build ./conda-recipe --output-folder output --python 3.7
           conda build ./conda-recipe --output-folder output --python 3.8
@@ -535,16 +536,12 @@ jobs:
         elif [[ "$(uname -m)" == "arm64" ]]; then
           ARCH="osx-arm64"
           echo "Building for $ARCH architecture"
-          conda config --add channels conda-forge
-          conda config --set channel_priority strict
-
-          # ARM cannot build 3.6/3.7. Safely skip to 3.8+
           conda build ./conda-recipe --output-folder output --python 3.8
           conda build ./conda-recipe --output-folder output --python 3.9
           conda build ./conda-recipe --output-folder output --python 3.10
         fi
         
-        # --- MODERN BUILDS (Runs on both Intel and ARM) ---
+        # Modern builds
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13
@@ -556,21 +553,18 @@ jobs:
         conda init bash 
         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
-        # Install conda-build directly into 'base'
-        conda install --yes -n base conda-build
+        # Install conda-build and force setup the ultra-fast libmamba solver
+        conda install --yes -n base conda-build conda-libmamba-solver
+        conda config --set solver libmamba
         
         conda activate pst-env  
         conda install --yes pip
         python -m pip install --upgrade pip
         
         conda config --add channels conda-forge
-        conda config --set channel_priority strict
+        conda config --set channel_priority flexible
         
         # --- LEGACY BUILDS ---
-        # Note: 3.6/3.7 are highly legacy; if dependencies clash under strict priority,
-        # you can append --channel=defaults to individual lines below if needed.
-        # conda build ./conda-recipe --output-folder output --python 3.6
-        # conda build ./conda-recipe --output-folder output --python 3.7
         conda build ./conda-recipe --output-folder output --python 3.8
         conda build ./conda-recipe --output-folder output --python 3.9
         conda build ./conda-recipe --output-folder output --python 3.10
@@ -587,17 +581,17 @@ jobs:
         conda init cmd.exe
         refreshenv
         
-        conda install --yes -n base conda-build
+        # Install conda-build and force setup the ultra-fast libmamba solver
+        conda install --yes -n base conda-build conda-libmamba-solver
+        conda config --set solver libmamba
         
         conda activate pst-env
         python -m pip install --upgrade pip
         
         conda config --add channels conda-forge
-        conda config --set channel_priority strict
+        conda config --set channel_priority flexible
         
         # --- LEGACY BUILDS ---
-        # conda build ./conda-recipe --output-folder output --python 3.6
-        # conda build ./conda-recipe --output-folder output --python 3.7
         conda build ./conda-recipe --output-folder output --python 3.8
         conda build ./conda-recipe --output-folder output --python 3.9
         conda build ./conda-recipe --output-folder output --python 3.10
@@ -611,7 +605,6 @@ jobs:
     - name: Upload conda package
       uses: actions/upload-artifact@v4.6.0
       with:
-        # Replaced ambiguous matrix references with explicit workflow expressions if those matrices aren't explicitly declared
         name: conda-packages-${{ runner.os }}-${{ github.run_id }}
         path: |
           output/**/*.tar.bz2
