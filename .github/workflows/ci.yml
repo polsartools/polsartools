@@ -290,188 +290,128 @@ jobs:
 
 
 
-    # - name: Build wheels with cibuildwheel (Linux)
+    # - name: Build legacy wheels (Linux Python 3.6 to 3.8)
     #   if: runner.os == 'Linux'
     #   env:
-    #     # CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64"  
-    #     CIBW_BUILD: " cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
+    #     CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64"  
     #     CIBW_OUTPUT_DIR: wheelhouse
     #   run: |
     #     conda init bash 
-    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-    #     if [ -f ~/.bashrc ]; then
-    #       source ~/.bashrc  # Use .bashrc if it exists
-    #     else
-    #       source ~/.bash_profile  # Fallback to .bash_profile
-    #     fi
+    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
     #     conda activate pst-env  
-    #     echo "Active Conda Environment:"
-
+        
+    #     # Install older cibuildwheel version supporting Python < 3.9
+    #     python -m pip install "cibuildwheel<3.0.0"
     #     python -m cibuildwheel --output-dir wheelhouse
-    
-    
-    # - name: Build wheels with cibuildwheel (macOS)
+
+    # - name: Build modern wheels (Linux Python 3.9 to 3.13)
+    #   if: runner.os == 'Linux'
+    #   env:
+    #     CIBW_BUILD: "cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: |
+    #     conda init bash 
+    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
+    #     conda activate pst-env  
+        
+    #     # Ensure we are using the modern version
+    #     python -m pip install --upgrade cibuildwheel
+    #     python -m cibuildwheel --output-dir wheelhouse
+    # - name: Build legacy wheels (macOS Python 3.6 to 3.8)
     #   if: runner.os == 'macOS'
     #   env:
-    #     # Initially, leave CIBW_BUILD unset to be configured dynamically
     #     CIBW_OUTPUT_DIR: wheelhouse
     #   run: |
     #     conda init bash
+    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
+    #     conda activate pst-env
 
-    #     # Check if ~/.bashrc exists. If not, use ~/.bash_profile
-    #     if [ -f ~/.bashrc ]; then
-    #       source ~/.bashrc  # Use .bashrc if it exists
+    #     # Detect architecture to assign relevant targets
+    #     if [[ "$(uname -m)" == "x86_64" ]]; then
+    #       ARCH="macosx_x86_64"
+    #       export CIBW_BUILD="cp36-macosx_x86_64 cp37-macosx_x86_64 cp38-macosx_x86_64"
+    #     elif [[ "$(uname -m)" == "arm64" ]]; then
+    #       ARCH="macosx_arm64"
+    #       # Python 3.6/3.7 don't support arm64 natively. Only building 3.8+ for ARM.
+    #       export CIBW_BUILD="cp38-macosx_arm64"
     #     else
-    #       source ~/.bash_profile  # Fallback to .bash_profile
+    #       echo "Unsupported architecture: $(uname -m)"
+    #       exit 1
     #     fi
 
-    #     conda activate pst-env
-    #     echo "Active Conda Environment:"
+    #     echo "Building legacy wheels for architecture: $ARCH"
+        
+    #     # Install older cibuildwheel version supporting Python < 3.9
+    #     python -m pip install "cibuildwheel<3.0.0"
+    #     python -m cibuildwheel --output-dir wheelhouse
 
-    #     # Detect the architecture of the runner (ARM or Intel) on macOS
+    # - name: Build modern wheels (macOS Python 3.9 to 3.13)
+    #   if: runner.os == 'macOS'
+    #   env:
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: |
+    #     conda init bash
+    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
+    #     conda activate pst-env
+
     #     if [[ "$(uname -m)" == "x86_64" ]]; then
-    #       # Intel architecture (x86_64) - macOS
     #       ARCH="macosx_x86_64"
-    #       # export CIBW_BUILD="cp38-macosx_x86_64 cp39-macosx_x86_64"
     #       export CIBW_BUILD="cp39-macosx_x86_64 cp310-macosx_x86_64 cp311-macosx_x86_64 cp312-macosx_x86_64 cp313-macosx_x86_64"
     #     elif [[ "$(uname -m)" == "arm64" ]]; then
-    #       # ARM architecture (arm64) - macOS Apple Silicon
     #       ARCH="macosx_arm64"
-    #       # export CIBW_BUILD="cp38-macosx_arm64 cp39-macosx_arm64"
     #       export CIBW_BUILD="cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
     #     else
     #       echo "Unsupported architecture: $(uname -m)"
     #       exit 1
     #     fi
 
-    #     echo "Building for architecture: $ARCH"
-    #     echo "CIBW_BUILD: $CIBW_BUILD"
-
-    #     # Run cibuildwheel to build the wheels
+    #     echo "Building modern wheels for architecture: $ARCH"
+        
+    #     # Upgrade to modern cibuildwheel
+    #     python -m pip install --upgrade cibuildwheel
     #     python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Build legacy wheels (Linux Python 3.6 to 3.8)
-      if: runner.os == 'Linux'
-      env:
-        CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64"  
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: |
-        conda init bash 
-        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        conda activate pst-env  
+
+
+    # - name: Build legacy wheels (Windows Python 3.6 to 3.9)
+    #   if: runner.os == 'Windows'
+    #   env:
+    #     # Targets older Python versions using cibuildwheel v2
+    #     CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64"
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: |
+    #     conda init cmd.exe
+    #     refreshenv
+    #     conda activate pst-env
         
-        # Install older cibuildwheel version supporting Python < 3.9
-        python -m pip install "cibuildwheel<3.0.0"
-        python -m cibuildwheel --output-dir wheelhouse
+    #     # Install the older cibuildwheel version that supports 3.6 and 3.7
+    #     python -m pip install "cibuildwheel<3.0.0"
+    #     python -m cibuildwheel --output-dir wheelhouse
 
-    - name: Build modern wheels (Linux Python 3.9 to 3.13)
-      if: runner.os == 'Linux'
-      env:
-        CIBW_BUILD: "cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64 cp313-manylinux_x86_64"   
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: |
-        conda init bash 
-        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        conda activate pst-env  
+    # - name: Build modern wheels (Windows Python 3.10 to 3.13)
+    #   if: runner.os == 'Windows'
+    #   env:
+    #     # Targets newer Python versions using cibuildwheel v3
+    #     CIBW_BUILD: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+    #     CIBW_OUTPUT_DIR: wheelhouse
+    #   run: |
+    #     conda init cmd.exe
+    #     refreshenv
+    #     conda activate pst-env
         
-        # Ensure we are using the modern version
-        python -m pip install --upgrade cibuildwheel
-        python -m cibuildwheel --output-dir wheelhouse
-    - name: Build legacy wheels (macOS Python 3.6 to 3.8)
-      if: runner.os == 'macOS'
-      env:
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: |
-        conda init bash
-        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        conda activate pst-env
-
-        # Detect architecture to assign relevant targets
-        if [[ "$(uname -m)" == "x86_64" ]]; then
-          ARCH="macosx_x86_64"
-          export CIBW_BUILD="cp36-macosx_x86_64 cp37-macosx_x86_64 cp38-macosx_x86_64"
-        elif [[ "$(uname -m)" == "arm64" ]]; then
-          ARCH="macosx_arm64"
-          # Python 3.6/3.7 don't support arm64 natively. Only building 3.8+ for ARM.
-          export CIBW_BUILD="cp38-macosx_arm64"
-        else
-          echo "Unsupported architecture: $(uname -m)"
-          exit 1
-        fi
-
-        echo "Building legacy wheels for architecture: $ARCH"
-        
-        # Install older cibuildwheel version supporting Python < 3.9
-        python -m pip install "cibuildwheel<3.0.0"
-        python -m cibuildwheel --output-dir wheelhouse
-
-    - name: Build modern wheels (macOS Python 3.9 to 3.13)
-      if: runner.os == 'macOS'
-      env:
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: |
-        conda init bash
-        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        conda activate pst-env
-
-        if [[ "$(uname -m)" == "x86_64" ]]; then
-          ARCH="macosx_x86_64"
-          export CIBW_BUILD="cp39-macosx_x86_64 cp310-macosx_x86_64 cp311-macosx_x86_64 cp312-macosx_x86_64 cp313-macosx_x86_64"
-        elif [[ "$(uname -m)" == "arm64" ]]; then
-          ARCH="macosx_arm64"
-          export CIBW_BUILD="cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
-        else
-          echo "Unsupported architecture: $(uname -m)"
-          exit 1
-        fi
-
-        echo "Building modern wheels for architecture: $ARCH"
-        
-        # Upgrade to modern cibuildwheel
-        python -m pip install --upgrade cibuildwheel
-        python -m cibuildwheel --output-dir wheelhouse
+    #     # Upgrade cibuildwheel to the latest v3 release for modern Python support
+    #     python -m pip install --upgrade cibuildwheel
+    #     python -m cibuildwheel --output-dir wheelhouse
 
 
-
-    - name: Build legacy wheels (Windows Python 3.6 to 3.9)
-      if: runner.os == 'Windows'
-      env:
-        # Targets older Python versions using cibuildwheel v2
-        CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64"
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: |
-        conda init cmd.exe
-        refreshenv
-        conda activate pst-env
-        
-        # Install the older cibuildwheel version that supports 3.6 and 3.7
-        python -m pip install "cibuildwheel<3.0.0"
-        python -m cibuildwheel --output-dir wheelhouse
-
-    - name: Build modern wheels (Windows Python 3.10 to 3.13)
-      if: runner.os == 'Windows'
-      env:
-        # Targets newer Python versions using cibuildwheel v3
-        CIBW_BUILD: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
-        CIBW_OUTPUT_DIR: wheelhouse
-      run: |
-        conda init cmd.exe
-        refreshenv
-        conda activate pst-env
-        
-        # Upgrade cibuildwheel to the latest v3 release for modern Python support
-        python -m pip install --upgrade cibuildwheel
-        python -m cibuildwheel --output-dir wheelhouse
-
-
-    - name: Upload wheel artifacts
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
-        path: wheelhouse/*.whl
-        if-no-files-found: ignore
-        overwrite: false
-        include-hidden-files: false
+    # - name: Upload wheel artifacts
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     name: python-wheels-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.run_id }}  # Unique name based on run ID
+    #     path: wheelhouse/*.whl
+    #     if-no-files-found: ignore
+    #     overwrite: false
+    #     include-hidden-files: false
 
 
 ##########################################################################
@@ -579,80 +519,87 @@ jobs:
 ##########################################################################
 # Build conda packages with conda-build
 ##########################################################################
-    # - name: Build Conda package (macOS)
-    #   if: runner.os == 'macOS' 
-    #   run: |
-    #     conda init bash 
-    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-    #     conda activate pst-env  
-
-    #     # Install conda-build in the active environment
-    #     conda install --yes conda-build pip
-    #     python -m pip install --upgrade pip
-
-    #     if [[ "$(uname -m)" == "x86_64" ]]; then
-    #       ARCH="osx-x86_64"
-    #     elif [[ "$(uname -m)" == "arm64" ]]; then
-    #       ARCH="osx-arm64"
-    #     else
-    #       echo "Unsupported architecture: $(uname -m)"
-    #       exit 1
-    #     fi
-
-    #     echo "Building for $ARCH architecture"
-    #     conda config --add channels conda-forge
-    #     conda config --set channel_priority strict
+    - name: Build Conda package (macOS)
+      if: runner.os == 'macOS' 
+      run: |
+        conda init bash 
+        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
-    #     conda build ./conda-recipe --output-folder output --python 3.11
-    #     conda build ./conda-recipe --output-folder output --python 3.12
-    #     conda build ./conda-recipe --output-folder output --python 3.13
+        # 1. CRITICAL: Install conda-build directly into the 'base' environment
+        conda install --yes -n base conda-build
+        
+        conda activate pst-env  
+        conda install --yes pip
+        python -m pip install --upgrade pip
+
+        if [[ "$(uname -m)" == "x86_64" ]]; then
+          ARCH="osx-x86_64"
+        elif [[ "$(uname -m)" == "arm64" ]]; then
+          ARCH="osx-arm64"
+        else
+          echo "Unsupported architecture: $(uname -m)"
+          exit 1
+        fi
+
+        echo "Building for $ARCH architecture"
+        conda config --add channels conda-forge
+        conda config --set channel_priority strict
+        
+        conda build ./conda-recipe --output-folder output --python 3.11
+        conda build ./conda-recipe --output-folder output --python 3.12
+        conda build ./conda-recipe --output-folder output --python 3.13
 
 
-    # - name: Build Conda package (Linux)
-    #   if: runner.os == 'Linux' 
-    #   run: |
-    #     conda init bash 
-    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-    #     conda activate pst-env  
+    - name: Build Conda package (Linux)
+      if: runner.os == 'Linux' 
+      run: |
+        conda init bash 
+        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
+        
+        # 1. CRITICAL: Install conda-build directly into the 'base' environment
+        conda install --yes -n base conda-build
+        
+        conda activate pst-env  
+        conda install --yes pip
+        python -m pip install --upgrade pip
+        
+        conda config --add channels conda-forge
+        conda config --set channel_priority strict
+        
+        conda build ./conda-recipe --output-folder output --python 3.11
+        conda build ./conda-recipe --output-folder output --python 3.12
+        conda build ./conda-recipe --output-folder output --python 3.13  
+        
 
-    #     # Install conda-build in the active environment
-    #     conda install --yes conda-build pip
-    #     python -m pip install --upgrade pip
+    - name: Build Conda package (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        conda init cmd.exe
+        refreshenv
         
-    #     conda config --add channels conda-forge
-    #     conda config --set channel_priority strict
+        # 1. CRITICAL: Install conda-build directly into the 'base' environment
+        conda install --yes -n base conda-build
         
-    #     conda build ./conda-recipe --output-folder output --python 3.11
-    #     conda build ./conda-recipe --output-folder output --python 3.12
-    #     conda build ./conda-recipe --output-folder output --python 3.13  
+        conda activate pst-env
+        python -m pip install --upgrade pip
         
-
-    # - name: Build Conda package (Windows)
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     conda init cmd.exe
-    #     refreshenv
-    #     conda activate pst-env
+        conda config --add channels conda-forge
+        conda config --set channel_priority strict
         
-    #     # Install conda-build in the active environment
-    #     conda install --yes conda-build
-    #     python -m pip install --upgrade pip
-        
-    #     conda config --add channels conda-forge
-    #     conda config --set channel_priority strict
-        
-    #     conda build ./conda-recipe --output-folder output --python 3.11 
+        conda build ./conda-recipe --output-folder output --python 3.11
+        conda build ./conda-recipe --output-folder output --python 3.12
+        conda build ./conda-recipe --output-folder output --python 3.13
 
 
-    # - name: Upload conda package
-    #   uses: actions/upload-artifact@v4.6.0
-    #   with:
-    #     # Replaced ambiguous matrix references with explicit workflow expressions if those matrices aren't explicitly declared
-    #     name: conda-packages-${{ runner.os }}-${{ github.run_id }}
-    #     path: |
-    #       output/**/*.tar.bz2
-    #       output/**/*.conda
-    #     if-no-files-found: ignore
-    #     overwrite: false
-    #     include-hidden-files: false
+    - name: Upload conda package
+      uses: actions/upload-artifact@v4.6.0
+      with:
+        # Replaced ambiguous matrix references with explicit workflow expressions if those matrices aren't explicitly declared
+        name: conda-packages-${{ runner.os }}-${{ github.run_id }}
+        path: |
+          output/**/*.tar.bz2
+          output/**/*.conda
+        if-no-files-found: ignore
+        overwrite: false
+        include-hidden-files: false
   ###########################################################################
