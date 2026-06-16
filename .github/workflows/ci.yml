@@ -569,8 +569,8 @@ jobs:
         # --- LEGACY BUILDS ---
         # Note: 3.6/3.7 are highly legacy; if dependencies clash under strict priority,
         # you can append --channel=defaults to individual lines below if needed.
-        conda build ./conda-recipe --output-folder output --python 3.6
-        conda build ./conda-recipe --output-folder output --python 3.7
+        # conda build ./conda-recipe --output-folder output --python 3.6
+        # conda build ./conda-recipe --output-folder output --python 3.7
         conda build ./conda-recipe --output-folder output --python 3.8
         conda build ./conda-recipe --output-folder output --python 3.9
         conda build ./conda-recipe --output-folder output --python 3.10
@@ -596,8 +596,8 @@ jobs:
         conda config --set channel_priority strict
         
         # --- LEGACY BUILDS ---
-        conda build ./conda-recipe --output-folder output --python 3.6
-        conda build ./conda-recipe --output-folder output --python 3.7
+        # conda build ./conda-recipe --output-folder output --python 3.6
+        # conda build ./conda-recipe --output-folder output --python 3.7
         conda build ./conda-recipe --output-folder output --python 3.8
         conda build ./conda-recipe --output-folder output --python 3.9
         conda build ./conda-recipe --output-folder output --python 3.10
