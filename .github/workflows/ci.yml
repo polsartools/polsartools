@@ -415,7 +415,6 @@ jobs:
 
 
 ##########################################################################
-
 ##########################################################################
 # Build conda packages with conda-build
 ##########################################################################
@@ -425,15 +424,13 @@ jobs:
         conda init bash 
         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
-        # 1. CRITICAL: Install conda-build directly into the 'base' environment
-        # Install conda-build AND the modern libmamba solver backend
+        # Install conda-build into base and stay in base
         conda install --yes -n base conda-build conda-libmamba-solver
         conda config --set solver libmamba
         conda config --set channel_priority flexible
         
-        conda activate pst-env  
-        conda install --yes pip
-        python -m pip install --upgrade pip
+        # Optional: update pst-env if required by your pipeline, but don't stay in it
+        conda run -n pst-env python -m pip install --upgrade pip
 
         if [[ "$(uname -m)" == "x86_64" ]]; then
           ARCH="osx-x86_64"
@@ -448,11 +445,11 @@ jobs:
         conda config --add channels conda-forge
         conda config --set channel_priority strict
         
+        # Run conda-build safely from base
         conda build ./conda-recipe --output-folder output --python 3.10
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13
-
 
     - name: Build Conda package (Linux)
       if: runner.os == 'Linux' 
@@ -460,16 +457,11 @@ jobs:
         conda init bash 
         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
-        # 1. CRITICAL: Install conda-build directly into the 'base' environment
-        # conda install --yes -n base conda-build
-
         conda install --yes -n base conda-build conda-libmamba-solver
         conda config --set solver libmamba
         conda config --set channel_priority flexible        
         
-        conda activate pst-env  
-        conda install --yes pip
-        python -m pip install --upgrade pip
+        conda run -n pst-env python -m pip install --upgrade pip
         
         conda config --add channels conda-forge
         conda config --set channel_priority strict
@@ -479,36 +471,30 @@ jobs:
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13  
         
-
     - name: Build Conda package (Windows)
       if: runner.os == 'Windows'
+      shell: cmd
       run: |
-        conda init cmd.exe
-        refreshenv
+        call conda init cmd.exe
+        rem Windows runners often require a fresh shell context or direct path calls
         
-        # 1. CRITICAL: Install conda-build directly into the 'base' environment
-        # conda install --yes -n base conda-build
-
-        conda install --yes -n base conda-build conda-libmamba-solver
-        conda config --set solver libmamba
-        conda config --set channel_priority flexible
+        call conda install --yes -n base conda-build conda-libmamba-solver
+        call conda config --set solver libmamba
+        call conda config --set channel_priority flexible
         
-        conda activate pst-env
-        python -m pip install --upgrade pip
+        call conda run -n pst-env python -m pip install --upgrade pip
         
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
+        call conda config --add channels conda-forge
+        call conda config --set channel_priority strict
         
-        conda build ./conda-recipe --output-folder output --python 3.10
-        conda build ./conda-recipe --output-folder output --python 3.11
-        conda build ./conda-recipe --output-folder output --python 3.12
-        conda build ./conda-recipe --output-folder output --python 3.13
-
+        call conda build ./conda-recipe --output-folder output --python 3.10
+        call conda build ./conda-recipe --output-folder output --python 3.11
+        call conda build ./conda-recipe --output-folder output --python 3.12
+        call conda build ./conda-recipe --output-folder output --python 3.13
 
     - name: Upload conda package
       uses: actions/upload-artifact@v4.6.0
       with:
-        # Replaced ambiguous matrix references with explicit workflow expressions if those matrices aren't explicitly declared
         name: conda-packages-${{ runner.os }}-${{ github.run_id }}
         path: |
           output/**/*.tar.bz2
@@ -516,115 +502,3 @@ jobs:
         if-no-files-found: ignore
         overwrite: false
         include-hidden-files: false
-  ###########################################################################
-
-# ##########################################################################
-# # Build conda packages with conda-build
-# ##########################################################################
-#     - name: Build Conda package (macOS)
-#       if: runner.os == 'macOS' 
-#       run: |
-#         conda init bash 
-#         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        
-#         # Install conda-build and force setup the ultra-fast libmamba solver
-#         conda install --yes -n base conda-build conda-libmamba-solver
-#         conda config --set solver libmamba
-        
-#         conda activate pst-env  
-#         conda install --yes pip
-#         python -m pip install --upgrade pip
-
-#         conda config --add channels conda-forge
-#         # Shift to flexible priority to stop dependency locks on old Python versions
-#         conda config --set channel_priority flexible
-
-#         if [[ "$(uname -m)" == "x86_64" ]]; then
-#           ARCH="osx-x86_64"
-#           echo "Building for $ARCH architecture"
-#           conda build ./conda-recipe --output-folder output --python 3.6
-#           conda build ./conda-recipe --output-folder output --python 3.7
-#           conda build ./conda-recipe --output-folder output --python 3.8
-#           conda build ./conda-recipe --output-folder output --python 3.9
-#           conda build ./conda-recipe --output-folder output --python 3.10
-#         elif [[ "$(uname -m)" == "arm64" ]]; then
-#           ARCH="osx-arm64"
-#           echo "Building for $ARCH architecture"
-#           # conda build ./conda-recipe --output-folder output --python 3.8
-#           # conda build ./conda-recipe --output-folder output --python 3.9
-#           conda build ./conda-recipe --output-folder output --python 3.10
-#         fi
-        
-#         # Modern builds
-#         conda build ./conda-recipe --output-folder output --python 3.11
-#         conda build ./conda-recipe --output-folder output --python 3.12
-#         conda build ./conda-recipe --output-folder output --python 3.13
-
-
-#     - name: Build Conda package (Linux)
-#       if: runner.os == 'Linux' 
-#       run: |
-#         conda init bash 
-#         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        
-#         # Install conda-build and force setup the ultra-fast libmamba solver
-#         conda install --yes -n base conda-build conda-libmamba-solver
-#         conda config --set solver libmamba
-        
-#         conda activate pst-env  
-#         conda install --yes pip
-#         python -m pip install --upgrade pip
-        
-#         conda config --add channels conda-forge
-#         conda config --set channel_priority flexible
-        
-#         # --- LEGACY BUILDS ---
-#         # conda build ./conda-recipe --output-folder output --python 3.8
-#         # conda build ./conda-recipe --output-folder output --python 3.9
-#         conda build ./conda-recipe --output-folder output --python 3.10
-
-#         # --- MODERN BUILDS ---
-#         conda build ./conda-recipe --output-folder output --python 3.11
-#         conda build ./conda-recipe --output-folder output --python 3.12
-#         conda build ./conda-recipe --output-folder output --python 3.13
-        
-
-#     - name: Build Conda package (Windows)
-#       if: runner.os == 'Windows'
-#       run: |
-#         conda init cmd.exe
-#         refreshenv
-        
-#         # Install conda-build and force setup the ultra-fast libmamba solver
-#         conda install --yes -n base conda-build conda-libmamba-solver
-#         conda config --set solver libmamba
-        
-#         conda activate pst-env
-#         python -m pip install --upgrade pip
-        
-#         conda config --add channels conda-forge
-#         conda config --set channel_priority flexible
-        
-#         # --- LEGACY BUILDS ---
-#         # conda build ./conda-recipe --output-folder output --python 3.8
-#         # conda build ./conda-recipe --output-folder output --python 3.9
-#         conda build ./conda-recipe --output-folder output --python 3.10
-
-#         # --- MODERN BUILDS ---
-#         conda build ./conda-recipe --output-folder output --python 3.11 
-#         conda build ./conda-recipe --output-folder output --python 3.12
-#         conda build ./conda-recipe --output-folder output --python 3.13
-
-
-#     - name: Upload conda package
-#       uses: actions/upload-artifact@v4.6.0
-#       with:
-#         name: conda-packages-${{ runner.os }}-${{ github.run_id }}
-#         path: |
-#           output/**/*.tar.bz2
-#           output/**/*.conda
-#         if-no-files-found: ignore
-#         overwrite: false
-#         include-hidden-files: false
-#   ###########################################################################
-
