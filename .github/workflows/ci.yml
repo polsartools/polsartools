@@ -537,7 +537,7 @@ jobs:
           ARCH="osx-arm64"
           echo "Building for $ARCH architecture"
           # conda build ./conda-recipe --output-folder output --python 3.8
-          conda build ./conda-recipe --output-folder output --python 3.9
+          # conda build ./conda-recipe --output-folder output --python 3.9
           conda build ./conda-recipe --output-folder output --python 3.10
         fi
         
@@ -566,7 +566,7 @@ jobs:
         
         # --- LEGACY BUILDS ---
         # conda build ./conda-recipe --output-folder output --python 3.8
-        conda build ./conda-recipe --output-folder output --python 3.9
+        # conda build ./conda-recipe --output-folder output --python 3.9
         conda build ./conda-recipe --output-folder output --python 3.10
 
         # --- MODERN BUILDS ---
@@ -593,7 +593,7 @@ jobs:
         
         # --- LEGACY BUILDS ---
         # conda build ./conda-recipe --output-folder output --python 3.8
-        conda build ./conda-recipe --output-folder output --python 3.9
+        # conda build ./conda-recipe --output-folder output --python 3.9
         conda build ./conda-recipe --output-folder output --python 3.10
 
         # --- MODERN BUILDS ---
