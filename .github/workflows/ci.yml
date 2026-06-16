@@ -575,84 +575,84 @@ jobs:
     #     overwrite: false
     #     include-hidden-files: false
 
-    
+
 ##########################################################################
 # Build conda packages with conda-build
 ##########################################################################
-    - name: Build Conda package (macOS)
-      if: runner.os == 'macOS' 
-      run: |
-        conda init bash 
-        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        conda activate pst-env  
+    # - name: Build Conda package (macOS)
+    #   if: runner.os == 'macOS' 
+    #   run: |
+    #     conda init bash 
+    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
+    #     conda activate pst-env  
 
-        # Install conda-build in the active environment
-        conda install --yes conda-build pip
-        python -m pip install --upgrade pip
+    #     # Install conda-build in the active environment
+    #     conda install --yes conda-build pip
+    #     python -m pip install --upgrade pip
 
-        if [[ "$(uname -m)" == "x86_64" ]]; then
-          ARCH="osx-x86_64"
-        elif [[ "$(uname -m)" == "arm64" ]]; then
-          ARCH="osx-arm64"
-        else
-          echo "Unsupported architecture: $(uname -m)"
-          exit 1
-        fi
+    #     if [[ "$(uname -m)" == "x86_64" ]]; then
+    #       ARCH="osx-x86_64"
+    #     elif [[ "$(uname -m)" == "arm64" ]]; then
+    #       ARCH="osx-arm64"
+    #     else
+    #       echo "Unsupported architecture: $(uname -m)"
+    #       exit 1
+    #     fi
 
-        echo "Building for $ARCH architecture"
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
+    #     echo "Building for $ARCH architecture"
+    #     conda config --add channels conda-forge
+    #     conda config --set channel_priority strict
         
-        conda build ./conda-recipe --output-folder output --python 3.11
-        conda build ./conda-recipe --output-folder output --python 3.12
-        conda build ./conda-recipe --output-folder output --python 3.13
+    #     conda build ./conda-recipe --output-folder output --python 3.11
+    #     conda build ./conda-recipe --output-folder output --python 3.12
+    #     conda build ./conda-recipe --output-folder output --python 3.13
 
 
-    - name: Build Conda package (Linux)
-      if: runner.os == 'Linux' 
-      run: |
-        conda init bash 
-        if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
-        conda activate pst-env  
+    # - name: Build Conda package (Linux)
+    #   if: runner.os == 'Linux' 
+    #   run: |
+    #     conda init bash 
+    #     if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
+    #     conda activate pst-env  
 
-        # Install conda-build in the active environment
-        conda install --yes conda-build pip
-        python -m pip install --upgrade pip
+    #     # Install conda-build in the active environment
+    #     conda install --yes conda-build pip
+    #     python -m pip install --upgrade pip
         
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
+    #     conda config --add channels conda-forge
+    #     conda config --set channel_priority strict
         
-        conda build ./conda-recipe --output-folder output --python 3.11
-        conda build ./conda-recipe --output-folder output --python 3.12
-        conda build ./conda-recipe --output-folder output --python 3.13  
+    #     conda build ./conda-recipe --output-folder output --python 3.11
+    #     conda build ./conda-recipe --output-folder output --python 3.12
+    #     conda build ./conda-recipe --output-folder output --python 3.13  
         
 
-    - name: Build Conda package (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        conda init cmd.exe
-        refreshenv
-        conda activate pst-env
+    # - name: Build Conda package (Windows)
+    #   if: runner.os == 'Windows'
+    #   run: |
+    #     conda init cmd.exe
+    #     refreshenv
+    #     conda activate pst-env
         
-        # Install conda-build in the active environment
-        conda install --yes conda-build
-        python -m pip install --upgrade pip
+    #     # Install conda-build in the active environment
+    #     conda install --yes conda-build
+    #     python -m pip install --upgrade pip
         
-        conda config --add channels conda-forge
-        conda config --set channel_priority strict
+    #     conda config --add channels conda-forge
+    #     conda config --set channel_priority strict
         
-        conda build ./conda-recipe --output-folder output --python 3.11 
+    #     conda build ./conda-recipe --output-folder output --python 3.11 
 
 
-    - name: Upload conda package
-      uses: actions/upload-artifact@v4.6.0
-      with:
-        # Replaced ambiguous matrix references with explicit workflow expressions if those matrices aren't explicitly declared
-        name: conda-packages-${{ runner.os }}-${{ github.run_id }}
-        path: |
-          output/**/*.tar.bz2
-          output/**/*.conda
-        if-no-files-found: ignore
-        overwrite: false
-        include-hidden-files: false
+    # - name: Upload conda package
+    #   uses: actions/upload-artifact@v4.6.0
+    #   with:
+    #     # Replaced ambiguous matrix references with explicit workflow expressions if those matrices aren't explicitly declared
+    #     name: conda-packages-${{ runner.os }}-${{ github.run_id }}
+    #     path: |
+    #       output/**/*.tar.bz2
+    #       output/**/*.conda
+    #     if-no-files-found: ignore
+    #     overwrite: false
+    #     include-hidden-files: false
   ###########################################################################
