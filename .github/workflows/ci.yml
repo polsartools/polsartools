@@ -426,7 +426,10 @@ jobs:
         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
         # 1. CRITICAL: Install conda-build directly into the 'base' environment
-        conda install --yes -n base conda-build
+        # Install conda-build AND the modern libmamba solver backend
+        conda install --yes -n base conda-build conda-libmamba-solver
+        conda config --set solver libmamba
+        conda config --set channel_priority flexible
         
         conda activate pst-env  
         conda install --yes pip
@@ -445,7 +448,7 @@ jobs:
         conda config --add channels conda-forge
         conda config --set channel_priority strict
         
-        # conda build ./conda-recipe --output-folder output --python 3.10
+        conda build ./conda-recipe --output-folder output --python 3.10
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13
@@ -458,7 +461,11 @@ jobs:
         if [ -f ~/.bashrc ]; then source ~/.bashrc; else source ~/.bash_profile; fi
         
         # 1. CRITICAL: Install conda-build directly into the 'base' environment
-        conda install --yes -n base conda-build
+        # conda install --yes -n base conda-build
+
+        conda install --yes -n base conda-build conda-libmamba-solver
+        conda config --set solver libmamba
+        conda config --set channel_priority flexible        
         
         conda activate pst-env  
         conda install --yes pip
@@ -467,7 +474,7 @@ jobs:
         conda config --add channels conda-forge
         conda config --set channel_priority strict
         
-        # conda build ./conda-recipe --output-folder output --python 3.10
+        conda build ./conda-recipe --output-folder output --python 3.10
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13  
@@ -480,7 +487,11 @@ jobs:
         refreshenv
         
         # 1. CRITICAL: Install conda-build directly into the 'base' environment
-        conda install --yes -n base conda-build
+        # conda install --yes -n base conda-build
+
+        conda install --yes -n base conda-build conda-libmamba-solver
+        conda config --set solver libmamba
+        conda config --set channel_priority flexible
         
         conda activate pst-env
         python -m pip install --upgrade pip
@@ -488,7 +499,7 @@ jobs:
         conda config --add channels conda-forge
         conda config --set channel_priority strict
         
-        # conda build ./conda-recipe --output-folder output --python 3.10
+        conda build ./conda-recipe --output-folder output --python 3.10
         conda build ./conda-recipe --output-folder output --python 3.11
         conda build ./conda-recipe --output-folder output --python 3.12
         conda build ./conda-recipe --output-folder output --python 3.13

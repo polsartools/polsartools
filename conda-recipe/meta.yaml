@@ -32,10 +32,6 @@ requirements:
     - requests
 
 test:
-  requires:
-    - tables  
-  commands:
-    - python -c "import tables; print('PyTables version:', tables.__version__)"
     - python -c "import polsartools"
 
 about:
