@@ -3,7 +3,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.12"  
+__version__ = "0.13"  
 
 
 # Importing functions from the submodules for direct access

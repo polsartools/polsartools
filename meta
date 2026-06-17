@@ -6,15 +6,8 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
-v0.12
-added simulate_CP
-extend esar to BioSAR data
-fix rflee comp issue
-fix uavsar C3->T3
-MRSLab functions image-wide parameters
-fix vector clip
-extend NISAR S-band and update for QGIS plugin
-added ALOS-4 UWD reader
+v0.13
+
 
 [to do]
 windows arm CI --> not yet there
