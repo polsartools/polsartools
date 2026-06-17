@@ -32,6 +32,8 @@ requirements:
     - requests
 
 test:
+  commands:
+    - python -m pip install tables
     - python -c "import polsartools"
 
 about:
