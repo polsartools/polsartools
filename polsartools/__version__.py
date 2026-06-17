@@ -1,2 +1,2 @@
 # polsartools/__version__.py
-__version__ = "0.13"
+__version__ = "0.12.1"

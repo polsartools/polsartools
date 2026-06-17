@@ -11,7 +11,7 @@ copyright = '2026, PolSARtools team'
 author = 'Narayanarao Bhogapurapu'
 
 
-release = '0.13'
+release = '0.12.1'
 
 
 # -- General configuration ---------------------------------------------------
