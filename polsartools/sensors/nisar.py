@@ -185,7 +185,7 @@ def get_geo_meta(inFile):
             base_grid = f'{freq_path}/{product_type}/grids/frequencyA'
             pol_path = f'{base_grid}/listOfPolarizations'
             
-            # Note: GCOV usually puts projection in the grid, GSLC in metadata/radarGrid
+            
             if product_type == "GCOV":
                 projection_path = f'{base_grid}/projection'
                 listofcov_path = f'{base_grid}/listOfCovarianceTerms'
@@ -204,7 +204,7 @@ def get_geo_meta(inFile):
                 x_spacing = h5.get_node(f"{base_grid}/xCoordinateSpacing").read()
                 y_spacing = h5.get_node(f"{base_grid}/yCoordinateSpacing").read()
                 numberofcovarianceTerms = 0
-                if listofcov_path:
+                if listofcov_path is not None:
                     listOfCovarianceTerms = np.array(h5.get_node(listofcov_path).read()).astype(str)
                     numberofcovarianceTerms = len(listOfCovarianceTerms)
 
@@ -520,7 +520,7 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
         
     
     # freq_band,listOfPolarizations, xres, yres, projection = gslc_meta(inFile)
-    freq_band,listOfPolarizations, xres, yres, projection = get_geo_meta(inFile)
+    freq_band,listOfPolarizations, xres, yres, projection, numberofcovarianceTerms = get_geo_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
 
