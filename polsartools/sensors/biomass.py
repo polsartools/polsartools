@@ -1,4 +1,5 @@
 import numpy as np
+import glob
 from osgeo import gdal
 gdal.UseExceptions()
 import os,tempfile,shutil
@@ -269,15 +270,17 @@ def import_biomass_l1a(in_dir,mat='T3',
         base_out_dir = temp_dir
 
     mat_tag = 'S2'
-    biomassPath = in_dir.lower()
-    biomassPath = biomassPath[-80:]
-    biomassPath = biomassPath[:70]
-    biomassDataAbsPath = os.path.join(in_dir,"measurement",biomassPath + "_i_abs.tiff")
-    biomassDataPhasePath = os.path.join(in_dir,"measurement",biomassPath + "_i_phase.tiff")
+    measurement_dir = os.path.join(in_dir, "measurement")
+    annotation_dir = os.path.join(in_dir, "annotation")
+    try:
+        biomassDataAbsPath = glob.glob(os.path.join(measurement_dir, "*_i_abs.tiff"))[0]
+        biomassDataPhasePath = glob.glob(os.path.join(measurement_dir, "*_i_phase.tiff"))[0]
+        lut_path = glob.glob(os.path.join(annotation_dir, "*_lut.nc"))[0]
+    except IndexError:
+        raise ValueError("Could not find required files in the specified directory. Please ensure that the directory contains the following files:\n"
+                         "- Measurement: *_i_abs.tiff, *_i_phase.tiff\n"
+                         "- Annotation: *_lut.nc")
 
-    lut_path = os.path.join(in_dir,"annotation",biomassPath + "_lut.nc")
-
-    # try:
     dataAbsSet = gdal.Open(biomassDataAbsPath, gdal.GA_ReadOnly)
     dataPhaseSet = gdal.Open(biomassDataPhasePath, gdal.GA_ReadOnly)
 
@@ -448,12 +451,16 @@ def import_biomass_l1b(in_dir,
         temp_dir = tempfile.mkdtemp(prefix='temp_S2_')
         base_out_dir = temp_dir
 
-    biomassPath = in_dir.lower()
-    biomassPath = biomassPath[-80:]
-    biomassPath = biomassPath[:70]
-    biomassDataAbsPath = os.path.join(in_dir, "measurement", biomassPath + "_i_abs.tiff")
-
-    lut_path = os.path.join(in_dir,"annotation",biomassPath + "_lut.nc")
+    measurement_dir = os.path.join(in_dir, "measurement")
+    annotation_dir = os.path.join(in_dir, "annotation")
+    try:
+        biomassDataAbsPath = glob.glob(os.path.join(measurement_dir, "*_i_abs.tiff"))[0]
+        # biomassDataPhasePath = glob.glob(os.path.join(measurement_dir, "*_i_phase.tiff"))[0]
+        lut_path = glob.glob(os.path.join(annotation_dir, "*_lut.nc"))[0]
+    except IndexError:
+        raise ValueError("Could not find required files in the specified directory. Please ensure that the directory contains the following files:\n"
+                         "- Measurement: *_i_abs.tiff\n"
+                         "- Annotation: *_lut.nc")
 
     # Open dataset
     ds = gdal.Open(biomassDataAbsPath, gdal.GA_ReadOnly)
