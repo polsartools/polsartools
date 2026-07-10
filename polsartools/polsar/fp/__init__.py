@@ -15,3 +15,4 @@ from .freeman_3c import freeman_3c
 from .freeman_2c import freeman_2c
 from .praks_parm_fp import praks_parm_fp
 from .touzi_decomposition import touzi_decomposition
+from .div_fp import div_fp
