@@ -6,7 +6,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,read_rst
 
 @time_it
-def cluster_h_alpha_fp(hFile,alphaFile , win=1, fmt="tif", cog=False, ovr = [2, 4, 8, 16], 
+def cluster_h_alpha_fp(hFile,alphaFile , out_path = None, plot_path = None, win=1, fmt="tif", cog=False, ovr = [2, 4, 8, 16], 
             comp=False, max_workers=None,block_size=(512, 512),
             progress_callback=None,  # for QGIS plugin    
             ):
@@ -69,9 +69,15 @@ def cluster_h_alpha_fp(hFile,alphaFile , win=1, fmt="tif", cog=False, ovr = [2, 
     write_flag=True
 
     if fmt == "bin":
-        output_filepaths.append(os.path.join(infolder, "ha_cluster.bin"))
+        if out_path==None:
+            output_filepaths.append(os.path.join(infolder, "ha_cluster.bin"))
+        else:
+            output_filepaths.append(out_path)
     else:
-        output_filepaths.append(os.path.join(infolder, "ha_cluster.tif"))
+        if out_path==None:
+            output_filepaths.append(os.path.join(infolder, "ha_cluster.tif"))
+        else:
+            output_filepaths.append(out_path)
     
 
     def update_gdal_colors(filepath):
@@ -142,8 +148,12 @@ def cluster_h_alpha_fp(hFile,alphaFile , win=1, fmt="tif", cog=False, ovr = [2, 
         plt.title(r"H-$\overline{\alpha}$ clusters")
         plt.axis('off') 
         plt.tight_layout()
-        plt.savefig(os.path.join(infolder, "ha_cluster.png"), bbox_inches='tight',dpi=300,transparent=True)
-        plt.close()
+        if plot_path:
+            plt.savefig(plot_path, bbox_inches='tight',dpi=300,transparent=True)
+            plt.close()
+        else:
+            plt.savefig(os.path.join(infolder, "ha_cluster.png"), bbox_inches='tight',dpi=300,transparent=True)
+            plt.close()
         update_gdal_colors(output_filepaths[0])
 
 
@@ -186,6 +196,7 @@ def process_chunk_hacfp(chunks, window_size,input_filepaths,*args):
     zones[(h < 0.5) & (alpha >= 47.5)] = 7  # Z7
     zones[(h < 0.5) & (alpha >= 42.5) & (alpha < 47.5)] = 8  # Z8
     zones[(h < 0.5) & (alpha < 42.5)] = 9  # Z9
+    zones[(h == 0) & (alpha == 0)] = 0
 
     return zones.astype(np.uint8)
 
