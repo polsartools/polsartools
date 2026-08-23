@@ -5,7 +5,7 @@ from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files, grd_global_stats
 
 @time_it
-def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif", 
+def powers_dp_grd(cpFile,xpFile, method=1, NESZ=-16, win=1, fmt="tif", 
            cog=False, ovr = [2, 4, 8, 16], comp=False,
            max_workers=None,block_size=(512, 512),
            progress_callback=None,  # for QGIS plugin          
@@ -23,6 +23,7 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
     >>> powers_dp_grd(
     ...     cpFile="/path/to/copol_file.tif",
     ...     xpFile="/path/to/crosspol_file.tif",
+    ...     NESZ=-16,
     ...     method=2,    
     ...     win=3,
     ...     fmt="tif",
@@ -39,6 +40,8 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
     method : int
         1: Decomposition based powers
         2: Factorisation based powers
+    NESZ : float, default=-16 (cooresponds to Sentinel-1)
+        Noise Equivalent Sigma Zero (NESZ) value in dB for normalization.
     win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
@@ -101,13 +104,14 @@ def powers_dp_grd(cpFile,xpFile, method=1, win=1, fmt="tif",
     # print(f"Global stats - S1: S5={S5_s1:.4f}, S95={S95_s1:.4f}, Max={Smax_s1:.4f}")
     process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag, 
                             process_chunk_dp_powers,
-                            *[method,S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
+                            *[NESZ,method,S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
                             block_size=block_size, max_workers=max_workers,  num_outputs=len(output_filepaths),
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
+    NESZ = float(args[-11])
     method = int(args[-10])
     S2_c11 = float(args[-9])
     S98_c11 = float(args[-8])
@@ -158,7 +162,7 @@ def process_chunk_dp_powers(chunks, window_size,*args, **kwargs):
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)) # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)) # For Noise pixels 
 
-    NESZ = -16 ## For Sentinel-1
+
     dprsi = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
 
     shp = np.shape(dprbi)

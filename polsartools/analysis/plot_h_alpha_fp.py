@@ -800,8 +800,9 @@ def plot_h_alpha_fp(h, alpha, ppath=None, cmap='viridis',
     if vmin is None and vmax is not None:
         norm_option = mcolors.Normalize(vmax=vmax) if norm == '' else norm_option
     
-    plt.hexbin(H.flatten(), alpha.flatten(), gridsize=gridsize, cmap=cmap,mincnt=1,norm=norm_option)
-    
+    hb = plt.hexbin(H.flatten(), alpha.flatten(), gridsize=gridsize, cmap=cmap,mincnt=1,norm=norm_option)
+    # actual_vmin, actual_vmax = hb.get_clim()
+    # print(f"Computed vmin: {actual_vmin}, vmax: {actual_vmax}")
     if zone_lines:
         plt.axvline(x=0.5,color=zone_line_color,linestyle="--",linewidth=0.5,zorder=1)
         plt.axvline(x=0.9,color=zone_line_color,linestyle="--",linewidth=0.5,zorder=1)
@@ -850,6 +851,7 @@ def plot_h_alpha_fp(h, alpha, ppath=None, cmap='viridis',
     ax.tick_params(axis='both', which='minor', length=2, width=0.2)
     for spine in ax.spines.values():
         spine.set_linewidth(0.5)
+
     if cbar:
         c_bar = plt.colorbar()
         c_bar.ax.tick_params(labelsize=fs-fss)
