@@ -220,28 +220,6 @@ def prepare_dem(bbox,out_path="dem.tif",
         lon_range = range(int(np.floor(xmin)), int(np.ceil(xmax)))
         lat_range = range(int(np.floor(ymin)), int(np.ceil(ymax)))
         tiles = [tile_name(lat, lon) for lon in lon_range for lat in lat_range]
-    
-    # print(f"Downloading {len(tiles)} tiles...")
-    
-    # def chunk(lst, size):
-    #     for i in range(0, len(lst), size):
-    #         yield lst[i:i + size]
-
-    # hgt_paths = []
-
-    # for batch in chunk(list(tiles), tile_limit):
-        
-    #     for name in batch:
-    #         ext = ".tif" if dem_type in ["COP30", "COP90", "SRTM3"] else ".hgt"
-    #         hgt_path = os.path.join(hgt_dir, f"{name}{ext}")
-
-    #         if not os.path.exists(hgt_path):
-    #             downloaded = download_tile(name, hgt_dir=hgt_dir, dem_type=dem_type)
-    #             if not downloaded and dem_type == "SRTM1":
-    #                 create_empty_hgt(hgt_path)
-
-    #         hgt_paths.append(hgt_path)
-
 
     def chunk(lst, size):
         for i in range(0, len(lst), size):
@@ -276,7 +254,8 @@ def prepare_dem(bbox,out_path="dem.tif",
     gdal.BuildVRT(vrt_path, hgt_paths)
 
     warp_args = {
-        "format": "GTiff"
+        "format": "GTiff",
+        "creationOptions": ["BIGTIFF=IF_SAFER"]
     }
 
     if apply_correction and dem_type in ["SRTM1", "SRTM3"]:

@@ -53,9 +53,6 @@ def get_s_input_filepaths(in_dir):
     found_files = {k: find_file(k, in_dir) for k in keys}
     available = [v for v in found_files.values() if v is not None]
     if len(available) in [2, 4]:
-        # print(f"Found valid S-matrix set with {len(available)} files:")
-        # for path in available:
-        #     print(f"  {path}")
         return available
     else:
         raise FileNotFoundError(f"Only found {len(available)} S-matrix files; need exactly 2 or 4.")
@@ -77,6 +74,10 @@ def get_output_filepaths(in_dir, out_dir, matrix, fmt):
         "T4": ["T11", "T12_real", "T12_imag", "T13_real", "T13_imag",
                "T14_real", "T14_imag", "T22", "T23_real", "T23_imag",
                "T24_real", "T24_imag", "T33", "T34_real", "T34_imag", "T44"],
+        "M4": ["M11", "M12", "M13", "M14",
+               "M21", "M22", "M23", "M24",
+               "M31", "M32", "M33", "M34",
+               "M41", "M42", "M43", "M44"],
         "C2HX": ["C11", "C12_real", "C12_imag", "C22"],
         "C2VX": ["C11", "C12_real", "C12_imag", "C22"],
         "C2HV": ["C11", "C12_real", "C12_imag", "C22"],
@@ -124,6 +125,7 @@ def convert_S(in_dir, mat='T3', azlks=4,rglks=2,
         Output matrix format. Supported values:
         - 'T4', 'T3', 'T2HV' (Coherency)
         - 'C4', 'C3', 'C2HX', 'C2VX', 'C2HV' (Covariance)
+        - 'M4' (Mueller)
     azlks : int, default=4
         Number of looks in azimuth direction.
     rglks : int, default=2
@@ -153,13 +155,14 @@ def convert_S(in_dir, mat='T3', azlks=4,rglks=2,
     
     input_filepaths =  get_s_input_filepaths(in_dir)
     output_filepaths = get_output_filepaths(in_dir, out_dir,mat, fmt)
+    print(f"Input files: {input_filepaths}")
     
     if len(input_filepaths) not in [2, 4]:
         raise Exception("Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files")
     if len(input_filepaths) == 2 and mat not in {'C2', 'T2'}:
         raise Exception(f"Invalid matrix type '{mat}' for dual-pol input - please choose one of 'C2', 'T2'")
-    if len(input_filepaths) == 4 and mat not in {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV'}:
-        raise Exception(f"Invalid matrix type '{mat}' for full-pol input - please choose one of 'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV',")
+    if len(input_filepaths) == 4 and mat not in {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV','M4'}:
+        raise Exception(f"Invalid matrix type '{mat}' for full-pol input - please choose one of 'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV','M4'")
     
     # VALID_MATRICES = {'C4', 'T4', 'C3', 'T3', 'C2HX', 'C2VX', 'C2HV', 'T2HV', 'C2', 'T2'}
     # if matrix not in VALID_MATRICES:
@@ -351,7 +354,59 @@ def process_chunk_s2ct(chunks, *args, **kwargs):
         del Kp
         return np.real(T11),np.real(T12),np.imag(T12),np.real(T13),np.imag(T13), np.real(T14),np.imag(T14),np.real(T22),np.real(T23),np.imag(T23), np.real(T24),np.imag(T24),np.real(T33),np.real(T34),np.imag(T34),np.real(T44)    
 
+    elif matrix == "M4":
+        a, b, c, d = s11, s12, s21, s22
+        del s11, s12, s21, s22
 
+        aa = np.abs(a) ** 2
+        bb = np.abs(b) ** 2
+        cc = np.abs(c) ** 2
+        dd = np.abs(d) ** 2
+
+        ab_conj = a * np.conj(b)
+        cd_conj = c * np.conj(d)
+        ac_conj = a * np.conj(c)
+        bd_conj = b * np.conj(d)
+        ad_conj = a * np.conj(d)
+        bc_conj = b * np.conj(c)
+
+        del a, b, c, d
+
+        M00 = mlook_arr(0.5 * (aa + bb + cc + dd), azlks, rglks).astype(np.float32)
+        M01 = mlook_arr(0.5 * (aa - bb + cc - dd), azlks, rglks).astype(np.float32)
+        M02 = mlook_arr(np.real(ab_conj + cd_conj), azlks, rglks).astype(np.float32)
+        M03 = mlook_arr(np.imag(ab_conj + cd_conj), azlks, rglks).astype(np.float32)
+
+        M10 = mlook_arr(0.5 * (aa + bb - cc - dd), azlks, rglks).astype(np.float32)
+        M11 = mlook_arr(0.5 * (aa - bb - cc + dd), azlks, rglks).astype(np.float32)
+        M12 = mlook_arr(np.real(ab_conj - cd_conj), azlks, rglks).astype(np.float32)
+        M13 = mlook_arr(np.imag(ab_conj - cd_conj), azlks, rglks).astype(np.float32)
+
+        M20 = mlook_arr(np.real(ac_conj + bd_conj), azlks, rglks).astype(np.float32)
+        M21 = mlook_arr(np.real(ac_conj - bd_conj), azlks, rglks).astype(np.float32)
+        M22 = mlook_arr(np.real(ad_conj + bc_conj), azlks, rglks).astype(np.float32)
+        M23 = mlook_arr(np.imag(ad_conj - bc_conj), azlks, rglks).astype(np.float32)
+
+        M30 = mlook_arr(-np.imag(ac_conj + bd_conj), azlks, rglks).astype(np.float32)
+        M31 = mlook_arr(-np.imag(ac_conj - bd_conj), azlks, rglks).astype(np.float32)
+        M32 = mlook_arr(-np.imag(ad_conj + bc_conj), azlks, rglks).astype(np.float32)
+        M33 = mlook_arr(np.real(ad_conj - bc_conj), azlks, rglks).astype(np.float32)
+
+        del (
+            aa,
+            bb,
+            cc,
+            dd,
+            ab_conj,
+            cd_conj,
+            ac_conj,
+            bd_conj,
+            ad_conj,
+            bc_conj,
+        )
+
+        return  M00, M01, M02, M03, M10, M11, M12, M13, M20, M21, M22, M23, M30, M31, M32, M33,
+        
     elif matrix == "T3":
         Kp = (1/np.sqrt(2))*np.array([s11+s22, s11-s22, s12+s21])
 

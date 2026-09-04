@@ -361,6 +361,7 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         'T4':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
         'T3':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
         'C4':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
+        'M4':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
         'C3':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': True,  'dtype': np.float32},
         'C2HV': {'channels': ['HH', 'VV'],             'apply_multilook': True,  'dtype': np.float32},
         'C2HX': {'channels': ['HH', 'HV'],             'apply_multilook': True,  'dtype': np.float32},
@@ -486,7 +487,7 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
 
     mat : str, optional (default = 'C2' for Dual-pol, 'T3' for Full-pol)
         Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
-        'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
+        'T3', 'C2HX', 'C2VX', 'C2HV','T2HV','M4' and Dual-pol: 'Sxy','C2'.
 
     azlks : int, optional (default=3)
         The number of azimuth looks for multi-looking. 
@@ -572,7 +573,7 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
 
     mat : str, optional (default = 'T3' or 'C2)
         Type of matrix to extract. Valid options for Full-pol: 'S2',  'C4, 'C3', 'T4', 
-        'T3', 'C2HX', 'C2VX', 'C2HV','T2HV'and Dual-pol: 'Sxy','C2'.
+        'T3', 'C2HX', 'C2VX', 'C2HV','T2HV', 'M4' and Dual-pol: 'Sxy','C2'.
 
     azlks : int, optional (default=3)
         The number of azimuth looks for multi-looking. 
@@ -786,6 +787,7 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
 
     listOfCovarianceTerms = f"{base_path}/listOfCovarianceTerms"
 
+    print(numberofcovarianceTerms)
     if nchannels==2 and numberofcovarianceTerms==2:
         mat='I2'
     elif nchannels==2 and numberofcovarianceTerms==3:

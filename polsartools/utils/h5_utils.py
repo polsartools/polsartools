@@ -58,6 +58,8 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,ca
         return compute_t3(chunks, azlks, rglks, apply_multilook,calibration_constant)
     elif matrix_type == "T4":
         return compute_t4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip) 
+    elif matrix_type == "M4":
+        return compute_m4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip)
     elif matrix_type == "T2HV":
         return compute_t2hv(chunks, azlks, rglks, apply_multilook,calibration_constant)   
     elif matrix_type == "C2HV":
@@ -76,7 +78,58 @@ def compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook,recip,ca
         return compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant)
     else:
         raise ValueError(f"Unsupported matrix type: {matrix_type}")
-        
+
+def compute_m4(
+    chunks, azlks, rglks, apply_multilook, calibration_constant, recip=False
+):
+  def opt_mlook(data):
+    return mlook_arr(data, azlks, rglks) if apply_multilook else data
+
+  if recip:
+    chunks["HV"] = (chunks["HV"] + chunks["VH"]) * 0.5
+    chunks["VH"] = chunks["HV"]
+
+  a = chunks["HH"] / calibration_constant
+  b = chunks["HV"] / calibration_constant
+  c = chunks["VH"] / calibration_constant
+  d = chunks["VV"] / calibration_constant
+
+  # Precompute common absolute squares and inner products
+  aa = np.abs(a) ** 2
+  bb = np.abs(b) ** 2
+  cc = np.abs(c) ** 2
+  dd = np.abs(d) ** 2
+
+  ab_conj = a * np.conj(b)
+  cd_conj = c * np.conj(d)
+  ac_conj = a * np.conj(c)
+  bd_conj = b * np.conj(d)
+  ad_conj = a * np.conj(d)
+  bc_conj = b * np.conj(c)
+
+  return {
+      # Row 0
+      "M00": opt_mlook(0.5 * (aa + bb + cc + dd)),
+      "M01": opt_mlook(0.5 * (aa - bb + cc - dd)),
+      "M02": opt_mlook(np.real(ab_conj + cd_conj)),
+      "M03": opt_mlook(np.imag(ab_conj + cd_conj)),
+      # Row 1
+      "M10": opt_mlook(0.5 * (aa + bb - cc - dd)),
+      "M11": opt_mlook(0.5 * (aa - bb - cc + dd)),
+      "M12": opt_mlook(np.real(ab_conj - cd_conj)),
+      "M13": opt_mlook(np.imag(ab_conj - cd_conj)),
+      # Row 2
+      "M20": opt_mlook(np.real(ac_conj + bd_conj)),
+      "M21": opt_mlook(np.real(ac_conj - bd_conj)),
+      "M22": opt_mlook(np.real(ad_conj + bc_conj)),
+      "M23": opt_mlook(np.imag(ad_conj - bc_conj)),
+      # Row 3
+      "M30": opt_mlook(-np.imag(ac_conj + bd_conj)),
+      "M31": opt_mlook(-np.imag(ac_conj - bd_conj)),
+      "M32": opt_mlook(-np.imag(ad_conj + bc_conj)),
+      "M33": opt_mlook(np.real(ad_conj - bc_conj)),
+  }
+
 def compute_c3(chunks, azlks, rglks, apply_multilook,calibration_constant):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
