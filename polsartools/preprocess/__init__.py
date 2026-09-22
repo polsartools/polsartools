@@ -10,3 +10,4 @@ from .convert_S2 import convert_S
 from .clip import clip
 from .prepare_dem import prepare_dem
 from .simulate_CP import simulate_CP
+from .convert_C import convert_C

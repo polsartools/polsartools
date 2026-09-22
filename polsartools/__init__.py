@@ -24,7 +24,7 @@ from .sensors.biomass import import_biomass_l1a, import_biomass_l1b
 from .sensors.alos4 import import_alos4_uwd_l11
 
 """ Importing preprocessing modules """
-from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip
+from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip, convert_C
 from .preprocess.filters import filter_boxcar, filter_refined_lee
 from .preprocess import prepare_dem, mlook, simulate_CP
 
@@ -62,7 +62,7 @@ __all__ = [
     # UTILS
     'mlook', 'clip','stokes_parm',
     'read_rst', 'time_it',
-    'convert_T3_C3', 'convert_C3_T3', 'convert_S', 'simulate_CP',
+    'convert_T3_C3', 'convert_C3_T3', 'convert_S', 'simulate_CP', 'convert_C',
     # FULL-POL
     'grvi', 'rvi_fp', 'mf3cf', 'mf4cf', 'dop_fp', 'prvi_fp', 'neumann_parm', 
     'nned_fp', 'freeman_3c','freeman_2c',
