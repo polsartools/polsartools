@@ -123,6 +123,7 @@ Preprocessing
     functions/preprocess/clip
     functions/preprocess/mlook
     functions/preprocess/convert_S
+    functions/preprocess/convert_C
     functions/preprocess/simulate_CP
     
 Other functions

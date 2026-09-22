@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.preprocess.convert_S2 &#8212; PolSARtools 0.9.1 documentation</title>
+    <title>polsartools.preprocess.convert_S2 &#8212; PolSARtools 0.12.1 documentation</title>
   
   
   
@@ -26,41 +26,48 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=9dc39874"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=c5b435e8"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/preprocess/convert_S2';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -86,7 +93,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -178,11 +185,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
     </div>
     
@@ -267,11 +281,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
       </div>
     
@@ -388,9 +409,6 @@
     <span class="n">found_files</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">find_file</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">in_dir</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span>
     <span class="n">available</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">found_files</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
-        <span class="c1"># print(f&quot;Found valid S-matrix set with {len(available)} files:&quot;)</span>
-        <span class="c1"># for path in available:</span>
-        <span class="c1">#     print(f&quot;  {path}&quot;)</span>
         <span class="k">return</span> <span class="n">available</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Only found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">available</span><span class="p">)</span><span class="si">}</span><span class="s2"> S-matrix files; need exactly 2 or 4.&quot;</span><span class="p">)</span>
@@ -412,6 +430,10 @@
         <span class="s2">&quot;T4&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;T11&quot;</span><span class="p">,</span> <span class="s2">&quot;T12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;T13_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T13_imag&quot;</span><span class="p">,</span>
                <span class="s2">&quot;T14_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T14_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;T22&quot;</span><span class="p">,</span> <span class="s2">&quot;T23_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T23_imag&quot;</span><span class="p">,</span>
                <span class="s2">&quot;T24_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T24_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;T33&quot;</span><span class="p">,</span> <span class="s2">&quot;T34_real&quot;</span><span class="p">,</span> <span class="s2">&quot;T34_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;T44&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;M4&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;M11&quot;</span><span class="p">,</span> <span class="s2">&quot;M12&quot;</span><span class="p">,</span> <span class="s2">&quot;M13&quot;</span><span class="p">,</span> <span class="s2">&quot;M14&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;M21&quot;</span><span class="p">,</span> <span class="s2">&quot;M22&quot;</span><span class="p">,</span> <span class="s2">&quot;M23&quot;</span><span class="p">,</span> <span class="s2">&quot;M24&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;M31&quot;</span><span class="p">,</span> <span class="s2">&quot;M32&quot;</span><span class="p">,</span> <span class="s2">&quot;M33&quot;</span><span class="p">,</span> <span class="s2">&quot;M34&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;M41&quot;</span><span class="p">,</span> <span class="s2">&quot;M42&quot;</span><span class="p">,</span> <span class="s2">&quot;M43&quot;</span><span class="p">,</span> <span class="s2">&quot;M44&quot;</span><span class="p">],</span>
         <span class="s2">&quot;C2HX&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;C22&quot;</span><span class="p">],</span>
         <span class="s2">&quot;C2VX&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;C22&quot;</span><span class="p">],</span>
         <span class="s2">&quot;C2HV&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_real&quot;</span><span class="p">,</span> <span class="s2">&quot;C12_imag&quot;</span><span class="p">,</span> <span class="s2">&quot;C22&quot;</span><span class="p">],</span>
@@ -461,6 +483,7 @@
 <span class="sd">        Output matrix format. Supported values:</span>
 <span class="sd">        - &#39;T4&#39;, &#39;T3&#39;, &#39;T2HV&#39; (Coherency)</span>
 <span class="sd">        - &#39;C4&#39;, &#39;C3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39; (Covariance)</span>
+<span class="sd">        - &#39;M4&#39; (Mueller)</span>
 <span class="sd">    azlks : int, default=4</span>
 <span class="sd">        Number of looks in azimuth direction.</span>
 <span class="sd">    rglks : int, default=2</span>
@@ -490,13 +513,14 @@
     
     <span class="n">input_filepaths</span> <span class="o">=</span>  <span class="n">get_s_input_filepaths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">)</span>
     <span class="n">output_filepaths</span> <span class="o">=</span> <span class="n">get_output_filepaths</span><span class="p">(</span><span class="n">in_dir</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span><span class="n">mat</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input files: </span><span class="si">{</span><span class="n">input_filepaths</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Invalid S folder: must contain either 2 (dual/compact-pol) or 4 (full-pol) S-matrix files&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">}:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2">&#39; for dual-pol input - please choose one of &#39;C2&#39;, &#39;T2&#39;&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">}:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2">&#39; for full-pol input - please choose one of &#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;,&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">mat</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;T4&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;T3&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2VX&#39;</span><span class="p">,</span> <span class="s1">&#39;C2HV&#39;</span><span class="p">,</span> <span class="s1">&#39;T2HV&#39;</span><span class="p">,</span><span class="s1">&#39;M4&#39;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid matrix type &#39;</span><span class="si">{</span><span class="n">mat</span><span class="si">}</span><span class="s2">&#39; for full-pol input - please choose one of &#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;,&#39;M4&#39;&quot;</span><span class="p">)</span>
     
     <span class="c1"># VALID_MATRICES = {&#39;C4&#39;, &#39;T4&#39;, &#39;C3&#39;, &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;, &#39;T2HV&#39;, &#39;C2&#39;, &#39;T2&#39;}</span>
     <span class="c1"># if matrix not in VALID_MATRICES:</span>
@@ -689,7 +713,59 @@
         <span class="k">del</span> <span class="n">Kp</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T11</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T12</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T13</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T13</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T14</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T14</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T22</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T23</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T24</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T24</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T33</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T34</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">T34</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">T44</span><span class="p">)</span>    
 
+    <span class="k">elif</span> <span class="n">matrix</span> <span class="o">==</span> <span class="s2">&quot;M4&quot;</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">s11</span><span class="p">,</span> <span class="n">s12</span><span class="p">,</span> <span class="n">s21</span><span class="p">,</span> <span class="n">s22</span>
+        <span class="k">del</span> <span class="n">s11</span><span class="p">,</span> <span class="n">s12</span><span class="p">,</span> <span class="n">s21</span><span class="p">,</span> <span class="n">s22</span>
 
+        <span class="n">aa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">dd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="n">ab_conj</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">cd_conj</span> <span class="o">=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">ac_conj</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">bd_conj</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">ad_conj</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">bc_conj</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span>
+
+        <span class="n">M00</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">aa</span> <span class="o">+</span> <span class="n">bb</span> <span class="o">+</span> <span class="n">cc</span> <span class="o">+</span> <span class="n">dd</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M01</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">aa</span> <span class="o">-</span> <span class="n">bb</span> <span class="o">+</span> <span class="n">cc</span> <span class="o">-</span> <span class="n">dd</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M02</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ab_conj</span> <span class="o">+</span> <span class="n">cd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M03</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ab_conj</span> <span class="o">+</span> <span class="n">cd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">M10</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">aa</span> <span class="o">+</span> <span class="n">bb</span> <span class="o">-</span> <span class="n">cc</span> <span class="o">-</span> <span class="n">dd</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M11</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">aa</span> <span class="o">-</span> <span class="n">bb</span> <span class="o">-</span> <span class="n">cc</span> <span class="o">+</span> <span class="n">dd</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M12</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ab_conj</span> <span class="o">-</span> <span class="n">cd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M13</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ab_conj</span> <span class="o">-</span> <span class="n">cd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">M20</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ac_conj</span> <span class="o">+</span> <span class="n">bd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M21</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ac_conj</span> <span class="o">-</span> <span class="n">bd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M22</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ad_conj</span> <span class="o">+</span> <span class="n">bc_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M23</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ad_conj</span> <span class="o">-</span> <span class="n">bc_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">M30</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ac_conj</span> <span class="o">+</span> <span class="n">bd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M31</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ac_conj</span> <span class="o">-</span> <span class="n">bd_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M32</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ad_conj</span> <span class="o">+</span> <span class="n">bc_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">M33</span> <span class="o">=</span> <span class="n">mlook_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ad_conj</span> <span class="o">-</span> <span class="n">bc_conj</span><span class="p">),</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="p">(</span>
+            <span class="n">aa</span><span class="p">,</span>
+            <span class="n">bb</span><span class="p">,</span>
+            <span class="n">cc</span><span class="p">,</span>
+            <span class="n">dd</span><span class="p">,</span>
+            <span class="n">ab_conj</span><span class="p">,</span>
+            <span class="n">cd_conj</span><span class="p">,</span>
+            <span class="n">ac_conj</span><span class="p">,</span>
+            <span class="n">bd_conj</span><span class="p">,</span>
+            <span class="n">ad_conj</span><span class="p">,</span>
+            <span class="n">bc_conj</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span>  <span class="n">M00</span><span class="p">,</span> <span class="n">M01</span><span class="p">,</span> <span class="n">M02</span><span class="p">,</span> <span class="n">M03</span><span class="p">,</span> <span class="n">M10</span><span class="p">,</span> <span class="n">M11</span><span class="p">,</span> <span class="n">M12</span><span class="p">,</span> <span class="n">M13</span><span class="p">,</span> <span class="n">M20</span><span class="p">,</span> <span class="n">M21</span><span class="p">,</span> <span class="n">M22</span><span class="p">,</span> <span class="n">M23</span><span class="p">,</span> <span class="n">M30</span><span class="p">,</span> <span class="n">M31</span><span class="p">,</span> <span class="n">M32</span><span class="p">,</span> <span class="n">M33</span><span class="p">,</span>
+        
     <span class="k">elif</span> <span class="n">matrix</span> <span class="o">==</span> <span class="s2">&quot;T3&quot;</span><span class="p">:</span>
         <span class="n">Kp</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s11</span><span class="o">+</span><span class="n">s22</span><span class="p">,</span> <span class="n">s11</span><span class="o">-</span><span class="n">s22</span><span class="p">,</span> <span class="n">s12</span><span class="o">+</span><span class="n">s21</span><span class="p">])</span>
 
@@ -781,8 +857,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -793,7 +869,7 @@
 
   <p class="copyright">
     
-      © Copyright 2025, PolSARtools team.
+      © Copyright 2026, PolSARtools team.
       <br/>
     
   </p>
@@ -802,7 +878,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
@@ -816,7 +892,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>

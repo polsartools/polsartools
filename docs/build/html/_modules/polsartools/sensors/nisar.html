@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.12 documentation</title>
+    <title>polsartools.sensors.nisar &#8212; PolSARtools 0.12.1 documentation</title>
   
   
   
@@ -26,41 +26,48 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=3f949d3d"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/documentation_options.js?v=c5b435e8"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/nisar';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -86,7 +93,7 @@
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
   <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
@@ -178,11 +185,18 @@
       
         <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
       
     </div>
     
@@ -267,11 +281,18 @@
         
           <div class="navbar-item">
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button></div>
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
         
       </div>
     
@@ -520,11 +541,13 @@
             <span class="n">base_grid</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">product_type</span><span class="si">}</span><span class="s1">/grids/frequencyA&#39;</span>
             <span class="n">pol_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s1">/listOfPolarizations&#39;</span>
             
-            <span class="c1"># Note: GCOV usually puts projection in the grid, GSLC in metadata/radarGrid</span>
+            
             <span class="k">if</span> <span class="n">product_type</span> <span class="o">==</span> <span class="s2">&quot;GCOV&quot;</span><span class="p">:</span>
                 <span class="n">projection_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s1">/projection&#39;</span>
+                <span class="n">listofcov_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s1">/listOfCovarianceTerms&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">projection_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s1">/GSLC/metadata/radarGrid/projection&#39;</span>
+                <span class="n">listofcov_path</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="c1"># 3. Read the data</span>
             <span class="k">try</span><span class="p">:</span>
@@ -536,8 +559,14 @@
                 <span class="n">projection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">projection_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
                 <span class="n">x_spacing</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s2">/xCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                 <span class="n">y_spacing</span> <span class="o">=</span> <span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_grid</span><span class="si">}</span><span class="s2">/yCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">numberofcovarianceTerms</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">listofcov_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">listOfCovarianceTerms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">listofcov_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+                    <span class="n">numberofcovarianceTerms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfCovarianceTerms</span><span class="p">)</span>
+
                 
-                <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span> <span class="n">list_of_polarizations</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">projection</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">freq_band</span><span class="p">,</span> <span class="n">list_of_polarizations</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">projection</span><span class="p">),</span> <span class="n">numberofcovarianceTerms</span>
+                
 
             <span class="k">except</span> <span class="n">tables</span><span class="o">.</span><span class="n">NoSuchNodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing expected metadata node: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -688,6 +717,7 @@
         <span class="s1">&#39;T4&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;T3&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;C4&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
+        <span class="s1">&#39;M4&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;C3&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">,</span> <span class="s1">&#39;VH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span> <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;C2HV&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;VV&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
         <span class="s1">&#39;C2HX&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;HH&#39;</span><span class="p">,</span> <span class="s1">&#39;HV&#39;</span><span class="p">],</span>             <span class="s1">&#39;apply_multilook&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">},</span>
@@ -815,7 +845,7 @@
 
 <span class="sd">    mat : str, optional (default = &#39;C2&#39; for Dual-pol, &#39;T3&#39; for Full-pol)</span>
 <span class="sd">        Type of matrix to extract. Valid options for Full-pol: &#39;S2&#39;,  &#39;C4, &#39;C3&#39;, &#39;T4&#39;, </span>
-<span class="sd">        &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;,&#39;T2HV&#39;and Dual-pol: &#39;Sxy&#39;,&#39;C2&#39;.</span>
+<span class="sd">        &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;,&#39;T2HV&#39;,&#39;M4&#39; and Dual-pol: &#39;Sxy&#39;,&#39;C2&#39;.</span>
 
 <span class="sd">    azlks : int, optional (default=3)</span>
 <span class="sd">        The number of azimuth looks for multi-looking. </span>
@@ -849,7 +879,7 @@
         
     
     <span class="c1"># freq_band,listOfPolarizations, xres, yres, projection = gslc_meta(inFile)</span>
-    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
+    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">numberofcovarianceTerms</span> <span class="o">=</span> <span class="n">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
     <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band polarization channels: </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -904,7 +934,7 @@
 
 <span class="sd">    mat : str, optional (default = &#39;T3&#39; or &#39;C2)</span>
 <span class="sd">        Type of matrix to extract. Valid options for Full-pol: &#39;S2&#39;,  &#39;C4, &#39;C3&#39;, &#39;T4&#39;, </span>
-<span class="sd">        &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;,&#39;T2HV&#39;and Dual-pol: &#39;Sxy&#39;,&#39;C2&#39;.</span>
+<span class="sd">        &#39;T3&#39;, &#39;C2HX&#39;, &#39;C2VX&#39;, &#39;C2HV&#39;,&#39;T2HV&#39;, &#39;M4&#39; and Dual-pol: &#39;Sxy&#39;,&#39;C2&#39;.</span>
 
 <span class="sd">    azlks : int, optional (default=3)</span>
 <span class="sd">        The number of azimuth looks for multi-looking. </span>
@@ -971,10 +1001,10 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">nisar_gcov</span><span class="p">(</span><span class="n">matrix_type</span><span class="p">,</span> <span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                  <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">numberofcovarianceTerms</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting elements...&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
         <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
             <span class="c1"># matrix_type = &#39;C2HX&#39;</span>
             <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;HVHV&#39;</span><span class="p">]</span>
@@ -990,8 +1020,32 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid dual-channel polarization combination found.&quot;</span><span class="p">)</span>
             <span class="k">return</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;HV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HX&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;HVHV&#39;</span><span class="p">,</span><span class="s1">&#39;HHHV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2VX&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;VVVV&#39;</span><span class="p">,</span> <span class="s1">&#39;VHVH&#39;</span><span class="p">,</span><span class="s1">&#39;VVVH&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;HH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;VV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2HV&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;VVVV&#39;</span><span class="p">,</span><span class="s1">&#39;HHVV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;RH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;RV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2R&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;RHRH&#39;</span><span class="p">,</span> <span class="s1">&#39;RVRV&#39;</span><span class="p">,</span><span class="s1">&#39;RHRV&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;LH&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span> <span class="ow">and</span> <span class="s1">&#39;LV&#39;</span> <span class="ow">in</span> <span class="n">listOfPolarizations</span><span class="p">:</span>
+            <span class="n">matrix_type</span> <span class="o">=</span> <span class="s1">&#39;C2L&#39;</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LHLH&#39;</span><span class="p">,</span> <span class="s1">&#39;LVLV&#39;</span><span class="p">,</span><span class="s1">&#39;LHLV&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid dual-channel polarization combination found.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;HVHV&#39;</span><span class="p">,</span><span class="s1">&#39;VVVV&#39;</span><span class="p">,</span><span class="s1">&#39;VHVH&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">10</span><span class="p">:</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;HHHH&#39;</span><span class="p">,</span> <span class="s1">&#39;HVHV&#39;</span><span class="p">,</span><span class="s1">&#39;VVVV&#39;</span><span class="p">,</span><span class="s1">&#39;VHVH&#39;</span><span class="p">,</span><span class="s1">&#39;HHHV&#39;</span><span class="p">,</span><span class="s1">&#39;HHVV&#39;</span><span class="p">,</span><span class="s1">&#39;HVVV&#39;</span><span class="p">,</span><span class="s1">&#39;VHVH&#39;</span><span class="p">,</span><span class="s1">&#39;VVVH&#39;</span><span class="p">,</span><span class="s1">&#39;HHVV&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No valid polarization combination found.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
 
     <span class="c1"># Directory setup</span>
     <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1083,10 +1137,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
       
     <span class="c1"># freq_band,listOfPolarizations, xres, yres, projection = gcov_meta(inFile)</span>
-    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="n">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
+    <span class="n">freq_band</span><span class="p">,</span><span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">numberofcovarianceTerms</span> <span class="o">=</span> <span class="n">get_geo_meta</span><span class="p">(</span><span class="n">inFile</span><span class="p">)</span>
     <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">listOfPolarizations</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detected </span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s2">-band polarization channels: </span><span class="si">{</span><span class="n">listOfPolarizations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
 
     <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">,</span><span class="n">ycoords</span> <span class="o">=</span> <span class="n">get_geo_info</span><span class="p">(</span><span class="n">inFile</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">)</span>
     
@@ -1096,15 +1149,22 @@
     
     <span class="n">base_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/science/</span><span class="si">{</span><span class="n">freq_band</span><span class="si">}</span><span class="s1">SAR/GCOV/grids/frequencyA&#39;</span>
 
-    <span class="k">if</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+    <span class="n">listOfCovarianceTerms</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_path</span><span class="si">}</span><span class="s2">/listOfCovarianceTerms&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">numberofcovarianceTerms</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
         <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;I2&#39;</span>
-    <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span>
+    <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">4</span><span class="p">:</span>
         <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;I4&#39;</span>
+    <span class="k">elif</span> <span class="n">nchannels</span><span class="o">==</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">numberofcovarianceTerms</span><span class="o">==</span><span class="mi">10</span><span class="p">:</span>
+        <span class="n">mat</span><span class="o">=</span><span class="s1">&#39;C4&#39;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span><span class="p">(</span><span class="s1">&#39;Invalid number of channels!!&#39;</span><span class="p">)</span>
     <span class="n">nisar_gcov</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span><span class="n">inFile</span><span class="p">,</span> <span class="n">inFolder</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">azlks</span><span class="p">,</span> <span class="n">rglks</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span>
                 <span class="n">start_x</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="n">xres</span><span class="p">,</span> <span class="n">yres</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span>
-                <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span><span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span></div>
+                <span class="n">inshape</span><span class="p">,</span> <span class="n">outshape</span><span class="p">,</span> <span class="n">listOfPolarizations</span><span class="p">,</span> <span class="n">numberofcovarianceTerms</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span><span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span><span class="p">)</span></div>
 
 </pre></div>
 
@@ -1135,8 +1195,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1156,7 +1216,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
@@ -1170,7 +1230,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
 </p></div>
       
     </div>
