@@ -33,3 +33,4 @@ dependencies:
       - pillow==12.1.1
       - tables==3.11.1
       - blosc2==4.1.2
+      - requests
