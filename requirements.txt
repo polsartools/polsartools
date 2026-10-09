@@ -13,3 +13,4 @@ scikit-image
 pytest
 gdal<=3.11.0
 scikit-image
+geopandas
