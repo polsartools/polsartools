@@ -27,3 +27,13 @@ The `import_nisar_gcov` function extracts intensity elements (dual-pol: HHHH,HVH
 
 .. autofunction:: polsartools.import_nisar_gcov
    :noindex:
+
+
+metadata (``nisar_product_info``)
+----------------------------
+
+The `nisar_product_info` function extracts and displays metadata information for a given NISAR HDF5 product file.
+
+.. autofunction:: polsartools.nisar_product_info
+   :noindex:
+

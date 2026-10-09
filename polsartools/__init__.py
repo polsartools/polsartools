@@ -3,7 +3,7 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-__version__ = "0.12.1"  
+__version__ = "0.13"  
 
 
 # Importing functions from the submodules for direct access
@@ -22,6 +22,7 @@ from .sensors.esar import import_esar_gtc
 from .sensors.sentinel1 import import_s1_grd
 from .sensors.biomass import import_biomass_l1a, import_biomass_l1b
 from .sensors.alos4 import import_alos4_uwd_l11
+from .sensors.nisar_product_info import nisar_product_info
 
 """ Importing preprocessing modules """
 from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip, convert_C
@@ -47,7 +48,7 @@ __all__ = [
     # SENSORS
     'import_uavsar_grd', 'import_uavsar_mlc','import_isro_asar',  'import_esar_gtc',
     # 'isro_asar_old',
-    'import_nisar_gslc', 'import_nisar_rslc','import_nisar_gcov',
+    'import_nisar_gslc', 'import_nisar_rslc','import_nisar_gcov', 'nisar_product_info',
     'import_alos2_fbd_l11','import_alos2_hbq_l11', 'import_alos2_wbd_l11',
     'import_chyaan2_fp','import_chyaan2_cp',
     'import_rs2_fp',  
