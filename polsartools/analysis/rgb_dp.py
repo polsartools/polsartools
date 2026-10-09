@@ -94,7 +94,7 @@ def rgb_dp(infolder, type=1, save_tif=False, window_size=None):
             _, S2 = construct_from_sxy()
             C22 = (np.abs(S2)**2).astype(np.float32)
         red = norm_data(C22)
-        del C22
+        # del C22
 
         C11 = load_cov("C11")
         if C11 is None:
@@ -107,7 +107,7 @@ def rgb_dp(infolder, type=1, save_tif=False, window_size=None):
             S1, S2 = construct_from_sxy()
             C12r = (S1*np.conj(S2)).real.astype(np.float32)
         green = norm_data(np.abs(C11 + blue*0 + red*0 + C22 - 2*C12r))
-        del C11, C12r
+        del C11, C12r,C22
 
     elif type == 2:
         C11 = load_cov("C11")

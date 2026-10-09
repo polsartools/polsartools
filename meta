@@ -8,11 +8,17 @@
 
 v0.13
 
+added div_fp
+biomass sensor path Fix
+updated powers_dp with NESZ
+added muller matrix option
+added convert_C
+added nisar_product_info, sample_rasters
 
 [to do]
 windows arm CI --> not yet there
 full-pol <- compact pol 
-convert_C and convert_T
+convert_T
 rectangular window
 NISAR-ISCE3?
 NISAR incidence angle
