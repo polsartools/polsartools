@@ -39,7 +39,7 @@ from .polsar.others.stokes_parm import stokes_parm
 
 """ Importing analysis modules """
 from .analysis import signature_fp, plot_h_alpha_dp, plot_h_a_alpha_fp, pauli_rgb, rgb_dp, plot_h_alpha_fp, \
-                        rgb, cluster_h_alpha_fp, plot_h_theta_fp,plot_h_theta_cp
+                        rgb, cluster_h_alpha_fp, plot_h_theta_fp,plot_h_theta_cp, sample_rasters
 
 """ Importing utils """
 from .utils import time_it, read_rst
@@ -57,7 +57,7 @@ __all__ = [
     'import_alos4_uwd_l11',
     #
     'signature_fp','pauli_rgb','rgb_dp','plot_h_alpha_fp','plot_h_a_alpha_fp','cluster_h_alpha_fp',
-    'plot_h_alpha_dp','rgb', 'plot_h_theta_fp','plot_h_theta_cp',
+    'plot_h_alpha_dp','rgb', 'plot_h_theta_fp','plot_h_theta_cp','sample_rasters',
     # SPECKEL FILTERS
     'filter_refined_lee', 'filter_boxcar',
     # UTILS

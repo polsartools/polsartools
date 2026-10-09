@@ -10,3 +10,4 @@ from .plot_h_theta_fp import plot_h_theta_fp
 from .plot_h_theta_cp import plot_h_theta_cp
 
 from .cluster_h_alpha_fp import cluster_h_alpha_fp
+from .sample_rasters import sample_rasters
