@@ -80,6 +80,7 @@ def print_rslc_meta(file_path, band, product_type):
         zero_doppler_start_time = h5file.get_node(f"/science/{band_prefix}SAR/identification/zeroDopplerStartTime").read()
         listOfPolarizations = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/swaths/frequencyA/listOfPolarizations").read()
         listOfPolarizations = listOfPolarizations.astype(str).tolist()
+
         acquiredRangeBandwidth = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/swaths/frequencyA/acquiredRangeBandwidth").read()
 
         num_cols = incidence_angle.shape[1]
@@ -163,7 +164,9 @@ def print_gslc_meta(file_path, band, product_type):
     with tables.open_file(file_path, mode="r") as h5file:
         # 1. Read spacing values
         
-        along_track = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/sceneCenterAlongTrackSpacing").read()
+        if band == "LSAR":
+            along_track = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/sceneCenterAlongTrackSpacing").read()
+        
         if product_type == "GSLC":
             slant_range = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/grids/frequencyA/slantRangeSpacing").read()
         elif product_type == "GCOV":
@@ -176,7 +179,13 @@ def print_gslc_meta(file_path, band, product_type):
         incidence_angle = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/radarGrid/incidenceAngle").read()
         orbit_pass_direction = h5file.get_node(f"/science/{band_prefix}SAR/identification/orbitPassDirection").read()
 
-        acquiredRangeBandwidth = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/acquiredRangeBandwidth").read()
+        if band == "LSAR":
+            acquiredRangeBandwidth = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/acquiredRangeBandwidth").read()
+        elif band == "SSAR" and product_type == "GCOV":
+            acquiredRangeBandwidth = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/rangeBandwidth").read()
+        elif band == "SSAR" and product_type == "GSLC":
+            acquiredRangeBandwidth = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/grids/frequencyA/rangeBandwidth").read()
+
         zero_doppler_end_time = h5file.get_node(f"/science/{band_prefix}SAR/identification/zeroDopplerEndTime").read()
         zero_doppler_start_time = h5file.get_node(f"/science/{band_prefix}SAR/identification/zeroDopplerStartTime").read()
 
@@ -234,7 +243,8 @@ def print_gslc_meta(file_path, band, product_type):
     print("Acquisition Date/Time (UTC):", dt_obj.strftime("%Y-%m-%d %H:%M:%S"))
     print(f"Acquisition Duration: {duration.total_seconds()} seconds")
     print("-" * 40)
-    print(f"Along-Track Spacing:  {along_track:3.3f} m")
+    if band == "LSAR":
+        print(f"Along-Track Spacing:  {along_track:3.3f} m")
     print(f"Slant Range Spacing: {slant_range:3.3f} m")
 
     print(f"X Coordinate Spacing (ground): {x_coordinate_spacing:3.1f} m")
