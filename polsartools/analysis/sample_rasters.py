@@ -51,11 +51,17 @@ def verify_and_reproject_vector(raster_path, vector_path):
     print(f"Vector EPSG: {vector_epsg or 'Unknown (Custom/Local CRS)'}")
     print(f"Vector Feature Count: {num_points} points")
 
-    # 4. Compare Projections
-    if raster_srs.IsSame(vector_srs) == 1:
+    # 4. Compare Projections Robustly via EPSG Codes or IsSame
+    match_found = False
+    if raster_epsg and vector_epsg and raster_epsg == vector_epsg:
+        match_found = True
+    elif raster_srs.IsSame(vector_srs) == 1:
+        match_found = True
+
+    if match_found:
         return [vector_path, 0]
     else:
-        print("Projections do not match. Reprojecting vector to match raster...")
+        print("Projections do not match (or definitions differ). Reprojecting vector to match raster...")
         
         temp_dir = tempfile.gettempdir()
         base_name = os.path.basename(vector_path)
@@ -77,7 +83,6 @@ def verify_and_reproject_vector(raster_path, vector_path):
             raise RuntimeError(f"Failed to reproject vector file: {vector_path}")
         
         reprojected_ds = None  # Close and flush dataset
-        # print(f"Reprojected vector saved to temp location: {temp_vector_path}")
         return [temp_vector_path, 1]
    
 def rst_sample(vector_file, raster_files, output_file, custom_column_names, window=1):
@@ -253,8 +258,6 @@ def sample_rasters(raster_files,vector_file,output_file,window=1,custom_column_n
     ...     window=1
     ... )
     """
-
-
 
     if custom_column_names is None:
         custom_column_names = create_column_names(raster_files)
