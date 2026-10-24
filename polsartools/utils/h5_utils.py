@@ -718,11 +718,11 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
         'RH'   if 'RH'   in dataset_paths else
         'LH'   if 'LH'   in dataset_paths else
         'HHHH' if 'HHHH' in dataset_paths else
+        'VVVV' if 'VVVV' in dataset_paths else
         'HVHV' if 'HVHV' in dataset_paths else
         'RHRH' if 'RHRH' in dataset_paths else
         None
     )
-
     jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
 
     total_tasks = len(jobs)

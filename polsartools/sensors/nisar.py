@@ -699,6 +699,7 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
     # Dataset paths
     dataset_paths = {ch: f"{base_path}/{ch}" for ch in channels}
     recip = False
+    # print(dataset_paths)
     # Call h5_polsar
     h5_polsar(
         h5_file=inFile,
