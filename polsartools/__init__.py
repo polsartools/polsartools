@@ -23,6 +23,7 @@ from .sensors.sentinel1 import import_s1_grd
 from .sensors.biomass import import_biomass_l1a, import_biomass_l1b
 from .sensors.alos4 import import_alos4_uwd_l11
 from .sensors.nisar_product_info import nisar_product_info
+from .sensors.nisar_h5_tif import nisar_h5_tif
 
 """ Importing preprocessing modules """
 from .preprocess import convert_T3_C3,convert_C3_T3, convert_S, clip, convert_C
