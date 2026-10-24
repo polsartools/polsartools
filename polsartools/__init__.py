@@ -49,7 +49,7 @@ __all__ = [
     # SENSORS
     'import_uavsar_grd', 'import_uavsar_mlc','import_isro_asar',  'import_esar_gtc',
     # 'isro_asar_old',
-    'import_nisar_gslc', 'import_nisar_rslc','import_nisar_gcov', 'nisar_product_info',
+    'import_nisar_gslc', 'import_nisar_rslc','import_nisar_gcov', 'nisar_product_info','nisar_h5_tif',
     'import_alos2_fbd_l11','import_alos2_hbq_l11', 'import_alos2_wbd_l11',
     'import_chyaan2_fp','import_chyaan2_cp',
     'import_rs2_fp',  
