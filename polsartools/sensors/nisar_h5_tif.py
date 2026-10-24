@@ -7,65 +7,68 @@ tables.parameters.PYTABLES_SYS_ATTRS = False
 
 def nisar_h5_tif(h5_path, layer_to_extract=None, out_dir=None, 
                  fmt='tif', cog=False, ovr=[2, 4, 8, 16], comp=False):
-   ```python
+ 
 """
 Extract data layers from NISAR HDF5 files and export them as GeoTIFF,
 Cloud Optimized GeoTIFF (COG), or ENVI binary files.
 
-Supported products:
-    - SME2: Soil Moisture
-    - GUNW: Geocoded Unwrapped Interferogram
-    - GOFF: Geocoded Offset
+Supported products
+------------------
+- SME2: Soil Moisture
+- GUNW: Geocoded Unwrapped Interferogram
+- GOFF: Geocoded Offset
 
-Examples:
-    Extract a single layer:
-        nisar_h5_tif("file.h5", layer_to_extract="SM")
+Examples
+--------
+>>> # Extract a single layer
+>>> nisar_h5_tif("file.h5", layer_to_extract="SM")
 
-    Extract multiple layers:
-        nisar_h5_tif(
-            "file.h5",
-            layer_to_extract=["UWP", "WI", "COH"]
-        )
+>>> # Extract multiple layers
+>>> nisar_h5_tif(
+...     h5_path="file.h5",
+...     layer_to_extract=["UWP", "WI", "COH"]
+... )
 
-    Extract all supported layers:
-        nisar_h5_tif("file.h5", layer_to_extract="ALL")
+>>> # Extract all supported layers
+>>> nisar_h5_tif("file.h5", layer_to_extract="ALL")
 
-Parameters:
-    h5_path : str
-        Path to the input NISAR HDF5 file.
+Parameters
+----------
+h5_path : str
+    Path to the input NISAR HDF5 file.
 
-    layer_to_extract : str, list of str, tuple of str, or None, optional
-        Layer or layers to extract. Use a single layer key, a list or tuple
-        of layer keys, or "ALL" to extract all supported layers.
+layer_to_extract : str, list[str], tuple[str], or None, default=None
+    Layer or layers to extract. Accepts a single layer key, a list or tuple
+    of layer keys, or "ALL" to extract all supported layers.
 
-    output_directory : str or None, optional
-        Parent directory for the output folder named after the input file.
-        Defaults to the input file's directory.
+output_directory : str or None, default=None
+    Parent directory where a subfolder named after the input file is created
+    to store the output files. If None, defaults to the input file's directory.
 
-    fmt : {'tif', 'bin'}, optional
-        Output format: GeoTIFF/COG ('tif') or ENVI binary ('bin').
-        Default is 'tif'.
+fmt : {'tif', 'bin'}, default='tif'
+    Output file format:
+    - 'tif': GeoTIFF format
+    - 'bin': ENVI binary format
 
-    cog : bool, optional
-        If True, generate Cloud Optimized GeoTIFFs with internal tiling
-        and overviews. Default is False.
+cog : bool, default=False
+    If True, generates Cloud Optimized GeoTIFFs with internal tiling
+    and overviews.
 
-    ovr : list of int, optional
-        Overview levels for COG generation. Default is [2, 4, 8, 16].
-        Used only when cog=True.
+ovr : list[int], default=[2, 4, 8, 16]
+    Overview levels for COG generation. Ignored if cog=False.
 
-    comp : bool, optional
-        If True, apply LZW compression to GeoTIFF outputs.
-        Default is False.
+comp : bool, default=False
+    If True, applies LZW compression to GeoTIFF outputs.
 
-Raises:
-    ValueError
-        If the input format is unsupported or an invalid layer key is given.
+Raises
+------
+ValueError
+    If the input format is unsupported or an invalid layer key is provided.
 
-    FileNotFoundError
-        If the input HDF5 file does not exist.
+FileNotFoundError
+    If the specified input HDF5 file does not exist.
 """
-```
+
     if not os.path.exists(h5_path):
         raise FileNotFoundError(f"HDF5 file not found at '{h5_path}'.")
 
