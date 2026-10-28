@@ -680,7 +680,9 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
     elif len(listOfPolarizations)==4 and numberofcovarianceTerms==4:
         channels = ['HHHH', 'HVHV','VVVV','VHVH']
     elif len(listOfPolarizations)==4 and numberofcovarianceTerms==10:
-        channels = ['HHHH', 'HVHV','VVVV','VHVH','HHHV','HHVV','HVVV','VHVH','VVVH','HHVV']
+        # channels = ['HHHH', 'HVHV','VVVV','VHVH','HHHV','HHVV','HVVV','VHVH','VVVH','HHVV']
+        channels = ['HHHH', 'HHHV','HHVH','HHVV','HVHV','HVVH','HVVV','VHVH','VHVV','VVVV']
+
     else:
         print("No valid polarization combination found.")
         return
