@@ -8,66 +8,66 @@ tables.parameters.PYTABLES_SYS_ATTRS = False
 def nisar_h5_tif(h5_path, layer_to_extract=None, out_dir=None, 
                  fmt='tif', cog=False, ovr=[2, 4, 8, 16], comp=False):
  
-"""
-Extract data layers from NISAR HDF5 files and export them as GeoTIFF,
-Cloud Optimized GeoTIFF (COG), or ENVI binary files.
-
-Supported products
-------------------
-- SME2: Soil Moisture
-- GUNW: Geocoded Unwrapped Interferogram
-- GOFF: Geocoded Offset
-
-Examples
---------
->>> # Extract a single layer
->>> nisar_h5_tif("file.h5", layer_to_extract="SM")
-
->>> # Extract multiple layers
->>> nisar_h5_tif(
-...     h5_path="file.h5",
-...     layer_to_extract=["UWP", "WI", "COH"]
-... )
-
->>> # Extract all supported layers
->>> nisar_h5_tif("file.h5", layer_to_extract="ALL")
-
-Parameters
-----------
-h5_path : str
-    Path to the input NISAR HDF5 file.
-
-layer_to_extract : str, list[str], tuple[str], or None, default=None
-    Layer or layers to extract. Accepts a single layer key, a list or tuple
-    of layer keys, or "ALL" to extract all supported layers.
-
-output_directory : str or None, default=None
-    Parent directory where a subfolder named after the input file is created
-    to store the output files. If None, defaults to the input file's directory.
-
-fmt : {'tif', 'bin'}, default='tif'
-    Output file format:
-    - 'tif': GeoTIFF format
-    - 'bin': ENVI binary format
-
-cog : bool, default=False
-    If True, generates Cloud Optimized GeoTIFFs with internal tiling
-    and overviews.
-
-ovr : list[int], default=[2, 4, 8, 16]
-    Overview levels for COG generation. Ignored if cog=False.
-
-comp : bool, default=False
-    If True, applies LZW compression to GeoTIFF outputs.
-
-Raises
-------
-ValueError
-    If the input format is unsupported or an invalid layer key is provided.
-
-FileNotFoundError
-    If the specified input HDF5 file does not exist.
-"""
+    """
+    Extract data layers from NISAR HDF5 files and export them as GeoTIFF,
+    Cloud Optimized GeoTIFF (COG), or ENVI binary files.
+    
+    Supported products
+    ------------------
+    - SME2: Soil Moisture
+    - GUNW: Geocoded Unwrapped Interferogram
+    - GOFF: Geocoded Offset
+    
+    Examples
+    --------
+    >>> # Extract a single layer
+    >>> nisar_h5_tif("file.h5", layer_to_extract="SM")
+    
+    >>> # Extract multiple layers
+    >>> nisar_h5_tif(
+    ...     h5_path="file.h5",
+    ...     layer_to_extract=["UWP", "WI", "COH"]
+    ... )
+    
+    >>> # Extract all supported layers
+    >>> nisar_h5_tif("file.h5", layer_to_extract="ALL")
+    
+    Parameters
+    ----------
+    h5_path : str
+        Path to the input NISAR HDF5 file.
+    
+    layer_to_extract : str, list[str], tuple[str], or None, default=None
+        Layer or layers to extract. Accepts a single layer key, a list or tuple
+        of layer keys, or "ALL" to extract all supported layers.
+    
+    output_directory : str or None, default=None
+        Parent directory where a subfolder named after the input file is created
+        to store the output files. If None, defaults to the input file's directory.
+    
+    fmt : {'tif', 'bin'}, default='tif'
+        Output file format:
+        - 'tif': GeoTIFF format
+        - 'bin': ENVI binary format
+    
+    cog : bool, default=False
+        If True, generates Cloud Optimized GeoTIFFs with internal tiling
+        and overviews.
+    
+    ovr : list[int], default=[2, 4, 8, 16]
+        Overview levels for COG generation. Ignored if cog=False.
+    
+    comp : bool, default=False
+        If True, applies LZW compression to GeoTIFF outputs.
+    
+    Raises
+    ------
+    ValueError
+        If the input format is unsupported or an invalid layer key is provided.
+    
+    FileNotFoundError
+        If the specified input HDF5 file does not exist.
+    """
 
     if not os.path.exists(h5_path):
         raise FileNotFoundError(f"HDF5 file not found at '{h5_path}'.")
