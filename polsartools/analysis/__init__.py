@@ -11,3 +11,4 @@ from .plot_h_theta_cp import plot_h_theta_cp
 
 from .cluster_h_alpha_fp import cluster_h_alpha_fp
 from .sample_rasters import sample_rasters
+from .plot_hc_thetac_dp import plot_hc_thetac_dp

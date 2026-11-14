@@ -6,14 +6,10 @@
 # conda-recipe/meta.yaml
 # docs/source/conf.py
 
-v0.13
+v0.14
+added nisar_h5_tif
+added hc_tc_plot
 
-added diversity_fp
-biomass sensor path Fix
-updated powers_dp with NESZ
-added muller matrix option
-added convert_C
-added nisar_product_info, sample_rasters
 
 [to do]
 windows arm CI --> not yet there
