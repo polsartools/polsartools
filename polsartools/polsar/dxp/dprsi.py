@@ -4,7 +4,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files, S_norm, stokes_global_stats
 @time_it
-def dprsi(in_dir,  win=1, fmt="tif", cog=False, 
+def dprsi(in_dir,  NESZ=-16, win=1, fmt="tif", cog=False, 
           ovr = [2, 4, 8, 16], comp=False,
           max_workers=None,block_size=(512, 512),
           progress_callback=None,  # for QGIS plugin          
@@ -29,6 +29,10 @@ def dprsi(in_dir,  win=1, fmt="tif", cog=False,
     ----------
     in_dir : str
         Path to the input folder containing C2 matrix files.
+    NESZ : float, default=-16 for Sentinel-1
+        Noise Equivalent Sigma Zero (NESZ) in dB. This value is used to determine
+        whether a pixel is considered valid or noise. Pixels with C11 (co-pol) values
+        above this threshold are treated as valid, while those below are treated as noise.
     win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
@@ -77,14 +81,15 @@ def dprsi(in_dir,  win=1, fmt="tif", cog=False,
 
     process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
                             process_chunk_dprsi,
-                            *[S0_2, S0_98, S0_max, S1_2, S1_98, S1_max, S2_2, S2_98, S2_max, S3_2, S3_98, S3_max],
+                            *[NESZ,S0_2, S0_98, S0_max, S1_2, S1_98, S1_max, S2_2, S2_98, S2_max, S3_2, S3_98, S3_max],
                             block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dprsi(chunks, window_size,*args):
-
+    
+    NESZ = float(args[-13])
     S0_2 = float(args[-12])
     S0_98 = float(args[-11])
     S0_max = float(args[-10])
@@ -148,7 +153,7 @@ def process_chunk_dprsi(chunks, window_size,*args):
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)); # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)); # For Noise pixels 
 
-    NESZ = -16 ## For Sentinel-1
+    # NESZ = -16 ## For Sentinel-1
     dprsi = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
 
     return dprsi.astype(np.float32)

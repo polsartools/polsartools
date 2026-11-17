@@ -4,7 +4,7 @@ from polsartools.utils.proc_utils import process_chunks_parallel
 from polsartools.utils.utils import conv2d,time_it,eig22
 from .dxp_infiles import dxpc2files, grd_global_stats
 @time_it
-def dprsic(cpFile,xpFile,  win=1, fmt="tif", 
+def dprsic(cpFile,xpFile, NESZ=-16, win=1, fmt="tif", 
            cog=False, ovr = [2, 4, 8, 16], comp=False,
            max_workers=None,block_size=(512, 512),
            progress_callback=None,  # for QGIS plugin          
@@ -34,6 +34,10 @@ def dprsic(cpFile,xpFile,  win=1, fmt="tif",
         Path to the co-polarized backscatter (linear) SAR raster file.
     xpFile : str
         Path to the cross-polarized backscatter (linear) SAR raster file.
+    NESZ : float, default=-16 for Sentinel-1
+        Noise Equivalent Sigma Zero (NESZ) in dB. This value is used to determine
+        whether a pixel is considered valid or noise. Pixels with C11 (co-pol) values
+        above this threshold are treated as valid, while those below are treated as noise.
     win : int, default=1
         Size of the spatial averaging window. Larger windows reduce speckle noise
         but decrease spatial resolution.
@@ -74,16 +78,20 @@ def dprsic(cpFile,xpFile,  win=1, fmt="tif",
     print("Computing global statistics for normalization...")
 
     S2_c11, S98_c11, Smax_c11, S2_c22, S98_c22, Smax_c22, S2_s1, S98_s1, Smax_s1 = grd_global_stats(cpFile, xpFile)
+
+    # print(f"Global statistics computed: S2_c11={S2_c11}, S98_c11={S98_c11}, Smax_c11={Smax_c11}, "
+    #       f"S2_c22={S2_c22}, S98_c22={S98_c22}, Smax_c22={Smax_c22}, S2_s1={S2_s1}, S98_s1={S98_s1}, Smax_s1={Smax_s1}")
+
     process_chunks_parallel(input_filepaths, list(output_filepaths), win, write_flag,
                             process_chunk_dprsic,
-                            *[S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
+                            *[NESZ,S2_c11, S98_c11, Smax_c11,S2_c22, S98_c22, Smax_c22,S2_s1, S98_s1, Smax_s1],
                             block_size=block_size, max_workers=max_workers,  num_outputs=1,
                             cog=cog,ovr=ovr, comp=comp,
                             progress_callback=progress_callback
                             )
     
 def process_chunk_dprsic(chunks, window_size,*args):
-
+    NESZ = float(args[-10])
     S2_c11 = float(args[-9])
     S98_c11 = float(args[-8])
     Smax_c11  = float(args[-7])
@@ -116,7 +124,8 @@ def process_chunk_dprsic(chunks, window_size,*args):
     dprsi_con1 = (1 - ent)*np.sqrt(1 - np.square(s1_s_norm)); # For Valid pixels
     dprsi_con2 = np.sqrt(1 - np.square(s1_s_norm)); # For Noise pixels 
 
-    NESZ = -16 ## For Sentinel-1
+    # NESZ = -16 ## For Sentinel-1
+    # NESZ = -40 ## For NISAR
     dprsic = np.where(C11_av_db > NESZ, dprsi_con1, dprsi_con2) 
 
 
