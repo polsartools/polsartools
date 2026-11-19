@@ -358,7 +358,7 @@ def plot_h_theta_cp(h,theta, ppath=None, cmap='jet',
             ppath = os.path.join(ppath, 'htheta_plot_cp.png')  
             
         plt.savefig(ppath, dpi=300, bbox_inches='tight')
-        plt.close(fig)
+        # plt.close(fig)
         print(f"Plot saved as '{ppath}'")
     
     # y = read_bin(h) if isinstance(h, (str, os.PathLike, Path)) else np.asarray(h)

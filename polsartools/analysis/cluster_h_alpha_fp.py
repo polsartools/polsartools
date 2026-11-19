@@ -150,10 +150,10 @@ def cluster_h_alpha_fp(hFile,alphaFile , out_path = None, plot_path = None, win=
         plt.tight_layout()
         if plot_path:
             plt.savefig(plot_path, bbox_inches='tight',dpi=300,transparent=True)
-            plt.close()
+            # plt.close()
         else:
             plt.savefig(os.path.join(infolder, "ha_cluster.png"), bbox_inches='tight',dpi=300,transparent=True)
-            plt.close()
+            # plt.close()
         update_gdal_colors(output_filepaths[0])
 
 

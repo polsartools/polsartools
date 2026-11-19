@@ -185,4 +185,4 @@ def plot_hc_thetac_dp(Hc, thetac, ppath=None, cmap='viridis', colorbar=True, nor
             filename = ppath
         plt.savefig(filename, dpi=dpi, bbox_inches='tight')
         print(f"Plot saved successfully as '{filename}'")
-        plt.close(fig)
+        # plt.close(fig)
