@@ -639,7 +639,9 @@ def import_nisar_rslc(inFile, mat='T3', azlks=22,rglks=10,
 
 def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir=None,cc=1, progress_callback=None):
+                 inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir=None,cc=1, 
+                 rtc_factor_path=None,
+                 progress_callback=None):
 
     print(f"Extracting elements...")
     if len(listOfPolarizations)==2 and numberofcovarianceTerms==2:
@@ -724,14 +726,16 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
         inshape=inshape,
         outshape=outshape,
         calibration_constant=cc,
+        rtc_factor_path=rtc_factor_path,
         progress_callback=progress_callback
     )        
     
 @time_it 
-def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
+def import_nisar_gcov(inFile, azlks=1, rglks=1, bsc='sigma0',fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
             max_workers=None,
+            
             progress_callback=None):
     """
     Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.
@@ -755,6 +759,10 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
     rglks : int, optional (default=1)
         The number of range looks for multi-looking. 
     
+    bsc : str, optional (default='sigma0')
+        Backscatter type to extract. Valid options are:
+        - 'sigma0': Sigma nought backscatter
+        - 'gamma0': Gamma nought backscatter
     fmt : {'tif', 'bin'}, optional (default='tif')
         Output format:
         - 'tif': GeoTIFF with georeferencing
@@ -779,6 +787,35 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
     freq_band,listOfPolarizations, xres, yres, projection, numberofcovarianceTerms = get_geo_meta(inFile)
     nchannels = len(listOfPolarizations)
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
+    # Backscatter type selection
+    backscatter_type = bsc.lower()
+
+    if backscatter_type not in ['gamma0', 'sigma0']:
+        raise ValueError(
+            "backscatter_type must be 'gamma0' or 'sigma0'"
+        )
+
+    rtc_factor_path = None
+
+    if backscatter_type == 'sigma0':
+
+        rtc_factor_path = (
+            f'/science/{freq_band}SAR/GCOV/grids/'
+            f'frequencyA/rtcGammaToSigmaFactor'
+        )
+
+        with tables.open_file(inFile, 'r') as h5:
+
+            if rtc_factor_path not in h5:
+                raise ValueError(
+                    f"RTC factor not found: {rtc_factor_path}"
+                )
+
+    print(f"Selected backscatter type: {backscatter_type}")
+
+
+
+
 
     inshape, outshape, start_x, start_y, xcoords,ycoords = get_geo_info(inFile, azlks, rglks)
     
@@ -803,4 +840,4 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, fmt='tif',
         raise('Invalid number of channels!!')
     nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, max_workers,
                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir,progress_callback=progress_callback)
+                inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir,rtc_factor_path=rtc_factor_path, progress_callback=progress_callback)

@@ -188,29 +188,6 @@ def compute_sxy(chunks, calibration_constant):
         raise ValueError(f"Insufficient dual-pol channels. Found: {available_channels}")
 
 
-
-# def compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant):
-    
-#     def opt_mlook(data):
-#         return mlook_arr(data, azlks, rglks) if apply_multilook else data
-    
-    
-#     # Identify available channels
-#     available_channels = set(chunks.keys())
-#     # print("available_channels",available_channels)
-#     # Define co-pol and cross-pol combinations
-#     copol_priority = ['HHHH', 'VVVV']
-#     crosspol_priority = ['HVHV', 'VHVH']
-
-#     # Select co-pol channel
-#     copol = next((ch for ch in copol_priority if ch in available_channels), None)
-#     crosspol = next((ch for ch in crosspol_priority if ch in available_channels), None)
-
-#     return {
-#         "HH": opt_mlook(chunks[copol] / calibration_constant),
-#         "HV": opt_mlook(chunks[crosspol] / calibration_constant)
-#     }
-
 def compute_II(chunks, azlks, rglks, apply_multilook, calibration_constant):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
@@ -475,14 +452,30 @@ def get_chunk_jobs(h5_file, dataset_path, chunk_size_x, chunk_size_y):
 
 def process_and_write_tile(job, h5_file, dataset_paths,  azlks, rglks, matrix_type,apply_multilook,recip, temp_dir,
                            start_x, start_y, xres, yres, epsg,
-                           calibration_constant=1):
+                           calibration_constant=1,rtc_factor_path=None):
     os.makedirs(temp_dir, exist_ok=True)
     x0, x1, y0, y1 = job["x_start"], job["x_end"], job["y_start"], job["y_end"]
 
+    # chunks = {}
+    # with tables.open_file(h5_file, 'r') as h5:
+    #     for name, path in dataset_paths.items():
+    #         chunks[name] = h5.get_node(path)[y0:y1, x0:x1]
     chunks = {}
+
     with tables.open_file(h5_file, 'r') as h5:
+
+        # Read original GCOV layers
         for name, path in dataset_paths.items():
             chunks[name] = h5.get_node(path)[y0:y1, x0:x1]
+
+        # Apply Gamma0-to-Sigma0 conversion
+        if rtc_factor_path is not None:
+
+            factor = h5.get_node(rtc_factor_path)[y0:y1, x0:x1]
+            factor = np.asarray(factor, dtype=np.float32)
+
+            for name in chunks:
+                chunks[name] = chunks[name] * factor
 
     # results = compute_c3_elements(chunks, azlks, rglks, apply_multilook)
     results = compute_elements(chunks, matrix_type, azlks, rglks, apply_multilook, recip,calibration_constant)
@@ -646,59 +639,6 @@ def cleanup_temp_files(temp_dir):
     
     os.rmdir(temp_dir)
 
-
-# def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
-#                             azlks, rglks,matrix_type, apply_multilook,recip=False,
-#                             chunk_size_x=512, chunk_size_y=512,
-#                             max_workers=None,
-#                             start_x=None, start_y=None, xres=1.0, yres=1.0, epsg=4326,
-#                             fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
-#                             dtype=np.float32,
-#                             inshape=None,outshape=None,
-#                             calibration_constant=1):
-#     if max_workers is None:
-#         max_workers = max(multiprocessing.cpu_count() - 1, 1)
-#     # print("dataset_paths",dataset_paths)
-#     # polarization_key = 'HH' if 'HH' in dataset_paths else 'VV' if 'VV' in dataset_paths else None
-#     polarization_key = (
-#     'HH'   if 'HH'   in dataset_paths else
-#     'VV'   if 'VV'   in dataset_paths else
-#     'RH'   if 'RH'   in dataset_paths else
-#     'LH'   if 'LH'   in dataset_paths else
-#     'HHHH' if 'HHHH' in dataset_paths else
-#     'HVHV' if 'HVHV' in dataset_paths else
-#     'RHRH' if 'RHRH' in dataset_paths else
-#     None
-#     )
-
-#     # print("polarization_key",polarization_key)
-
-#     # jobs = get_chunk_jobs(h5_file, dataset_paths["HH"], chunk_size_x, chunk_size_y)
-#     jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
-
-#     with ProcessPoolExecutor(max_workers=max_workers) as pool:
-#         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,
-#                                azlks, rglks, matrix_type, apply_multilook, recip,temp_dir, 
-#                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
-#                                calibration_constant=calibration_constant) for job in jobs]
-#         with tqdm(total=len(futures), desc="Processing chunks") as pbar:
-#             for _ in as_completed(futures):
-#                 pbar.update(1)
-
-#     # Discover output band names
-#     dummy_shape = (azlks * 2, rglks * 2)
-#     dummy_data = {k: np.zeros(dummy_shape, dtype=np.complex64) for k in dataset_paths.keys()}
-#     keys = compute_elements(dummy_data, matrix_type, azlks, rglks, 
-#                             apply_multilook,recip,calibration_constant).keys()
-
-#     for name in keys:
-#         mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
-#                       azlks, rglks, apply_multilook, 
-#                       start_x, start_y, xres, yres, epsg, 
-#                       fmt,cog,ovr,comp, dtype,inshape,outshape)
-
-#     cleanup_temp_files(temp_dir)
-
 def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
               azlks, rglks, matrix_type, apply_multilook, recip=False,
               chunk_size_x=512, chunk_size_y=512,
@@ -708,6 +648,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
               dtype=np.float32,
               inshape=None, outshape=None,
               calibration_constant=1,
+              rtc_factor_path=None,
               progress_callback=None):   # NEW PARAM
     if max_workers is None:
         max_workers = max(multiprocessing.cpu_count() - 1, 1)
@@ -723,6 +664,21 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
         'RHRH' if 'RHRH' in dataset_paths else
         None
     )
+    # Validate RTC factor dimensions
+    if rtc_factor_path is not None:
+
+        with tables.open_file(h5_file, 'r') as h5:
+
+            factor_node = h5.get_node(rtc_factor_path)
+            source_node = h5.get_node(dataset_paths[polarization_key])
+
+            if factor_node.shape != source_node.shape:
+                raise ValueError(
+                    f"RTC factor shape {factor_node.shape} "
+                    f"does not match GCOV shape {source_node.shape}"
+                )
+
+
     jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
 
     total_tasks = len(jobs)
@@ -732,7 +688,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
         futures = [pool.submit(process_and_write_tile, job, h5_file, dataset_paths,
                                azlks, rglks, matrix_type, apply_multilook, recip, temp_dir,
                                start_x=start_x, start_y=start_y, xres=xres, yres=yres, epsg=epsg,
-                               calibration_constant=calibration_constant) for job in jobs]
+                               calibration_constant=calibration_constant, rtc_factor_path=rtc_factor_path) for job in jobs]
 
         use_tqdm = progress_callback is None
         pbar = tqdm(total=total_tasks, desc="Processing chunks") if use_tqdm else None
