@@ -338,13 +338,13 @@ def compute_c2c(chunks, azlks, rglks, apply_multilook,calibration_constant):
     
     elif "RHRH" in chunks and "RVRV" in chunks:
         
-        C11 = opt_mlook(np.abs(chunks["RHRH"]/calibration_constant)**2).astype(np.float32)
-        C22 = opt_mlook(np.abs(chunks["RVRV"]/calibration_constant)**2).astype(np.float32)
+        C11 = opt_mlook(np.abs(chunks["RHRH"]/calibration_constant)).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["RVRV"]/calibration_constant)).astype(np.float32)
         C12 = opt_mlook(np.real(chunks["RHRV"]/calibration_constant) + 1j * np.imag(chunks["RHRV"]/calibration_constant)).astype(np.complex64)
     elif "LHLH" in chunks and "LVLV" in chunks:
         
-        C11 = opt_mlook(np.abs(chunks["LHLH"]/calibration_constant)**2).astype(np.float32)
-        C22 = opt_mlook(np.abs(chunks["LVLV"]/calibration_constant)**2).astype(np.float32)
+        C11 = opt_mlook(np.abs(chunks["LHLH"]/calibration_constant)).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["LVLV"]/calibration_constant)).astype(np.float32)
         C12 = opt_mlook(np.real(chunks["LHLV"]/calibration_constant) + 1j * np.imag(chunks["LHLV"]/calibration_constant)).astype(np.complex64)
     else:
         raise ValueError("Neither RH/RV nor LH/LV channels found for C2L/C2R computation.")
