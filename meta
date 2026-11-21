@@ -9,7 +9,11 @@
 v0.14
 added nisar_h5_tif
 added hc_tc_plot
-
+fix dprsic,dprsi global normalization
+extend nisar gcov to Sigma0
+fix nisar gcov c2 matrix elements
+update convert_C
+added convert_T
 
 [to do]
 windows arm CI --> not yet there

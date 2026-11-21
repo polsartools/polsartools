@@ -827,7 +827,7 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, bsc='sigma0',fmt='tif',
 
     listOfCovarianceTerms = f"{base_path}/listOfCovarianceTerms"
 
-    print(numberofcovarianceTerms)
+    print(f"numberofcovarianceTerms: {numberofcovarianceTerms}")
     if nchannels==2 and numberofcovarianceTerms==2:
         mat='I2'
     elif nchannels==2 and numberofcovarianceTerms==3:

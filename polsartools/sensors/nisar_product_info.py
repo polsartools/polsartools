@@ -1,5 +1,3 @@
-
-
 import tables, re, os
 import numpy as np
 from datetime import datetime

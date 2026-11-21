@@ -30,7 +30,8 @@ def process_chunks_parallel(
         bands_to_read = [1] * len(input_filepaths)
         
     if max_workers is None:
-        max_workers = os.cpu_count() - 1
+        # max_workers = os.cpu_count() - 1
+        max_workers = max(1, (os.cpu_count() or 2) - 1)
 
     input_datasets = [gdal.Open(fp, gdal.GA_ReadOnly) for fp in input_filepaths]
     if any(ds is None for ds in input_datasets):
