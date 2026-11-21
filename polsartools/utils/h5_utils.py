@@ -266,8 +266,8 @@ def compute_c2hv(chunks, azlks, rglks, apply_multilook,calibration_constant):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
 
     if "HHHH" in chunks and "VVVV" in chunks:
-        C11 = opt_mlook(np.abs(chunks["HHHH"]/calibration_constant)**2).astype(np.float32)
-        C22 = opt_mlook(np.abs(chunks["VVVV"]/calibration_constant)**2).astype(np.float32)
+        C11 = opt_mlook(np.abs(chunks["HHHH"]/calibration_constant)).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["VVVV"]/calibration_constant)).astype(np.float32)
         C12 = opt_mlook(np.real(chunks["HHVV"])/calibration_constant +1j * np.imag(chunks["HHVV"])/calibration_constant).astype(np.complex64)
     else:
 
@@ -287,8 +287,8 @@ def compute_c2hx(chunks, azlks, rglks, apply_multilook,calibration_constant):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
 
     if 'HHHH' in chunks and 'HVHV' in chunks:
-        C11 = opt_mlook(np.abs(chunks["HHHH"]/calibration_constant)**2).astype(np.float32)
-        C22 = opt_mlook(np.abs(chunks["HVHV"]/calibration_constant)**2).astype(np.float32)
+        C11 = opt_mlook(np.abs(chunks["HHHH"]/calibration_constant)).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["HVHV"]/calibration_constant)).astype(np.float32)
         C12 = opt_mlook(np.real(chunks["HHHV"])/calibration_constant +1j * np.imag(chunks["HHHV"])/calibration_constant).astype(np.complex64)
     else:
         C11 = opt_mlook(np.abs(chunks["HH"]/calibration_constant)**2).astype(np.float32)
@@ -306,8 +306,8 @@ def compute_c2vx(chunks, azlks, rglks, apply_multilook,calibration_constant):
     def opt_mlook(data):
         return mlook_arr(data, azlks, rglks) if apply_multilook else data
     if 'VVVV' in chunks and 'VHVH' in chunks:
-        C11 = opt_mlook(np.abs(chunks["VVVV"]/calibration_constant)**2).astype(np.float32)
-        C22 = opt_mlook(np.abs(chunks["VHVH"]/calibration_constant)**2).astype(np.float32)
+        C11 = opt_mlook(np.abs(chunks["VVVV"]/calibration_constant)).astype(np.float32)
+        C22 = opt_mlook(np.abs(chunks["VHVH"]/calibration_constant)).astype(np.float32)
         C12 = opt_mlook(np.real(chunks["VVVH"])/calibration_constant +1j * np.imag(chunks["VVVH"])/calibration_constant).astype(np.complex64)
     else:
 
