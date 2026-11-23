@@ -9,6 +9,13 @@ from polsartools.utils.utils import time_it
 # from polsartools.utils.io_utils import write_s2_bin_ref, write_s2_ct_ref
 from polsartools.utils.h5_utils import h5_polsar, get_ml_chunk
 from netCDF4 import Dataset
+from polsartools.utils.clip_utils import prepare_clip_window, apply_vector_mask
+
+
+
+
+
+
 #%%
 
 def rslc_meta(inFile):
@@ -223,7 +230,9 @@ def get_geo_meta(inFile):
 
 def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1, progress_callback=None):
+                 inshape, outshape, listOfPolarizations, out_dir=None,cc=1, 
+                 clip_window=None,clip_mode='crop', clip=None,
+                    progress_callback=None):
 
     # Determine matrix type based on available polarizations
     # if matrix_type in ['C2','C2HV','C2HX','C2VX']:
@@ -288,6 +297,9 @@ def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_
             inshape=inshape,
             outshape=outshape,
             calibration_constant=cc,
+            clip_window=None,
+    clip_mode='crop',
+    clip=None,
             progress_callback=progress_callback
         )        
     else:
@@ -348,13 +360,17 @@ def nisar_dp(matrix_type, inFile, inFolder, base_path, azlks, rglks, recip, max_
             inshape=inshape,
             outshape=outshape,
             calibration_constant=cc,
+            clip_window=None,
+    clip_mode='crop',
+    clip=None,
             progress_callback=progress_callback
         )
 
 
 def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                    start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                   inshape, outshape, out_dir=None,cc=1, progress_callback=None):
+                   inshape, outshape, out_dir=None,cc=1, clip_window=None,clip_mode='crop', clip=None,
+                   progress_callback=None):
 
     MATRIX_CONFIG = {
         'S2':   {'channels': ['HH', 'HV', 'VH', 'VV'], 'apply_multilook': False, 'dtype': np.complex64},
@@ -416,6 +432,10 @@ def nisar_fp(mat, inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
         inshape=inshape,
         outshape=outshape,
         calibration_constant=cc,
+        clip_window=clip_window,
+        clip_mode=clip_mode,
+        clip=clip,
+
         progress_callback=progress_callback
     )
 
@@ -468,7 +488,9 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
              recip=False,
-            max_workers=None,
+            max_workers=None, clip=None,
+            clip_crs=None,
+            clip_mode='crop',
             progress_callback=None):
     """
     Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file 
@@ -526,7 +548,32 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
     print(f"Detected {freq_band}-band polarization channels: {listOfPolarizations}")
 
     inshape, outshape, start_x, start_y, xcoords,ycoords = get_geo_info(inFile, azlks, rglks)
-    
+
+    # Prepare clipping window
+    clip_window = prepare_clip_window(
+        clip,
+        clip_crs,
+        projection,
+        xcoords,
+        ycoords,
+        azlks,
+        rglks
+    )
+
+    if clip_window is not None:
+
+        x0, x1, y0, y1 = clip_window
+
+        print("AOI pixel window:", clip_window)
+
+        print(
+            "AOI dimensions:",
+            x1 - x0,
+            "x",
+            y1 - y0
+        )
+
+
     # print(projection,start_x,start_y,xres,yres,inshape,outshape)
     # print(min(ycoords),max(ycoords), min(ycoords)+np.abs(yres)*(inshape[1]-1))
     
@@ -540,7 +587,10 @@ def import_nisar_gslc(inFile, mat='T3', azlks=2, rglks=2, fmt='tif',
         # print("Dual-Pol data detected.",mat)
         nisar_dp(mat,inFile, inFolder, base_path, azlks, rglks, recip, max_workers,
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                 inshape, outshape, listOfPolarizations, out_dir, progress_callback=progress_callback)
+                 inshape, outshape, listOfPolarizations, out_dir, clip_window=clip_window,
+clip_mode=clip_mode,
+clip=clip,
+progress_callback=progress_callback)
         
                 
     elif nchannels==4:
@@ -641,6 +691,9 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
                  start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
                  inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir=None,cc=1, 
                  rtc_factor_path=None,
+                 clip_window=None,
+                clip_mode='crop',
+                clip=None,
                  progress_callback=None):
 
     print(f"Extracting elements...")
@@ -727,6 +780,9 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
         outshape=outshape,
         calibration_constant=cc,
         rtc_factor_path=rtc_factor_path,
+        clip_window=clip_window,
+        clip_mode=clip_mode,
+        clip=clip,
         progress_callback=progress_callback
     )        
     
@@ -734,8 +790,8 @@ def nisar_gcov(matrix_type, inFile, inFolder, base_path, azlks, rglks, max_worke
 def import_nisar_gcov(inFile, azlks=1, rglks=1, bsc='sigma0',fmt='tif',
              cog=False,ovr = [2, 4, 8, 16],comp=False,
              out_dir=None,
-            max_workers=None,
-            
+            max_workers=None,clip=None,
+            clip_crs=None, clip_mode='crop',
             progress_callback=None):
     """
     Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.
@@ -818,7 +874,21 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, bsc='sigma0',fmt='tif',
 
 
     inshape, outshape, start_x, start_y, xcoords,ycoords = get_geo_info(inFile, azlks, rglks)
-    
+
+    clip_window = prepare_clip_window(
+        clip,
+        clip_crs,
+        projection,
+        xcoords,
+        ycoords,
+        azlks,
+        rglks
+    )
+
+    if clip_window is not None:
+
+        print("AOI pixel window:", clip_window)
+
     inFolder = os.path.dirname(inFile)   
     if not inFolder:
         inFolder = "."
@@ -840,4 +910,7 @@ def import_nisar_gcov(inFile, azlks=1, rglks=1, bsc='sigma0',fmt='tif',
         raise('Invalid number of channels!!')
     nisar_gcov(mat,inFile, inFolder, base_path, azlks, rglks, max_workers,
                 start_x, start_y, xres, yres, projection, fmt, cog, ovr, comp,
-                inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir,rtc_factor_path=rtc_factor_path, progress_callback=progress_callback)
+                inshape, outshape, listOfPolarizations, numberofcovarianceTerms, out_dir,rtc_factor_path=rtc_factor_path, clip_window=clip_window,
+                clip_mode=clip_mode,
+                clip=clip,
+                progress_callback=progress_callback)

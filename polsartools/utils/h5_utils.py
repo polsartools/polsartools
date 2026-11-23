@@ -12,8 +12,8 @@ from netCDF4 import Dataset
 from osgeo import gdal, osr
 gdal.UseExceptions()
 import multiprocessing
-
-
+import math
+from polsartools.utils.clip_utils import apply_vector_mask
 
 import warnings
 warnings.filterwarnings("ignore", category=tables.exceptions.DataTypeWarning)
@@ -431,22 +431,65 @@ def compute_t4(chunks, azlks, rglks, apply_multilook,calibration_constant,recip=
         "T44": opt_mlook(np.real(np.abs(Kp[3])**2))
     }
 
+def get_chunk_jobs(
+    h5_file,
+    dataset_path,
+    chunk_size_x,
+    chunk_size_y,
+    clip_window=None
+):
 
-def get_chunk_jobs(h5_file, dataset_path, chunk_size_x, chunk_size_y):
-    # import tables
     jobs = []
+
     with tables.open_file(h5_file, 'r') as h5:
+
         arr = h5.get_node(dataset_path)
+
         height, width = arr.shape
-        for y in range(0, height, chunk_size_y):
-            for x in range(0, width, chunk_size_x):
+
+        # Default: process entire raster
+        if clip_window is None:
+
+            x_min, x_max = 0, width
+            y_min, y_max = 0, height
+
+        else:
+
+            x_min, x_max, y_min, y_max = clip_window
+
+        # Generate only intersecting chunks
+        for y in range(
+            (y_min // chunk_size_y) * chunk_size_y,
+            y_max,
+            chunk_size_y
+        ):
+
+            for x in range(
+                (x_min // chunk_size_x) * chunk_size_x,
+                x_max,
+                chunk_size_x
+            ):
+
                 jobs.append({
+
                     "x_start": x,
-                    "x_end": min(x + chunk_size_x, width),
+
+                    "x_end": min(
+                        x + chunk_size_x,
+                        width
+                    ),
+
                     "y_start": y,
-                    "y_end": min(y + chunk_size_y, height)
+
+                    "y_end": min(
+                        y + chunk_size_y,
+                        height
+                    )
+
                 })
+
     return jobs
+
 
 
 
@@ -519,119 +562,329 @@ def save_tiff(name, data, x0, y0, azlks, rglks, apply_multilook, temp_dir,
     dst = None
 
 
-def mosaic_chunks(element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y, 
-                  azlks, rglks, apply_multilook,
-                  start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326,
-                  fmt='tif',cog=False,ovr = [2, 4, 8, 16],comp=False,
-                  dtype=np.float32,
-                  inshape=None,outshape=None
-                  
-                  ):
-
+def mosaic_chunks( element_name, temp_dir, output_dir, chunk_size_x, chunk_size_y, azlks, rglks, apply_multilook, start_x=0, start_y=0, xres=1.0, yres=1.0, epsg=4326, fmt='tif', cog=False, ovr=[2, 4, 8, 16], comp=False, dtype=np.float32, inshape=None, outshape=None, clip_window=None ):
     dtype = get_dtype(dtype)
+
     os.makedirs(output_dir, exist_ok=True)
-    chunk_files = sorted(glob.glob(os.path.join(temp_dir, f"{element_name}_*.tif")))
+
+    chunk_files = sorted(
+        glob.glob(os.path.join(temp_dir, f"{element_name}_*.tif"))
+    )
+
     if not chunk_files:
         print(f"No chunks found for {element_name}")
         return
 
+    # --------------------------------------------------
+    # 1. Handle multilooking
+    # --------------------------------------------------
+
     if not apply_multilook:
-        azlks = rglks = 1
-    
-    dataset = gdal.Open(chunk_files[0], gdal.GA_ReadOnly)
-    in_geotransform = dataset.GetGeoTransform()
-    
-    out_geotransform = list(in_geotransform)
-    normalized = tuple(round(float(x), 6) for x in in_geotransform)
-    if normalized in [
-        (0.0, 1.0, 0.0, 0.0, 0.0, -1.0),
-        (0.0, 1.0, 0.0, 0.0, 0.0,  1.0)
-                    ]:
-        # out_geotransform[1] *= 1 
-        # out_geotransform[5] *= 1 
-        
-        res_x = xres * 1
-        res_y = yres * 1
+        azlks = 1
+        rglks = 1
+
+    # --------------------------------------------------
+    # 2. Calculate output resolution
+    # --------------------------------------------------
+
+    res_x = xres * rglks
+    res_y = abs(yres) * azlks
+
+    # Preserve original full-raster dimensions
+    if inshape is None:
+        raise ValueError("inshape must be provided.")
+
+    original_width = inshape[0]
+    original_height = inshape[1]
+
+    # --------------------------------------------------
+    # 3. Calculate output dimensions and origin
+    # --------------------------------------------------
+
+    if clip_window is not None:
+
+        x_min, x_max, y_min, y_max = map(int, clip_window)
+
+        # Align clipping boundaries to multilook blocks
+        clip_x_start = x_min // rglks
+        clip_y_start = y_min // azlks
+
+        clip_x_end = min(
+            math.ceil(x_max / rglks),
+            math.ceil(original_width / rglks)
+        )
+
+        clip_y_end = min(
+            math.ceil(y_max / azlks),
+            math.ceil(original_height / azlks)
+        )
+
+        out_width = clip_x_end - clip_x_start
+        out_height = clip_y_end - clip_y_start
+
     else:
-        # out_geotransform[1] = (in_geotransform[1] * in_cols) / out_x_size
-        # out_geotransform[5] = (in_geotransform[5] * in_rows) / out_y_size
 
-        res_x = xres * rglks
-        res_y = yres * azlks
-    
-    # print(res_x,res_y)
-    
-    if apply_multilook and (inshape is not None) and (outshape is not None):
-        old_width = inshape[0]
-        old_height = inshape[1]
-        ml_width = outshape[0]
-        ml_height = outshape[1]
-        res_x = (xres * old_width) / ml_width
-        res_y = (yres * old_height) / ml_height
-        
-        # print(res_x,res_y)
-    
+        clip_x_start = 0
+        clip_y_start = 0
 
-    max_x = 0
-    max_y = 0
+        out_width = (
+            outshape[0]
+            if apply_multilook and outshape is not None
+            else math.ceil(original_width / rglks)
+        )
+
+        out_height = (
+            outshape[1]
+            if apply_multilook and outshape is not None
+            else math.ceil(original_height / azlks)
+        )
+
+    if out_width <= 0 or out_height <= 0:
+        raise ValueError("Invalid output dimensions.")
+
+    # print("\n========== CLIP DEBUG ==========")
+
+    # print("clip_window:", clip_window)
+
+    # print("inshape:", inshape)
+
+    # print("outshape:", outshape)
+
+    # print("azlks:", azlks)
+
+    # print("rglks:", rglks)
+
+    # print("start_x:", start_x)
+
+    # print("start_y:", start_y)
+
+    # print("xres:", xres)
+
+    # print("yres:", yres)
+
+    # print("================================\n")
+
+
+
+
+
+
+
+
+
+
+    # --------------------------------------------------
+    # 4. Calculate output geotransform
+    # --------------------------------------------------
+
+    clipped_start_x = start_x + clip_x_start * res_x
+
+    clipped_start_y = start_y - clip_y_start * res_y
+
+    geotransform = [
+        clipped_start_x,
+        res_x,
+        0,
+        clipped_start_y,
+        0,
+        -res_y
+    ]
+
+    # --------------------------------------------------
+    # 5. Calculate intersecting chunk offsets
+    # --------------------------------------------------
+
     offsets = []
 
     for f in chunk_files:
-        y0 = int(f.split("_")[-2])
-        x0 = int(f.split("_")[-1].split(".")[0])
-        x_ml = x0 // rglks
-        y_ml = y0 // azlks
-        tile = gdal.Open(f)
-        h, w = tile.RasterYSize, tile.RasterXSize
-        max_x = max(max_x, x_ml + w)
-        max_y = max(max_y, y_ml + h)
-        offsets.append((f, x_ml, y_ml))
+
+        filename = os.path.basename(f)
+
+        y0 = int(filename.split("_")[-2])
+        x0 = int(filename.split("_")[-1].split(".")[0])
+
+        tile = gdal.Open(f, gdal.GA_ReadOnly)
+
+        data = tile.GetRasterBand(1).ReadAsArray()
+
+        h, w = data.shape
+
         tile = None
 
-    driver = gdal.GetDriverByName('ENVI') if fmt == 'bin' else gdal.GetDriverByName('GTiff')
+        # Original tile coordinates in multilooked pixels
+        tile_x_start = x0 // rglks
+        tile_y_start = y0 // azlks
+
+        tile_x_end = tile_x_start + w
+        tile_y_end = tile_y_start + h
+
+        # AOI intersection
+        ix0 = max(tile_x_start, clip_x_start)
+        iy0 = max(tile_y_start, clip_y_start)
+
+        ix1 = min(
+            tile_x_end,
+            clip_x_start + out_width
+        )
+
+        iy1 = min(
+            tile_y_end,
+            clip_y_start + out_height
+        )
+
+        if ix0 >= ix1 or iy0 >= iy1:
+            continue
+
+        # Source offsets inside original tile
+        src_x0 = ix0 - tile_x_start
+        src_y0 = iy0 - tile_y_start
+
+        src_x1 = ix1 - tile_x_start
+        src_y1 = iy1 - tile_y_start
+
+        # Destination offsets inside output raster
+        dst_x = ix0 - clip_x_start
+        dst_y = iy0 - clip_y_start
+
+        offsets.append((
+            f,
+            src_x0,
+            src_y0,
+            src_x1,
+            src_y1,
+            dst_x,
+            dst_y
+        ))
+
+    # --------------------------------------------------
+    # 6. Create output raster
+    # --------------------------------------------------
+
+    driver = (
+        gdal.GetDriverByName('ENVI')
+        if fmt == 'bin'
+        else gdal.GetDriverByName('GTiff')
+    )
 
     options = ['BIGTIFF=IF_SAFER']
-    if comp:
-        # options += ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=9']
-        options += ['COMPRESS=LZW']
-    if cog:
-        options += ['TILED=YES', 'BLOCKXSIZE=512', 'BLOCKYSIZE=512']
-    
-    options = options if fmt == 'tif' else []
-    
-    
-    out_path = os.path.join(output_dir, f"{element_name}.{fmt}")
-    dst = driver.Create(out_path, max_x, max_y, 1, dtype, options=options)
 
-    dst.SetGeoTransform([start_x, res_x, 0, start_y, 0, -abs(res_y)])
-   
-    # print(start_x, start_y, res_x, -abs(res_y))
-    srs = osr.SpatialReference(); srs.ImportFromEPSG(epsg)
+    if comp:
+        options += ['COMPRESS=LZW']
+
+    if cog:
+        options += [
+            'TILED=YES',
+            'BLOCKXSIZE=512',
+            'BLOCKYSIZE=512'
+        ]
+
+    if fmt != 'tif':
+        options = []
+
+    out_path = os.path.join(
+        output_dir,
+        f"{element_name}.{fmt}"
+    )
+
+    dst = driver.Create(
+        out_path,
+        out_width,
+        out_height,
+        1,
+        dtype,
+        options=options
+    )
+
+    if dst is None:
+        raise RuntimeError(
+            f"Could not create output raster: {out_path}"
+        )
+
+    dst.SetGeoTransform(geotransform)
+
+    srs = osr.SpatialReference()
+    srs.ImportFromEPSG(int(epsg))
+
     dst.SetProjection(srs.ExportToWkt())
 
-    for f, x_ml, y_ml in offsets:
-        tile = gdal.Open(f)
+    band = dst.GetRasterBand(1)
+
+    band.SetNoDataValue(0)
+
+    # --------------------------------------------------
+    # 7. Write intersecting chunks
+    # --------------------------------------------------
+
+    for (
+        f,
+        src_x0,
+        src_y0,
+        src_x1,
+        src_y1,
+        dst_x,
+        dst_y
+    ) in offsets:
+
+        tile = gdal.Open(f, gdal.GA_ReadOnly)
+
         data = tile.GetRasterBand(1).ReadAsArray()
-        dst.GetRasterBand(1).WriteArray(data, x_ml, y_ml)
+
+        # Crop tile to AOI intersection
+        clipped_data = data[
+            src_y0:src_y1,
+            src_x0:src_x1
+        ]
+
+        band.WriteArray(
+            clipped_data,
+            dst_x,
+            dst_y
+        )
+
         tile = None
 
-    dst.GetRasterBand(1).SetNoDataValue(0)
+    # --------------------------------------------------
+    # 8. Metadata
+    # --------------------------------------------------
+
     if apply_multilook:
+
         dst.SetMetadata({
             'AzimuthLooks': str(azlks),
-            'RangeLooks': str(rglks),
+            'RangeLooks': str(rglks)
         })
 
-    dst.SetMetadataItem('Generated by','polsartools')
-    dst.FlushCache()
-    if cog:
-        dst.BuildOverviews("NEAREST", ovr)
-    # dst.SetMetadataItem('TIFFTAG_DOCUMENTNAME', element_name)
-    # dst.SetMetadataItem('DESCRIPTION', element_name)
-    # dst.SetDescription(element_name)
-    dst = None
-    print(f"Saved file {out_path}")
+    dst.SetMetadataItem(
+        'Generated by',
+        'polsartools'
+    )
 
+    if clip_window is not None:
+
+        dst.SetMetadataItem(
+            'ClipWindow',
+            str(clip_window)
+        )
+
+    dst.FlushCache()
+
+    # --------------------------------------------------
+    # 9. Build overviews
+    # --------------------------------------------------
+
+    if cog:
+
+        dst.BuildOverviews(
+            "NEAREST",
+            ovr
+        )
+
+    dst = None
+
+    print(
+        f"Saved file: {out_path} "
+        # f"| Size: {out_width} x {out_height}"
+    )
 
 def cleanup_temp_files(temp_dir):
     for f in glob.glob(os.path.join(temp_dir, "*.tif")):
@@ -649,6 +902,9 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
               inshape=None, outshape=None,
               calibration_constant=1,
               rtc_factor_path=None,
+              clip_window=None,
+              clip_mode='crop',
+              clip=None,
               progress_callback=None):   # NEW PARAM
     if max_workers is None:
         max_workers = max(multiprocessing.cpu_count() - 1, 1)
@@ -679,7 +935,7 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
                 )
 
 
-    jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y)
+    jobs = get_chunk_jobs(h5_file, dataset_paths[polarization_key], chunk_size_x, chunk_size_y,clip_window=clip_window)
 
     total_tasks = len(jobs)
     completed = 0
@@ -709,10 +965,38 @@ def h5_polsar(h5_file, dataset_paths, output_dir, temp_dir,
     keys = compute_elements(dummy_data, matrix_type, azlks, rglks,
                             apply_multilook, recip, calibration_constant).keys()
 
+    # for name in keys:
+    #     mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
+    #                   azlks, rglks, apply_multilook,
+    #                   start_x, start_y, xres, yres, epsg,
+    #                   fmt, cog, ovr, comp, dtype, inshape, outshape,
+    #                   clip_window=clip_window)
+
+    # cleanup_temp_files(temp_dir)
     for name in keys:
-        mosaic_chunks(name, temp_dir, output_dir, chunk_size_x, chunk_size_y,
-                      azlks, rglks, apply_multilook,
-                      start_x, start_y, xres, yres, epsg,
-                      fmt, cog, ovr, comp, dtype, inshape, outshape)
+
+        mosaic_chunks(
+            name, temp_dir, output_dir,
+            chunk_size_x, chunk_size_y,
+            azlks, rglks, apply_multilook,
+            start_x, start_y, xres, yres, epsg,
+            fmt, cog, ovr, comp, dtype,
+            inshape, outshape,
+            clip_window=clip_window
+        )
+
+        # Apply polygon mask after mosaicking
+        if isinstance(clip, (str, os.PathLike)):
+
+            output_path = os.path.join(
+                output_dir,
+                f"{name}.{fmt}"
+            )
+
+            apply_vector_mask(
+                output_path,
+                clip,
+                nodata=0
+            )
 
     cleanup_temp_files(temp_dir)

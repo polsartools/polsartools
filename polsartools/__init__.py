@@ -45,7 +45,7 @@ from .analysis import signature_fp, plot_h_alpha_dp, plot_h_a_alpha_fp, pauli_rg
 
 """ Importing utils """
 from .utils import time_it, read_rst
-
+from  .utils.h5_info import h5_info
 __all__ = [
     # SENSORS
     'import_uavsar_grd', 'import_uavsar_mlc','import_isro_asar',  'import_esar_gtc',
