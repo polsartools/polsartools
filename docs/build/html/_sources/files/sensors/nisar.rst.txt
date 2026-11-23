@@ -37,3 +37,11 @@ The `nisar_product_info` function extracts and displays metadata information for
 .. autofunction:: polsartools.nisar_product_info
    :noindex:
 
+
+convert NISAR .h5 to .tif (``nisar_h5_tif``)
+--------------------------------------------
+
+The `nisar_h5_tif` function extracts and converts NISAR HDF5 product files to GeoTIFF format.
+
+.. autofunction:: polsartools.nisar_h5_tif
+   :noindex:

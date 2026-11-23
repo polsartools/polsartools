@@ -16,6 +16,7 @@ update convert_C
 added convert_T
 add clip function to nisar_gcov, nisar_gslc
 add h5_info
+update nisar_product_info
 
 [to do]
 windows arm CI --> not yet there

@@ -1,0 +1,779 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>polsartools.sensors.nisar_h5_tif &#8212; PolSARtools 0.14 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+    <script src="../../../_static/documentation_options.js?v=506589e9"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/sensors/nisar_h5_tif';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="icon" href="../../../_static/icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/icon.png" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/icon.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PolSARtools</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/00start.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/01sensors.html">
+    Supported sensors
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/02functions.html">
+    Functions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../files/03refs.html">
+    References
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">polsartools.sensors.nisar_h5_tif</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for polsartools.sensors.nisar_h5_tif</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tables</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span><span class="p">,</span> <span class="n">osr</span>
+
+<span class="n">tables</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">PYTABLES_SYS_ATTRS</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="nisar_h5_tif">
+<a class="viewcode-back" href="../../../files/sensors/nisar.html#polsartools.nisar_h5_tif">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">nisar_h5_tif</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                 <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w"> </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract data layers from NISAR HDF5 files and export them as GeoTIFF,</span>
+<span class="sd">    Cloud Optimized GeoTIFF (COG), or ENVI binary files.</span>
+<span class="sd">    </span>
+<span class="sd">    Supported products</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    - SME2: Soil Moisture</span>
+<span class="sd">    - GUNW: Geocoded Unwrapped Interferogram</span>
+<span class="sd">    - GOFF: Geocoded Offset</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Extract a single layer</span>
+<span class="sd">    &gt;&gt;&gt; nisar_h5_tif(&quot;file.h5&quot;, layer_to_extract=&quot;SM&quot;)</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # Extract multiple layers</span>
+<span class="sd">    &gt;&gt;&gt; nisar_h5_tif(</span>
+<span class="sd">    ...     h5_path=&quot;file.h5&quot;,</span>
+<span class="sd">    ...     layer_to_extract=[&quot;UWP&quot;, &quot;WI&quot;, &quot;COH&quot;]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # Extract all supported layers</span>
+<span class="sd">    &gt;&gt;&gt; nisar_h5_tif(&quot;file.h5&quot;, layer_to_extract=&quot;ALL&quot;)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    h5_path : str</span>
+<span class="sd">        Path to the input NISAR HDF5 file.</span>
+<span class="sd">    </span>
+<span class="sd">    layer_to_extract : str, list[str], tuple[str], or None, default=None</span>
+<span class="sd">        Layer or layers to extract. Accepts a single layer key, a list or tuple</span>
+<span class="sd">        of layer keys, or &quot;ALL&quot; to extract all supported layers.</span>
+<span class="sd">    </span>
+<span class="sd">    output_directory : str or None, default=None</span>
+<span class="sd">        Parent directory where a subfolder named after the input file is created</span>
+<span class="sd">        to store the output files. If None, defaults to the input file&#39;s directory.</span>
+<span class="sd">    </span>
+<span class="sd">    fmt : {&#39;tif&#39;, &#39;bin&#39;}, default=&#39;tif&#39;</span>
+<span class="sd">        Output file format:</span>
+<span class="sd">        - &#39;tif&#39;: GeoTIFF format</span>
+<span class="sd">        - &#39;bin&#39;: ENVI binary format</span>
+<span class="sd">    </span>
+<span class="sd">    cog : bool, default=False</span>
+<span class="sd">        If True, generates Cloud Optimized GeoTIFFs with internal tiling</span>
+<span class="sd">        and overviews.</span>
+<span class="sd">    </span>
+<span class="sd">    ovr : list[int], default=[2, 4, 8, 16]</span>
+<span class="sd">        Overview levels for COG generation. Ignored if cog=False.</span>
+<span class="sd">    </span>
+<span class="sd">    comp : bool, default=False</span>
+<span class="sd">        If True, applies LZW compression to GeoTIFF outputs.</span>
+<span class="sd">    </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the input format is unsupported or an invalid layer key is provided.</span>
+<span class="sd">    </span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If the specified input HDF5 file does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">h5_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;HDF5 file not found at &#39;</span><span class="si">{</span><span class="n">h5_path</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Inspect internal HDF5 nodes to determine product type</span>
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+        <span class="n">is_sme2</span> <span class="o">=</span> <span class="s2">&quot;/science/LSAR/SME2&quot;</span> <span class="ow">in</span> <span class="n">h5file</span>
+        <span class="n">is_gunw</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">/GUNW&quot;</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;/science/LSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;/science/SSAR&#39;</span><span class="p">])</span>
+        <span class="n">is_goff</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">/GOFF&quot;</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;/science/LSAR&#39;</span><span class="p">,</span> <span class="s1">&#39;/science/SSAR&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">is_sme2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detected Product Type: SME2 (Soil Moisture)&quot;</span><span class="p">)</span>
+        <span class="n">_process_sme2</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_gunw</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detected Product Type: GUNW (Geocoded Unwrapped Interferogram)&quot;</span><span class="p">)</span>
+        <span class="n">_process_gunw</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_goff</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Detected Product Type: GOFF (Geocoded Pixel Offsets)&quot;</span><span class="p">)</span>
+        <span class="n">_process_goff</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[ERROR] Unsupported NISAR product format in file: </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">h5_path</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;-&gt; Supported Product Types: SME2, GUNW, GOFF</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;-&gt; Please ensure the HDF5 structure contains valid paths under &#39;/science/LSAR&#39; or &#39;/science/SSAR&#39;.&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_raster</span><span class="p">(</span><span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">data_array</span><span class="p">,</span> <span class="n">tif_path</span><span class="p">,</span> 
+                  <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal helper to write arrays into georeferenced raster files using GDAL.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">data_array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">data_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">data_array</span><span class="p">)</span>
+        
+    <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">data_array</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">start_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">x_spacing</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">start_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ycoords</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">y_spacing</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">geotransform</span> <span class="o">=</span> <span class="p">(</span><span class="n">start_x</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_spacing</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">start_y</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">y_spacing</span><span class="p">))</span>
+    
+    <span class="n">gdal_datatype_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float64</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;complex64&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat32</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;complex128&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_CFloat64</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;int16&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Int16</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;uint16&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_UInt16</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;int32&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Int32</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;uint32&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_UInt32</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">):</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">data_array</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gdal_datatype_map</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARNING] Unsupported NumPy data type </span><span class="si">{</span><span class="n">data_array</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Skipping.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+        
+    <span class="n">gdal_dtype</span> <span class="o">=</span> <span class="n">gdal_datatype_map</span><span class="p">[</span><span class="n">data_array</span><span class="o">.</span><span class="n">dtype</span><span class="p">]</span>
+    
+    <span class="c1"># Adjust path extension if bin format is chosen</span>
+    <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span><span class="p">:</span>
+        <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.bin&#39;</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s1">&#39;ENVI&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s1">&#39;GTiff&#39;</span><span class="p">)</span>
+
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BIGTIFF=IF_SAFER&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">comp</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;COMPRESS=LZW&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cog</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;TILED=YES&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKXSIZE=512&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCKYSIZE=512&#39;</span><span class="p">]</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="n">options</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;tif&#39;</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="n">out_ds</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gdal_dtype</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+    
+    <span class="n">srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
+    <span class="n">srs</span><span class="o">.</span><span class="n">ImportFromEPSG</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">projection</span><span class="p">))</span>
+    <span class="n">srs</span><span class="o">.</span><span class="n">SetAxisMappingStrategy</span><span class="p">(</span><span class="n">osr</span><span class="o">.</span><span class="n">OAMS_TRADITIONAL_GIS_ORDER</span><span class="p">)</span>
+    <span class="n">out_ds</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="n">srs</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">())</span>
+    <span class="n">out_ds</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">(</span><span class="n">geotransform</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing output file: </span><span class="si">{</span><span class="n">tif_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">band</span> <span class="o">=</span> <span class="n">out_ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">data_array</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">):</span>
+        <span class="n">band</span><span class="o">.</span><span class="n">SetNoDataValue</span><span class="p">(</span><span class="o">-</span><span class="mi">9999</span><span class="p">)</span>
+        
+    <span class="n">band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">data_array</span><span class="p">)</span>
+    <span class="n">band</span><span class="o">.</span><span class="n">FlushCache</span><span class="p">()</span>
+
+    <span class="c1"># Build overviews if COG is requested</span>
+    <span class="k">if</span> <span class="n">cog</span> <span class="ow">and</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;tif&#39;</span><span class="p">:</span>
+        <span class="n">out_ds</span><span class="o">.</span><span class="n">BuildOverviews</span><span class="p">(</span><span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="n">ovr</span><span class="p">)</span>
+
+    <span class="n">out_ds</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">band</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_output_directory</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper to construct output path with a subfolder named after the HDF5 file.&quot;&quot;&quot;</span>
+    <span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">h5_path</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">output_directory</span><span class="p">:</span>
+        <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">h5_path</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;.&quot;</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="n">base_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_directory</span><span class="p">,</span> <span class="n">base_name</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out_dir</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_sme2</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+    <span class="n">layer_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;SM&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Soil Moisture&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/science/LSAR/SME2/grids/soilMoisture&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;SMU&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Soil Moisture Uncertainty&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/science/LSAR/SME2/grids/soilMoistureUncertainty&quot;</span><span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_to_extract</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[INFO] No layers specified for SME2 product.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       -&gt; Supported layers for SME2: &#39;SM&#39;, &#39;SMU&#39;, or &#39;ALL&#39;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       -&gt; Example usage: nisar_h5_tif(h5_path, layer_to_extract=&#39;ALL&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_to_extract</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">keys_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">layer_to_extract</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys_to_process</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer_mapping</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid SME2 layer &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39; in list.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">l_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">layer_to_extract</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">l_key</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
+            <span class="n">keys_to_process</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">layer_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">l_key</span> <span class="ow">in</span> <span class="n">layer_mapping</span><span class="p">:</span>
+            <span class="n">keys_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid SME2 layer &#39;</span><span class="si">{</span><span class="n">layer_to_extract</span><span class="si">}</span><span class="s2">&#39;. Choose from: &#39;SM&#39;, &#39;SMU&#39;&quot;</span><span class="p">)</span>
+
+    <span class="n">out_dir</span> <span class="o">=</span> <span class="n">_get_output_directory</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">)</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s1">&#39;tif&#39;</span>
+
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+        <span class="n">grid_base</span> <span class="o">=</span> <span class="s2">&quot;/science/LSAR/SME2/grids&quot;</span>
+
+        <span class="k">for</span> <span class="n">l_key</span> <span class="ow">in</span> <span class="n">keys_to_process</span><span class="p">:</span>
+            <span class="n">target_info</span> <span class="o">=</span> <span class="n">layer_mapping</span><span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+            <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">l_key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing </span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2">)...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/xCoordinates&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="ow">or</span> <span class="n">target_info</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">h5file</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARNING] Dataset for </span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2"> not found in file. Skipping.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">xcoords</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/xCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">ycoords</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/yCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">x_spacing</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/xCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">y_spacing</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/yCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">projection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/projection&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">data_array</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">target_info</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+            <span class="n">_write_raster</span><span class="p">(</span><span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">data_array</span><span class="p">,</span> <span class="n">tif_path</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully exported </span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_gunw</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+    <span class="n">layer_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;UWP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Unwrapped Phase (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;unwrappedInterferogram&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;unwrappedInterferogram/HH/unwrappedPhase&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;WI&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Wrapped Interferogram (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;wrappedInterferogram&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;wrappedInterferogram/HH/wrappedInterferogram&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;COH&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Coherence Magnitude (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;unwrappedInterferogram&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;unwrappedInterferogram/HH/coherenceMagnitude&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;ION&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ionosphere Phase Screen (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;unwrappedInterferogram&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;unwrappedInterferogram/HH/ionospherePhaseScreen&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;ATO&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Along Track Pixel Offset (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets/HH/alongTrackOffset&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;SRO&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Slant Range Pixel Offset (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets/HH/slantRangeOffset&quot;</span><span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_to_extract</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[INFO] No layers specified for GUNW product.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       -&gt; Supported layers for GUNW: &#39;UWP&#39;, &#39;WI&#39;, &#39;COH&#39;, &#39;ION&#39;, &#39;ATO&#39;, &#39;SRO&#39;, or &#39;ALL&#39;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       -&gt; Example usage: nisar_h5_tif(h5_path, layer_to_extract=[&#39;UWP&#39;, &#39;COH&#39;])</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_to_extract</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">keys_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">layer_to_extract</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys_to_process</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer_mapping</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid GUNW layer &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39; in list.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">l_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">layer_to_extract</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">l_key</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
+            <span class="n">keys_to_process</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">layer_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">l_key</span> <span class="ow">in</span> <span class="n">layer_mapping</span><span class="p">:</span>
+            <span class="n">keys_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid GUNW layer &#39;</span><span class="si">{</span><span class="n">layer_to_extract</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">out_dir</span> <span class="o">=</span> <span class="n">_get_output_directory</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">)</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s1">&#39;tif&#39;</span>
+
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+        <span class="n">freq_path</span> <span class="o">=</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="k">if</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="k">else</span> <span class="s1">&#39;/science/SSAR&#39;</span>
+        <span class="n">grid_base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s2">/GUNW/grids/frequencyA&quot;</span>
+
+        <span class="k">for</span> <span class="n">l_key</span> <span class="ow">in</span> <span class="n">keys_to_process</span><span class="p">:</span>
+            <span class="n">target_info</span> <span class="o">=</span> <span class="n">layer_mapping</span><span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+            <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">l_key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">subgrid_base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">target_node_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing </span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2">)...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">subgrid_base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="ow">or</span> <span class="n">target_node_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">h5file</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARNING] Subgrid or dataset for </span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2"> not found in file. Skipping.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">xcoords</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/xCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">ycoords</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/yCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">x_spacing</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/xCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">y_spacing</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/yCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">projection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/projection&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">data_array</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">target_node_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+            <span class="n">_write_raster</span><span class="p">(</span><span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">data_array</span><span class="p">,</span> <span class="n">tif_path</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully exported </span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_goff</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+    <span class="n">layer_mapping</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+        <span class="n">layer_mapping</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="sa">f</span><span class="s2">&quot;ATO</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Along Track Offset (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/alongTrackOffset&quot;</span><span class="p">},</span>
+            <span class="sa">f</span><span class="s2">&quot;SRO</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Slant Range Offset (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/slantRangeOffset&quot;</span><span class="p">},</span>
+            <span class="sa">f</span><span class="s2">&quot;ATOV</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Along Track Offset Variance (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/alongTrackOffsetVariance&quot;</span><span class="p">},</span>
+            <span class="sa">f</span><span class="s2">&quot;SROV</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Slant Range Offset Variance (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/slantRangeOffsetVariance&quot;</span><span class="p">},</span>
+            <span class="sa">f</span><span class="s2">&quot;CSP</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Correlation Surface Peak (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/correlationSurfacePeak&quot;</span><span class="p">},</span>
+            <span class="sa">f</span><span class="s2">&quot;COV</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Cross Offset Variance (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/crossOffsetVariance&quot;</span><span class="p">},</span>
+            <span class="sa">f</span><span class="s2">&quot;SNR</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Layer </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> Signal To Noise Ratio (HH)&quot;</span><span class="p">,</span> <span class="s2">&quot;subgrid&quot;</span><span class="p">:</span> <span class="s2">&quot;pixelOffsets&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pixelOffsets/HH/layer</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/snr&quot;</span><span class="p">}</span>
+        <span class="p">})</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_to_extract</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[INFO] No layers specified for GOFF product.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       -&gt; Supported layers for GOFF: Layers 1-3 for ATO, SRO, ATOV, SROV, CSP, COV, SNR (e.g., &#39;ATO1&#39;), or &#39;ALL&#39;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       -&gt; Example usage: nisar_h5_tif(h5_path, layer_to_extract=&#39;ALL&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer_to_extract</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">keys_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">layer_to_extract</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys_to_process</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">layer_mapping</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid GOFF layer &#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39; in list.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">l_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">layer_to_extract</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">l_key</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
+            <span class="n">keys_to_process</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">layer_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">l_key</span> <span class="ow">in</span> <span class="n">layer_mapping</span><span class="p">:</span>
+            <span class="n">keys_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid GOFF layer &#39;</span><span class="si">{</span><span class="n">layer_to_extract</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">out_dir</span> <span class="o">=</span> <span class="n">_get_output_directory</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">)</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;bin&#39;</span> <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s1">&#39;bin&#39;</span> <span class="k">else</span> <span class="s1">&#39;tif&#39;</span>
+
+    <span class="k">with</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5file</span><span class="p">:</span>
+        <span class="n">freq_path</span> <span class="o">=</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="k">if</span> <span class="s1">&#39;/science/LSAR&#39;</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="k">else</span> <span class="s1">&#39;/science/SSAR&#39;</span>
+        <span class="n">grid_base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">freq_path</span><span class="si">}</span><span class="s2">/GOFF/grids/frequencyA&quot;</span>
+
+        <span class="k">for</span> <span class="n">l_key</span> <span class="ow">in</span> <span class="n">keys_to_process</span><span class="p">:</span>
+            <span class="n">target_info</span> <span class="o">=</span> <span class="n">layer_mapping</span><span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+            <span class="n">tif_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">l_key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">subgrid_base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;subgrid&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">target_node_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">grid_base</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing </span><span class="si">{</span><span class="n">target_info</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2">)...&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">subgrid_base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">h5file</span> <span class="ow">or</span> <span class="n">target_node_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">h5file</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[WARNING] Subgrid or dataset for </span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2"> not found in file. Skipping.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">xcoords</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/xCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">ycoords</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/yCoordinates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">x_spacing</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/xCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">y_spacing</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/yCoordinateSpacing&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">projection</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subgrid_base</span><span class="si">}</span><span class="s2">/projection&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">data_array</span> <span class="o">=</span> <span class="n">h5file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">target_node_path</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+            <span class="n">_write_raster</span><span class="p">(</span><span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span><span class="p">,</span> <span class="n">x_spacing</span><span class="p">,</span> <span class="n">y_spacing</span><span class="p">,</span> <span class="n">projection</span><span class="p">,</span> <span class="n">data_array</span><span class="p">,</span> <span class="n">tif_path</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">cog</span><span class="p">,</span> <span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully exported </span><span class="si">{</span><span class="n">l_key</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, PolSARtools team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

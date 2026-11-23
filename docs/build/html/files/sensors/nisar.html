@@ -595,6 +595,96 @@ Does not return any values.</p>
 </dd></dl>
 
 </section>
+<section id="convert-nisar-h5-to-tif-nisar-h5-tif">
+<h2>convert NISAR .h5 to .tif (<code class="docutils literal notranslate"><span class="pre">nisar_h5_tif</span></code>)<a class="headerlink" href="#convert-nisar-h5-to-tif-nisar-h5-tif" title="Link to this heading">#</a></h2>
+<p>The <cite>nisar_h5_tif</cite> function extracts and converts NISAR HDF5 product files to GeoTIFF format.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">nisar_h5_tif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h5_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_to_extract</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar_h5_tif.html#nisar_h5_tif"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extract data layers from NISAR HDF5 files and export them as GeoTIFF,
+Cloud Optimized GeoTIFF (COG), or ENVI binary files.</p>
+<section id="supported-products">
+<h3>Supported products<a class="headerlink" href="#supported-products" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>SME2: Soil Moisture</p></li>
+<li><p>GUNW: Geocoded Unwrapped Interferogram</p></li>
+<li><p>GOFF: Geocoded Offset</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract a single layer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_h5_tif</span><span class="p">(</span><span class="s2">&quot;file.h5&quot;</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="o">=</span><span class="s2">&quot;SM&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract multiple layers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_h5_tif</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">h5_path</span><span class="o">=</span><span class="s2">&quot;file.h5&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">layer_to_extract</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UWP&quot;</span><span class="p">,</span> <span class="s2">&quot;WI&quot;</span><span class="p">,</span> <span class="s2">&quot;COH&quot;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract all supported layers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nisar_h5_tif</span><span class="p">(</span><span class="s2">&quot;file.h5&quot;</span><span class="p">,</span> <span class="n">layer_to_extract</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">param h5_path<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the input NISAR HDF5 file.</p>
+</dd>
+<dt class="field-even">type h5_path<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param layer_to_extract<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Layer or layers to extract. Accepts a single layer key, a list or tuple
+of layer keys, or “ALL” to extract all supported layers.</p>
+</dd>
+<dt class="field-even">type layer_to_extract<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, list[str], tuple[str], or None, default=None</p>
+</dd>
+<dt class="field-odd">param output_directory<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Parent directory where a subfolder named after the input file is created
+to store the output files. If None, defaults to the input file’s directory.</p>
+</dd>
+<dt class="field-even">type output_directory<span class="colon">:</span></dt>
+<dd class="field-even"><p>str or None, default=None</p>
+</dd>
+<dt class="field-odd">param fmt<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Output file format:
+- ‘tif’: GeoTIFF format
+- ‘bin’: ENVI binary format</p>
+</dd>
+<dt class="field-even">type fmt<span class="colon">:</span></dt>
+<dd class="field-even"><p>{‘tif’, ‘bin’}, default=’tif’</p>
+</dd>
+<dt class="field-odd">param cog<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If True, generates Cloud Optimized GeoTIFFs with internal tiling
+and overviews.</p>
+</dd>
+<dt class="field-even">type cog<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, default=False</p>
+</dd>
+<dt class="field-odd">param ovr<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Overview levels for COG generation. Ignored if cog=False.</p>
+</dd>
+<dt class="field-even">type ovr<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[int], default=[2, 4, 8, 16]</p>
+</dd>
+<dt class="field-odd">param comp<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If True, applies LZW compression to GeoTIFF outputs.</p>
+</dd>
+<dt class="field-even">type comp<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool, default=False</p>
+</dd>
+<dt class="field-odd">raises ValueError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the input format is unsupported or an invalid layer key is provided.</p>
+</dd>
+<dt class="field-even">raises FileNotFoundError<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the specified input HDF5 file does not exist.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -648,6 +738,7 @@ Does not return any values.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gslc-import-nisar-gslc">GSLC (<code class="docutils literal notranslate"><span class="pre">import_nisar_gslc</span></code>)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gcov-import-nisar-gcov">GCOV (<code class="docutils literal notranslate"><span class="pre">import_nisar_gcov</span></code>)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata-nisar-product-info">metadata (<code class="docutils literal notranslate"><span class="pre">nisar_product_info</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-nisar-h5-to-tif-nisar-h5-tif">convert NISAR .h5 to .tif (<code class="docutils literal notranslate"><span class="pre">nisar_h5_tif</span></code>)</a></li>
 </ul>
   </nav></div>
 
