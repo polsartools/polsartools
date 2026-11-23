@@ -3,6 +3,40 @@ warnings.filterwarnings("ignore")
 import tables 
 
 def h5_info(file_path, show_unimplemented=True):
+    """
+    Displays the hierarchical structure and metadata of an HDF5 file.
+
+    Recursively traverses the HDF5 file and prints information about its
+    groups and datasets, including dataset paths, shapes, and data types.
+
+    The function also identifies unimplemented or unsupported HDF5
+    objects and optionally displays them in the output.
+
+    Parameters
+    ----------
+    file_path : str or pathlib.Path
+        Path to the input HDF5 file.
+
+    show_unimplemented : bool, optional
+        If True (default), displays unimplemented or unsupported HDF5
+        objects along with their paths and shapes. If False, these
+        objects are skipped.
+
+    Returns
+    -------
+    None
+        Prints the hierarchical structure and metadata of the HDF5
+        file to the console. Does not return any values.
+
+    Examples
+    --------
+    >>> import polsartools as pst
+
+    >>> pst.h5_info("path/to/file.h5")
+
+    >>> pst.h5_info("path/to/file.h5", show_unimplemented=False)
+    """
+
     with tables.open_file(file_path, mode="r") as f:
         def traverse(node):
             if isinstance(node, tables.Group):

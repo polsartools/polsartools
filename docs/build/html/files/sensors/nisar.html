@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>🔸NISAR &#8212; PolSARtools 0.13 documentation</title>
+    <title>🔸NISAR &#8212; PolSARtools 0.14 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../_static/documentation_options.js?v=9bec1924"></script>
+    <script src="../../_static/documentation_options.js?v=506589e9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/sensors/nisar';</script>
@@ -441,7 +441,7 @@ in the same location as the input file.</p>
 <p>The <cite>import_nisar_gslc</cite> function extracts Sxy/C2/T2 (for dual-pol), S2/C4/T4/C3/T3/C2/T2 (for full-pol) matrix elements from the given NISAR GSLC <cite>.h5</cite> file and saves them into a C2 directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_nisar_gslc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#import_nisar_gslc"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_nisar_gslc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'crop'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#import_nisar_gslc"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts the C2 matrix elements (C11, C22, and C12) from a NISAR GSLC HDF5 file
 and saves them into respective binary files.</p>
 <section id="id1">
@@ -489,7 +489,7 @@ in the same location as the input file.</p>
 <p>The <cite>import_nisar_gcov</cite> function extracts intensity elements (dual-pol: HHHH,HVHV or VVVV,VHVH; Full-pol: HHHH,HVHV,VHVH,VVVV; sigma0 or gamma0) from the given NISAR GCOV <cite>.h5</cite> file and saves them into a II directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_nisar_gcov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#import_nisar_gcov"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">import_nisar_gcov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bsc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sigma0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'crop'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar.html#import_nisar_gcov"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Extracts the backscatter intensity elements from a NISAR GCOV HDF5 file and saves them into respective tif/binar files.</p>
 <section id="id3">
 <h3>Example:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
@@ -510,6 +510,10 @@ in the same location as the input file.</p>
 <dt>azlks<span class="classifier">int, optional (default=1)</span></dt><dd><p>The number of azimuth looks for multi-looking.</p>
 </dd>
 <dt>rglks<span class="classifier">int, optional (default=1)</span></dt><dd><p>The number of range looks for multi-looking.</p>
+</dd>
+<dt>bsc<span class="classifier">str, optional (default=’sigma0’)</span></dt><dd><p>Backscatter type to extract. Valid options are:
+- ‘sigma0’: Sigma nought backscatter
+- ‘gamma0’: Gamma nought backscatter</p>
 </dd>
 <dt>fmt<span class="classifier">{‘tif’, ‘bin’}, optional (default=’tif’)</span></dt><dd><p>Output format:
 - ‘tif’: GeoTIFF with georeferencing
@@ -535,7 +539,60 @@ in the same location as the input file.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">nisar_product_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/sensors/nisar_product_info.html#nisar_product_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd></dd></dl>
+<dd><p>Prints a metadata summary of a NISAR HDF5 product.</p>
+<p>Automatically identifies the NISAR frequency band (L-band or S-band)
+and product type (RSLC, GSLC, or GCOV), then extracts and displays
+relevant acquisition and spatial metadata.</p>
+<dl class="simple">
+<dt>The metadata summary includes:</dt><dd><ul class="simple">
+<li><p>Product filename</p></li>
+<li><p>Frequency band and product type</p></li>
+<li><p>Available polarization channels</p></li>
+<li><p>Acquired range bandwidth</p></li>
+<li><p>Orbit pass direction</p></li>
+<li><p>Acquisition date, time, and duration</p></li>
+<li><p>Along-track, ground-range, and slant-range spacing (where available)</p></li>
+<li><p>X and Y coordinate spacing for geocoded products</p></li>
+<li><p>Projection / EPSG code for geocoded products</p></li>
+<li><p>Geographic coverage coordinates (bounding rectangle corners)</p></li>
+<li><p>Near-range, mid-range, and far-range incidence angles</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>product_file</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – Path to the NISAR HDF5 product file. Supported product types
+are RSLC, GSLC, and GCOV.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Prints the extracted metadata summary to the console.
+Does not return any values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If the specified HDF5 product file does not exist.</p></li>
+<li><p><strong>ValueError</strong> – If the product contains unsupported or invalid metadata.</p></li>
+<li><p><strong>KeyError</strong> – If required metadata groups or datasets are missing.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">polsartools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pst</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pst</span><span class="o">.</span><span class="n">nisar_product_info</span><span class="p">(</span><span class="s2">&quot;path/to/NISAR_RSLC.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pst</span><span class="o">.</span><span class="n">nisar_product_info</span><span class="p">(</span><span class="s2">&quot;path/to/NISAR_GSLC.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pst</span><span class="o">.</span><span class="n">nisar_product_info</span><span class="p">(</span><span class="s2">&quot;path/to/NISAR_GCOV.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </section>
 </section>

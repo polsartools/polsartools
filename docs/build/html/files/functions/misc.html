@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Derive stokes parameters (stokes_parm) &#8212; PolSARtools 0.13 documentation</title>
+    <title>Derive stokes parameters (stokes_parm) &#8212; PolSARtools 0.14 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../_static/documentation_options.js?v=9bec1924"></script>
+    <script src="../../_static/documentation_options.js?v=506589e9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/misc';</script>
@@ -334,6 +334,7 @@
 <li class="toctree-l1"><a class="reference internal" href="full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_fp</span></code> )</a></li>
 <li class="toctree-l1"><a class="reference internal" href="full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="full_pol/diversity_fp.html">Diversity indices for FP(<code class="docutils literal notranslate"><span class="pre">diversity_fp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="dataCP.html">Compact-pol data format</a></li>
@@ -371,6 +372,7 @@
 
 
 
+
 <li class="toctree-l1"><a class="reference internal" href="full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
@@ -387,10 +389,12 @@
 <li class="toctree-l1"><a class="reference internal" href="preprocess/mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocess/convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocess/convert_C.html">Convert Covariance matrix (C4/C3/C2) (<code class="docutils literal notranslate"><span class="pre">convert_C</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="preprocess/convert_T.html">Convert COherency matrix (T4/T3/T2) (<code class="docutils literal notranslate"><span class="pre">convert_T</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="preprocess/simulate_CP.html">Simulate Compact-pol SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
+
 
 </ul>
 </div>
@@ -570,6 +574,46 @@ Temporary tile files can be cleaned up after processing.</p>
 </dd></dl>
 
 </section>
+<section id="hd5-info-h5-info">
+<h1>HD5 Info (<code class="docutils literal notranslate"><span class="pre">h5_info</span></code>)<a class="headerlink" href="#hd5-info-h5-info" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">h5_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_unimplemented</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/polsartools/utils/h5_info.html#h5_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Displays the hierarchical structure and metadata of an HDF5 file.</p>
+<p>Recursively traverses the HDF5 file and prints information about its
+groups and datasets, including dataset paths, shapes, and data types.</p>
+<p>The function also identifies unimplemented or unsupported HDF5
+objects and optionally displays them in the output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – Path to the input HDF5 file.</p></li>
+<li><p><strong>show_unimplemented</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True (default), displays unimplemented or unsupported HDF5
+objects along with their paths and shapes. If False, these
+objects are skipped.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Prints the hierarchical structure and metadata of the HDF5
+file to the console. Does not return any values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">polsartools</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pst</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pst</span><span class="o">.</span><span class="n">h5_info</span><span class="p">(</span><span class="s2">&quot;path/to/file.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pst</span><span class="o">.</span><span class="n">h5_info</span><span class="p">(</span><span class="s2">&quot;path/to/file.h5&quot;</span><span class="p">,</span> <span class="n">show_unimplemented</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
 
 
                 </article>
@@ -620,6 +664,7 @@ Temporary tile files can be cleaned up after processing.</p>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-dem-prepare-dem">Prepare DEM (<code class="docutils literal notranslate"><span class="pre">prepare_dem</span></code>)</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#hd5-info-h5-info">HD5 Info (<code class="docutils literal notranslate"><span class="pre">h5_info</span></code>)</a></li>
 </ul>
 
   </nav></div>

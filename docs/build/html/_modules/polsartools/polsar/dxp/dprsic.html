@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>polsartools.polsar.dxp.dprsic &#8212; PolSARtools 0.12.1 documentation</title>
+    <title>polsartools.polsar.dxp.dprsic &#8212; PolSARtools 0.14 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../../_static/documentation_options.js?v=c5b435e8"></script>
+    <script src="../../../../_static/documentation_options.js?v=506589e9"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/polsartools/polsar/dxp/dprsic';</script>
@@ -362,7 +362,7 @@
 <div class="viewcode-block" id="dprsic">
 <a class="viewcode-back" href="../../../../files/functions/dual_pol/dprsic.html#polsartools.dprsic">[docs]</a>
 <span class="nd">@time_it</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dprsic</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span><span class="n">xpFile</span><span class="p">,</span>  <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">dprsic</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span><span class="n">xpFile</span><span class="p">,</span> <span class="n">NESZ</span><span class="o">=-</span><span class="mi">16</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span> 
            <span class="n">cog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ovr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">comp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
            <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">block_size</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
            <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for QGIS plugin          </span>
@@ -392,6 +392,10 @@
 <span class="sd">        Path to the co-polarized backscatter (linear) SAR raster file.</span>
 <span class="sd">    xpFile : str</span>
 <span class="sd">        Path to the cross-polarized backscatter (linear) SAR raster file.</span>
+<span class="sd">    NESZ : float, default=-16 for Sentinel-1</span>
+<span class="sd">        Noise Equivalent Sigma Zero (NESZ) in dB. This value is used to determine</span>
+<span class="sd">        whether a pixel is considered valid or noise. Pixels with C11 (co-pol) values</span>
+<span class="sd">        above this threshold are treated as valid, while those below are treated as noise.</span>
 <span class="sd">    win : int, default=1</span>
 <span class="sd">        Size of the spatial averaging window. Larger windows reduce speckle noise</span>
 <span class="sd">        but decrease spatial resolution.</span>
@@ -432,9 +436,13 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing global statistics for normalization...&quot;</span><span class="p">)</span>
 
     <span class="n">S2_c11</span><span class="p">,</span> <span class="n">S98_c11</span><span class="p">,</span> <span class="n">Smax_c11</span><span class="p">,</span> <span class="n">S2_c22</span><span class="p">,</span> <span class="n">S98_c22</span><span class="p">,</span> <span class="n">Smax_c22</span><span class="p">,</span> <span class="n">S2_s1</span><span class="p">,</span> <span class="n">S98_s1</span><span class="p">,</span> <span class="n">Smax_s1</span> <span class="o">=</span> <span class="n">grd_global_stats</span><span class="p">(</span><span class="n">cpFile</span><span class="p">,</span> <span class="n">xpFile</span><span class="p">)</span>
+
+    <span class="c1"># print(f&quot;Global statistics computed: S2_c11={S2_c11}, S98_c11={S98_c11}, Smax_c11={Smax_c11}, &quot;</span>
+    <span class="c1">#       f&quot;S2_c22={S2_c22}, S98_c22={S98_c22}, Smax_c22={Smax_c22}, S2_s1={S2_s1}, S98_s1={S98_s1}, Smax_s1={Smax_s1}&quot;)</span>
+
     <span class="n">process_chunks_parallel</span><span class="p">(</span><span class="n">input_filepaths</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_filepaths</span><span class="p">),</span> <span class="n">win</span><span class="p">,</span> <span class="n">write_flag</span><span class="p">,</span>
                             <span class="n">process_chunk_dprsic</span><span class="p">,</span>
-                            <span class="o">*</span><span class="p">[</span><span class="n">S2_c11</span><span class="p">,</span> <span class="n">S98_c11</span><span class="p">,</span> <span class="n">Smax_c11</span><span class="p">,</span><span class="n">S2_c22</span><span class="p">,</span> <span class="n">S98_c22</span><span class="p">,</span> <span class="n">Smax_c22</span><span class="p">,</span><span class="n">S2_s1</span><span class="p">,</span> <span class="n">S98_s1</span><span class="p">,</span> <span class="n">Smax_s1</span><span class="p">],</span>
+                            <span class="o">*</span><span class="p">[</span><span class="n">NESZ</span><span class="p">,</span><span class="n">S2_c11</span><span class="p">,</span> <span class="n">S98_c11</span><span class="p">,</span> <span class="n">Smax_c11</span><span class="p">,</span><span class="n">S2_c22</span><span class="p">,</span> <span class="n">S98_c22</span><span class="p">,</span> <span class="n">Smax_c22</span><span class="p">,</span><span class="n">S2_s1</span><span class="p">,</span> <span class="n">S98_s1</span><span class="p">,</span> <span class="n">Smax_s1</span><span class="p">],</span>
                             <span class="n">block_size</span><span class="o">=</span><span class="n">block_size</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">,</span>  <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                             <span class="n">cog</span><span class="o">=</span><span class="n">cog</span><span class="p">,</span><span class="n">ovr</span><span class="o">=</span><span class="n">ovr</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="n">comp</span><span class="p">,</span>
                             <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress_callback</span>
@@ -442,7 +450,7 @@
 
     
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunk_dprsic</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-
+    <span class="n">NESZ</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">])</span>
     <span class="n">S2_c11</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">9</span><span class="p">])</span>
     <span class="n">S98_c11</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">])</span>
     <span class="n">Smax_c11</span>  <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span>
@@ -475,7 +483,8 @@
     <span class="n">dprsi_con1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ent</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">s1_s_norm</span><span class="p">));</span> <span class="c1"># For Valid pixels</span>
     <span class="n">dprsi_con2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">s1_s_norm</span><span class="p">));</span> <span class="c1"># For Noise pixels </span>
 
-    <span class="n">NESZ</span> <span class="o">=</span> <span class="o">-</span><span class="mi">16</span> <span class="c1">## For Sentinel-1</span>
+    <span class="c1"># NESZ = -16 ## For Sentinel-1</span>
+    <span class="c1"># NESZ = -40 ## For NISAR</span>
     <span class="n">dprsic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">C11_av_db</span> <span class="o">&gt;</span> <span class="n">NESZ</span><span class="p">,</span> <span class="n">dprsi_con1</span><span class="p">,</span> <span class="n">dprsi_con2</span><span class="p">)</span> 
 
 

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Convert Covariance matrix (C4/C3/C2) (convert_C) &#8212; PolSARtools 0.13 documentation</title>
+    <title>Convert Covariance matrix (C4/C3/C2) (convert_C) &#8212; PolSARtools 0.14 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=9bec1924"></script>
+    <script src="../../../_static/documentation_options.js?v=506589e9"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'files/functions/preprocess/convert_C';</script>
@@ -46,7 +46,7 @@
     <link rel="icon" href="../../../_static/icon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Simulate Compact-pol SAR (simulate_CP)" href="simulate_CP.html" />
+    <link rel="next" title="Convert COherency matrix (T4/T3/T2) (convert_T)" href="convert_T.html" />
     <link rel="prev" title="Convert single-look S (S2,Sxy) (convert_S)" href="convert_S.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -334,6 +334,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../full_pol/GRVI.html">Generalized volume based Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">grvi</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../full_pol/PRVI_fp.html">Polarimetric Radar Vegetation Index (<code class="docutils literal notranslate"><span class="pre">prvi_fp</span></code> )</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../full_pol/DOP_fp.html">Degree of Polarization (<code class="docutils literal notranslate"><span class="pre">dop_fp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../full_pol/diversity_fp.html">Diversity indices for FP(<code class="docutils literal notranslate"><span class="pre">diversity_fp</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../dataCP.html">Compact-pol data format</a></li>
@@ -371,6 +372,7 @@
 
 
 
+
 <li class="toctree-l1"><a class="reference internal" href="../full_pol/halpha_plot_fp.html">Full-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_fp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dual_pol/halpha_plot_dp.html">Dual-pol H-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_alpha_dp</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../analysis/haalpha_plot_fp.html">Full-pol H-A-alpha plot (<code class="docutils literal notranslate"><span class="pre">plot_h_a_alpha_fp</span></code>)</a></li>
@@ -387,10 +389,12 @@
 <li class="toctree-l1"><a class="reference internal" href="mlook.html">Multi-looking (<code class="docutils literal notranslate"><span class="pre">mlook</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="convert_S.html">Convert single-look S (S2,Sxy) (<code class="docutils literal notranslate"><span class="pre">convert_S</span></code>)</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Convert Covariance matrix (C4/C3/C2) (<code class="docutils literal notranslate"><span class="pre">convert_C</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_T.html">Convert COherency matrix (T4/T3/T2) (<code class="docutils literal notranslate"><span class="pre">convert_T</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simulate_CP.html">Simulate Compact-pol SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../misc.html">Derive stokes parameters (<code class="docutils literal notranslate"><span class="pre">stokes_parm</span></code>)</a></li>
+
 
 </ul>
 </div>
@@ -456,42 +460,162 @@
 <h1>Convert Covariance matrix (C4/C3/C2) (<code class="docutils literal notranslate"><span class="pre">convert_C</span></code>)<a class="headerlink" href="#convert-covariance-matrix-c4-c3-c2-convert-c" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">convert_C</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/preprocess/convert_C.html#convert_C"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert Covariance matrix into coherency (T4, T3, T2) or covariance (C2) matrices.
-It supports both GeoTIFF and PolSARpro-compatible output.</p>
+<span class="sig-prename descclassname"><span class="pre">polsartools.</span></span><span class="sig-name descname"><span class="pre">convert_C</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T3'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">azlks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rglks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tif'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ovr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(512,</span> <span class="pre">512)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/polsartools/preprocess/convert_C.html#convert_C"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert covariance matrices (C2, C3, C4) into coherency (T2, T3, T4)
+or covariance (C2, C3, C2HX, C2VX, C2HV, C2CP) matrices.</p>
+<p>Supports GeoTIFF and PolSARpro-compatible binary output formats,
+multilooking and spatial filtering.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert C3 to T3 matrix</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span><span class="s2">&quot;/path/to/C_data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span><span class="s2">&quot;/path/to/C3_data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Output as tiled GeoTIFF with Cloud Optimized overviews</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span><span class="s2">&quot;/data/C_data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert C4 to T4 matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span><span class="s2">&quot;/path/to/C4_data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T4&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert C4 to C3 matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span><span class="s2">&quot;/path/to/C4_data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract dual-pol C2HV from C4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span><span class="s2">&quot;/path/to/C4_data&quot;</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C2HV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert C3 to compact-pol C2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;/path/to/C3_data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;C2CP&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">phi</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">chi</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Apply multilooking and spatial filtering</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;/path/to/C3_data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T3&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">azlks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">rglks</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">win</span><span class="o">=</span><span class="mi">5</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate Cloud Optimized GeoTIFF output</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_C</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;/path/to/C4_data&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mat</span><span class="o">=</span><span class="s2">&quot;T4&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;tif&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">cog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">comp</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>in_dir</strong> (<em>str</em>) – <p>Path to the input folder containing covariance components
-{C3: C11, C12_real, C12_imag, C13_real, C13_imag, C22, C13_real, C23_imag, C33;</p>
-<blockquote>
-<div><p>C4: C11, C12_real, C12_imag, C13_real, C13_imag, C14_real, C14_imag, C22, C23_real, C23_imag, C24_real, C24_imag, C33, C34_real, C34_imag,}.</p>
-</div></blockquote>
+<li><p><strong>in_dir</strong> (<em>str</em>) – <p>Path to the input directory containing covariance matrix
+components. The input matrix type (C2, C3, or C4) is
+automatically detected based on the available components.</p>
+<p>Supported input components:</p>
+<dl class="simple">
+<dt>C2:</dt><dd><p>C11, C12_real, C12_imag, C22</p>
+</dd>
+<dt>C3:</dt><dd><p>C11, C12_real, C12_imag,
+C13_real, C13_imag,
+C22, C23_real, C23_imag, C33</p>
+</dd>
+<dt>C4:</dt><dd><p>C11, C12_real, C12_imag,
+C13_real, C13_imag,
+C14_real, C14_imag,
+C22, C23_real, C23_imag,
+C24_real, C24_imag,
+C33, C34_real, C34_imag, C44</p>
+</dd>
+</dl>
+<p>All input components must have the same file format
+(.bin or .tif), dimensions, and georeferencing.</p>
 </p></li>
-<li><p><strong>mat</strong> (<em>str</em><em>, </em><em>default='T3'</em>) – Output matrix. Supported values:
-- ‘T4’, ‘T3’, ‘T2’ (Coherency)
-- ‘C3’, ‘C2’, ‘C2HX’, ‘C2VX’, ‘C2HV’ (Covariance)</p></li>
-<li><p><strong>azlks</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of looks in azimuth direction.</p></li>
-<li><p><strong>rglks</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of looks in range direction.</p></li>
-<li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the moving average window.</p></li>
-<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output format type.</p></li>
-<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, creates Cloud Optimized GeoTIFF (COG).</p></li>
-<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Levels of pyramid overviews for COG generation.</p></li>
-<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, applies LZW compression to output GeoTIFF files.</p></li>
-<li><p><strong>recip</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, scattering matrix reciprocal symmetry is applied, i.e, S_HV = S_VH.</p></li>
-<li><p><strong>cf</strong> (<em>float</em><em>, </em><em>default=1</em>) – Calibration factor (linear) to adjust the amplitude of S2 data.</p></li>
-<li><p><strong>out_dir</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Path to the output folder. If None, uses the input folder.</p></li>
-<li><p><strong>max_workers</strong> (<em>int</em><em> | </em><em>None</em><em>, </em><em>default=None</em>) – Number of parallel worker threads.</p></li>
-<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Size of chunks for processing.</p></li>
+<li><p><strong>mat</strong> (<em>str</em><em>, </em><em>default='T3'</em>) – <p>Desired output matrix.</p>
+<p>Supported conversions:</p>
+<dl class="simple">
+<dt>C2 input:</dt><dd><ul>
+<li><p>’C2’</p></li>
+<li><p>’T2’</p></li>
+</ul>
+</dd>
+<dt>C3 input:</dt><dd><ul>
+<li><p>’T3’</p></li>
+<li><p>’C2’</p></li>
+<li><p>’C2HX’</p></li>
+<li><p>’C2VX’</p></li>
+<li><p>’C2HV’</p></li>
+<li><p>’C2CP’</p></li>
+</ul>
+</dd>
+<dt>C4 input:</dt><dd><ul>
+<li><p>’T4’</p></li>
+<li><p>’C3’</p></li>
+<li><p>’C2’</p></li>
+<li><p>’C2HX’</p></li>
+<li><p>’C2VX’</p></li>
+<li><p>’C2HV’</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>azlks</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of looks in the azimuth direction.
+Must be a positive integer.</p></li>
+<li><p><strong>rglks</strong> (<em>int</em><em>, </em><em>default=1</em>) – Number of looks in the range direction.
+Must be a positive integer.</p></li>
+<li><p><strong>win</strong> (<em>int</em><em>, </em><em>default=1</em>) – Size of the square moving-average spatial filtering window.
+A value of 1 disables spatial filtering.</p></li>
+<li><p><strong>fmt</strong> (<em>{'tif'</em><em>, </em><em>'bin'}</em><em>, </em><em>default='tif'</em>) – Output file format:
+- ‘tif’: GeoTIFF
+- ‘bin’: PolSARpro-compatible binary format.</p></li>
+<li><p><strong>cog</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, generates Cloud Optimized GeoTIFF output.
+Requires fmt=’tif’.</p></li>
+<li><p><strong>ovr</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>2</em><em>, </em><em>4</em><em>, </em><em>8</em><em>, </em><em>16</em><em>]</em>) – Overview pyramid levels used during COG generation.</p></li>
+<li><p><strong>comp</strong> (<em>bool</em><em>, </em><em>default=False</em>) – If True, applies LZW compression to GeoTIFF output files.</p></li>
+<li><p><strong>recip</strong> (<em>bool</em><em>, </em><em>default=True</em>) – If True, applies reciprocal symmetry to the scattering
+matrix. Retained for compatibility with the processing
+interface.</p></li>
+<li><p><strong>cf</strong> (<em>float</em><em>, </em><em>default=1</em>) – Calibration factor (linear) retained for compatibility
+with the processing interface.</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Path to the output directory. If None, creates an output
+directory named after the requested matrix inside in_dir.</p></li>
+<li><p><strong>max_workers</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Maximum number of parallel worker processes.
+If None, uses the default worker count provided by
+process_chunks_parallel.</p></li>
+<li><p><strong>block_size</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default=</em><em>(</em><em>512</em><em>, </em><em>512</em><em>)</em>) – Processing block size in pixels, specified as
+(range, azimuth). Block dimensions are automatically
+adjusted to align with the multilooking factors.</p></li>
+<li><p><strong>phi</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Compact-pol orientation angle in radians.
+Used only for C3-to-C2CP conversion.</p></li>
+<li><p><strong>chi</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Compact-pol ellipticity angle in radians.
+Used only for C3-to-C2CP conversion.</p></li>
+<li><p><strong>progress_callback</strong> (<em>callable</em><em> or </em><em>None</em><em>, </em><em>default=None</em>) – Optional callback function for monitoring processing
+progress, primarily intended for QGIS plugin integration.
+Receives a float between 0.0 and 1.0 representing
+the fraction of completed processing blocks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Writes the converted matrix components to the output
+directory. Each matrix component is saved as an individual
+raster file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If input parameters are invalid or input raster properties
+    are inconsistent.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If the required covariance matrix components are missing
+    or an input raster cannot be opened.</p></li>
+<li><p><strong>NotImplementedError</strong> – If the requested input-to-output matrix conversion
+    is not supported.</p></li>
 </ul>
 </dd>
 </dl>
@@ -519,11 +643,11 @@ It supports both GeoTIFF and PolSARpro-compatible output.</p>
       </div>
     </a>
     <a class="right-next"
-       href="simulate_CP.html"
+       href="convert_T.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Simulate Compact-pol SAR (<code class="docutils literal notranslate"><span class="pre">simulate_CP</span></code>)</p>
+        <p class="prev-next-title">Convert COherency matrix (T4/T3/T2) (<code class="docutils literal notranslate"><span class="pre">convert_T</span></code>)</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

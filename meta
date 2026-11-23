@@ -20,7 +20,6 @@ add h5_info
 [to do]
 windows arm CI --> not yet there
 full-pol <- compact pol 
-convert_T
 rectangular window
 NISAR-ISCE3?
 NISAR incidence angle

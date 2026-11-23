@@ -167,8 +167,11 @@ def print_gslc_meta(file_path, band, product_type):
         
         if product_type == "GSLC":
             slant_range = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/grids/frequencyA/slantRangeSpacing").read()
+            projection_path = (f"/science/{band_prefix}SAR/GSLC/metadata/radarGrid/projection" )
         elif product_type == "GCOV":
             slant_range = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/slantRangeSpacing").read()
+            projection_path = (f"/science/{band_prefix}SAR/GCOV/grids/frequencyA/projection")
+
         # ground_range = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/sceneCenterGroundRangeSpacing").read()
         x_coordinate_spacing = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/grids/frequencyA/xCoordinateSpacing").read()
         y_coordinate_spacing = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/grids/frequencyA/yCoordinateSpacing").read()
@@ -176,7 +179,7 @@ def print_gslc_meta(file_path, band, product_type):
         listOfPolarizations = listOfPolarizations.astype(str).tolist()
         incidence_angle = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/radarGrid/incidenceAngle").read()
         orbit_pass_direction = h5file.get_node(f"/science/{band_prefix}SAR/identification/orbitPassDirection").read()
-
+        epsg = int(h5file.get_node(projection_path).read())
         if band == "LSAR":
             acquiredRangeBandwidth = h5file.get_node(f"/science/{band_prefix}SAR/{product_type}/metadata/sourceData/swaths/frequencyA/acquiredRangeBandwidth").read()
         elif band == "SSAR" and product_type == "GCOV":
@@ -247,6 +250,7 @@ def print_gslc_meta(file_path, band, product_type):
 
     print(f"X Coordinate Spacing (ground): {x_coordinate_spacing:3.1f} m")
     print(f"Y Coordinate Spacing (ground): {abs(y_coordinate_spacing):3.1f} m")
+    print(f"Projection (EPSG): EPSG:{epsg}")
     print("-" * 40)
     print("Coverage Coordinates (Longitude, Latitude):")
     for name, (lon, lat) in corners.items():
@@ -257,7 +261,59 @@ def print_gslc_meta(file_path, band, product_type):
     print(f"far-range Incidence Angle: {max_angle:.6f}°")
 
 def nisar_product_info(product_file):
+    """
+    Prints a metadata summary of a NISAR HDF5 product.
 
+    Automatically identifies the NISAR frequency band (L-band or S-band)
+    and product type (RSLC, GSLC, or GCOV), then extracts and displays
+    relevant acquisition and spatial metadata.
+
+    The metadata summary includes:
+        - Product filename
+        - Frequency band and product type
+        - Available polarization channels
+        - Acquired range bandwidth
+        - Orbit pass direction
+        - Acquisition date, time, and duration
+        - Along-track, ground-range, and slant-range spacing (where available)
+        - X and Y coordinate spacing for geocoded products
+        - Projection / EPSG code for geocoded products
+        - Geographic coverage coordinates (bounding rectangle corners)
+        - Near-range, mid-range, and far-range incidence angles
+
+    Parameters
+    ----------
+    product_file : str or pathlib.Path
+        Path to the NISAR HDF5 product file. Supported product types
+        are RSLC, GSLC, and GCOV.
+
+    Returns
+    -------
+    None
+        Prints the extracted metadata summary to the console.
+        Does not return any values.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the specified HDF5 product file does not exist.
+
+    ValueError
+        If the product contains unsupported or invalid metadata.
+
+    KeyError
+        If required metadata groups or datasets are missing.
+
+    Examples
+    --------
+    >>> import polsartools as pst
+
+    >>> pst.nisar_product_info("path/to/NISAR_RSLC.h5")
+
+    >>> pst.nisar_product_info("path/to/NISAR_GSLC.h5")
+
+    >>> pst.nisar_product_info("path/to/NISAR_GCOV.h5")
+    """
     band, product_type = identify_nisar_product(product_file)
     print(os.path.basename(product_file).split('.h5')[0])
     print('FrequencyA metadata')
@@ -269,15 +325,3 @@ def nisar_product_info(product_file):
     else:
         print(f"Unsupported product type: {product_type}")
     print("-" * 40)
-
-
-
-
-
-
-
-
-
-
-
-

@@ -125,6 +125,7 @@ Preprocessing
     functions/preprocess/mlook
     functions/preprocess/convert_S
     functions/preprocess/convert_C
+    functions/preprocess/convert_T
     functions/preprocess/simulate_CP
     
 Other functions
