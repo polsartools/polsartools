@@ -15,6 +15,7 @@ fix nisar gcov c2 matrix elements
 update convert_C
 added convert_T
 add clip function to nisar_gcov, nisar_gslc
+add h5_info
 
 [to do]
 windows arm CI --> not yet there
